@@ -3,7 +3,7 @@ import styled from 'styled-components'
 export const InfoBoxContainer = styled.div`
   position: absolute;
   right: 0.5rem;
-  top: 2vh;
+  bottom: 5vh;
   width: 6rem;
   background-color: ${(props) => props.theme['white']};
   z-index: 9999;

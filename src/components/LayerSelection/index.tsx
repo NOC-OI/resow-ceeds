@@ -1,4 +1,4 @@
-import { LayerSelectionContainer, LayerSelectionTitle} from "./styles";
+import { LayerSelectionContainer, LayerSelectionTitle, LayerTypes} from "./styles";
 import { useState } from "react";
 import { LayerType } from "../LayerType";
 import * as L from 'leaflet';
@@ -81,6 +81,7 @@ export function LayerSelection({selectedLayers, setSelectedLayers, actualLayer, 
       <LayerSelectionTitle>
         <h1>Layer Selection</h1>
       </LayerSelectionTitle>
+      <LayerTypes>
         {layerClasses.map(layerClass => {
           return (
             <LayerType
@@ -96,6 +97,7 @@ export function LayerSelection({selectedLayers, setSelectedLayers, actualLayer, 
             />
           )
         })}
+      </LayerTypes>
     </LayerSelectionContainer>
   )
 }

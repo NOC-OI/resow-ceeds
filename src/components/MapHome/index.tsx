@@ -1,22 +1,14 @@
-import { MapContainer, useMap, Marker, Popup, TileLayer, useMapEvent, WMSTileLayer, GeoJSON } from 'react-leaflet'
+import { MapContainer, useMap, Marker, Popup, TileLayer, useMapEvent, WMSTileLayer, GeoJSON, LayersControl } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-// import * as WMS from 'leaflet.wms';
 import * as L from 'leaflet';
-import continent from '../../countries-land-1km.geo.json';
+// import { continent } from '../../countries-land-1km.geo';
 import { InfoBox } from '../InfoBox';
 import GeoRasterLayer from 'georaster-layer-for-leaflet';
 import { GetCOGLayer } from './addGeoraster';
+import { GetBathymetryLayer } from './addBathymetry';
+import { Loading } from '../Loading';
 
-// const MySource =  WMS.Source.extend ({
-//   'getEvents': function() {
-//     if (this.options.identify) {
-//         return {'click': this.identify};
-//     } else {
-//         return {};
-//     }
-//   }
-// });
 
 interface DisplayPositionProps{
   map: any,
@@ -38,10 +30,6 @@ function DisplayPosition({ map }: DisplayPositionProps) {
   )
 }
 
-interface CustomWMSProps {
-  layer: any,
-}
-
 interface keyable {
   [key: string]: any
 }
@@ -61,11 +49,14 @@ export function MapHome({selectedLayers, actualLayer, layerAction, setLayerActio
 
   const [map, setMap] = useState<any>(null)
 
+  const [loading, setLoading] = useState<boolean>(false)
+
   async function getWMSLayer (layerName: Object) {
     // layerName.params['atribution'] = actualLayer
     // const layer = L.tileLayer.wms( layerName.url, layerName.params)
     const WMSOptions = {
       service: 'WMS',
+      attribution: actualLayer,
       request: 'GetMap',
       version: '1.3.0',
       layers: 'eusm2021_eunis2019_group',
@@ -87,6 +78,14 @@ export function MapHome({selectedLayers, actualLayer, layerAction, setLayerActio
     // const newBounds = [[nE.lat, nE.lng],[sW.lat, sW.lng]]
     // console.log(newBounds)
     map.fitBounds([[46, -10],[52, 2]])
+  }
+
+
+  async function customWMSLayer() {
+    const getBathymetry = new GetBathymetryLayer()
+    await getBathymetry.getLayer().then( function () {
+      map.addLayer(getBathymetry.layer)
+    })
   }
 
 
@@ -121,8 +120,9 @@ export function MapHome({selectedLayers, actualLayer, layerAction, setLayerActio
     const layerName = selectedLayers[actualLayer]
     if (layerName.data_type === 'WMS'){
       await getWMSLayer(layerName)
+      setLoading(false)
     } else if (layerName.data_type === 'COG'){
-      const getCOGLayer = new GetCOGLayer(layerName)
+      const getCOGLayer = new GetCOGLayer(layerName, actualLayer)
 
       await getCOGLayer.parseGeo().then( function () {
         map.addLayer(getCOGLayer.layer)
@@ -132,13 +132,11 @@ export function MapHome({selectedLayers, actualLayer, layerAction, setLayerActio
         const newBounds = [[nE.lat, nE.lng],[sW.lat, sW.lng]]
         console.log(newBounds)
         map.fitBounds(newBounds)
+        setLoading(false)
 
       })
-
-
     }
   }
-
 
   function removeLayerFromMap(): void {
     map.eachLayer(function(layer: any){
@@ -156,38 +154,17 @@ export function MapHome({selectedLayers, actualLayer, layerAction, setLayerActio
 
   useEffect(() => {
     if (layerAction === 'remove') {
+      setLoading(true)
       removeLayerFromMap()
       setLayerAction('')
+      setLoading(false)
     } else if (layerAction === 'add'){
+      setLoading(true)
       addLayerIntoMap()
       setLayerAction('')
     }
+    console.log(selectedLayers)
   }, [selectedLayers])
-
-  // useEffect(() => {
-  //   {map ? customWMSLayer(bathymetry) : null }
-  // }
-  // , [])
-
-  // const bathymetry = useMemo(() => {
-  //   const source = new MySource(
-  //     "https://ows.terrestris.de/osm/service",
-  //     {
-  //       "format": "image/png",
-  //       "transparent": "true",
-  //       "opacity": '0',
-  //       "info_format": "text/html"
-  //     }
-  //   );
-  //   return source.getLayer('TOPO-WMS')
-  //   },[],
-  // )
-
-  function customWMSLayer({layer}:  CustomWMSProps) {
-    if(!map.hasLayer(layer)){
-      map.addLayer(layer)
-    }
-  }
 
   const displayMap = useMemo(
     () => (
@@ -199,33 +176,46 @@ export function MapHome({selectedLayers, actualLayer, layerAction, setLayerActio
         scrollWheelZoom={true}
         zoomControl={false}
         ref={setMap}
-        >
-        <TileLayer
-          attribution={MAPBOX_ATTRIBUTION}
-          url={`https://api.mapbox.com/styles/v1/${MAPBOX_USERID}/tiles/256/{z}/{x}/{y}@2x?access_token=${MAPBOX_API_KEY}`}
-        />
-        {/* {map?
-          <GeoJSON
-            attribution="Coastlines"
-            data={continent}
-            style={{
-              color: "#5a5c5a",
-              weight: 2,
-              opacity: 0.4,
-              fillOpacity: 0,
-              zIndex: 9999,
-            }} />
-          : null
-        } */}
+      >
+        <LayersControl>
+          <LayersControl.BaseLayer checked name="OSM">
+            <TileLayer
+              attribution={'© OpenStreetMap'}
+              maxZoom={30}
+              url={'https://tile.openstreetmap.org/{z}/{x}/{y}.png'}
+            />
+          </LayersControl.BaseLayer>
+          <LayersControl.BaseLayer name="NASA Blue Marble">
+            <TileLayer
+              url="https://gibs-{s}.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default//EPSG3857_500m/{z}/{y}/{x}.jpeg"
+              attribution="&copy; NASA Blue Marble, image service by OpenGeo"
+            />
+          </LayersControl.BaseLayer>
+          {/* <LayersControl.Overlay name="Coastline">
+            <GeoJSON
+              attribution="Coastlines"
+              data={continent}
+              style={{
+                color: "#5a5c5a",
+                weight: 2,
+                opacity: 0.4,
+                fillOpacity: 0,
+              }}
+            />
+          </LayersControl.Overlay> */}
+          {/* <LayersControl.Overlay name="Background Bathymetry">
+            { customWMSLayer }
+          </LayersControl.Overlay> */}
+        </LayersControl>
       </MapContainer>
     ),
     [map],
   )
-
   return (
     <div>
       {map ? <DisplayPosition map={map} /> : null}
       {displayMap}
+      {loading ? <Loading/> : null }
     </div>
   )
 }

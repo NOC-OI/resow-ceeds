@@ -12,7 +12,7 @@ export function Home() {
 
   const [selectedLayers, setSelectedLayers] = useState<Object>({})
 
-  const [actualLayer, setActualLayer] = useState(null)
+  const [actualLayer, setActualLayer] = useState('')
 
   const [layerAction, setLayerAction] = useState('')
 
@@ -41,9 +41,7 @@ export function Home() {
       </SideBar>
       <MapHome
         selectedLayers={selectedLayers}
-        setSelectedLayers={setSelectedLayers}
         actualLayer={actualLayer}
-        setActualLayer={setActualLayer}
         layerAction={layerAction}
         setLayerAction={setLayerAction}
       />

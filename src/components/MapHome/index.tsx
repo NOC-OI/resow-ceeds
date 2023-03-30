@@ -1,20 +1,22 @@
-import { MapContainer, withLeaflet, useMap, Marker, Popup, TileLayer, useMapEvent, WMSTileLayer, GeoJSON } from 'react-leaflet'
+import { MapContainer, useMap, Marker, Popup, TileLayer, useMapEvent, WMSTileLayer, GeoJSON } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import * as WMS from "leaflet.wms";
-
+// import * as WMS from 'leaflet.wms';
+import * as L from 'leaflet';
 import continent from '../../countries-land-1km.geo.json';
 import { InfoBox } from '../InfoBox';
+import GeoRasterLayer from 'georaster-layer-for-leaflet';
+import { GetCOGLayer } from './addGeoraster';
 
-const MySource =  WMS.Source.extend ({
-  'getEvents': function() {
-    if (this.options.identify) {
-        return {'click': this.identify};
-    } else {
-        return {};
-    }
-  }
-});
+// const MySource =  WMS.Source.extend ({
+//   'getEvents': function() {
+//     if (this.options.identify) {
+//         return {'click': this.identify};
+//     } else {
+//         return {};
+//     }
+//   }
+// });
 
 interface DisplayPositionProps{
   map: any,
@@ -25,29 +27,28 @@ function DisplayPosition({ map }: DisplayPositionProps) {
   const [position, setPosition] = useState(null)
 
   useEffect(() => {
-    map.on('mousemove', (e) => {
+    map.on('mousemove', (e: any) => {
       setPosition(e.latlng)
     })
   }, [map])
   return (
     <InfoBox
       position={position}
-      setPosition={setPosition}
     />
   )
 }
 
 interface CustomWMSProps {
-  map: any,
-  layer: String[],
-  options: Object,
-  url: String,
+  layer: any,
+}
+
+interface keyable {
+  [key: string]: any
 }
 
 interface MapProps{
-  setPosition: any,
-  selectedLayers: Object,
-  actualLayer: any,
+  selectedLayers: keyable,
+  actualLayer: string,
   layerAction: String,
   setLayerAction: any
 }
@@ -58,28 +59,27 @@ export function MapHome({selectedLayers, actualLayer, layerAction, setLayerActio
   const MAPBOX_USERID = 'mapbox/satellite-v9';
   const MAPBOX_ATTRIBUTION = "Map data &copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors, Imagery © <a href='https://www.mapbox.com/'>Mapbox</a>"
 
-  const [map, setMap] = useState(null)
-  map? console.log(map._layers): console.log('')
+  const [map, setMap] = useState<any>(null)
 
   async function getWMSLayer (layerName: Object) {
     // layerName.params['atribution'] = actualLayer
     // const layer = L.tileLayer.wms( layerName.url, layerName.params)
-    const layer = L.tileLayer.wms( 'https://ows.emodnet-seabedhabitats.eu/geoserver/emodnet_view/wms?',
-      {
-        service: 'WMS',
-        attribution: actualLayer,
-        request: 'GetMap',
-        version: '1.3.0',
-        layers: 'eusm2021_eunis2019_group',
-        format: 'image/png',
-        transparent: 'true',
-        info_format: 'text/html',
-        tiled: 'false',
-        width: '150',
-        height: '125',
-        bounds: L.latLngBounds([[46, -10],[50, 2]])
-      })
-    map.addLayer(layer)
+    const WMSOptions = {
+      service: 'WMS',
+      request: 'GetMap',
+      version: '1.3.0',
+      layers: 'eusm2021_eunis2019_group',
+      format: 'image/png',
+      transparent: true,
+      info_format: 'text/html',
+      tiled: 'false',
+      width: '150',
+      height: '125',
+      bounds: L.latLngBounds([[46, -10],[50, 2]])
+    }
+    const layer = L.tileLayer.wms( 'https://ows.emodnet-seabedhabitats.eu/geoserver/emodnet_view/wms?', WMSOptions)
+
+    map ? map.addLayer(layer) : null
     console.log(layer)
     // let nE = layer.getBounds().getNorthEast()
     // let sW = layer.getBounds().getSouthWest()
@@ -89,46 +89,59 @@ export function MapHome({selectedLayers, actualLayer, layerAction, setLayerActio
     map.fitBounds([[46, -10],[52, 2]])
   }
 
-  async function getCOGLayer (layerName) {
-    parseGeoraster(layerName.url).then(async georaster => {
 
-      const layer = new GeoRasterLayer({
-        attribution: actualLayer,
-        georaster: georaster,
-        resolution: 128,
-        opacity: 1,
-        keepBuffer: 25,
-        debugLevel: 2,
-        // mask: continent,
-        // mask_strategy: "inside"
-        pixelValuesToColorFn: values => {
-          console.log(values)
-          return values[0] ? '#00000000' : values[0]
-        }
-      });
-      map.addLayer(layer)
+  // async function getCOGLayer (layerName: any) {
+  //   parseGeoraster(layerName.url).then(async (georaster: any) => {
 
-      let nE = layer.getBounds().getNorthEast()
-      let sW = layer.getBounds().getSouthWest()
+  //     const layer = new GeoRasterLayer({
+  //       georaster: georaster,
+  //       resolution: 128,
+  //       opacity: 1,
+  //       keepBuffer: 25,
+  //       debugLevel: 0,
+  //       // mask: continent,
+  //       // mask_strategy: "inside"
+  //       // pixelValuesToColorFn: values => {
+  //       //   console.log(values)
+  //       //   return values[0] ? '#00000000' : values[0]
+  //       // }
+  //     });
+  //     map.addLayer(layer)
 
-      const newBounds = [[nE.lat, nE.lng],[sW.lat, sW.lng]]
-      console.log(newBounds)
-      map.fitBounds(newBounds)
-    });
-  };
+  //     let nE = layer.getBounds().getNorthEast()
+  //     let sW = layer.getBounds().getSouthWest()
+
+  //     const newBounds = [[nE.lat, nE.lng],[sW.lat, sW.lng]]
+  //     console.log(newBounds)
+  //     map.fitBounds(newBounds)
+  //   });
+  // };
 
   async function generateSelectedLayer () {
     const layerName = selectedLayers[actualLayer]
     if (layerName.data_type === 'WMS'){
       await getWMSLayer(layerName)
     } else if (layerName.data_type === 'COG'){
-      await getCOGLayer(layerName)
+      const getCOGLayer = new GetCOGLayer(layerName)
+
+      await getCOGLayer.parseGeo().then( function () {
+        map.addLayer(getCOGLayer.layer)
+        let nE = getCOGLayer.layer.getBounds().getNorthEast()
+        let sW = getCOGLayer.layer.getBounds().getSouthWest()
+
+        const newBounds = [[nE.lat, nE.lng],[sW.lat, sW.lng]]
+        console.log(newBounds)
+        map.fitBounds(newBounds)
+
+      })
+
+
     }
   }
 
 
   function removeLayerFromMap(): void {
-    map.eachLayer(function(layer){
+    map.eachLayer(function(layer: any){
       if (layer.options.attribution === actualLayer ){
         map.removeLayer(layer)
         setLayerAction('')
@@ -151,22 +164,26 @@ export function MapHome({selectedLayers, actualLayer, layerAction, setLayerActio
     }
   }, [selectedLayers])
 
+  // useEffect(() => {
+  //   {map ? customWMSLayer(bathymetry) : null }
+  // }
+  // , [])
 
-  const bathymetry = useMemo(() => {
-    const source = new MySource(
-      "https://ows.terrestris.de/osm/service",
-      {
-        "format": "image/png",
-        "transparent": "true",
-        "opacity": '0',
-        "info_format": "text/html"
-      }
-    );
-    return source.getLayer('TOPO-WMS')
-    },[],
-  )
+  // const bathymetry = useMemo(() => {
+  //   const source = new MySource(
+  //     "https://ows.terrestris.de/osm/service",
+  //     {
+  //       "format": "image/png",
+  //       "transparent": "true",
+  //       "opacity": '0',
+  //       "info_format": "text/html"
+  //     }
+  //   );
+  //   return source.getLayer('TOPO-WMS')
+  //   },[],
+  // )
 
-  function CustomWMSLayer({layer}:  CustomWMSProps) {
+  function customWMSLayer({layer}:  CustomWMSProps) {
     if(!map.hasLayer(layer)){
       map.addLayer(layer)
     }
@@ -208,7 +225,6 @@ export function MapHome({selectedLayers, actualLayer, layerAction, setLayerActio
   return (
     <div>
       {map ? <DisplayPosition map={map} /> : null}
-      {map ? <CustomWMSLayer layer={bathymetry} /> : null }
       {displayMap}
     </div>
   )

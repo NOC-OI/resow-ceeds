@@ -1,6 +1,7 @@
 import { LayerSelectionContainer, LayerSelectionTitle} from "./styles";
 import { useState } from "react";
 import { LayerType } from "../LayerType";
+import * as L from 'leaflet';
 
 interface LayerSelectionProps{
   selectedLayers: Object,

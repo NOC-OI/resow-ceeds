@@ -12,7 +12,7 @@ interface LayerTypeProps {
   childs: Object
   selectedLayers: keyable
   setSelectedLayers: any
-  actualLayer: any,
+  actualLayer: string[],
   setActualLayer: any,
   layerAction: String,
   setLayerAction: any,
@@ -51,7 +51,7 @@ export function LayerType({ content, childs, selectedLayers, setSelectedLayers, 
 
   function handleChangeMapLayer(e: any) {
     const layerInfo = JSON.parse(e.target.value)
-    setActualLayer(layerInfo.subLayer)
+    setActualLayer([layerInfo.subLayer])
     if (e.target.checked){
       addMapLayer(layerInfo)
     } else{

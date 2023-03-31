@@ -2,9 +2,9 @@ import { useState } from "react";
 import { LayerSelection } from "../../components/LayerSelection";
 import { MapHome } from "../../components/MapHome";
 import { SideSelection } from "../../components/SideSelection";
-import { HomeContainer, SideBar } from "./styles";
+import { TileServerContainer, SideBar } from "./styles";
 
-export function Home() {
+export function TileServer() {
   const [layer, setLayer] = useState<boolean>(false)
 
 
@@ -15,7 +15,7 @@ export function Home() {
   const [layerAction, setLayerAction] = useState('')
 
   return (
-    <HomeContainer>
+    <TileServerContainer>
       <SideBar>
         <SideSelection
           layer={layer}
@@ -44,6 +44,6 @@ export function Home() {
         layerAction={layerAction}
         setLayerAction={setLayerAction}
       />
-    </HomeContainer>
+    </TileServerContainer>
   )
 }

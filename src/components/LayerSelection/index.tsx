@@ -6,7 +6,7 @@ import * as L from 'leaflet';
 interface LayerSelectionProps{
   selectedLayers: Object,
   setSelectedLayers: any,
-  actualLayer: any,
+  actualLayer: string[],
   setActualLayer: any,
   layerAction: String,
   setLayerAction: any,

@@ -1,13 +1,14 @@
-import { MapContainer, useMap, Marker, Popup, TileLayer, useMapEvent, WMSTileLayer, GeoJSON, LayersControl } from 'react-leaflet'
+import { MapContainer, useMap, Marker, Popup, TileLayer, useMapEvent, WMSTileLayer, GeoJSON, LayersControl, Pane } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import * as L from 'leaflet';
 // import { continent } from '../../countries-land-1km.geo';
 import { InfoBox } from '../InfoBox';
-import GeoRasterLayer from 'georaster-layer-for-leaflet';
-import { GetCOGLayer } from './addGeoraster';
+// import GeoRasterLayer from 'georaster-layer-for-leaflet';
+import { GetCOGLayer, GetTileLayer } from './addGeoraster';
 import { GetBathymetryLayer } from './addBathymetry';
 import { Loading } from '../Loading';
+import React from 'react';
 
 
 interface DisplayPositionProps{
@@ -36,18 +37,19 @@ interface keyable {
 
 interface MapProps{
   selectedLayers: keyable,
-  actualLayer: string,
+  actualLayer: string[],
   layerAction: String,
   setLayerAction: any
 }
 
-export function MapHome({selectedLayers, actualLayer, layerAction, setLayerAction}: MapProps) {
-  // console.log(selectedLayers)
+function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction}: MapProps) {
   const MAPBOX_API_KEY = import.meta.env.VITE_MAPBOX_API_KEY;
   const MAPBOX_USERID = 'mapbox/satellite-v9';
   const MAPBOX_ATTRIBUTION = "Map data &copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors, Imagery © <a href='https://www.mapbox.com/'>Mapbox</a>"
 
+  console.log('render...')
   const [map, setMap] = useState<any>(null)
+
 
   const [loading, setLoading] = useState<boolean>(false)
 
@@ -56,7 +58,7 @@ export function MapHome({selectedLayers, actualLayer, layerAction, setLayerActio
     // const layer = L.tileLayer.wms( layerName.url, layerName.params)
     const WMSOptions = {
       service: 'WMS',
-      attribution: actualLayer,
+      attribution: actualLayer[0],
       request: 'GetMap',
       version: '1.3.0',
       layers: 'eusm2021_eunis2019_group',
@@ -71,7 +73,6 @@ export function MapHome({selectedLayers, actualLayer, layerAction, setLayerActio
     const layer = L.tileLayer.wms( 'https://ows.emodnet-seabedhabitats.eu/geoserver/emodnet_view/wms?', WMSOptions)
 
     map ? map.addLayer(layer) : null
-    console.log(layer)
     // let nE = layer.getBounds().getNorthEast()
     // let sW = layer.getBounds().getSouthWest()
 
@@ -117,31 +118,46 @@ export function MapHome({selectedLayers, actualLayer, layerAction, setLayerActio
   // };
 
   async function generateSelectedLayer () {
-    const layerName = selectedLayers[actualLayer]
+    const layerName = selectedLayers[actualLayer[0]]
     if (layerName.data_type === 'WMS'){
       await getWMSLayer(layerName)
       setLoading(false)
     } else if (layerName.data_type === 'COG'){
-      const getCOGLayer = new GetCOGLayer(layerName, actualLayer)
 
-      await getCOGLayer.parseGeo().then( function () {
-        map.addLayer(getCOGLayer.layer)
-        let nE = getCOGLayer.layer.getBounds().getNorthEast()
-        let sW = getCOGLayer.layer.getBounds().getSouthWest()
+      if (window.location.pathname === '/') {
+        const getCOGLayer = new GetCOGLayer(layerName, actualLayer)
+        await getCOGLayer.parseGeo().then( function () {
+          map.addLayer(getCOGLayer.layer)
+          let nE = getCOGLayer.layer.getBounds().getNorthEast()
+          let sW = getCOGLayer.layer.getBounds().getSouthWest()
 
-        const newBounds = [[nE.lat, nE.lng],[sW.lat, sW.lng]]
-        console.log(newBounds)
-        map.fitBounds(newBounds)
-        setLoading(false)
+          const newBounds = [[nE.lat, nE.lng],[sW.lat, sW.lng]]
+          map.fitBounds(newBounds)
+          setLoading(false)
+        });
+      } else {
 
-      })
+        const getCOGLayer = new GetTileLayer(layerName, actualLayer)
+
+        await getCOGLayer.getTile().then( function () {
+          map.addLayer(getCOGLayer.layer, true)
+          const newBounds = [
+            [getCOGLayer.bounds[3], getCOGLayer.bounds[0]],
+            [getCOGLayer.bounds[1], getCOGLayer.bounds[2]]
+          ]
+          map.fitBounds(newBounds)
+          setLoading(false)
+        });
+      }
     }
   }
 
   function removeLayerFromMap(): void {
+
     map.eachLayer(function(layer: any){
-      if (layer.options.attribution === actualLayer ){
+      if (actualLayer.includes(layer.options.attribution)){
         map.removeLayer(layer)
+        map.setView(new L.LatLng(50.39415159013279, -7.712108868853798), 5);
         setLayerAction('')
       }
     })
@@ -163,7 +179,6 @@ export function MapHome({selectedLayers, actualLayer, layerAction, setLayerActio
       addLayerIntoMap()
       setLayerAction('')
     }
-    console.log(selectedLayers)
   }, [selectedLayers])
 
   const displayMap = useMemo(
@@ -179,18 +194,23 @@ export function MapHome({selectedLayers, actualLayer, layerAction, setLayerActio
       >
         <LayersControl>
           <LayersControl.BaseLayer checked name="OSM">
-            <TileLayer
-              attribution={'© OpenStreetMap'}
-              maxZoom={30}
-              url={'https://tile.openstreetmap.org/{z}/{x}/{y}.png'}
-            />
+            <Pane name="OSM" style={{ zIndex: -1 }} >
+              <TileLayer
+                attribution={'© OpenStreetMap'}
+                maxZoom={30}
+                url={'https://tile.openstreetmap.org/{z}/{x}/{y}.png'}
+              />
+            </Pane>
           </LayersControl.BaseLayer>
           <LayersControl.BaseLayer name="NASA Blue Marble">
-            <TileLayer
-              url="https://gibs-{s}.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default//EPSG3857_500m/{z}/{y}/{x}.jpeg"
-              attribution="&copy; NASA Blue Marble, image service by OpenGeo"
-            />
+            <Pane name="NASA" style={{ zIndex: -1 }} >
+              <TileLayer
+                url="https://gibs-{s}.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default//EPSG3857_500m/{z}/{y}/{x}.jpeg"
+                attribution="&copy; NASA Blue Marble, image service by OpenGeo"
+              />
+            </Pane>
           </LayersControl.BaseLayer>
+        </LayersControl>
           {/* <LayersControl.Overlay name="Coastline">
             <GeoJSON
               attribution="Coastlines"
@@ -206,16 +226,24 @@ export function MapHome({selectedLayers, actualLayer, layerAction, setLayerActio
           {/* <LayersControl.Overlay name="Background Bathymetry">
             { customWMSLayer }
           </LayersControl.Overlay> */}
-        </LayersControl>
       </MapContainer>
     ),
     [map],
   )
+
   return (
     <div>
-      {map ? <DisplayPosition map={map} /> : null}
       {displayMap}
+      {map ? <DisplayPosition map={map} /> : null}
       {loading ? <Loading/> : null }
     </div>
   )
 }
+
+
+function mapPropsAreEqual(prevMap: any, nextMap: any) {
+  return prevMap.selectedLayers === nextMap.selectedLayers
+    && prevMap.actualLayer === nextMap.actualLayer;
+}
+
+export const MapHome = React.memo(MapHome1, mapPropsAreEqual)

@@ -1,3 +1,4 @@
+import internal from "stream";
 import { InfoBoxContainer } from "./styles";
 
 interface keyable {
@@ -6,13 +7,13 @@ interface keyable {
 
 interface InfoBoxProps {
   position: null | keyable,
+  depth: null | number,
 }
 
 
-export function InfoBox({position = null }: InfoBoxProps) {
+export function InfoBox({position = null, depth = null }: InfoBoxProps) {
   let lat
   let lng
-
 
   if (position === null){
     lat = '---'
@@ -35,6 +36,7 @@ export function InfoBox({position = null }: InfoBoxProps) {
     lng = `${lngDegrees}°${lngMinutes}'${lngSeconds}${lngSignal}`
   }
 
+
   return (
     <InfoBoxContainer>
       <h1>Haig Fras</h1>
@@ -48,7 +50,7 @@ export function InfoBox({position = null }: InfoBoxProps) {
       </div>
       <div>
         <p>Depth:</p>
-        <span>-- m</span>
+        <span>{depth? `${depth} m` : `-- m` }</span>
       </div>
     </InfoBoxContainer>
   )

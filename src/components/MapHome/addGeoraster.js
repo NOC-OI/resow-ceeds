@@ -3,9 +3,10 @@ import axios from 'axios';
 import { parse, stringify } from 'qs'
 import 'leaflet/dist/leaflet';
 
+
 export class GetCOGLayer {
   constructor (layerName, actualLayer) {
-    this.layerBame = layerName
+    this.layerName = layerName
     this.actualLayer = actualLayer
     this.url = layerName.url
     this.layer = null
@@ -43,6 +44,52 @@ export class GetCOGLayer {
   }
 }
 
+
+export class GetTifLayer {
+  constructor (url, actualLayer) {
+    this.actualLayer = actualLayer
+    this.url = url
+    this.layer = null
+    this.georaster = null
+  }
+
+  async parseGeo() {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const self = this
+    // const scale = chroma.scale(['white', 'black']).domain([-11022, 0]);
+
+    console.log("start search image")
+    await fetch(this.url)
+    .then(async response => await response.arrayBuffer())
+    .then(async arrayBuffer => {
+      await parseGeoraster(arrayBuffer).then(async georaster => {
+        const min = georaster.mins[0];
+        const max = georaster.maxs[0];
+        const range = georaster.ranges[0];
+        // var scale = chroma.scale("Viridis");
+        this.georaster = georaster
+        this.layer = await new GeoRasterLayer({
+          georaster: georaster,
+          opacity: 0,
+          // pixelValuesToColorFn: function(pixelValues) {
+          //   var pixelValue = pixelValues[0]; // there's just one band in this raster
+
+          //   // if there's zero wind, don't return a color
+          //   if (pixelValue === 0) return null;
+
+          //   // scale to 0 - 1 used by chroma
+          //   var scaledPixelValue = (pixelValue - min) / range;
+
+          //   var color = scale(scaledPixelValue).hex();
+
+          //   return color;
+          // },
+          resolution: 64
+        });
+      });
+    });
+  }
+}
 
 
 export class GetTileLayer {

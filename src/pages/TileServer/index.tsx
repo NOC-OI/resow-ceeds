@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { LayerSelection } from "../../components/LayerSelection";
+import { CalcSelection } from "../../components/CalcSelection";
 import { MapHome } from "../../components/MapHome";
 import { SideSelection } from "../../components/SideSelection";
 import { TileServerContainer, SideBar } from "./styles";
+import { CalculationValue } from "../../components/CalculationValue";
 
 export function TileServer() {
   const [layer, setLayer] = useState<boolean>(false)
 
+  const [calc, setCalc] = useState<boolean>(false)
 
   const [selectedLayers, setSelectedLayers] = useState<Object>({})
 
@@ -14,12 +17,16 @@ export function TileServer() {
 
   const [layerAction, setLayerAction] = useState('')
 
+  const [calculationValue, setCalculationValue] = useState('');
+
   return (
     <TileServerContainer>
       <SideBar>
         <SideSelection
           layer={layer}
           setLayer={setLayer}
+          calc={calc}
+          setCalc={setCalc}
           selectedLayers={selectedLayers}
           setSelectedLayers={setSelectedLayers}
           actualLayer={actualLayer}
@@ -36,6 +43,18 @@ export function TileServer() {
             setLayerAction={setLayerAction}
           /> :
           null
+        }
+        {calc ?
+          <CalcSelection setCalculationValue={setCalculationValue}
+          /> :
+          null
+        }
+        {calculationValue?
+          <CalculationValue
+            calculationValue={calculationValue}
+            setCalculationValue={setCalculationValue}
+          />
+          : null
         }
       </SideBar>
       <MapHome

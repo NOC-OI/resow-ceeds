@@ -5,6 +5,7 @@ export function DefaulLayout() {
   return (
     <LayoutContainer>
       <Outlet />
+
     </LayoutContainer>
   )
 }

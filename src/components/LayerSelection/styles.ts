@@ -32,5 +32,5 @@ export const LayerSelectionTitle = styled.div`
 export const LayerTypes = styled.div`
   height: calc(90vh - 2.5rem + 0.75rem);
   max-height:90vh;
-  overflow-y:scroll;
+  overflow-y:auto;
 `

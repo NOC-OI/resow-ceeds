@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 interface SideSelectionProps{
   layer: boolean,
   setLayer: any,
+  calc?: boolean,
+  setCalc?: any,
   selectedLayers: Object,
   setSelectedLayers: any,
   actualLayer: string[],
@@ -14,18 +16,31 @@ interface SideSelectionProps{
   setLayerAction: any,
 }
 
-export function SideSelection({layer, setLayer, selectedLayers, setSelectedLayers, actualLayer, setActualLayer, setLayerAction}: SideSelectionProps ) {
+export function SideSelection({layer, setLayer, calc, setCalc, selectedLayers, setSelectedLayers, actualLayer, setActualLayer, setLayerAction}: SideSelectionProps ) {
 
   const navigate = useNavigate();
 
   function handleShowLayerSelection() {
     if (window.location.pathname === '/bathymetry') {
       navigate('/')
+      setLayer(false)
+      setCalc(false)
     } else{
       setLayer((layer: any) => !layer)
+      setCalc(false)
     }
   }
 
+  function handleShowCalcSelection() {
+    if (window.location.pathname === '/bathymetry') {
+      navigate('/')
+      setLayer(false)
+      setCalc(true)
+    } else{
+      setCalc((calc: any) => !calc)
+      setLayer(false)
+    }
+  }
   function handleEraseLayers() {
     setActualLayer(Object.keys(selectedLayers))
     setSelectedLayers({})
@@ -47,7 +62,7 @@ export function SideSelection({layer, setLayer, selectedLayers, setSelectedLayer
         <SideSelectionLink>
           <FontAwesomeIcon title={"Select Pictures"} icon={faCamera} />
         </SideSelectionLink>
-        <SideSelectionLink >
+        <SideSelectionLink  onClick={handleShowCalcSelection} >
           <FontAwesomeIcon title={"Use Cases Calculations"} icon={faCalculator} />
         </SideSelectionLink>
         <SideSelectionLink onClick={handleGoToBathymetry}>

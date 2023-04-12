@@ -19,8 +19,11 @@ export const LayerTypeContainer = styled.div`
   }
 `
 
-export const LayerTypeOptions = styled.div`
+export const LayerTypeOptionsContainer = styled.div`
   font-size: 0.75rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   label{
     display: flex;
     align-items: center;
@@ -42,6 +45,15 @@ export const LayerTypeOptions = styled.div`
     p {
       vertical-align: middle;
       padding-left: 0.25rem;
+    }
+  }
+  div {
+    svg{
+      padding-left: 0.375rem;
+      cursor: pointer;
+      &:hover {
+        color: ${(props) => props.theme['yellow-700']};
+      }
     }
   }
 `

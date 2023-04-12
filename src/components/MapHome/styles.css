@@ -1,0 +1,15 @@
+
+.leaflet-popup-content-wrapper {
+  max-height:90vh;
+  overflow-y:auto;
+}
+
+.leaflet-popup-content-wrapper h2 {
+  font-size: 1rem;
+}
+
+.leaflet-popup-content-wrapper .leaflet-popup-content {
+}
+
+.leaflet-popup-tip-container {
+}

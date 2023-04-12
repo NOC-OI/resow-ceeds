@@ -1,21 +1,27 @@
 import { MapContainer, useMap, Marker, Popup, TileLayer, useMapEvent, WMSTileLayer, GeoJSON, LayersControl, Pane } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import * as L from 'leaflet';
-// import { continent } from '../../countries-land-1km.geo';
+import { coastline } from '../../coastline';
+// import { bathymetry } from '../../bathymetry';
 import { InfoBox } from '../InfoBox';
-// import GeoRasterLayer from 'georaster-layer-for-leaflet';
-import { GetCOGLayer, GetTileLayer } from './addGeoraster';
-import { GetBathymetryLayer } from './addBathymetry';
+import { GetCOGLayer, GetTifLayer, GetTileLayer } from './addGeoraster';
 import { Loading } from '../Loading';
 import React from 'react';
+import { callBetterWMS } from './addBetterWMS';
+import './styles.css'
+import { GetGeoblazeValue } from './getGeoblazeValue';
 
+// import axios from 'axios';
+// import { GetCanvasLayer } from './addCanvasLayer';
+// import { GetBathymetryLayer } from './addBathymetry';
 
 interface DisplayPositionProps{
   map: any,
+  depth: any,
 }
 
-function DisplayPosition({ map }: DisplayPositionProps) {
+function DisplayPosition({ map, depth }: DisplayPositionProps) {
 
   const [position, setPosition] = useState(null)
 
@@ -27,6 +33,7 @@ function DisplayPosition({ map }: DisplayPositionProps) {
   return (
     <InfoBox
       position={position}
+      depth={depth}
     />
   )
 }
@@ -42,80 +49,46 @@ interface MapProps{
   setLayerAction: any
 }
 
+
+
 function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction}: MapProps) {
   const MAPBOX_API_KEY = import.meta.env.VITE_MAPBOX_API_KEY;
   const MAPBOX_USERID = 'mapbox/satellite-v9';
   const MAPBOX_ATTRIBUTION = "Map data &copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors, Imagery © <a href='https://www.mapbox.com/'>Mapbox</a>"
 
-  console.log('render...')
   const [map, setMap] = useState<any>(null)
 
+  const [depth, setDepth] = useState(null)
+
+  const [emodnet, setEmodnet] = useState<boolean>(false)
+
+
+  // useEffect(() => {
+  //   if (map){
+  //     customWMSLayer()
+  //   }
+  // }, [selectedLayers])
+
+  // useEffect(() => {
+  //   if (map){
+  //     generateCanvasLayer()
+  //   }
+  // }, [selectedLayers])
 
   const [loading, setLoading] = useState<boolean>(false)
 
-  async function getWMSLayer (layerName: Object) {
-    // layerName.params['atribution'] = actualLayer
-    // const layer = L.tileLayer.wms( layerName.url, layerName.params)
-    const WMSOptions = {
-      service: 'WMS',
-      attribution: actualLayer[0],
-      request: 'GetMap',
-      version: '1.3.0',
-      layers: 'eusm2021_eunis2019_group',
-      format: 'image/png',
-      transparent: true,
-      info_format: 'text/html',
-      tiled: 'false',
-      width: '150',
-      height: '125',
-      bounds: L.latLngBounds([[46, -10],[50, 2]])
-    }
-    const layer = L.tileLayer.wms( 'https://ows.emodnet-seabedhabitats.eu/geoserver/emodnet_view/wms?', WMSOptions)
+  async function getWMSLayer (layerName: any) {
+    layerName.params['attribution'] = actualLayer[0]
+    const layer = callBetterWMS(layerName.url, layerName.params)
 
     map ? map.addLayer(layer) : null
-    // let nE = layer.getBounds().getNorthEast()
-    // let sW = layer.getBounds().getSouthWest()
-
-    // const newBounds = [[nE.lat, nE.lng],[sW.lat, sW.lng]]
-    // console.log(newBounds)
     map.fitBounds([[46, -10],[52, 2]])
+    setEmodnet(true)
   }
 
-
-  async function customWMSLayer() {
-    const getBathymetry = new GetBathymetryLayer()
-    await getBathymetry.getLayer().then( function () {
-      map.addLayer(getBathymetry.layer)
-    })
-  }
-
-
-  // async function getCOGLayer (layerName: any) {
-  //   parseGeoraster(layerName.url).then(async (georaster: any) => {
-
-  //     const layer = new GeoRasterLayer({
-  //       georaster: georaster,
-  //       resolution: 128,
-  //       opacity: 1,
-  //       keepBuffer: 25,
-  //       debugLevel: 0,
-  //       // mask: continent,
-  //       // mask_strategy: "inside"
-  //       // pixelValuesToColorFn: values => {
-  //       //   console.log(values)
-  //       //   return values[0] ? '#00000000' : values[0]
-  //       // }
-  //     });
-  //     map.addLayer(layer)
-
-  //     let nE = layer.getBounds().getNorthEast()
-  //     let sW = layer.getBounds().getSouthWest()
-
-  //     const newBounds = [[nE.lat, nE.lng],[sW.lat, sW.lng]]
-  //     console.log(newBounds)
-  //     map.fitBounds(newBounds)
-  //   });
-  // };
+  // if (map) {
+  //   console.log(map._layers)
+  // }
 
   async function generateSelectedLayer () {
     const layerName = selectedLayers[actualLayer[0]]
@@ -162,6 +135,50 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction}: Ma
       }
     })
   }
+  useEffect(() => {
+    if (map){
+      let actualLayer = 'bathymetry'
+      let layerExist = false
+      map.eachLayer(function(layer: any){
+        if (actualLayer.includes(layer.options.attribution)){
+          layerExist = true
+          return false
+        }
+      });
+      if (!layerExist) {
+        setLoading(true)
+        let url = 'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/asc/bathymetry.tif'
+
+        const fetchData = async () => {
+          const getTifLayer = new GetTifLayer(url, [actualLayer])
+          await getTifLayer.parseGeo().then(function () {
+            map.addLayer(getTifLayer.layer)
+            let nE = getTifLayer.layer.getBounds().getNorthEast()
+            let sW = getTifLayer.layer.getBounds().getSouthWest()
+
+            const newBounds = [[nE.lat, nE.lng],[sW.lat, sW.lng]]
+            map.fitBounds(newBounds)
+
+
+            map.on('mousemove', function(evt: { originalEvent: any; }) {
+              var latlng = map.mouseEventToLatLng(evt.originalEvent);
+              const getGeoblazeValue = new GetGeoblazeValue(getTifLayer.georaster)
+              getGeoblazeValue.getGeoblaze().then(function () {
+                let dep = getGeoblazeValue.dep
+                if (dep){
+                  setDepth(dep[0].toFixed(0))
+                } else{
+                  setDepth(null)
+                }
+              })
+            });
+            setLoading(false)
+          });
+        }
+        fetchData();
+      }
+    }
+  }, [map])
 
   async function addLayerIntoMap() {
     await generateSelectedLayer()
@@ -181,6 +198,17 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction}: Ma
     }
   }, [selectedLayers])
 
+  // function pointToLayer() {
+  //   return null
+  //   // return L.marker(latlng, { icon: {}}); // Change the icon to a custom icon
+  // }
+
+  // function onEachFeaturePoint(feature, layer) {
+  //   layer.on('mousemove', function (event) {
+  //     console.log(event);
+  //   });
+  // }
+
   const displayMap = useMemo(
     () => (
       <MapContainer
@@ -192,6 +220,18 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction}: Ma
         zoomControl={false}
         ref={setMap}
       >
+        {/* <GeoJSON
+          attribution="bathymetry"
+          data={bathymetry}
+          pointToLayer={pointToLayer}
+          onEachFeature={onEachFeaturePoint}
+          style={{
+            color: "#5a5c5a",
+            weight: 0,
+            opacity: 0,
+            fillOpacity: 0,
+          }}
+        /> */}
         <LayersControl>
           <LayersControl.BaseLayer checked name="OSM">
             <Pane name="OSM" style={{ zIndex: -1 }} >
@@ -210,11 +250,10 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction}: Ma
               />
             </Pane>
           </LayersControl.BaseLayer>
-        </LayersControl>
-          {/* <LayersControl.Overlay name="Coastline">
+          <LayersControl.Overlay name="Coastline">
             <GeoJSON
               attribution="Coastlines"
-              data={continent}
+              data={coastline}
               style={{
                 color: "#5a5c5a",
                 weight: 2,
@@ -222,10 +261,8 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction}: Ma
                 fillOpacity: 0,
               }}
             />
-          </LayersControl.Overlay> */}
-          {/* <LayersControl.Overlay name="Background Bathymetry">
-            { customWMSLayer }
-          </LayersControl.Overlay> */}
+          </LayersControl.Overlay>
+        </LayersControl>
       </MapContainer>
     ),
     [map],
@@ -234,7 +271,8 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction}: Ma
   return (
     <div>
       {displayMap}
-      {map ? <DisplayPosition map={map} /> : null}
+      {map ? <DisplayPosition map={map} depth={depth} /> : null}
+      {/* {map ? <DisplayBathymetry map={map} /> : null} */}
       {loading ? <Loading/> : null }
     </div>
   )
@@ -247,3 +285,171 @@ function mapPropsAreEqual(prevMap: any, nextMap: any) {
 }
 
 export const MapHome = React.memo(MapHome1, mapPropsAreEqual)
+
+
+  // async function getCOGLayer (layerName: any) {
+  //   parseGeoraster(layerName.url).then(async (georaster: any) => {
+
+  //     const layer = new GeoRasterLayer({
+  //       georaster: georaster,
+  //       resolution: 128,
+  //       opacity: 1,
+  //       keepBuffer: 25,
+  //       debugLevel: 0,
+  //       // mask: continent,
+  //       // mask_strategy: "inside"
+  //       // pixelValuesToColorFn: values => {
+  //       //   console.log(values)
+  //       //   return values[0] ? '#00000000' : values[0]
+  //       // }
+  //     });
+  //     map.addLayer(layer)
+
+  //     let nE = layer.getBounds().getNorthEast()
+  //     let sW = layer.getBounds().getSouthWest()
+
+  //     const newBounds = [[nE.lat, nE.lng],[sW.lat, sW.lng]]
+  //     console.log(newBounds)
+  //     map.fitBounds(newBounds)
+  //   });
+  // };
+
+
+    // async function showFeatureInfo () {
+  //   // layerName.params['atribution'] = actualLayer
+  //   // const layer = L.tileLayer.wms( layerName.url, layerName.params)
+  //   const featureOptions = {
+  //     service: 'WMS',
+  //     request: 'GetFeatureInfo',
+  //     version: '1.3.0',
+  //     QUERY_LAYERS: 'eusm2021_eunis2019_group',
+  //     layers: 'eusm2021_eunis2019_group',
+  //     info_format: 'text/html',
+  //     transparent: true,
+  //     feature_count: 25,
+  //     I: 175,
+  //     J: 39,
+  //     width: '256',
+  //     height: '256',
+  //     viewParams: 'null;undefined',
+  //   }
+
+  //   await axios.get(
+  //     'https://emodnet.ec.europa.eu/geoviewer/proxy//https://ows.emodnet-seabedhabitats.eu/geoserver/emodnet_view/wms?', {
+  //       params: featureOptions,
+  //     }
+  //   ).then(r => console.log(r.data))
+  // }
+
+  // async function getWTMSLayer (layerName: Object) {
+  //   // layerName.params['atribution'] = actualLayer
+  //   // const layer = L.tileLayer.wms( layerName.url, layerName.params)
+  //   const WMSOptions = {
+  //     service: 'WMS',
+  //     attribution: actualLayer[0],
+  //     request: 'GetMap',
+  //     version: '1.3.0',
+  //     layers: 'eusm2021_eunis2019_group',
+  //     format: 'image/png',
+  //     transparent: true,
+  //     info_format: 'text/html',
+  //     tiled: 'true',
+  //     width: '150',
+  //     height: '125',
+  //     bounds: L.latLngBounds([[50, -11],[53, -8]])
+  //   }
+  //   const layer = L.tileLayer.wms( 'https://ows.emodnet-seabedhabitats.eu/geoserver/emodnet_view/wms?', WMSOptions)
+
+  //   map ? map.addLayer(layer) : null
+  //   // let nE = layer.getBounds().getNorthEast()
+  //   // let sW = layer.getBounds().getSouthWest()
+
+  //   // const newBounds = [[nE.lat, nE.lng],[sW.lat, sW.lng]]
+  //   // console.log(newBounds)
+  //   map.fitBounds([[46, -10],[52, 2]])
+  // }
+
+
+    // async function getWMSLayer2() {
+  //   const params = {
+  //     service: 'WMS',
+  //     attribution: actualLayer[0],
+  //     version: '1.3.0',
+  //     format: 'image/png',
+  //     transparent: true,
+  //     info_format: 'text/html',
+  //     width: '256',
+  //     height: '256',
+  //     viewParams: 'null;undefined',
+  //   }
+  //   const url = 'https://emodnet.ec.europa.eu/geoviewer/proxy//https://ows.emodnet-seabedhabitats.eu/geoserver/emodnet_view/wms?'
+
+  //   let layer = 'eusm2021_eunis2019_group'
+
+
+  //   const getBathymetry = new GetBathymetryLayer(url, params, layer)
+  //   await getBathymetry.getLayer().then( function () {
+  //     map.addLayer(getBathymetry.layer)
+  //   })
+  // }
+
+
+// {/* <LayersControl.Overlay name="Background Bathymetry">
+// { customWMSLayer }
+// </LayersControl.Overlay> */}
+
+// async function customWMSLayer2() {
+//   const getBathymetry = new GetBathymetryLayer()
+//   await getBathymetry.getLayer().then( function () {
+//     map.addLayer(getBathymetry.layer)
+//   })
+// }
+
+// {/* <TileLayer
+//   attribution={'WMTS'}
+//   // url={'https://tile.openstreetmap.org/{z}/{x}/{y}.png'}
+//   url={'https://ows.emodnet-seabedhabitats.eu/geoserver/emodnet_view/gwc/service/wmts/rest/eusm2021_bio_full/emodnet_view:eusm2019_bio_full/EPSG:4326/EPSG:4326:{z}/{x}/{y}?format=image/png8'}
+//   tms={true}
+// /> */}
+
+  // async function generateCanvasLayer() {
+  //   setLoading(true)
+  //   let url = "https://ihcantabria.github.io/Leaflet.CanvasLayer.Field/data/Bay_Speed.asc"
+
+  //   let text = await d3.text(url).then(async function (text) {
+
+  //     // const getCanvasLayer = new GetCanvasLayer(text)
+  //     // await getCanvasLayer.getLayer().then( function () {
+  //     //   map.addLayer(getCanvasLayer.layer)
+  //     //   setLoading(false)
+  //     // });
+
+
+  //     const s = ScalarField.fromASCIIGrid(text)
+  //     console.log(s)
+  //     const layer = LayerScalarField(s)
+
+  //     map.addLayer(layer)
+  //     setLoading(false)
+
+  //   });
+
+
+  //   // const getCanvasLayer = new GetCanvasLayer(url)
+  //   // await getCanvasLayer.getLayer().then( function () {
+
+  //   //   map.addLayer(getCanvasLayer.layer)
+  //   //   setLoading(false)
+  //   // });
+  // }
+
+  // async function getGeojson() {
+  //   await axios.get('https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/asc/bathymetry.geojson').then(r => {
+  //     return (
+  //       r.data.json
+  //     )
+  //   })
+  // }
+
+
+  // , "crs": {"type": "name", "properties": {"name": "urn:ogc:def:crs:EPSG::4326"}}

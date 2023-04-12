@@ -162,7 +162,7 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction}: Ma
 
             map.on('mousemove', function(evt: { originalEvent: any; }) {
               var latlng = map.mouseEventToLatLng(evt.originalEvent);
-              const getGeoblazeValue = new GetGeoblazeValue(getTifLayer.georaster)
+              const getGeoblazeValue = new GetGeoblazeValue(getTifLayer.georaster, latlng)
               getGeoblazeValue.getGeoblaze().then(function () {
                 let dep = getGeoblazeValue.dep
                 if (dep){

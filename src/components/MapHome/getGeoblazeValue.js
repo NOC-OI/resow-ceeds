@@ -1,13 +1,13 @@
-import 'leaflet/dist/leaflet';
 import geoblaze from 'geoblaze';
 
 export class GetGeoblazeValue {
-  constructor (georaster) {
+  constructor (georaster, latlng) {
     this.georaster = georaster
+    this.latlng = latlng
     this.dep = null
   }
 
   async getGeoblaze() {
-    this.dep = geoblaze.identify(getTifLayer.georaster, [latlng.lng, latlng.lat])
+    this.dep = geoblaze.identify(this.georaster, [this.latlng.lng, this.latlng.lat])
   };
 }

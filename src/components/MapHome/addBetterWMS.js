@@ -81,7 +81,8 @@ const betterWMS = L.TileLayer.WMS.extend({
 });
 
 export const callBetterWMS = (url, params) =>{
-  return betterWMS(url, params)
+  const layer = new betterWMS(url, params)
+  return layer
 }
 
 // https://emodnet.ec.europa.eu/geoviewer/proxy//https://ows.emodnet-seabedhabitats.eu/geoserver/emodnet_view/wms?

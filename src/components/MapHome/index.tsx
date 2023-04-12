@@ -97,7 +97,7 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction}: Ma
       setLoading(false)
     } else if (layerName.data_type === 'COG'){
 
-      if (window.location.pathname === '/') {
+      if (window.location.pathname === '/notileserver') {
         const getCOGLayer = new GetCOGLayer(layerName, actualLayer)
         await getCOGLayer.parseGeo().then( function () {
           map.addLayer(getCOGLayer.layer)

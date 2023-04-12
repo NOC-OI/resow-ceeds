@@ -21,7 +21,7 @@ export function SideSelection({layer, setLayer, calc, setCalc, selectedLayers, s
   const navigate = useNavigate();
 
   function handleShowLayerSelection() {
-    if (window.location.pathname === '/bathymetry') {
+    if (window.location.pathname === '/3d') {
       navigate('/')
       setLayer(false)
       setCalc(false)
@@ -32,7 +32,7 @@ export function SideSelection({layer, setLayer, calc, setCalc, selectedLayers, s
   }
 
   function handleShowCalcSelection() {
-    if (window.location.pathname === '/bathymetry') {
+    if (window.location.pathname === '/3d') {
       navigate('/')
       setLayer(false)
       setCalc(true)
@@ -48,8 +48,8 @@ export function SideSelection({layer, setLayer, calc, setCalc, selectedLayers, s
   }
 
   function handleGoToBathymetry() {
-    if (window.location.pathname !== '/bathymetry') {
-      navigate('/bathymetry')
+    if (window.location.pathname !== '/3d') {
+      navigate('/3d')
     }
   }
 

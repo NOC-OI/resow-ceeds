@@ -54,17 +54,6 @@ export function CalcType({ content, childs, setCalculationValue }: CalcTypeProps
     setSubCalcs(subCalcs => Object.keys(subCalcs).length === 0? childs : {})
   }
 
-  // function CalcTypeOptions({subCalc}: CalcTypeOptionsProps) {
-  //   return (
-  //     <CalcTypeOptionsContainer>
-  //       <label key={subCalcs[subCalc]['url']}>
-  //         <p onClick={handleShowCalcValues(subCalc)}>{subCalcs[subCalc]['name']}</p>
-  //       </label>
-  //     </CalcTypeOptionsContainer>
-  //   )
-  // }
-
-  console.log(subCalcs)
   return (
       <CalcTypeContainer>
         <div>

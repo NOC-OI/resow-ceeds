@@ -24,4 +24,10 @@ export const CalculationValueContainer = styled.div`
     line-height: 1.6;
     text-align: center;
   }
+  svg{
+    cursor: pointer;
+    &:hover {
+      color: ${(props) => props.theme['yellow-700']};
+    }
+  }
 `

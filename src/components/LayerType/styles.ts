@@ -21,33 +21,33 @@ export const LayerTypeContainer = styled.div`
 
 export const LayerTypeOptionsContainer = styled.div`
   font-size: 0.75rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  label{
+  div{
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    padding-right: 10px;
-    white-space: nowrap;
-    padding: 0.375rem;
-    cursor: pointer;
-    input{
-      vertical-align: middle;
-      padding-right: 0.25rem;
-      ::selection{
-        background-color: ${(props) => props.theme['blue-500']} !important;
-      }
+    label{
+      display: flex;
+      align-items: center;
+      padding-right: 10px;
+      white-space: nowrap;
+      padding: 0.375rem;
+      cursor: pointer;
+      input[type=checkbox]{
+        vertical-align: middle;
+        padding-right: 0.25rem;
+        ::selection{
+          background-color: ${(props) => props.theme['blue-500']} !important;
+        }
 
-      ::-moz-selection{
-        background-color: ${(props) => props.theme['blue-500']} !important;
+        ::-moz-selection{
+          background-color: ${(props) => props.theme['blue-500']} !important;
+        }
+      }
+      p {
+        vertical-align: middle;
+        padding-left: 0.25rem;
       }
     }
-    p {
-      vertical-align: middle;
-      padding-left: 0.25rem;
-    }
-  }
-  div {
     svg{
       padding-left: 0.375rem;
       cursor: pointer;
@@ -55,5 +55,8 @@ export const LayerTypeOptionsContainer = styled.div`
         color: ${(props) => props.theme['yellow-700']};
       }
     }
+  }
+  input[type=range]{
+    width: 100%
   }
 `

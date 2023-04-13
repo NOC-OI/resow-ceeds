@@ -11,6 +11,7 @@ import React from 'react';
 import { callBetterWMS } from './addBetterWMS';
 import './styles.css'
 import { GetGeoblazeValue } from './getGeoblazeValue';
+import { layer } from '@fortawesome/fontawesome-svg-core';
 
 // import axios from 'axios';
 // import { GetCanvasLayer } from './addCanvasLayer';
@@ -60,8 +61,8 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction}: Ma
 
   const [depth, setDepth] = useState(null)
 
-  const [emodnet, setEmodnet] = useState<boolean>(false)
-
+  const defaultWMSBounds = [[46, -10],[52, 2]]
+  // console.log(selectedLayers)
 
   // useEffect(() => {
   //   if (map){
@@ -80,10 +81,7 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction}: Ma
   async function getWMSLayer (layerName: any) {
     layerName.params['attribution'] = actualLayer[0]
     const layer = callBetterWMS(layerName.url, layerName.params)
-
-    map ? map.addLayer(layer) : null
-    map.fitBounds([[46, -10],[52, 2]])
-    setEmodnet(true)
+    return layer
   }
 
   // if (map) {
@@ -92,37 +90,37 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction}: Ma
 
   async function generateSelectedLayer () {
     const layerName = selectedLayers[actualLayer[0]]
+    let layer
+    let bounds
     if (layerName.data_type === 'WMS'){
-      await getWMSLayer(layerName)
-      setLoading(false)
+      layer = await getWMSLayer(layerName)
+      bounds = defaultWMSBounds
+
     } else if (layerName.data_type === 'COG'){
 
       if (window.location.pathname === '/notileserver') {
         const getCOGLayer = new GetCOGLayer(layerName, actualLayer)
         await getCOGLayer.parseGeo().then( function () {
-          map.addLayer(getCOGLayer.layer)
-          let nE = getCOGLayer.layer.getBounds().getNorthEast()
-          let sW = getCOGLayer.layer.getBounds().getSouthWest()
-
-          const newBounds = [[nE.lat, nE.lng],[sW.lat, sW.lng]]
-          map.fitBounds(newBounds)
-          setLoading(false)
+          layer = getCOGLayer.layer
+          let nE = layer.getBounds().getNorthEast()
+          let sW = layer.getBounds().getSouthWest()
+          bounds = [[nE.lat, nE.lng],[sW.lat, sW.lng]]
         });
       } else {
-
         const getCOGLayer = new GetTileLayer(layerName, actualLayer)
-
         await getCOGLayer.getTile().then( function () {
-          map.addLayer(getCOGLayer.layer, true)
-          const newBounds = [
+          layer = getCOGLayer.layer
+          bounds = [
             [getCOGLayer.bounds[3], getCOGLayer.bounds[0]],
             [getCOGLayer.bounds[1], getCOGLayer.bounds[2]]
           ]
-          map.fitBounds(newBounds)
-          setLoading(false)
         });
       }
     }
+    map.addLayer(layer, true)
+    map.fitBounds(bounds)
+    layer? layer.bringToFront(): null
+    setLoading(false)
   }
 
   function removeLayerFromMap(): void {
@@ -132,6 +130,7 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction}: Ma
         map.removeLayer(layer)
         map.setView(new L.LatLng(50.39415159013279, -7.712108868853798), 5);
         setLayerAction('')
+        setLoading(false)
       }
     })
   }
@@ -153,13 +152,6 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction}: Ma
           const getTifLayer = new GetTifLayer(url, [actualLayer])
           await getTifLayer.parseGeo().then(function () {
             map.addLayer(getTifLayer.layer)
-            let nE = getTifLayer.layer.getBounds().getNorthEast()
-            let sW = getTifLayer.layer.getBounds().getSouthWest()
-
-            const newBounds = [[nE.lat, nE.lng],[sW.lat, sW.lng]]
-            map.fitBounds(newBounds)
-
-
             map.on('mousemove', function(evt: { originalEvent: any; }) {
               var latlng = map.mouseEventToLatLng(evt.originalEvent);
               const getGeoblazeValue = new GetGeoblazeValue(getTifLayer.georaster, latlng)
@@ -185,15 +177,48 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction}: Ma
     setLayerAction('')
   }
 
+  async function changeMapZoom() {
+    map.eachLayer(function(layer: any){
+      if (actualLayer.includes(layer.options.attribution)){
+        if (selectedLayers[actualLayer[0]].data_type === 'WMS'){
+          map.fitBounds([[46, -10],[52, 2]])
+        } else if (selectedLayers[actualLayer[0]].data_type = 'COG'){
+          const newBounds = [
+            [layer.options.limits[3], layer.options.limits[0]],
+            [layer.options.limits[1], layer.options.limits[2]]
+          ]
+          map.fitBounds(newBounds)
+        }
+
+        layer.bringToFront()
+
+      }
+    })
+    setLayerAction('')
+  }
+
+  function changeMapOpacity() {
+    map.eachLayer(function(layer: any){
+      if (actualLayer.includes(layer.options.attribution)){
+        layer.setOpacity(selectedLayers[actualLayer[0]].opacity)
+      }
+    })
+  }
+
   useEffect(() => {
     if (layerAction === 'remove') {
       setLoading(true)
       removeLayerFromMap()
       setLayerAction('')
-      setLoading(false)
     } else if (layerAction === 'add'){
       setLoading(true)
       addLayerIntoMap()
+      setLayerAction('')
+    } else if (layerAction === 'zoom'){
+      changeMapZoom()
+      setLayerAction('')
+    } else if (layerAction === 'opacity'){
+      changeMapOpacity()
       setLayerAction('')
     }
   }, [selectedLayers])
@@ -216,6 +241,7 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction}: Ma
         center={[50.39415159013279, -7.712108868853798]}
         zoom={5}
         maxZoom={30}
+        minZoom={2}
         scrollWheelZoom={true}
         zoomControl={false}
         ref={setMap}

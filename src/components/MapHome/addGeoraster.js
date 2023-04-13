@@ -152,7 +152,8 @@ export class GetTileLayer {
     this.layer = L.tileLayer( tileUrl, {
       opacity: 1.0,
       maxZoom: 30,
-      attribution: this.actualLayer[0]
+      attribution: this.actualLayer[0],
+      limits: this.bounds
     })
   }
 }

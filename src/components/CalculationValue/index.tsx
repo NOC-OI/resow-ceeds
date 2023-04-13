@@ -20,7 +20,6 @@ export function CalculationValue({calculationValue, setCalculationValue}: Calcul
     param = Object.keys(calculationValue[Object.keys(calculationValue)[0]])
     results = Object.values(calculationValue[Object.keys(calculationValue)[0]])
   }
-  console.log(results)
   function handleClose(){
     setCalculationValue('')
   }
@@ -30,7 +29,6 @@ export function CalculationValue({calculationValue, setCalculationValue}: Calcul
       <FontAwesomeIcon icon={faCircleXmark} onClick={handleClose} />
       <h1>{Object.keys(calculationValue)[0]}</h1>
       {results[0].map(result => {
-        console.log(result)
         return (
           <p key={result}>{result}</p>
         )

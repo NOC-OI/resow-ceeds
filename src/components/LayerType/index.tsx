@@ -112,6 +112,7 @@ export function LayerType({ content, childs, selectedLayers, setSelectedLayers, 
 
     function handleClickZoom() {
       let layerInfo = JSON.parse(JSON.stringify({subLayer: `${content}_${subLayer}`, dataInfo: subLayers[subLayer]}))
+      setActiveOpacity( opacityIsClicked? layerInfo.subLayer: null)
       setActualLayer([layerInfo.subLayer])
       changeMapZoom(layerInfo)
     }

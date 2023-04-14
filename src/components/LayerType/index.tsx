@@ -131,7 +131,7 @@ export function LayerType({ content, childs, selectedLayers, setSelectedLayers, 
     return (
       <LayerTypeOptionsContainer>
         <div>
-          <label key={subLayers[subLayer]['url']} htmlFor={`${content}_${subLayer}`}>
+          <label key={`${content}_${subLayer}`} htmlFor={`${content}_${subLayer}`}>
             <input
               onChange={handleChangeMapLayer}
               value={JSON.stringify({subLayer: `${content}_${subLayer}`, dataInfo: subLayers[subLayer]})}
@@ -183,7 +183,7 @@ export function LayerType({ content, childs, selectedLayers, setSelectedLayers, 
           {Object.keys(subLayers).map(subLayer => {
             return (
               <LayerTypeOptions
-                key={subLayers[subLayer]['url']}
+                key={`${content}_${subLayer}`}
                 subLayer={subLayer}
               />
             )

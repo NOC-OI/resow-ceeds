@@ -1,9 +1,9 @@
 import styled from 'styled-components'
 
 export const LayerSelectionContainer = styled.div`
-  margin-left: -2.375rem;
+  margin-left: -2.30rem;
   height: 90vh;
-  width: 18rem;
+  width: 22rem;
   background-color: ${(props) => props.theme['white']};
   z-index: 9998;
   border-top-left-radius: 16px;
@@ -23,7 +23,7 @@ export const LayerSelectionTitle = styled.div`
   h1{
     padding: 0.375rem;
     padding-right: 2rem;
-    margin-left: 3.5rem;
+    margin-left: 3rem;
     font-size: 1.5rem;
     font-weight: bold;
   }

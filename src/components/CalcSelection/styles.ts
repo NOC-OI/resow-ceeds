@@ -23,7 +23,7 @@ export const CalcSelectionTitle = styled.div`
   h1{
     padding: 0.375rem;
     padding-right: 2rem;
-    margin-left: 3.5rem;
+    margin-left: 3rem;
     font-size: 1.5rem;
     font-weight: bold;
   }

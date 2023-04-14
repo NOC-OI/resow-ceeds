@@ -4,7 +4,7 @@ export const SideSelectionContainer = styled.div`
   height: 90vh;
   background-color: ${(props) => props.theme['white']};
   padding: 0.375rem;
-  width: 2rem;
+  width: 1.5rem;
   z-index: 9999;
   border-radius: 16px;
   box-shadow: 0px 4px 4px ${(props) => props.theme['black']};

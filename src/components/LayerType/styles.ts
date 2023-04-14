@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 export const LayerTypeContainer = styled.div`
   margin: 0.5rem;
-  margin-left: 3.5rem;
+  margin-left: 3rem;
   border-radius: 16px;
   padding: 0.375rem;
   box-shadow: 0px 4px 4px ${(props) => props.theme['black']};
@@ -20,7 +20,7 @@ export const LayerTypeContainer = styled.div`
 `
 
 export const LayerTypeOptionsContainer = styled.div`
-  font-size: 0.75rem;
+  font-size: 0.65rem;
   div{
     display: flex;
     justify-content: space-between;

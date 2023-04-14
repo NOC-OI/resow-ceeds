@@ -61,22 +61,20 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction}: Ma
 
   const [depth, setDepth] = useState(null)
 
-  const defaultWMSBounds = [[46, -10],[52, 2]]
-  // console.log(selectedLayers)
+  const defaultWMSBounds = [[48, -14],[52, -4]]
 
-  // useEffect(() => {
-  //   if (map){
-  //     customWMSLayer()
-  //   }
-  // }, [selectedLayers])
-
-  // useEffect(() => {
-  //   if (map){
-  //     generateCanvasLayer()
-  //   }
-  // }, [selectedLayers])
 
   const [loading, setLoading] = useState<boolean>(false)
+
+  function bringLayerToFront(layer: any) {
+    layer.bringToFront()
+    const frontLayers = ['Coastline', 'Marine Conservation Zones', 'Special Areas of Conservation']
+    map.eachLayer(function(mapLayer: any){
+      if (frontLayers.includes(mapLayer.options.attribution)){
+        mapLayer.bringToFront()
+      }
+    })
+  }
 
   async function getWMSLayer (layerName: any) {
     layerName.params['attribution'] = actualLayer[0]
@@ -84,9 +82,6 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction}: Ma
     return layer
   }
 
-  // if (map) {
-  //   console.log(map._layers)
-  // }
 
   async function generateSelectedLayer () {
     const layerName = selectedLayers[actualLayer[0]]
@@ -119,7 +114,7 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction}: Ma
     }
     map.addLayer(layer, true)
     map.fitBounds(bounds)
-    layer? layer.bringToFront(): null
+    layer? bringLayerToFront(layer): null
     setLoading(false)
   }
 
@@ -128,7 +123,7 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction}: Ma
     map.eachLayer(function(layer: any){
       if (actualLayer.includes(layer.options.attribution)){
         map.removeLayer(layer)
-        map.setView(new L.LatLng(50.39415159013279, -7.712108868853798), 5);
+        // map.setView(new L.LatLng(50.39415159013279, -7.712108868853798), 5);
         setLayerAction('')
         setLoading(false)
       }
@@ -181,7 +176,7 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction}: Ma
     map.eachLayer(function(layer: any){
       if (actualLayer.includes(layer.options.attribution)){
         if (selectedLayers[actualLayer[0]].data_type === 'WMS'){
-          map.fitBounds([[46, -10],[52, 2]])
+          map.fitBounds(defaultWMSBounds)
         } else if (selectedLayers[actualLayer[0]].data_type = 'COG'){
           const newBounds = [
             [layer.options.limits[3], layer.options.limits[0]],
@@ -190,7 +185,7 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction}: Ma
           map.fitBounds(newBounds)
         }
 
-        layer.bringToFront()
+        bringLayerToFront(layer)
 
       }
     })
@@ -276,6 +271,42 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction}: Ma
               />
             </Pane>
           </LayersControl.BaseLayer>
+          <LayersControl.Overlay checked name="Special Areas of Conservation">
+            <WMSTileLayer
+              attribution="Special Areas of Conservation"
+              url='https://mpa-ows.jncc.gov.uk/mpa_mapper/wms?'
+              params={{
+                service: 'WMS',
+                request: 'GetMap',
+                version: '1.3.0',
+                layers: 'sac_mc_full',
+                format: 'image/png',
+                transparent: true,
+                width: 256,
+                height: 256,
+              }}
+              opacity={1}
+              zIndex={9999}
+          />
+          </LayersControl.Overlay>
+          <LayersControl.Overlay checked name="Marine Conservation Zones">
+            <WMSTileLayer
+              attribution="Marine Conservation Zones"
+              url='https://mpa-ows.jncc.gov.uk/mpa_mapper/wms?'
+              params={{
+                service: 'WMS',
+                request: 'GetMap',
+                version: '1.3.0',
+                layers: 'mcz',
+                format: 'image/png',
+                transparent: true,
+                width: 256,
+                height: 256,
+              }}
+              opacity={1}
+              zIndex={9998}
+            />
+          </LayersControl.Overlay>
           <LayersControl.Overlay name="Coastline">
             <GeoJSON
               attribution="Coastlines"
@@ -479,3 +510,16 @@ export const MapHome = React.memo(MapHome1, mapPropsAreEqual)
 
 
   // , "crs": {"type": "name", "properties": {"name": "urn:ogc:def:crs:EPSG::4326"}}
+
+
+    // useEffect(() => {
+  //   if (map){
+  //     customWMSLayer()
+  //   }
+  // }, [selectedLayers])
+
+  // useEffect(() => {
+  //   if (map){
+  //     generateCanvasLayer()
+  //   }
+  // }, [selectedLayers])

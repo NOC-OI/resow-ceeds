@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 export const CalcTypeContainer = styled.div`
   margin: 0.5rem;
-  margin-left: 3.5rem;
+  margin-left: 3rem;
   border-radius: 16px;
   padding: 0.375rem;
   box-shadow: 0px 4px 4px ${(props) => props.theme['black']};

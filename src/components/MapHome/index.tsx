@@ -11,7 +11,7 @@ import React from 'react';
 import { callBetterWMS } from './addBetterWMS';
 import './styles.css'
 import { GetGeoblazeValue } from './getGeoblazeValue';
-import FreeDraw from 'leaflet-freedraw';
+// import FreeDraw from 'leaflet-freedraw';
 
 // import axios from 'axios';
 // import { GetCanvasLayer } from './addCanvasLayer';

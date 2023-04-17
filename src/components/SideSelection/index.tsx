@@ -45,6 +45,8 @@ export function SideSelection({layer, setLayer, calc, setCalc, selectedLayers, s
   }
   function handleEraseLayers() {
     setActualLayer(Object.keys(selectedLayers))
+    setLayer(false)
+    setCalc(false)
     setSelectedLayers({})
     setLayerAction('remove')
   }

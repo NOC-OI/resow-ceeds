@@ -124,9 +124,9 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction, sel
         map.removeLayer(layer)
         // map.setView(new L.LatLng(50.39415159013279, -7.712108868853798), 5);
         setLayerAction('')
-        setLoading(false)
       }
     })
+    setLoading(false)
   }
   useEffect(() => {
     if (map){

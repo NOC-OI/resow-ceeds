@@ -73,9 +73,20 @@ const betterWMS = L.TileLayer.WMS.extend({
     if (err) { console.log(err); return; } // do nothing if there's an error
 
     // Otherwise show the content in a popup, or something.
+    let verifyContent = content.split("body")[1]
+    verifyContent = verifyContent.replace(/(\r|\n|\s|>|<)/g, '')
+    // verifyContent = verifyContent.replace(/\n/g, '')
+    // verifyContent = verifyContent.replace(/\s/g, '')
+    // verifyContent = verifyContent.replace('<', '')
+    // verifyContent = verifyContent.replace('>', '')
+    verifyContent = verifyContent.replace('/', '')
+    let newContent = content
+    if (!verifyContent){
+      newContent = 'No data available'
+    }
     L.popup({ maxWidth: 200 })
       .setLatLng(latlng)
-      .setContent(content)
+      .setContent(newContent)
       .openOn(this._map);
   }
 });

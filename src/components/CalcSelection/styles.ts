@@ -1,5 +1,37 @@
 import styled from 'styled-components'
 
+export const LatLonLimitsContainer = styled.div`
+  padding-top: 0.5rem;
+  label{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom:0.5rem;
+    p{
+      width: 6rem;
+      font-size: 0.65rem;
+    }
+    input{
+      width: 4rem;
+      height: 0.9rem;
+      font-size: 0.65rem;
+    }
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
+    input:disabled{
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+  }
+`
+
 export const CalcSelectionContainer = styled.div`
   margin-left: -2.3rem;
   height: 90vh;
@@ -15,7 +47,7 @@ export const CalcSelectionContainer = styled.div`
 `
 export const CalcSelectionArea = styled.div`
   padding: 0.375rem;
-  padding-top: 1rem;
+  padding-top: 0.5rem;
   margin-left: 3rem;
   align-items: center;
   text-align: center;
@@ -25,20 +57,23 @@ export const CalcSelectionArea = styled.div`
     font-size: 1rem;
     font-weight: bold;
   }
-  div{
+`
+
+export const CalcButtonSelection = styled.div`
+  /* padding: 0.375rem; */
+  div:first-child{
     display: flex;
     justify-content: space-around;
     align-items: center;
     height: 2rem;
   }
 `
+
 export const ActiveButton = styled.div`
-  width: 100%;
   svg{
+    width: 4rem;
     color:  ${(props) => props.theme['black']};
     background: ${(props) => props.theme['yellow-400']};
-    width: 100%;
-    margin: 0.5rem;
     border-radius: 9px;
     padding: 0.375rem;
     box-shadow: 0px 4px 4px ${(props) => props.theme['black']};
@@ -50,11 +85,9 @@ export const ActiveButton = styled.div`
 `
 
 export const Button = styled.div`
-  width: 100%;
   svg{
+    width: 4rem;
     color:  ${(props) => props.theme['black']};
-    width: 100%;
-    margin: 0.5rem;
     border-radius: 9px;
     padding: 0.375rem;
     box-shadow: 0px 4px 4px ${(props) => props.theme['black']};
@@ -84,18 +117,18 @@ export const CalcSelectionTitle = styled.div`
 `
 
 export const CalcTypes = styled.div`
-  padding-top: 0.75rem;
+  padding-top: 0rem;
   h1{
     margin-left: 3rem;
     padding-right: 2rem;
-    padding-bottom: 0.375rem;
+    /* padding-bottom: 0.375rem; */
     font-size: 1rem;
     font-weight: bold;
   }
 `
 
 export const CalcTypesWithoutTitle = styled.div`
-  height: calc(90vh - 2.5rem - 0.75rem - 1rem - 2rem - 0.75rem - 1.375rem);
-  max-height: calc(90vh - 2.5rem - 0.75rem - 1rem - 2rem - 0.75rem - 1.375rem);
+  height: calc(90vh - 2.5rem - 0.75rem - 1rem - 2rem - 0.75rem - 1.375rem - 0.5rem - 2rem - 3.55rem);
+  max-height: calc(90vh - 2.5rem - 0.75rem - 1rem - 2rem - 0.75rem - 1.375rem - 0.5rem - 2rem - 3.55rem);
   overflow-y:auto;
 `

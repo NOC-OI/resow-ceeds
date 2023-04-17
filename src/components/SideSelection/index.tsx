@@ -14,9 +14,10 @@ interface SideSelectionProps{
   actualLayer: string[],
   setActualLayer: any,
   setLayerAction: any,
+  setSelectedArea?: any
 }
 
-export function SideSelection({layer, setLayer, calc, setCalc, selectedLayers, setSelectedLayers, actualLayer, setActualLayer, setLayerAction}: SideSelectionProps ) {
+export function SideSelection({layer, setLayer, calc, setCalc, selectedLayers, setSelectedLayers, actualLayer, setActualLayer, setLayerAction, setSelectedArea}: SideSelectionProps ) {
 
   const navigate = useNavigate();
 
@@ -27,6 +28,7 @@ export function SideSelection({layer, setLayer, calc, setCalc, selectedLayers, s
       setCalc(false)
     } else{
       setLayer((layer: any) => !layer)
+      setSelectedArea(false)
       setCalc(false)
     }
   }

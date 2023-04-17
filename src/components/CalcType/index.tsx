@@ -1,10 +1,6 @@
 import { ArrowCircleDown, ArrowCircleUp } from "phosphor-react";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { CalcTypeContainer, CalcTypeOptionsContainer } from "./styles";
-import { faCircleInfo, faMagnifyingGlass, faSliders } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { CalculationValue } from "../CalculationValue";
-import { calculateSize } from "@iconify/react";
 import { Loading } from "../Loading";
 
 interface keyable {
@@ -15,19 +11,27 @@ interface keyable {
 interface CalcTypeProps {
   content: String
   childs: Object
-  setCalculationValue: any
+  setCalculationValue: any,
+  latLonLimits: any,
+  selectedArea: any,
 }
 
 interface CalcTypeOptionsProps {
   subCalc: any,
 }
 
-async function handleShowCalcValues(params: keyable, setCalculationValue: any, setLoading: any){
+async function handleShowCalcValues(params: keyable, setCalculationValue: any, setLoading: any, latLonLimits: any, selectedArea: any){
   setLoading(true)
   setCalculationValue(null)
+
   const baseUrl = 'https://haigfras-api.herokuapp.com'
+  let url = `${baseUrl}${params['url']}`
+  if (selectedArea) {
+    url = `${url}&bbox=${latLonLimits[2].lat},${latLonLimits[0].lng},${latLonLimits[0].lat},${latLonLimits[2].lng}`
+  }
+
   async function getCalculationResults() {
-    const response = await fetch(`${baseUrl}${params['url']}`, {
+    const response = await fetch(url, {
         method: 'GET',
         mode: 'cors',
         headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin':'*'},
@@ -41,7 +45,7 @@ async function handleShowCalcValues(params: keyable, setCalculationValue: any, s
   await getCalculationResults()
 }
 
-export function CalcType({ content, childs, setCalculationValue }: CalcTypeProps) {
+export function CalcType({ content, childs, setCalculationValue, latLonLimits, selectedArea}: CalcTypeProps) {
 
   const [subCalcs, setSubCalcs] = useState<keyable>({})
 
@@ -71,7 +75,7 @@ export function CalcType({ content, childs, setCalculationValue }: CalcTypeProps
               <CalcTypeOptionsContainer key={subCalcs[subCalc]['url']}>
                 <label>
                   {/* <p>{subCalcs[subCalc]['name']}</p> */}
-                  <p onClick={async() => {await handleShowCalcValues(subCalcs[subCalc], setCalculationValue, setLoading)}}>{subCalcs[subCalc]['name']}</p>
+                  <p onClick={async() => {await handleShowCalcValues(subCalcs[subCalc], setCalculationValue, setLoading, latLonLimits, selectedArea)}}>{subCalcs[subCalc]['name']}</p>
                 </label>
               </CalcTypeOptionsContainer>
             )

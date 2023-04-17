@@ -17,9 +17,7 @@ export class GetCOGLayer {
     const self = this
     const scale = chroma.scale(['white', 'black']).domain([-11022, 0]);
 
-    console.log("start search image")
     await parseGeoraster(this.url).then(async (georaster) => {
-      console.log("end search image")
       // const options = { left: 0, top: 0, right: 4000, bottom: 4000, width: 10, height: 10 };
       // georaster.getValues(options).then(values => {
       //   console.log("clipped values are", values);
@@ -40,7 +38,6 @@ export class GetCOGLayer {
         // mask_strategy: "inside"
       });
     });
-    console.log("end create cog layer")
   }
 }
 
@@ -58,7 +55,6 @@ export class GetTifLayer {
     const self = this
     // const scale = chroma.scale(['white', 'black']).domain([-11022, 0]);
 
-    console.log("start search image")
     await fetch(this.url)
     .then(async response => await response.arrayBuffer())
     .then(async arrayBuffer => {

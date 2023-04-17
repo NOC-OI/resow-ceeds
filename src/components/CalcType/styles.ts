@@ -6,13 +6,14 @@ export const CalcTypeContainer = styled.div`
   margin-left: 3rem;
   border-radius: 16px;
   padding: 0.375rem;
+  font-weight: bold;
   box-shadow: 0px 4px 4px ${(props) => props.theme['black']};
   header{
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-size: 1rem;
+    font-size: 0.9rem;
     &:hover {
       color: ${(props) => props.theme['yellow-700']};
     }
@@ -20,10 +21,11 @@ export const CalcTypeContainer = styled.div`
 `
 
 export const CalcTypeOptionsContainer = styled.div`
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-weight: normal;
   label{
     display: flex;
     align-items: center;

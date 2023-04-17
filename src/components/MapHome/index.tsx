@@ -1,21 +1,14 @@
-import { MapContainer, useMap, Marker, Popup, TileLayer, useMapEvent, WMSTileLayer, GeoJSON, LayersControl, Pane } from 'react-leaflet'
+import { MapContainer, useMap, Marker, Popup, TileLayer, useMapEvent, WMSTileLayer, GeoJSON, LayersControl, Pane, FeatureGroup } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css';
 import { useEffect, useMemo, useState } from 'react';
 import * as L from 'leaflet';
 import { coastline } from '../../coastline';
-// import { bathymetry } from '../../bathymetry';
 import { InfoBox } from '../InfoBox';
 import { GetCOGLayer, GetTifLayer, GetTileLayer } from './addGeoraster';
 import { Loading } from '../Loading';
 import React from 'react';
 import { callBetterWMS } from './addBetterWMS';
-import './styles.css'
 import { GetGeoblazeValue } from './getGeoblazeValue';
-// import FreeDraw from 'leaflet-freedraw';
-
-// import axios from 'axios';
-// import { GetCanvasLayer } from './addCanvasLayer';
-// import { GetBathymetryLayer } from './addBathymetry';
 
 interface DisplayPositionProps{
   map: any,
@@ -49,11 +42,12 @@ interface MapProps{
   layerAction: String,
   setLayerAction: any,
   selectedArea: boolean,
+  latLonLimits: any,
 }
 
 
 
-function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction, selectedArea}: MapProps) {
+function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction, selectedArea, latLonLimits}: MapProps) {
   const MAPBOX_API_KEY = import.meta.env.VITE_MAPBOX_API_KEY;
   const MAPBOX_USERID = 'mapbox/satellite-v9';
   const MAPBOX_ATTRIBUTION = "Map data &copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors, Imagery © <a href='https://www.mapbox.com/'>Mapbox</a>"
@@ -64,9 +58,9 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction, sel
 
   const defaultWMSBounds = [[48, -14],[52, -4]]
 
-  if (map) {
-    console.log(map._layers)
-  }
+  // if (map) {
+  //   console.log(map._layers)
+  // }
 
   const [loading, setLoading] = useState<boolean>(false)
 
@@ -177,18 +171,91 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction, sel
     setLayerAction('')
   }
 
+  // const freeDraw = new FreeDraw({
+  //   mode: FreeDraw.ALL,
+  //   leaveModeAfterCreate:true,
+  //   maximumPolygons: 1,
+  //   smoothFactor: 0.3,
+  //   simplifyFactor: 2,
+  //   strokeWidth: 3
+  // });
+
   // useEffect(() => {
   //   if (selectedArea){
-  //     const freeDraw = new FreeDraw({
-  //       mode: FreeDraw.ALL,
-  //       maximumPolygons: 1,
-  //       smoothFactor: 0.3,
-  //       simplifyFactor: 2,
-  //       strokeWidth: 3
-  //     });
-  //     const layer = freeDraw
-  //     layer.options.attribution = 'teste'
   //     map.addLayer(freeDraw);
+
+  //     freeDraw.on("markers",function(event){
+  //       if(event.eventType=='create' && event.latLngs.length > 0){
+
+  //         //capture the current polygon bounds (store in 1st position)
+  //         var latLngs = event.latLngs[0];
+  //         freeDraw.clear(); //clear freedraw markers
+  //         //create polygon from lat lng bounds retrieved
+  //         var polygon = L.polygon(
+  //             latLngs.map(function(latLng){
+  //                 return [latLng.lat,latLng.lng];
+  //             }), {
+  //                 color: 'red',
+  //             }).addTo(map);
+  //       }
+  //     })
+  //   }
+  // }, [selectedArea])
+
+  useEffect(() => {
+    if (map){
+      map.eachLayer(function(layer: any){
+        if (layer.options.attribution === 'polygon'){
+          map.removeLayer(layer)
+        }
+      });
+      const polygon = L.polygon(latLonLimits,
+        {
+          attribution: 'polygon',
+          color: "#ff96bc",
+          weight: 2,
+          opacity: 0.7,
+        },
+      )
+      polygon.addTo(map);
+    }
+  }, [latLonLimits])
+
+
+
+  useEffect(() => {
+    if (selectedArea){
+      const polygon = L.polygon(latLonLimits,
+        {
+          attribution: 'polygon',
+          color: "#ff96bc",
+          weight: 2,
+          opacity: 0.7,
+        },
+      )
+      polygon.addTo(map);
+    } else {
+      if (map){
+        map.eachLayer(function(layer: any){
+          if (layer.options.attribution === 'polygon'){
+            map.removeLayer(layer)
+          }
+        });
+      }
+    }
+  }, [selectedArea])
+
+  // useEffect(() => {
+  //   if (latLonLimits){
+  //     polygon.addTo(map);
+  //   } else {
+  //     if (map){
+  //       map.eachLayer(function(layer: any){
+  //         if (layer.options.attribution === 'polygon'){
+  //           map.removeLayer(layer)
+  //         }
+  //       });
+  //     }
   //   }
   // }, [selectedArea])
 
@@ -333,11 +400,11 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction, sel
   )
 }
 
-
 function mapPropsAreEqual(prevMap: any, nextMap: any) {
   return prevMap.selectedLayers === nextMap.selectedLayers
     && prevMap.actualLayer === nextMap.actualLayer
-    && prevMap.selectedArea === nextMap.selectedArea;
+    && prevMap.selectedArea === nextMap.selectedArea
+    && prevMap.latLonLimits === nextMap.latLonLimits;
 }
 
 export const MapHome = React.memo(MapHome1, mapPropsAreEqual)
@@ -532,3 +599,15 @@ export const MapHome = React.memo(MapHome1, mapPropsAreEqual)
   //     console.log(event);
   //   });
   // }
+
+
+  // import { DrawPolygon } from './addLeafletDraw';
+// import 'leaflet-path-drag';
+// import FreeDraw from 'leaflet-freedraw';
+// import 'leaflet-draw'
+// import 'leaflet-path-transform';
+
+// import axios from 'axios';
+// import { GetCanvasLayer } from './addCanvasLayer';
+// import { GetBathymetryLayer } from './addBathymetry';
+// import { bathymetry } from '../../bathymetry';

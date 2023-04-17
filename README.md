@@ -11,7 +11,7 @@ The product is in the development phase and the following features have already 
 
 ### Opening of COG
 
-Two systems for opening COG Files were implemented. The first uses a tile server [www.titiler.xyz](www.titiler.xyz) and the other uses the repository [https://github.com/GeoTIFF/georaster](georaster).
+Two systems for opening COG Files were implemented. The first uses a tile server [www.titiler.xyz](www.titiler.xyz) and the other uses the repository [georaster](https://github.com/GeoTIFF/georaster).
 
 It is still in the process of analyzing the opening speed and rendering of the images in each of the strategies
 
@@ -19,9 +19,17 @@ It is still in the process of analyzing the opening speed and rendering of the i
 
 Openings of geojson files were implemented, which are available both in the JASMIN Object Store and also available within the repository itself
 
-O app foi deployado em um servidor gratuito heroku e pode ser acessado atraves do link [http://imfe-pilot.herokuapp.com/](http://imfe-pilot.herokuapp.com/)
+### Acessing WMS services
 
-O produto esta na fase de desenvolvimetno e as seguintes feicoes ja foram implementadas:
+Acessing JNCC and EMODNET WMS services to add layers to map.
+
+### Use cases calculation
+
+Performing calculations based on information provided by the user. The calculations are performed in an API, available at [https://haigfras-api.herokuapp.com/](https://haigfras-api.herokuapp.com/) and in the repository [api_calculations_use_cases](https://git.noc.ac.uk/ocean-informatics/imfepilot/api_calculations_use_cases).
+
+### 3D Map
+
+This is just a 3d map using the mapboxgl library. It still needs to be evaluated in more detail to verify its applicability to the project.
 
 ## Available Scripts
 

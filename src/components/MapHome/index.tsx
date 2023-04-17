@@ -11,7 +11,7 @@ import React from 'react';
 import { callBetterWMS } from './addBetterWMS';
 import './styles.css'
 import { GetGeoblazeValue } from './getGeoblazeValue';
-import { layer } from '@fortawesome/fontawesome-svg-core';
+import FreeDraw from 'leaflet-freedraw';
 
 // import axios from 'axios';
 // import { GetCanvasLayer } from './addCanvasLayer';
@@ -47,12 +47,13 @@ interface MapProps{
   selectedLayers: keyable,
   actualLayer: string[],
   layerAction: String,
-  setLayerAction: any
+  setLayerAction: any,
+  selectedArea: boolean,
 }
 
 
 
-function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction}: MapProps) {
+function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction, selectedArea}: MapProps) {
   const MAPBOX_API_KEY = import.meta.env.VITE_MAPBOX_API_KEY;
   const MAPBOX_USERID = 'mapbox/satellite-v9';
   const MAPBOX_ATTRIBUTION = "Map data &copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors, Imagery © <a href='https://www.mapbox.com/'>Mapbox</a>"
@@ -63,6 +64,9 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction}: Ma
 
   const defaultWMSBounds = [[48, -14],[52, -4]]
 
+  if (map) {
+    console.log(map._layers)
+  }
 
   const [loading, setLoading] = useState<boolean>(false)
 
@@ -75,6 +79,8 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction}: Ma
       }
     })
   }
+
+
 
   async function getWMSLayer (layerName: any) {
     layerName.params['attribution'] = actualLayer[0]
@@ -119,7 +125,6 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction}: Ma
   }
 
   function removeLayerFromMap(): void {
-
     map.eachLayer(function(layer: any){
       if (actualLayer.includes(layer.options.attribution)){
         map.removeLayer(layer)
@@ -172,6 +177,22 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction}: Ma
     setLayerAction('')
   }
 
+  // useEffect(() => {
+  //   if (selectedArea){
+  //     const freeDraw = new FreeDraw({
+  //       mode: FreeDraw.ALL,
+  //       maximumPolygons: 1,
+  //       smoothFactor: 0.3,
+  //       simplifyFactor: 2,
+  //       strokeWidth: 3
+  //     });
+  //     const layer = freeDraw
+  //     layer.options.attribution = 'teste'
+  //     map.addLayer(freeDraw);
+  //   }
+  // }, [selectedArea])
+
+
   async function changeMapZoom() {
     map.eachLayer(function(layer: any){
       if (actualLayer.includes(layer.options.attribution)){
@@ -218,17 +239,6 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction}: Ma
     }
   }, [selectedLayers])
 
-  // function pointToLayer() {
-  //   return null
-  //   // return L.marker(latlng, { icon: {}}); // Change the icon to a custom icon
-  // }
-
-  // function onEachFeaturePoint(feature, layer) {
-  //   layer.on('mousemove', function (event) {
-  //     console.log(event);
-  //   });
-  // }
-
   const displayMap = useMemo(
     () => (
       <MapContainer
@@ -241,18 +251,6 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction}: Ma
         zoomControl={false}
         ref={setMap}
       >
-        {/* <GeoJSON
-          attribution="bathymetry"
-          data={bathymetry}
-          pointToLayer={pointToLayer}
-          onEachFeature={onEachFeaturePoint}
-          style={{
-            color: "#5a5c5a",
-            weight: 0,
-            opacity: 0,
-            fillOpacity: 0,
-          }}
-        /> */}
         <LayersControl>
           <LayersControl.BaseLayer checked name="OSM">
             <Pane name="OSM" style={{ zIndex: -1 }} >
@@ -338,7 +336,8 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction}: Ma
 
 function mapPropsAreEqual(prevMap: any, nextMap: any) {
   return prevMap.selectedLayers === nextMap.selectedLayers
-    && prevMap.actualLayer === nextMap.actualLayer;
+    && prevMap.actualLayer === nextMap.actualLayer
+    && prevMap.selectedArea === nextMap.selectedArea;
 }
 
 export const MapHome = React.memo(MapHome1, mapPropsAreEqual)
@@ -523,3 +522,13 @@ export const MapHome = React.memo(MapHome1, mapPropsAreEqual)
   //     generateCanvasLayer()
   //   }
   // }, [selectedLayers])
+  // function pointToLayer() {
+  //   return null
+  //   // return L.marker(latlng, { icon: {}}); // Change the icon to a custom icon
+  // }
+
+  // function onEachFeaturePoint(feature, layer) {
+  //   layer.on('mousemove', function (event) {
+  //     console.log(event);
+  //   });
+  // }

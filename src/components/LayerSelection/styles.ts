@@ -20,6 +20,7 @@ export const LayerSelectionTitle = styled.div`
   border-top-right-radius: 16px;
   border-top-left-radius: 16px;
   margin: 0;
+  text-align: center;
   h1{
     padding: 0.375rem;
     padding-right: 2rem;

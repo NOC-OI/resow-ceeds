@@ -11,6 +11,9 @@ export function TileServer() {
 
   const [calc, setCalc] = useState<boolean>(false)
 
+  const [selectedArea, setSelectedArea] = useState(false);
+
+
   const [selectedLayers, setSelectedLayers] = useState<Object>({})
 
   const [actualLayer, setActualLayer] = useState<string[]>([''])
@@ -46,6 +49,8 @@ export function TileServer() {
         }
         {calc ?
           <CalcSelection setCalculationValue={setCalculationValue}
+            selectedArea={selectedArea}
+            setSelectedArea={setSelectedArea}
           /> :
           null
         }
@@ -62,6 +67,7 @@ export function TileServer() {
         actualLayer={actualLayer}
         layerAction={layerAction}
         setLayerAction={setLayerAction}
+        selectedArea={selectedArea}
       />
     </TileServerContainer>
   )

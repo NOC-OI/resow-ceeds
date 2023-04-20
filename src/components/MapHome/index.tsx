@@ -111,10 +111,22 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction, sel
           ]
         });
       }
+    } else if (layerName.data_type === 'Marker-COG'){
+
+      const getCOGLayer = new GetTileLayer(layerName, actualLayer, 'marker')
+      await getCOGLayer.getTile().then( function () {
+        layer = getCOGLayer.layer
+        bounds = [
+          [getCOGLayer.bounds[3], getCOGLayer.bounds[0]],
+          [getCOGLayer.bounds[1], getCOGLayer.bounds[2]]
+        ]
+      });
     }
     map.addLayer(layer, true)
-    map.fitBounds(bounds)
-    layer? bringLayerToFront(layer): null
+    if (layerName.data_type !== 'Marker-COG'){
+      map.fitBounds(bounds)
+      layer? bringLayerToFront(layer): null
+    }
     setLoading(false)
   }
 

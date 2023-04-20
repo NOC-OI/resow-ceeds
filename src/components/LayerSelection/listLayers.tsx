@@ -387,6 +387,32 @@ let listValues = [{
       data_type: 'COG'
     },
   },
+},
+{
+  layerClass: 'Seabed Images 2',
+  layerNames: {
+    Image1: {
+      url: 'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output/output_raster_cog.tif',
+      data_type: 'Marker-COG'
+    },
+    Image2: {
+      url:  'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/cog_rep_M58_10441297_12987749054970_1.tif',
+      data_type: 'Marker-COG'
+    },
+    Image3: {
+      url:  'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/cog_rep_M58_10441297_12987749390121_1.tif',
+      data_type: 'Marker-COG'
+    },
+    Image4: {
+      url:  'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/cog_rep_M58_10441297_12987755746830_1.tif',
+      data_type: 'Marker-COG'
+    },
+    Image5: {
+      url:  'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/cog_rep_M58_10441297_12987757649461_1.tif',
+      data_type: 'Marker-COG'
+    },
+  },
+
 }]
 
 function sortListLayers(listLayers: any[]){

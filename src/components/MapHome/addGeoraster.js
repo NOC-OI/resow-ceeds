@@ -89,10 +89,11 @@ export class GetTifLayer {
 
 
 export class GetTileLayer {
-  constructor (layerName, actualLayer) {
-    this.layerBame = layerName
+  constructor (layerName, actualLayer, dataType='COG') {
+    this.layerName = layerName
     this.actualLayer = actualLayer
     this.url = layerName.url
+    this.dataType = dataType
     this.layer = null
     this.colourScheme = 'gray'
     this.bounds = null
@@ -105,51 +106,59 @@ export class GetTileLayer {
     const cogStats = await axios.get(`${TITILER_URL}/cog/statistics?url=${encodeURIComponent(this.url)}`).then(r => r.data)
 
     this.bounds = cogInfo.bounds
+    if (this.dataType === 'marker'){
+      this.layer = L.marker([
+        (this.bounds[3] + this.bounds[1])/2,
+        (this.bounds[2] + this.bounds[0])/2
+      ])
+      this.layer.bindPopup(`<b>${this.actualLayer[0]}</b>`).openPopup();
 
-    const bands = []
-    for (let i = 0; i < cogInfo.band_descriptions.length; i++) {
-      bands.push(cogInfo.band_descriptions[i][0])
-    }
-    let bidx = [1]
-    if (bands.length >= 3) {
-      bidx = [1, 2, 3]
-    }
-
-    const rescale = []
-    for (let i = 0; i < bands.length; i++) {
-      const stats = cogStats[bands[i]]
-      rescale.push(`${stats.percentile_2},${stats.percentile_98}`)
-    }
-
-    const url = this.url
-    const args = {
-      bidx: bidx.length === 1 ? bidx[0] : bidx,
-      rescale: rescale.length === 1 ? rescale[0] : rescale,
-      url
-    }
-
-    const tileJson = await axios.get(
-      `${TITILER_URL}/cog/WebMercatorQuad/tilejson.json`,
-      {
-        params: args,
-        paramsSerializer: {
-          encode: params => parse(params),
-          serialize: params => stringify(params, { arrayFormat: 'repeat' })
-        }
+    } else {
+      const bands = []
+      for (let i = 0; i < cogInfo.band_descriptions.length; i++) {
+        bands.push(cogInfo.band_descriptions[i][0])
       }
-    ).then(r => r.data)
+      let bidx = [1]
+      if (bands.length >= 3) {
+        bidx = [1, 2, 3]
+      }
 
-    let tileUrl = tileJson.tiles[0]
-    if (bands.length === 1) {
-      tileUrl += `&colormap_name=${this.colourScheme}`
+      const rescale = []
+      for (let i = 0; i < bands.length; i++) {
+        const stats = cogStats[bands[i]]
+        rescale.push(`${stats.percentile_2},${stats.percentile_98}`)
+      }
+
+      const url = this.url
+      const args = {
+        bidx: bidx.length === 1 ? bidx[0] : bidx,
+        rescale: rescale.length === 1 ? rescale[0] : rescale,
+        url
+      }
+
+      const tileJson = await axios.get(
+        `${TITILER_URL}/cog/WebMercatorQuad/tilejson.json`,
+        {
+          params: args,
+          paramsSerializer: {
+            encode: params => parse(params),
+            serialize: params => stringify(params, { arrayFormat: 'repeat' })
+          }
+        }
+      ).then(r => r.data)
+
+      let tileUrl = tileJson.tiles[0]
+      if (bands.length === 1) {
+        tileUrl += `&colormap_name=${this.colourScheme}`
+      }
+
+
+      this.layer = L.tileLayer( tileUrl, {
+        opacity: 1.0,
+        maxZoom: 30,
+        attribution: this.actualLayer[0],
+        limits: this.bounds
+      })
     }
-
-
-    this.layer = L.tileLayer( tileUrl, {
-      opacity: 1.0,
-      maxZoom: 30,
-      attribution: this.actualLayer[0],
-      limits: this.bounds
-    })
   }
 }

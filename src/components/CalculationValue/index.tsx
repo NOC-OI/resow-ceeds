@@ -11,11 +11,11 @@ interface CalculationValueProps {
 export function CalculationValue({calculationValue, setCalculationValue}: CalculationValueProps) {
 
   let param
-  let results: string[][]
+  let results: string[][][]
 
   if (!calculationValue){
     param = '---'
-    results = [['---']]
+    results = [[['---']]]
   } else{
     param = Object.keys(calculationValue[Object.keys(calculationValue)[0]])
     results = Object.values(calculationValue[Object.keys(calculationValue)[0]])
@@ -28,9 +28,16 @@ export function CalculationValue({calculationValue, setCalculationValue}: Calcul
     <CalculationValueContainer>
       <FontAwesomeIcon icon={faCircleXmark} onClick={handleClose} />
       <h1>{Object.keys(calculationValue)[0]}</h1>
-      {results[0].map(result => {
+      {results.map(result => {
+        let elements = Object.values(result)[0]
+        console.log(elements)
         return (
-          <p key={result}>{result}</p>
+          elements.map(element =>{
+            console.log(element)
+            return (
+              <p key={element}>{element}</p>
+            )
+          })
         )
       })}
       {/* <span>{result}</span> */}

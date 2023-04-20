@@ -11,10 +11,11 @@ interface LayerSelectionProps{
   setActualLayer: any,
   layerAction: String,
   setLayerAction: any,
+  layerLegend: any,
+  setLayerLegend: any,
 }
 
-
-export function LayerSelection({selectedLayers, setSelectedLayers, actualLayer, setActualLayer, layerAction, setLayerAction}: LayerSelectionProps) {
+export function LayerSelection({selectedLayers, setSelectedLayers, actualLayer, setActualLayer, layerAction, setLayerAction, layerLegend, setLayerLegend}: LayerSelectionProps) {
 
   const [layerClasses, setLayerClasses] = useState(listLayers)
 
@@ -36,6 +37,8 @@ export function LayerSelection({selectedLayers, setSelectedLayers, actualLayer, 
               setActualLayer={setActualLayer}
               layerAction={layerAction}
               setLayerAction={setLayerAction}
+              layerLegend={layerLegend}
+              setLayerLegend={setLayerLegend}
             />
           )
         })}

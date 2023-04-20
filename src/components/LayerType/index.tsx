@@ -1,7 +1,7 @@
 import { ArrowCircleDown, ArrowCircleUp } from "phosphor-react";
 import { useRef, useState } from "react";
 import { LayerTypeContainer, LayerTypeOptionsContainer } from "./styles";
-import { faCircleInfo, faMagnifyingGlass, faSliders } from "@fortawesome/free-solid-svg-icons";
+import { faCircleInfo, faList, faMagnifyingGlass, faSliders } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface keyable {
@@ -18,18 +18,20 @@ interface LayerTypeProps {
   setActualLayer: any,
   layerAction: String,
   setLayerAction: any,
+  layerLegend: any,
+  setLayerLegend: any,
 }
 
 interface LayerTypeOptionsProps {
   subLayer: any,
 }
 
-export function LayerType({ content, childs, selectedLayers, setSelectedLayers, actualLayer, setActualLayer, layerAction, setLayerAction }: LayerTypeProps) {
+
+export function LayerType({ content, childs, selectedLayers, setSelectedLayers, actualLayer, setActualLayer, layerAction, setLayerAction, layerLegend, setLayerLegend }: LayerTypeProps) {
 
   const [subLayers, setSubLayers] = useState<keyable>({})
 
   const [activeOpacity, setActiveOpacity] = useState(null)
-
 
   const [isActive, setIsActive] = useState(false);
 
@@ -96,7 +98,6 @@ export function LayerType({ content, childs, selectedLayers, setSelectedLayers, 
     const [opacityIsClicked, setOpacityIsClicked] = useState(
       activeOpacity === `${content}_${subLayer}` ? true : false
     );
-    // const [opacityIsClicked, setOpacityIsClicked] = useState(false)
 
     function handleChangeMapLayer(e: any) {
       const layerInfo = JSON.parse(e.target.value)
@@ -115,6 +116,20 @@ export function LayerType({ content, childs, selectedLayers, setSelectedLayers, 
       setActiveOpacity( opacityIsClicked? layerInfo.subLayer: null)
       setActualLayer([layerInfo.subLayer])
       changeMapZoom(layerInfo)
+    }
+
+    async function handleClickLegend(){
+      let newParams = subLayers[subLayer].params
+      newParams.request = 'GetLegendGraphic'
+      newParams.layer = newParams.layers
+      console.log(subLayer)
+      async function getURILegend(newParams: any) {
+        const response = await fetch(subLayers[subLayer].url + new URLSearchParams(newParams))
+        const url = response.url;
+        setLayerLegend({layerName: subLayer, url: url})
+      }
+      await getURILegend(newParams)
+
     }
 
     function handleClickSlider() {
@@ -144,11 +159,18 @@ export function LayerType({ content, childs, selectedLayers, setSelectedLayers, 
             <div>
               <FontAwesomeIcon icon={faCircleInfo} />
               <FontAwesomeIcon
+                icon={faList}
+                title="Show Legend"
+                onClick={handleClickLegend}
+              />
+              <FontAwesomeIcon
                 icon={faMagnifyingGlass}
+                title="Zoom to the layer"
                 onClick={handleClickZoom}
               />
               <FontAwesomeIcon
                 icon={faSliders}
+                title="Change Opacity"
                 onClick={handleClickSlider}
               />
             </div>
@@ -192,5 +214,3 @@ export function LayerType({ content, childs, selectedLayers, setSelectedLayers, 
       </LayerTypeContainer>
   )
 }
-
-// https://mpa-ows.jncc.gov.uk/geoserver/mpa_mapper/wms?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&FORMAT=image%2Fpng8&TRANSPARENT=true&LAYERS=prot_annexi_reef_full&TILED=TRUE&WIDTH=256&HEIGHT=256&CRS=EPSG%3A4327&STYLES=&BBOX=40%2C-10%2C50%2C2

@@ -17,6 +17,26 @@ export class GetCOGLayer {
     const self = this
     const scale = chroma.scale(['white', 'black']).domain([-11022, 0]);
 
+    // await fetch(this.url)
+    // .then(async response => await response.arrayBuffer())
+    // .then(async arrayBuffer => {
+    //   await parseGeoraster(arrayBuffer).then(async georaster => {
+    //     this.layer = new GeoRasterLayer({
+    //       georaster: georaster,
+    //       attribution: this.actualLayer[0],
+    //       resolution: 256,
+    //       opacity: 0.7,
+    //       debugLevel: 0,
+    //       // pixelValuesToColorFn: function (values) {
+    //       //   const elevation = values[0];
+    //       //   if (elevation > 0) return "rgba(34, 15, 50,0)";
+    //       //   return scale(elevation).hex();
+    //       // }
+    //       // mask: continent,
+    //       // mask_strategy: "inside"
+    //     });
+    //   })
+    // })
     await parseGeoraster(this.url).then(async (georaster) => {
       // const options = { left: 0, top: 0, right: 4000, bottom: 4000, width: 10, height: 10 };
       // georaster.getValues(options).then(values => {
@@ -111,7 +131,20 @@ export class GetTileLayer {
         (this.bounds[3] + this.bounds[1])/2,
         (this.bounds[2] + this.bounds[0])/2
       ])
-      this.layer.bindPopup(`<b>${this.actualLayer[0]}</b>`).openPopup();
+      let popupText = `
+        <b>${this.actualLayer[0]}</b><br>
+        CEDA: XXXXXXXX<br>
+        TILE NUMBER:<em>10</em><br>
+        TOTAL AREA OF SURVEY:<em>2km²</em><br>
+        EXTENT OF SURVEY:<em>100m</em><br>
+        HABITAT:<em>XXXX</em><br>
+        SUBSTRATE:<em>XXXX</em><br>
+        iFDO SUMMARY:<em>XXXX</em><br>
+        <em>XXXXX</em><br>
+        <em>XXXXX</em><br>
+      `
+      this.layer.options.attribution = this.actualLayer[0]
+      this.layer.bindPopup(popupText).openPopup();
 
     } else {
       const bands = []

@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-export const CalculationValueContainer = styled.div`
+export const LayerLegendContainer = styled.div`
   right: 0.5rem;
   top: 5vh;
   width: max-content;
@@ -30,6 +30,7 @@ export const CalculationValueContainer = styled.div`
     padding-bottom: 0.375rem;
   }
   svg{
+    text-align: right;
     cursor: pointer;
     &:hover {
       color: ${(props) => props.theme['yellow-700']};

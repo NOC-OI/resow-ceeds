@@ -26,21 +26,20 @@ export function CalculationValue({calculationValue, setCalculationValue}: Calcul
 
   return (
     <CalculationValueContainer>
-      <FontAwesomeIcon icon={faCircleXmark} onClick={handleClose} />
+      <div>
+        <FontAwesomeIcon icon={faCircleXmark} onClick={handleClose} />
+      </div>
       <h1>{Object.keys(calculationValue)[0]}</h1>
       {results.map(result => {
         let elements = Object.values(result)[0]
-        console.log(elements)
         return (
           elements.map(element =>{
-            console.log(element)
             return (
               <p key={element}>{element}</p>
             )
           })
         )
       })}
-      {/* <span>{result}</span> */}
     </CalculationValueContainer>
   )
 }

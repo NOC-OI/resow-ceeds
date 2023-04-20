@@ -6,6 +6,7 @@ import { SideSelection } from "../../components/SideSelection";
 import { TileServerContainer, SideBar } from "./styles";
 import { CalculationValue } from "../../components/CalculationValue";
 import * as L from 'leaflet';
+import { LayerLegend } from "../../components/LayerLegend";
 
 
 export function TileServer() {
@@ -28,6 +29,8 @@ export function TileServer() {
   const [layerAction, setLayerAction] = useState('')
 
   const [calculationValue, setCalculationValue] = useState('');
+
+  const [layerLegend, setLayerLegend] = useState('');
 
   return (
     <TileServerContainer>
@@ -52,6 +55,8 @@ export function TileServer() {
             setActualLayer={setActualLayer}
             layerAction={layerAction}
             setLayerAction={setLayerAction}
+            layerLegend={layerLegend}
+            setLayerLegend={setLayerLegend}
           /> :
           null
         }
@@ -63,6 +68,13 @@ export function TileServer() {
             setLatLonLimits={setLatLonLimits}
           /> :
           null
+        }
+        {layerLegend?
+          <LayerLegend
+            layerLegend={layerLegend}
+            setLayerLegend={setLayerLegend}
+          />
+          : null
         }
         {calculationValue?
           <CalculationValue

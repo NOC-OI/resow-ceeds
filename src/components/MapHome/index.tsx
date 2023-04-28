@@ -15,6 +15,10 @@ interface DisplayPositionProps{
   depth: any,
 }
 
+interface keyable {
+  [key: string]: any
+}
+
 function DisplayPosition({ map, depth }: DisplayPositionProps) {
 
   const [position, setPosition] = useState(null)
@@ -32,10 +36,6 @@ function DisplayPosition({ map, depth }: DisplayPositionProps) {
   )
 }
 
-interface keyable {
-  [key: string]: any
-}
-
 interface MapProps{
   selectedLayers: keyable,
   actualLayer: string[],
@@ -43,11 +43,14 @@ interface MapProps{
   setLayerAction: any,
   selectedArea: boolean,
   latLonLimits: any,
+  showPhotos: any,
+  setShowPhotos: any,
+  activePhoto: any,
+  setActivePhoto: any,
 }
 
 
-
-function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction, selectedArea, latLonLimits}: MapProps) {
+function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction, selectedArea, latLonLimits, showPhotos, setShowPhotos, activePhoto, setActivePhoto}: MapProps) {
   const MAPBOX_API_KEY = import.meta.env.VITE_MAPBOX_API_KEY;
   const MAPBOX_USERID = 'mapbox/satellite-v9';
   const MAPBOX_ATTRIBUTION = "Map data &copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors, Imagery © <a href='https://www.mapbox.com/'>Mapbox</a>"
@@ -56,11 +59,13 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction, sel
 
   const [depth, setDepth] = useState(null)
 
+
   const defaultWMSBounds = [[48, -14],[52, -4]]
 
   // if (map) {
   //   console.log(map._layers)
   // }
+  // console.log(selectedLayers)
 
   const [loading, setLoading] = useState<boolean>(false)
 
@@ -82,17 +87,41 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction, sel
     return layer
   }
 
+  const activeIcon = L.icon({
+    iconUrl: '/marker-icon_red.png',
+    shadowUrl: '/marker-shadow.png',
+  });
+  const inactiveIcon = L.icon({
+    iconUrl: '/marker-icon.png',
+    shadowUrl: '/marker-shadow.png',
+  });
+
+  async function changeIcons(photo: any) {
+    map.eachLayer(function(mapLayer: any){
+      if(mapLayer.options.dataType === 'marker'){
+        if (mapLayer.options.url === photo.url){
+          mapLayer.setIcon(activeIcon)
+          if (!photo.notCenter){
+            map.setView(new L.LatLng(mapLayer._latlng.lat, mapLayer._latlng.lng), 10);
+          }
+        } else{
+          mapLayer.setIcon(inactiveIcon)
+        }
+      }
+    })
+  }
+
+
 
   async function generateSelectedLayer () {
     const layerName = selectedLayers[actualLayer[0]]
     let layer
+    let layers:any[] = []
     let bounds
     if (layerName.data_type === 'WMS'){
       layer = await getWMSLayer(layerName)
       bounds = defaultWMSBounds
-
     } else if (layerName.data_type === 'COG'){
-
       if (window.location.pathname === '/notileserver') {
         const getCOGLayer = new GetCOGLayer(layerName, actualLayer)
         await getCOGLayer.parseGeo().then( function () {
@@ -111,24 +140,56 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction, sel
           ]
         });
       }
-    } else if (layerName.data_type === 'Marker-COG'){
-
-      const getCOGLayer = new GetTileLayer(layerName, actualLayer, 'marker')
-      await getCOGLayer.getTile().then( function () {
-        layer = getCOGLayer.layer
-        bounds = [
-          [getCOGLayer.bounds[3], getCOGLayer.bounds[0]],
-          [getCOGLayer.bounds[1], getCOGLayer.bounds[2]]
-        ]
-      });
+    } else if (layerName.data_type === 'Photo'){
+      let latValues:number[] = []
+      let lonValues:number[] = []
+      bounds = defaultWMSBounds
+      await layerName.photos.map(async (photo: { notCenter: boolean, url: string; local_data_type: string; }) => {
+        if (photo.local_data_type === 'Marker-COG'){
+          const getCOGLayer = new GetTileLayer(photo, actualLayer, 'marker')
+          await getCOGLayer.getTile().then(async function () {
+            map.addLayer(getCOGLayer.layer)
+            if (getCOGLayer.layer){
+              getCOGLayer.layer.on('click', async function (e) {
+                const popup = L.popup()
+                  .setLatLng(e.latlng)
+                  .setContent(getCOGLayer.popupText)
+                  .openOn(map);
+                photo.notCenter = true
+                setActivePhoto(photo)
+              })
+            }
+          });
+        }
+      })
     }
-    map.addLayer(layer, true)
-    if (layerName.data_type !== 'Marker-COG'){
-      map.fitBounds(bounds)
+    if (layerName.data_type !== 'Photo'){
+      map.addLayer(layer, true)
       layer? bringLayerToFront(layer): null
     }
+    map.fitBounds(bounds)
     setLoading(false)
   }
+
+
+  useEffect(() => {
+    if (map){
+      let idx: number = 1
+      let newShowPhotos = [...showPhotos]
+      newShowPhotos.forEach((photo, i)=> {
+        if (activePhoto.url === photo.url){
+          newShowPhotos[i].active = true
+          idx = i
+        } else{
+          newShowPhotos[i].active = false
+        }
+      })
+      changeIcons(activePhoto)
+      setShowPhotos(newShowPhotos)
+
+    }
+  }, [activePhoto])
+
 
   function removeLayerFromMap(): void {
     map.eachLayer(function(layer: any){
@@ -183,37 +244,6 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction, sel
     setLayerAction('')
   }
 
-  // const freeDraw = new FreeDraw({
-  //   mode: FreeDraw.ALL,
-  //   leaveModeAfterCreate:true,
-  //   maximumPolygons: 1,
-  //   smoothFactor: 0.3,
-  //   simplifyFactor: 2,
-  //   strokeWidth: 3
-  // });
-
-  // useEffect(() => {
-  //   if (selectedArea){
-  //     map.addLayer(freeDraw);
-
-  //     freeDraw.on("markers",function(event){
-  //       if(event.eventType=='create' && event.latLngs.length > 0){
-
-  //         //capture the current polygon bounds (store in 1st position)
-  //         var latLngs = event.latLngs[0];
-  //         freeDraw.clear(); //clear freedraw markers
-  //         //create polygon from lat lng bounds retrieved
-  //         var polygon = L.polygon(
-  //             latLngs.map(function(latLng){
-  //                 return [latLng.lat,latLng.lng];
-  //             }), {
-  //                 color: 'red',
-  //             }).addTo(map);
-  //       }
-  //     })
-  //   }
-  // }, [selectedArea])
-
   useEffect(() => {
     if (map){
       map.eachLayer(function(layer: any){
@@ -256,21 +286,6 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction, sel
       }
     }
   }, [selectedArea])
-
-  // useEffect(() => {
-  //   if (latLonLimits){
-  //     polygon.addTo(map);
-  //   } else {
-  //     if (map){
-  //       map.eachLayer(function(layer: any){
-  //         if (layer.options.attribution === 'polygon'){
-  //           map.removeLayer(layer)
-  //         }
-  //       });
-  //     }
-  //   }
-  // }, [selectedArea])
-
 
   async function changeMapZoom() {
     map.eachLayer(function(layer: any){
@@ -416,7 +431,9 @@ function mapPropsAreEqual(prevMap: any, nextMap: any) {
   return prevMap.selectedLayers === nextMap.selectedLayers
     && prevMap.actualLayer === nextMap.actualLayer
     && prevMap.selectedArea === nextMap.selectedArea
-    && prevMap.latLonLimits === nextMap.latLonLimits;
+    && prevMap.latLonLimits === nextMap.latLonLimits
+    && prevMap.showPhotos === nextMap.showPhotos
+    && prevMap.activePhoto === nextMap.activePhoto;
 }
 
 export const MapHome = React.memo(MapHome1, mapPropsAreEqual)
@@ -623,3 +640,60 @@ export const MapHome = React.memo(MapHome1, mapPropsAreEqual)
 // import { GetCanvasLayer } from './addCanvasLayer';
 // import { GetBathymetryLayer } from './addBathymetry';
 // import { bathymetry } from '../../bathymetry';
+
+
+// newShowPhotos = changePhotosOrder(idx, 0, newShowPhotos)
+        // function changePhotosOrder(fromIndex: number, toIndex: number, arr: any[]) {
+  //   var element = arr[fromIndex];
+  //   arr.splice(fromIndex, 1);
+  //   arr.splice(toIndex, 0, element);
+  //   return arr
+  // }
+
+
+
+  // useEffect(() => {
+  //   if (latLonLimits){
+  //     polygon.addTo(map);
+  //   } else {
+  //     if (map){
+  //       map.eachLayer(function(layer: any){
+  //         if (layer.options.attribution === 'polygon'){
+  //           map.removeLayer(layer)
+  //         }
+  //       });
+  //     }
+  //   }
+  // }, [selectedArea])
+
+
+  // const freeDraw = new FreeDraw({
+  //   mode: FreeDraw.ALL,
+  //   leaveModeAfterCreate:true,
+  //   maximumPolygons: 1,
+  //   smoothFactor: 0.3,
+  //   simplifyFactor: 2,
+  //   strokeWidth: 3
+  // });
+
+  // useEffect(() => {
+  //   if (selectedArea){
+  //     map.addLayer(freeDraw);
+
+  //     freeDraw.on("markers",function(event){
+  //       if(event.eventType=='create' && event.latLngs.length > 0){
+
+  //         //capture the current polygon bounds (store in 1st position)
+  //         var latLngs = event.latLngs[0];
+  //         freeDraw.clear(); //clear freedraw markers
+  //         //create polygon from lat lng bounds retrieved
+  //         var polygon = L.polygon(
+  //             latLngs.map(function(latLng){
+  //                 return [latLng.lat,latLng.lng];
+  //             }), {
+  //                 color: 'red',
+  //             }).addTo(map);
+  //       }
+  //     })
+  //   }
+  // }, [selectedArea])

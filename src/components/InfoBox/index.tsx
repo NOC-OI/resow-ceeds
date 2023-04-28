@@ -19,20 +19,20 @@ export function InfoBox({position = null, depth = null }: InfoBoxProps) {
     lat = '---'
     lng = '---'
   } else{
-    let tempLat = position.lat.toFixed(4)
+    let tempLat = position.lat.toFixed(6)
     let latSignal
     tempLat >= 0 ? latSignal = 'N' : (latSignal = 'S', tempLat = tempLat *(-1))
     let latDegrees = String(Math.floor(tempLat)).padStart(2, '0')
     let latMinutes = String(Math.floor((tempLat % 1) * 60)).padStart(2, '0')
-    let latSeconds = String(Math.floor(((tempLat % 1) * 60)  % 1)).padStart(2, '0')
+    let latSeconds = String(Math.floor((((tempLat % 1) * 60)  % 1)*60)).padStart(2, '0')
     lat = `${latDegrees}°${latMinutes}'${latSeconds}${latSignal}`
 
-    let tempLng = position.lng.toFixed(4)
+    let tempLng = position.lng.toFixed(6)
     let lngSignal
     tempLng >= 0 ? lngSignal = 'W' : (lngSignal = 'E', tempLng = tempLng *(-1))
     let lngDegrees = String(Math.floor(tempLng)).padStart(2, '0')
     let lngMinutes = String(Math.floor((tempLng % 1) * 60)).padStart(2, '0')
-    let lngSeconds = String(Math.floor(((tempLng % 1) * 60)  % 1)).padStart(2, '0')
+    let lngSeconds = String(Math.floor((((tempLng % 1) * 60)  % 1)*60)).padStart(2, '0')
     lng = `${lngDegrees}°${lngMinutes}'${lngSeconds}${lngSignal}`
   }
 

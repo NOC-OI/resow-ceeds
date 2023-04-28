@@ -2,6 +2,7 @@ import { Route, Routes } from 'react-router-dom'
 import { DefaulLayout } from './layouts/DefaultLayout/index'
 import { ThreeD } from './pages/ThreeD'
 import { TileServer } from './pages/TileServer'
+import { PhotoPage } from './pages/PhotoPage'
 
 
 export function Router() {
@@ -12,6 +13,7 @@ export function Router() {
         <Route path="/" element={<TileServer />} />
         <Route path="/notileserver" element={<TileServer />} />
         <Route path="/3d" element={<ThreeD />} />
+        <Route path="/photos/:id" element={<PhotoPage/>} />
       </Route>
     </Routes>
   )

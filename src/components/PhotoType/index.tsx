@@ -1,15 +1,15 @@
 import { ArrowCircleDown, ArrowCircleUp } from "phosphor-react";
-import { useRef, useState } from "react";
-import { LayerTypeContainer, LayerTypeOptionsContainer } from "./styles";
+import { useEffect, useRef, useState } from "react";
 import { faCircleInfo, faList, faMagnifyingGlass, faSliders } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { PhotoTypeContainer, PhotoTypeOptionsContainer } from "./styles";
 
 interface keyable {
   [key: string]: any
 }
 
 
-interface LayerTypeProps {
+interface PhotoTypeProps {
   content: String
   childs: Object
   selectedLayers: keyable
@@ -20,18 +20,17 @@ interface LayerTypeProps {
   setLayerAction: any,
   layerLegend: any,
   setLayerLegend: any,
+  setShowPhotos: any,
 }
 
-interface LayerTypeOptionsProps {
+interface PhotoTypeOptionsProps {
   subLayer: any,
 }
 
 
-export function LayerType({ content, childs, selectedLayers, setSelectedLayers, actualLayer, setActualLayer, layerAction, setLayerAction, layerLegend, setLayerLegend }: LayerTypeProps) {
+export function PhotoType({ content, childs, selectedLayers, setSelectedLayers, actualLayer, setActualLayer, layerAction, setLayerAction, layerLegend, setLayerLegend, setShowPhotos }: PhotoTypeProps) {
 
   const [subLayers, setSubLayers] = useState<keyable>({})
-
-  const [activeOpacity, setActiveOpacity] = useState(null)
 
   const [isActive, setIsActive] = useState(false);
 
@@ -51,18 +50,6 @@ export function LayerType({ content, childs, selectedLayers, setSelectedLayers, 
     })
   }
 
-  function changeMapOpacity(layerInfo: any, opacity: number) {
-    setLayerAction('opacity')
-    const newSelectedLayer = layerInfo.dataInfo
-    newSelectedLayer.opacity = opacity
-    newSelectedLayer.zoom = true
-    setSelectedLayers((selectedLayers: any) => {
-      const copy = {...selectedLayers}
-      delete copy[layerInfo.subLayer]
-      return {[layerInfo.subLayer]: newSelectedLayer,...copy}
-    })
-  }
-
 
   function addMapLayer(layerInfo: any) {
     setLayerAction('add')
@@ -73,6 +60,21 @@ export function LayerType({ content, childs, selectedLayers, setSelectedLayers, 
       [layerInfo.subLayer]: newSelectedLayer
     })
   }
+
+  useEffect(() => {
+    if (layerAction){
+      const photoList: any[] = []
+      Object.keys(selectedLayers).forEach(layer => {
+        if(selectedLayers[layer].data_type === 'Photo'){
+          selectedLayers[layer].photos.forEach((photo: any) => {
+            photoList.push(photo)
+          })
+        }
+      })
+      setShowPhotos(photoList)
+    }
+  }, [selectedLayers])
+
 
 
   function removeMapLayer(layerInfo: any) {
@@ -88,16 +90,7 @@ export function LayerType({ content, childs, selectedLayers, setSelectedLayers, 
     return selectedLayers[`${content}_${subLayer}`]? true : false
   }
 
-  function getPreviousOpacityValue(content: String, subLayer: string) {
-    return selectedLayers[`${content}_${subLayer}`].opacity
-  }
-
-
-  function LayerTypeOptions({subLayer}: LayerTypeOptionsProps) {
-
-    const [opacityIsClicked, setOpacityIsClicked] = useState(
-      activeOpacity === `${content}_${subLayer}` ? true : false
-    );
+  function PhotoTypeOptions({subLayer}: PhotoTypeOptionsProps) {
 
     function handleChangeMapLayer(e: any) {
       const layerInfo = JSON.parse(e.target.value)
@@ -105,45 +98,18 @@ export function LayerType({ content, childs, selectedLayers, setSelectedLayers, 
       if (e.target.checked){
         addMapLayer(layerInfo)
       } else{
-        setOpacityIsClicked(false)
-        setActiveOpacity(null)
         removeMapLayer(layerInfo)
       }
     }
 
     function handleClickZoom() {
       let layerInfo = JSON.parse(JSON.stringify({subLayer: `${content}_${subLayer}`, dataInfo: subLayers[subLayer]}))
-      setActiveOpacity( opacityIsClicked? layerInfo.subLayer: null)
       setActualLayer([layerInfo.subLayer])
       changeMapZoom(layerInfo)
     }
 
-    async function handleClickLegend(){
-      let newParams = subLayers[subLayer].params
-      newParams.request = 'GetLegendGraphic'
-      newParams.layer = newParams.layers
-      async function getURILegend(newParams: any) {
-        const response = await fetch(subLayers[subLayer].url + new URLSearchParams(newParams))
-        const url = response.url;
-        setLayerLegend({layerName: subLayer, url: url})
-      }
-      await getURILegend(newParams)
-
-    }
-
-    function handleClickSlider() {
-      setOpacityIsClicked((opacityIsClicked) => !opacityIsClicked)
-    }
-
-    function handleChangeOpacity(e: any) {
-      let layerInfo = JSON.parse(JSON.stringify({subLayer: `${content}_${subLayer}`, dataInfo: subLayers[subLayer]}))
-      setActiveOpacity(layerInfo.subLayer)
-      setActualLayer([layerInfo.subLayer])
-      changeMapOpacity(layerInfo, e.target.value)
-    }
-
     return (
-      <LayerTypeOptionsContainer>
+      <PhotoTypeOptionsContainer>
         <div>
           <label key={`${content}_${subLayer}`} htmlFor={`${content}_${subLayer}`}>
             <input
@@ -158,40 +124,20 @@ export function LayerType({ content, childs, selectedLayers, setSelectedLayers, 
             <div>
               <FontAwesomeIcon icon={faCircleInfo} />
               <FontAwesomeIcon
-                icon={faList}
-                title="Show Legend"
-                onClick={handleClickLegend}
-              />
-              <FontAwesomeIcon
                 icon={faMagnifyingGlass}
                 title="Zoom to the layer"
                 onClick={handleClickZoom}
-              />
-              <FontAwesomeIcon
-                icon={faSliders}
-                title="Change Opacity"
-                onClick={handleClickSlider}
               />
             </div>
             ) : null
           }
         </div>
-        { opacityIsClicked ? (
-          <input type="range"
-            step={0.1}
-            min={0}
-            max={1}
-            value={getPreviousOpacityValue(content, subLayer)}
-            onChange={handleChangeOpacity}
-          />
-          ) : null
-        }
-      </LayerTypeOptionsContainer>
+      </PhotoTypeOptionsContainer>
     )
   }
 
   return (
-      <LayerTypeContainer>
+      <PhotoTypeContainer>
         <div>
           <header onClick={handleShowLayers}>
             <p>{content}</p>
@@ -203,13 +149,13 @@ export function LayerType({ content, childs, selectedLayers, setSelectedLayers, 
         <div>
           {Object.keys(subLayers).map(subLayer => {
             return (
-              <LayerTypeOptions
+              <PhotoTypeOptions
                 key={`${content}_${subLayer}`}
                 subLayer={subLayer}
               />
             )
           })}
         </div>
-      </LayerTypeContainer>
+      </PhotoTypeContainer>
   )
 }

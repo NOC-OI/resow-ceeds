@@ -12,7 +12,6 @@ export function LayerLegend({layerLegend, setLayerLegend}: LayerLegendProps) {
   function handleClose(){
     setLayerLegend('')
   }
-  console.log(layerLegend)
 
   return (
     <LayerLegendContainer>

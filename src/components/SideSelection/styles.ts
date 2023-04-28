@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 
 export const SideSelectionContainer = styled.div`
+  position: relative;
   height: 90vh;
   background-color: ${(props) => props.theme['white']};
   padding: 0.375rem;

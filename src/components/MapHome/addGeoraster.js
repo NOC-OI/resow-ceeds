@@ -63,11 +63,12 @@ export class GetCOGLayer {
 
 
 export class GetTifLayer {
-  constructor (url, actualLayer) {
+  constructor (url, actualLayer, resolution=64) {
     this.actualLayer = actualLayer
     this.url = url
     this.layer = null
     this.georaster = null
+    this.resolution = resolution
   }
 
   async parseGeo() {
@@ -100,7 +101,7 @@ export class GetTifLayer {
 
           //   return color;
           // },
-          resolution: 64
+          resolution: this.resolution
         });
       });
     });
@@ -117,9 +118,10 @@ export class GetTileLayer {
     this.layer = null
     this.colourScheme = 'gray'
     this.bounds = null
+    this.popupText = ''
   }
-
   async getTile() {
+
     const TITILER_URL = import.meta.env.VITE_TITILER_URL;
 
     const cogInfo = await axios.get(`${TITILER_URL}/cog/info?url=${encodeURIComponent(this.url)}`).then(r => r.data)
@@ -127,11 +129,23 @@ export class GetTileLayer {
 
     this.bounds = cogInfo.bounds
     if (this.dataType === 'marker'){
+
+      this.icon = L.icon({
+        iconUrl: '/marker-icon.png',
+        shadowUrl: '/marker-shadow.png',
+      });
+
       this.layer = L.marker([
         (this.bounds[3] + this.bounds[1])/2,
         (this.bounds[2] + this.bounds[0])/2
-      ])
-      let popupText = `
+      ],
+        {
+          riseOnHover: true,
+          autoPanOnFocus: false,
+          icon: this.icon
+        }
+      )
+      this.popupText = `
         <b>${this.actualLayer[0]}</b><br>
         CEDA: XXXXXXXX<br>
         TILE NUMBER:<em>10</em><br>
@@ -144,7 +158,8 @@ export class GetTileLayer {
         <em>XXXXX</em><br>
       `
       this.layer.options.attribution = this.actualLayer[0]
-      this.layer.bindPopup(popupText).openPopup();
+      this.layer.options.url = this.layerName.url
+      this.layer.options.dataType = this.dataType
 
     } else {
       const bands = []
@@ -184,7 +199,6 @@ export class GetTileLayer {
       if (bands.length === 1) {
         tileUrl += `&colormap_name=${this.colourScheme}`
       }
-
 
       this.layer = L.tileLayer( tileUrl, {
         opacity: 1.0,

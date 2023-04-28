@@ -3,50 +3,93 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCalculator, faCamera, faLayerGroup, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { Icon } from '@iconify/react';
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
-interface SideSelectionProps{
-  layer: boolean,
-  setLayer: any,
-  calc?: boolean,
-  setCalc?: any,
-  selectedLayers: Object,
-  setSelectedLayers: any,
-  actualLayer: string[],
-  setActualLayer: any,
-  setLayerAction: any,
-  setSelectedArea?: any
+interface keyable {
+  [key: string]: any
 }
 
-export function SideSelection({layer, setLayer, calc, setCalc, selectedLayers, setSelectedLayers, actualLayer, setActualLayer, setLayerAction, setSelectedArea}: SideSelectionProps ) {
+interface SideSelectionProps{
+  layer?: boolean,
+  setLayer?: any,
+  calc?: boolean,
+  setCalc?: any,
+  selectedLayers?: any,
+  setSelectedLayers?: any,
+  actualLayer?: string[],
+  setActualLayer?: any,
+  setLayerAction?: any,
+  setSelectedArea?: any,
+  photo?: boolean,
+  setPhoto?: any,
+  setShowPhotos?: any,
+  photoId?: string,
+}
+
+export function SideSelection({layer, setLayer, calc, setCalc, selectedLayers, setSelectedLayers, actualLayer, setActualLayer, setLayerAction, setSelectedArea, photo, setPhoto, setShowPhotos, photoId}: SideSelectionProps ) {
 
   const navigate = useNavigate();
 
   function handleShowLayerSelection() {
-    if (window.location.pathname === '/3d') {
+    if (window.location.pathname === '/3d' || window.location.pathname.slice(0,7) === '/photos') {
       navigate('/')
+      setPhoto(false)
       setLayer(false)
       setCalc(false)
     } else{
       setLayer((layer: any) => !layer)
+      setPhoto(false)
       setSelectedArea(false)
       setCalc(false)
     }
   }
 
   function handleShowCalcSelection() {
-    if (window.location.pathname === '/3d') {
+    if (window.location.pathname === '/3d' || window.location.pathname.slice(0,7) === '/photos') {
       navigate('/')
+      setPhoto(false)
       setLayer(false)
       setCalc(true)
     } else{
       setCalc((calc: any) => !calc)
+      setPhoto(false)
       setLayer(false)
     }
   }
+  function handleShowPhotoSelection() {
+    if (window.location.pathname === '/3d' || window.location.pathname.slice(0,7) === '/photos') {
+      navigate('/')
+      setLayer(false)
+      setCalc(false)
+      setPhoto(true)
+    } else{
+      setPhoto((photo: any) => !photo)
+      setLayer(false)
+      setCalc(false)
+    }
+  }
+
+  useEffect(() => {
+    if (photo){
+      const photoList: any[] = []
+      Object.keys(selectedLayers).forEach((layer: string) => {
+        if(selectedLayers[layer].data_type === 'Photo'){
+          selectedLayers[layer].photos.forEach((photo: any) => {
+            photoList.push(photo)
+          })
+        }
+      })
+      setShowPhotos(photoList)
+    } else{
+      setShowPhotos([])
+    }
+  }, [photo])
+
   function handleEraseLayers() {
     setActualLayer(Object.keys(selectedLayers))
     setLayer(false)
     setCalc(false)
+    setPhoto(false)
     setSelectedLayers({})
     setLayerAction('remove')
   }
@@ -63,7 +106,7 @@ export function SideSelection({layer, setLayer, calc, setCalc, selectedLayers, s
         <SideSelectionLink onClick={handleShowLayerSelection}>
           <FontAwesomeIcon title={"Select Layers"} icon={faLayerGroup} />
         </SideSelectionLink>
-        <SideSelectionLink>
+        <SideSelectionLink onClick={handleShowPhotoSelection}>
           <FontAwesomeIcon title={"Select Pictures"} icon={faCamera} />
         </SideSelectionLink>
         <SideSelectionLink  onClick={handleShowCalcSelection} >

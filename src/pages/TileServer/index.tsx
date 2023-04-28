@@ -5,8 +5,10 @@ import { MapHome } from "../../components/MapHome";
 import { SideSelection } from "../../components/SideSelection";
 import { TileServerContainer, SideBar } from "./styles";
 import { CalculationValue } from "../../components/CalculationValue";
+import { PhotoList } from "../../components/PhotoList";
 import * as L from 'leaflet';
 import { LayerLegend } from "../../components/LayerLegend";
+import { PhotoSelection } from "../../components/PhotoSelection";
 
 
 export function TileServer() {
@@ -30,7 +32,14 @@ export function TileServer() {
 
   const [calculationValue, setCalculationValue] = useState('');
 
+  const [photo, setPhoto] = useState<boolean>(false);
+
+  const [showPhotos, setShowPhotos] = useState<object[]>([])
+
   const [layerLegend, setLayerLegend] = useState('');
+
+  const [activePhoto, setActivePhoto] = useState('');
+
 
   return (
     <TileServerContainer>
@@ -46,6 +55,9 @@ export function TileServer() {
           setActualLayer={setActualLayer}
           setLayerAction={setLayerAction}
           setSelectedArea={setSelectedArea}
+          photo={photo}
+          setPhoto={setPhoto}
+          setShowPhotos={setShowPhotos}
         />
         {layer ?
           <LayerSelection
@@ -83,6 +95,30 @@ export function TileServer() {
           />
           : null
         }
+        {photo?
+          <PhotoSelection
+          selectedLayers={selectedLayers}
+          setSelectedLayers={setSelectedLayers}
+          actualLayer={actualLayer}
+          setActualLayer={setActualLayer}
+          layerAction={layerAction}
+          setLayerAction={setLayerAction}
+          layerLegend={layerLegend}
+          setLayerLegend={setLayerLegend}
+          setShowPhotos={setShowPhotos}
+          /> :
+          null
+        }
+        {showPhotos.length > 0?
+          <PhotoList
+            showPhotos={showPhotos}
+            setShowPhotos={setShowPhotos}
+            activePhoto={activePhoto}
+            setActivePhoto={setActivePhoto}
+            actualLayer={actualLayer}
+          />
+          : null
+        }
       </SideBar>
       <MapHome
         selectedLayers={selectedLayers}
@@ -91,6 +127,10 @@ export function TileServer() {
         setLayerAction={setLayerAction}
         selectedArea={selectedArea}
         latLonLimits={latLonLimits}
+        showPhotos={showPhotos}
+        setShowPhotos={setShowPhotos}
+        activePhoto={activePhoto}
+        setActivePhoto={setActivePhoto}
       />
     </TileServerContainer>
   )

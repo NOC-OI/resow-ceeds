@@ -32,7 +32,6 @@
     "jquery": "^3.6.4",
     "leaflet": "^1.9.3",
     "leaflet-draw": "^1.0.4",
-    "leaflet-freedraw": "^2.13.3",
     "leaflet-path-drag": "^1.8.0-beta.3",
     "leaflet-path-transform": "^1.8.0-beta.4",
     "leaflet.wms": "^0.2.0",

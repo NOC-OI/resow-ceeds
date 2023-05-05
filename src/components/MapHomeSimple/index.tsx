@@ -10,6 +10,9 @@ import React from 'react';
 import { GetGeoblazeValue } from '../MapHome/getGeoblazeValue';
 import { listPhotos } from '../PhotoSelection/listPhotos';
 import { useNavigate } from 'react-router-dom';
+import { GetMBTiles } from '../MapHome/addMBTiles';
+import {} from 'leaflet.vectorgrid'
+import { protobuf } from '../MapHome/addVectorGridL';
 
 interface DisplayPositionProps{
   map: any,
@@ -133,10 +136,30 @@ function MapHome1({photoId}: MapProps) {
           let layers:any[] = []
           let bounds
           await getPhotoInfo().then(async (photo) => {
-            console.log(photo)
             if (photo.local_data_type === 'Marker-COG'){
+              // const getMBLayer = new GetMBTiles()
+              // getMBLayer.getLayer().then( async function () {
+              //   map.addLayer(getMBLayer.layer, true)
+              //   setLoading(false)
+              // });
+
+              // let url = 'http://127.0.0.1:8080/v1/tiles/mytiles@1.0.0/{z}/{x}/{y}.mvt'
+              // var vectorTileOptions = {
+              //   interactive: true,
+              //   vectorTileLayerStyles: {
+              //     weight: 0,
+              //     fillColor: '#9bc2c4',
+              //     fillOpacity: 1,
+              //     fill: true
+              //   }
+              // };
+
+              // layer = protobuf(url, vectorTileOptions)
+              // map.addLayer(layer, true)
+              // console.log(layer)
+              // setLoading(false)
+
               const getCOGLayer = new GetTileLayer(photo, photo.url)
-              console.log(getCOGLayer)
               getCOGLayer.getTile().then( async function () {
                 layer = getCOGLayer.layer
                 bounds = [
@@ -148,6 +171,7 @@ function MapHome1({photoId}: MapProps) {
                 map.fitBounds(bounds)
                 setLoading(false)
               });
+
             }
           })
         }

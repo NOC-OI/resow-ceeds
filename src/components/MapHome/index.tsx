@@ -9,6 +9,7 @@ import { Loading } from '../Loading';
 import React from 'react';
 import { callBetterWMS } from './addBetterWMS';
 import { GetGeoblazeValue } from './getGeoblazeValue';
+import { GetMBTiles } from './addMBTiles';
 
 interface DisplayPositionProps{
   map: any,
@@ -162,8 +163,27 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction, sel
           });
         }
       })
+    } else if (layerName.data_type === 'MBTiles'){
+      bounds = defaultWMSBounds
+      const getMBTilesLayer = new GetMBTiles(layerName, actualLayer)
+      await getMBTilesLayer.getLayer().then(async function () {
+        layer = getMBTilesLayer.layer
+        if (layer){
+          layer.on('click', async function (e: any) {
+            let strContent: string[] = []
+            Object.keys(e.layer.properties).map(c => {
+              strContent.push(`<p>${c}: ${e.layer.properties[c] === ' '? '--': e.layer.properties[c]}<p>`) 
+            })
+            L.popup({ maxWidth: 200 })
+              .setLatLng(e.latlng)
+              .setContent(strContent.join(''))
+              .openOn(map);
+          })
+        }
+      });
     }
     if (layerName.data_type !== 'Photo'){
+      layer.options.attribution = actualLayer[0]
       map.addLayer(layer, true)
       layer? bringLayerToFront(layer): null
     }
@@ -290,7 +310,7 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction, sel
   async function changeMapZoom() {
     map.eachLayer(function(layer: any){
       if (actualLayer.includes(layer.options.attribution)){
-        if (selectedLayers[actualLayer[0]].data_type === 'WMS'){
+        if (selectedLayers[actualLayer[0]].data_type === 'WMS' || selectedLayers[actualLayer[0]].data_type === 'MBTiles'){
           map.fitBounds(defaultWMSBounds)
         } else if (selectedLayers[actualLayer[0]].data_type = 'COG'){
           const newBounds = [

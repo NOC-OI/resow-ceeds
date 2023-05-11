@@ -119,6 +119,7 @@ export class GetTileLayer {
     this.colourScheme = 'gray'
     this.bounds = null
     this.popupText = ''
+    this.position = null
   }
   async getTile() {
 
@@ -135,6 +136,7 @@ export class GetTileLayer {
         shadowUrl: '/marker-shadow.png',
       });
 
+      this.position = [(this.bounds[3] + this.bounds[1])/2,(this.bounds[2] + this.bounds[0])/2]
       this.layer = L.marker([
         (this.bounds[3] + this.bounds[1])/2,
         (this.bounds[2] + this.bounds[0])/2
@@ -171,12 +173,26 @@ export class GetTileLayer {
         bidx = [1, 2, 3]
       }
 
+      // let bidx = []
+      // bands.forEach((band, idx) => {
+      //   bidx.push(idx+1)
+      // })
       const rescale = []
       for (let i = 0; i < bands.length; i++) {
         const stats = cogStats[bands[i]]
-        rescale.push(`${stats.percentile_2},${stats.percentile_98}`)
+        stats? rescale.push(`${stats.percentile_2},${stats.percentile_98}`): rescale.push('0,255')
+        // stats? rescale.push(`0,${stats.percentile_98}`): rescale.push('0,255')
+        // rescale.push('0,255')
+
       }
 
+      // const rescale = []
+      // for (let i = 0; i < bands.length; i++) {
+      //   const stats = cogStats[bands[i]]
+      //   stats? rescale.push('0,255'): rescale.push('0,255')
+      // }
+      // console.log(cogStats)
+      
       const url = this.url
       const args = {
         bidx: bidx.length === 1 ? bidx[0] : bidx,
@@ -195,6 +211,7 @@ export class GetTileLayer {
         }
       ).then(r => r.data)
 
+      
       let tileUrl = tileJson.tiles[0]
       if (bands.length === 1) {
         tileUrl += `&colormap_name=${this.colourScheme}`

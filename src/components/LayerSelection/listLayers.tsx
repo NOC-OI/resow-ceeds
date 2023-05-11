@@ -358,11 +358,11 @@ let listValues = [{
   layerClass: 'Bathymetry',
   layerNames: {
     Emodnet: {
-      url: 'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/cog_rep_EMODNet_2020.tif',
+      url: 'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output/cog_rep_EMODNet_2020.tif',
       data_type: 'COG'
     },
     Gebco: {
-      url: 'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/cog_rep_gebco_2022.tif',
+      url: 'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output/cog_rep_gebco_2022.tif',
       data_type: 'COG'
     }
   },
@@ -375,19 +375,19 @@ let listValues = [{
       data_type: 'COG'
     },
     Image2: {
-      url:  'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/cog_rep_M58_10441297_12987749054970_1.tif',
+      url:  'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output/cog_rep_M58_10441297_12987749054970_1.tif',
       data_type: 'COG'
     },
     Image3: {
-      url:  'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/cog_rep_M58_10441297_12987749390121_1.tif',
+      url:  'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output/cog_rep_M58_10441297_12987749390121_1.tif',
       data_type: 'COG'
     },
     Image4: {
-      url:  'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/cog_rep_M58_10441297_12987755746830_1.tif',
+      url:  'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output/cog_rep_M58_10441297_12987755746830_1.tif',
       data_type: 'COG'
     },
     Image5: {
-      url:  'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/cog_rep_M58_10441297_12987757649461_1.tif',
+      url:  'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output/cog_rep_M58_10441297_12987757649461_1.tif',
       data_type: 'COG'
     },
   },

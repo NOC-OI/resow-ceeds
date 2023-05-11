@@ -24,6 +24,7 @@ export function TileServer() {
     new L.LatLng(39.9, -16.9)]
   )
 
+
   const [selectedLayers, setSelectedLayers] = useState<Object>({})
 
   const [actualLayer, setActualLayer] = useState<string[]>([''])
@@ -39,6 +40,11 @@ export function TileServer() {
   const [layerLegend, setLayerLegend] = useState('');
 
   const [activePhoto, setActivePhoto] = useState('');
+
+  const [mapBounds, setMapBounds] = useState({
+    _northEast: {lat: -89, lng:179},
+    _southWest: {lat: -89, lng:179}
+  })
 
 
   return (
@@ -115,7 +121,7 @@ export function TileServer() {
             setShowPhotos={setShowPhotos}
             activePhoto={activePhoto}
             setActivePhoto={setActivePhoto}
-            actualLayer={actualLayer}
+            mapBounds={mapBounds}
           />
           : null
         }
@@ -131,6 +137,8 @@ export function TileServer() {
         setShowPhotos={setShowPhotos}
         activePhoto={activePhoto}
         setActivePhoto={setActivePhoto}
+        mapBounds={mapBounds}
+        setMapBounds={setMapBounds}
       />
     </TileServerContainer>
   )

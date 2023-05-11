@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { faCircleInfo, faList, faMagnifyingGlass, faSliders } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { PhotoTypeContainer, PhotoTypeOptionsContainer } from "./styles";
+import axios from 'axios';
 
 interface keyable {
   [key: string]: any
@@ -50,15 +51,35 @@ export function PhotoType({ content, childs, selectedLayers, setSelectedLayers, 
     })
   }
 
+  async function getPhotoLayer(newSelectedLayer: any) {
+    await newSelectedLayer.photos.forEach(async (photo: any, idx: any) => {
+      if (photo.local_data_type === 'Marker-COG'){
+        const TITILER_URL = import.meta.env.VITE_TITILER_URL;
+        await axios.get(`${TITILER_URL}/cog/info?url=${encodeURIComponent(photo.url)}`).then(r =>{
+          const position = [(r.data.bounds[3] + r.data.bounds[1])/2, (r.data.bounds[2] + r.data.bounds[0])/2]
+          newSelectedLayer.photos[idx].position = position
+        })
+      }
+    });
+    return newSelectedLayer
+  }
 
-  function addMapLayer(layerInfo: any) {
+  async function addMapLayer(layerInfo: any) {
     setLayerAction('add')
     const newSelectedLayer = layerInfo.dataInfo
     newSelectedLayer.opacity = defaultOpacity
     newSelectedLayer.zoom = true
-    setSelectedLayers({...selectedLayers,
-      [layerInfo.subLayer]: newSelectedLayer
-    })
+    if (newSelectedLayer.data_type === 'Photo'){
+      await getPhotoLayer(newSelectedLayer).then(layer => {
+        setSelectedLayers({...selectedLayers,
+          [layerInfo.subLayer]: layer
+        })
+      })
+    } else{
+      setSelectedLayers({...selectedLayers,
+        [layerInfo.subLayer]: newSelectedLayer
+      })
+    }
   }
 
   useEffect(() => {
@@ -67,6 +88,7 @@ export function PhotoType({ content, childs, selectedLayers, setSelectedLayers, 
       Object.keys(selectedLayers).forEach(layer => {
         if(selectedLayers[layer].data_type === 'Photo'){
           selectedLayers[layer].photos.forEach((photo: any) => {
+            photo.layerName = actualLayer[0]
             photoList.push(photo)
           })
         }
@@ -92,11 +114,11 @@ export function PhotoType({ content, childs, selectedLayers, setSelectedLayers, 
 
   function PhotoTypeOptions({subLayer}: PhotoTypeOptionsProps) {
 
-    function handleChangeMapLayer(e: any) {
+    async function handleChangeMapLayer(e: any) {
       const layerInfo = JSON.parse(e.target.value)
       setActualLayer([layerInfo.subLayer])
       if (e.target.checked){
-        addMapLayer(layerInfo)
+        await addMapLayer(layerInfo)
       } else{
         removeMapLayer(layerInfo)
       }

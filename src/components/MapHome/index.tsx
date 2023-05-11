@@ -48,10 +48,12 @@ interface MapProps{
   setShowPhotos: any,
   activePhoto: any,
   setActivePhoto: any,
+  mapBounds: any,
+  setMapBounds: any,
 }
 
 
-function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction, selectedArea, latLonLimits, showPhotos, setShowPhotos, activePhoto, setActivePhoto}: MapProps) {
+function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction, selectedArea, latLonLimits, showPhotos, setShowPhotos, activePhoto, setActivePhoto, mapBounds, setMapBounds}: MapProps) {
   const MAPBOX_API_KEY = import.meta.env.VITE_MAPBOX_API_KEY;
   const MAPBOX_USERID = 'mapbox/satellite-v9';
   const MAPBOX_ATTRIBUTION = "Map data &copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors, Imagery © <a href='https://www.mapbox.com/'>Mapbox</a>"
@@ -59,8 +61,7 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction, sel
   const [map, setMap] = useState<any>(null)
 
   const [depth, setDepth] = useState(null)
-
-
+  
   const defaultWMSBounds = [[48, -14],[52, -4]]
 
   // if (map) {
@@ -80,7 +81,13 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction, sel
     })
   }
 
-
+  useEffect(() => {
+    if(map){
+      map.on('moveend', function() { 
+        setMapBounds(map.getBounds());
+      });
+    }
+  }, [map])
 
   async function getWMSLayer (layerName: any) {
     layerName.params['attribution'] = actualLayer[0]
@@ -103,7 +110,8 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction, sel
         if (mapLayer.options.url === photo.url){
           mapLayer.setIcon(activeIcon)
           if (!photo.notCenter){
-            map.setView(new L.LatLng(mapLayer._latlng.lat, mapLayer._latlng.lng), 10);
+            console.log(map)
+            map.setView(new L.LatLng(mapLayer._latlng.lat, mapLayer._latlng.lng), map._zoom);
           }
         } else{
           mapLayer.setIcon(inactiveIcon)
@@ -145,11 +153,11 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction, sel
       let latValues:number[] = []
       let lonValues:number[] = []
       bounds = defaultWMSBounds
-      await layerName.photos.map(async (photo: { notCenter: boolean, url: string; local_data_type: string; }) => {
+      await layerName.photos.map(async (photo: { notCenter: boolean, url: string; local_data_type: string; position: any }) => {
         if (photo.local_data_type === 'Marker-COG'){
           const getCOGLayer = new GetTileLayer(photo, actualLayer, 'marker')
           await getCOGLayer.getTile().then(async function () {
-            map.addLayer(getCOGLayer.layer)
+            map.addLayer(getCOGLayer.layer)           
             if (getCOGLayer.layer){
               getCOGLayer.layer.on('click', async function (e) {
                 const popup = L.popup()
@@ -157,6 +165,7 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction, sel
                   .setContent(getCOGLayer.popupText)
                   .openOn(map);
                 photo.notCenter = true
+                // getCOGLayer.layer. zIndexOffset = 9999
                 setActivePhoto(photo)
               })
             }
@@ -193,11 +202,11 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction, sel
 
 
   useEffect(() => {
-    if (map){
+    if (activePhoto){
       let idx: number = 1
       let newShowPhotos = [...showPhotos]
       newShowPhotos.forEach((photo, i)=> {
-        if (activePhoto.url === photo.url){
+          if (activePhoto.url === photo.url){
           newShowPhotos[i].active = true
           idx = i
         } else{
@@ -215,6 +224,9 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction, sel
     map.eachLayer(function(layer: any){
       if (actualLayer.includes(layer.options.attribution)){
         map.removeLayer(layer)
+        if(activePhoto.layerName === actualLayer[0]){
+          setActivePhoto('')
+        }
         // map.setView(new L.LatLng(50.39415159013279, -7.712108868853798), 5);
         setLayerAction('')
       }

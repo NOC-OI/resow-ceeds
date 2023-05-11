@@ -18,7 +18,6 @@ interface PhotoSelectionProps{
 export function PhotoSelection({selectedLayers, setSelectedLayers, actualLayer, setActualLayer, layerAction, setLayerAction, layerLegend, setLayerLegend, setShowPhotos}: PhotoSelectionProps) {
 
   const [photoClasses, setPhotoClasses] = useState(listPhotos)
-
   return (
     <PhotoSelectionContainer>
       <PhotoSelectionTitle>

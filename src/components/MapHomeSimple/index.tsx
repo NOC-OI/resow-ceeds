@@ -101,7 +101,7 @@ function MapHome1({photoId, contrast, setContrast, actualLayer, setActualLayer}:
     return returnedPhoto
   }
 
-  const generateSelectedLayer = async () => {
+  const generateSelectedLayer = async (fitBounds: boolean) => {
     let layer: any
     let layers:any[] = []
     let bounds
@@ -117,7 +117,9 @@ function MapHome1({photoId, contrast, setContrast, actualLayer, setActualLayer}:
           map.addLayer(layer, true)
           layer? bringLayerToFront(layer): null
           console.log(layer)
-          map.fitBounds(bounds)
+          if(fitBounds){
+            map.fitBounds(bounds)
+          }
           setLoading(false)
           setActualLayer([photo.url])
         });
@@ -160,7 +162,7 @@ function MapHome1({photoId, contrast, setContrast, actualLayer, setActualLayer}:
         let url = 'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/asc/bathymetry.tif'
 
         fetchData(url, actualLayer);
-        generateSelectedLayer();
+        generateSelectedLayer(true);
 
       }
     }
@@ -180,7 +182,7 @@ function MapHome1({photoId, contrast, setContrast, actualLayer, setActualLayer}:
 
       removeLayerFromMap();
 
-      generateSelectedLayer();
+      generateSelectedLayer(false);
     }
   }, [contrast])
 

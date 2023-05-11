@@ -180,9 +180,9 @@ export class GetTileLayer {
       const rescale = []
       for (let i = 0; i < bands.length; i++) {
         const stats = cogStats[bands[i]]
-        stats? rescale.push(`${stats.percentile_2},${stats.percentile_98}`): rescale.push('0,255')
+        // stats? rescale.push(`${stats.percentile_2},${stats.percentile_98}`): rescale.push('0,255')
         // stats? rescale.push(`0,${stats.percentile_98}`): rescale.push('0,255')
-        // rescale.push('0,255')
+        rescale.push('0,255')
 
       }
 

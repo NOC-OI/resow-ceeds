@@ -1,4 +1,4 @@
-import { SideSelectionContainer, SideSelectionLink } from "./styles";
+import { ContrastSelectorContainer, SideSelectionContainer, SideSelectionLink } from "./styles";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCalculator, faCamera, faLayerGroup, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { Icon } from '@iconify/react';
@@ -24,9 +24,45 @@ interface SideSelectionProps{
   setPhoto?: any,
   setShowPhotos?: any,
   photoId?: string,
+  photoPage?: boolean,
+  contrast?: boolean,
+  setContrast?: any,
 }
 
-export function SideSelection({layer, setLayer, calc, setCalc, selectedLayers, setSelectedLayers, actualLayer, setActualLayer, setLayerAction, setSelectedArea, photo, setPhoto, setShowPhotos, photoId}: SideSelectionProps ) {
+interface ContrastSelectorProps{
+  contrast: any,
+  setContrast: any,
+}
+
+function ContrastSelector({ contrast, setContrast }: ContrastSelectorProps) {
+
+  // const [position, setPosition] = useState(null)
+
+  // useEffect(() => {
+  //   map.on('mousemove', (e: any) => {
+  //     setPosition(e.latlng)
+  //   })
+  // }, [map])
+  function handleChangeContrast() {
+    setContrast((contrast: boolean) => !contrast)
+  }
+
+  return (
+    <ContrastSelectorContainer>
+      {/* <div>
+        <FontAwesomeIcon contentStyleType={'regular'} icon={faCircleXmark} onClick={handleClose} />
+      </div> */}
+      <h1>CONTRAST</h1>
+      <label>
+        <input type="checkbox" onChange={handleChangeContrast}/>
+        <span></span>
+      </label>
+    </ContrastSelectorContainer>
+  )
+}
+
+
+export function SideSelection({layer, setLayer, calc, setCalc, selectedLayers, setSelectedLayers, actualLayer, setActualLayer, setLayerAction, setSelectedArea, photo, setPhoto, setShowPhotos, photoId, photoPage, contrast, setContrast}: SideSelectionProps ) {
 
   const navigate = useNavigate();
 
@@ -85,6 +121,22 @@ export function SideSelection({layer, setLayer, calc, setCalc, selectedLayers, s
     }
   }, [photo])
 
+  useEffect(() => {
+    if (photo){
+      const photoList: any[] = []
+      Object.keys(selectedLayers).forEach((layer: string) => {
+        if(selectedLayers[layer].data_type === 'Photo'){
+          selectedLayers[layer].photos.forEach((photo: any) => {
+            photoList.push(photo)
+          })
+        }
+      })
+      setShowPhotos(photoList)
+    } else{
+      setShowPhotos([])
+    }
+  }, [photo])
+
   function handleEraseLayers() {
     setActualLayer(Object.keys(selectedLayers))
     setLayer(false)
@@ -118,6 +170,7 @@ export function SideSelection({layer, setLayer, calc, setCalc, selectedLayers, s
         <SideSelectionLink onClick={handleEraseLayers}>
           <FontAwesomeIcon title={"Clean map"} icon={faTrash} />
         </SideSelectionLink>
+        {photoPage ? <ContrastSelector contrast={contrast} setContrast={setContrast} /> : null}
       </SideSelectionContainer>
     </>
   )

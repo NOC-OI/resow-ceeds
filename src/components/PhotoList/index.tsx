@@ -31,7 +31,8 @@ export function PhotoList({showPhotos, setShowPhotos, activePhoto, setActivePhot
 
   function handleClickImage(showPhoto: ShowPhotoProps) {
     let newActualLayer = showPhoto.layerName.replace(' ', '-')
-    navigate(`/photos/${newActualLayer}_${showPhoto.id}`)
+    window.open(`/photos/${newActualLayer}_${showPhoto.id}`,'_blank')
+    // navigate(`/photos/${newActualLayer}_${showPhoto.id}`)
   }
 
   function handleClickCard(showPhoto: ShowPhotoProps, idx: number) {

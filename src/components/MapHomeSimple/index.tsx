@@ -42,10 +42,14 @@ function DisplayPosition({ map, depth }: DisplayPositionProps) {
 
 interface MapProps{
   photoId: any,
+  contrast: any,
+  setContrast: any,
+  actualLayer: any,
+  setActualLayer: any,
 }
 
 
-function MapHome1({photoId}: MapProps) {
+function MapHome1({photoId, contrast, setContrast, actualLayer, setActualLayer}: MapProps) {
   const MAPBOX_API_KEY = import.meta.env.VITE_MAPBOX_API_KEY;
   const MAPBOX_USERID = 'mapbox/satellite-v9';
   const MAPBOX_ATTRIBUTION = "Map data &copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors, Imagery © <a href='https://www.mapbox.com/'>Mapbox</a>"
@@ -97,6 +101,49 @@ function MapHome1({photoId}: MapProps) {
     return returnedPhoto
   }
 
+  const generateSelectedLayer = async () => {
+    let layer: any
+    let layers:any[] = []
+    let bounds
+    await getPhotoInfo().then(async (photo) => {
+      if (photo.local_data_type === 'Marker-COG'){
+        const getCOGLayer = new GetTileLayer(photo, [photo.url], contrast)
+        getCOGLayer.getTile().then( async function () {
+          layer = getCOGLayer.layer
+          bounds = [
+            [getCOGLayer.bounds[3], getCOGLayer.bounds[0]],
+            [getCOGLayer.bounds[1], getCOGLayer.bounds[2]]
+          ]
+          map.addLayer(layer, true)
+          layer? bringLayerToFront(layer): null
+          console.log(layer)
+          map.fitBounds(bounds)
+          setLoading(false)
+          setActualLayer([photo.url])
+        });
+
+      }
+    })
+  }
+
+  const fetchData = async (url: string, actualLayer: string) => {
+    const getTifLayer = new GetTifLayer(url, [actualLayer])
+    await getTifLayer.parseGeo().then(function () {
+      map.addLayer(getTifLayer.layer)
+      map.on('mousemove', function(evt: { originalEvent: any; }) {
+        var latlng = map.mouseEventToLatLng(evt.originalEvent);
+        const getGeoblazeValue = new GetGeoblazeValue(getTifLayer.georaster, latlng)
+        getGeoblazeValue.getGeoblaze().then(function () {
+          let dep = getGeoblazeValue.dep
+          if (dep){
+            setDepth(dep[0].toFixed(0))
+          } else{
+            setDepth(null)
+          }
+        })
+      });
+    });
+  }
 
   useEffect(() => {
     let actualLayer: string = 'bathymetry'
@@ -112,77 +159,31 @@ function MapHome1({photoId}: MapProps) {
         setLoading(true)
         let url = 'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/asc/bathymetry.tif'
 
-        const fetchData = async () => {
-          const getTifLayer = new GetTifLayer(url, [actualLayer])
-          await getTifLayer.parseGeo().then(function () {
-            map.addLayer(getTifLayer.layer)
-            map.on('mousemove', function(evt: { originalEvent: any; }) {
-              var latlng = map.mouseEventToLatLng(evt.originalEvent);
-              const getGeoblazeValue = new GetGeoblazeValue(getTifLayer.georaster, latlng)
-              getGeoblazeValue.getGeoblaze().then(function () {
-                let dep = getGeoblazeValue.dep
-                if (dep){
-                  setDepth(dep[0].toFixed(0))
-                } else{
-                  setDepth(null)
-                }
-              })
-            });
-          });
-        }
-
-        const generateSelectedLayer = async () => {
-          let layer
-          let layers:any[] = []
-          let bounds
-          await getPhotoInfo().then(async (photo) => {
-            if (photo.local_data_type === 'Marker-COG'){
-              // const getMBLayer = new GetMBTiles()
-              // getMBLayer.getLayer().then( async function () {
-              //   map.addLayer(getMBLayer.layer, true)
-              //   setLoading(false)
-              // });
-
-              // let url = 'http://127.0.0.1:8080/v1/tiles/mytiles@1.0.0/{z}/{x}/{y}.mvt'
-              // var vectorTileOptions = {
-              //   interactive: true,
-              //   vectorTileLayerStyles: {
-              //     weight: 0,
-              //     fillColor: '#9bc2c4',
-              //     fillOpacity: 1,
-              //     fill: true
-              //   }
-              // };
-
-              // layer = protobuf(url, vectorTileOptions)
-              // map.addLayer(layer, true)
-              // console.log(layer)
-              // setLoading(false)
-
-              const getCOGLayer = new GetTileLayer(photo, photo.url)
-              getCOGLayer.getTile().then( async function () {
-                layer = getCOGLayer.layer
-                bounds = [
-                  [getCOGLayer.bounds[3], getCOGLayer.bounds[0]],
-                  [getCOGLayer.bounds[1], getCOGLayer.bounds[2]]
-                ]
-                map.addLayer(layer, true)
-                layer? bringLayerToFront(layer): null
-                map.fitBounds(bounds)
-                setLoading(false)
-              });
-
-            }
-          })
-        }
-
-        fetchData();
-
+        fetchData(url, actualLayer);
         generateSelectedLayer();
 
       }
     }
   }, [map])
+
+  function removeLayerFromMap(): void {
+    map.eachLayer(function(layer: any){
+      if (actualLayer.includes(layer.options.attribution)){
+        map.removeLayer(layer)
+      }
+    })
+  }
+
+  useEffect(() => {
+    if(map) {
+      setLoading(true)
+
+      removeLayerFromMap();
+
+      generateSelectedLayer();
+    }
+  }, [contrast])
+
 
   const displayMap = useMemo(
     () => (
@@ -278,7 +279,8 @@ function MapHome1({photoId}: MapProps) {
 }
 
 function mapPropsAreEqual(prevMap: any, nextMap: any) {
-  return prevMap.photoId === nextMap.photoId;
+  return prevMap.photoId === nextMap.photoId &&
+  prevMap.contrast === nextMap.contrast;
 }
 
 export const MapHomeSimple = React.memo(MapHome1, mapPropsAreEqual)

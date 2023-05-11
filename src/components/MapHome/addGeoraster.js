@@ -110,7 +110,7 @@ export class GetTifLayer {
 
 
 export class GetTileLayer {
-  constructor (layerName, actualLayer, dataType='COG') {
+  constructor (layerName, actualLayer, contrast, dataType='COG') {
     this.layerName = layerName
     this.actualLayer = actualLayer
     this.url = layerName.url
@@ -120,6 +120,11 @@ export class GetTileLayer {
     this.bounds = null
     this.popupText = ''
     this.position = null
+    this.rescale = []
+    this.args = null
+    this.tileJson = null
+    this.tileUrl = null
+    this.contrast = contrast
   }
   async getTile() {
 
@@ -177,13 +182,14 @@ export class GetTileLayer {
       // bands.forEach((band, idx) => {
       //   bidx.push(idx+1)
       // })
-      const rescale = []
       for (let i = 0; i < bands.length; i++) {
         const stats = cogStats[bands[i]]
-        // stats? rescale.push(`${stats.percentile_2},${stats.percentile_98}`): rescale.push('0,255')
+        if (this.contrast){
+          stats? this.rescale.push(`${stats.percentile_2},${stats.percentile_98}`): this.rescale.push('0,255')
+        } else {
         // stats? rescale.push(`0,${stats.percentile_98}`): rescale.push('0,255')
-        rescale.push('0,255')
-
+          this.rescale.push('0,255')
+        }
       }
 
       // const rescale = []
@@ -194,16 +200,16 @@ export class GetTileLayer {
       // console.log(cogStats)
       
       const url = this.url
-      const args = {
+      this.args = {
         bidx: bidx.length === 1 ? bidx[0] : bidx,
-        rescale: rescale.length === 1 ? rescale[0] : rescale,
+        rescale: this.rescale.length === 1 ? this.rescale[0] : this.rescale,
         url
       }
 
-      const tileJson = await axios.get(
+      this.tileJson = await axios.get(
         `${TITILER_URL}/cog/WebMercatorQuad/tilejson.json`,
         {
-          params: args,
+          params: this.args,
           paramsSerializer: {
             encode: params => parse(params),
             serialize: params => stringify(params, { arrayFormat: 'repeat' })
@@ -212,12 +218,12 @@ export class GetTileLayer {
       ).then(r => r.data)
 
       
-      let tileUrl = tileJson.tiles[0]
+      this.tileUrl = this.tileJson.tiles[0]
       if (bands.length === 1) {
-        tileUrl += `&colormap_name=${this.colourScheme}`
+        this.tileUrl += `&colormap_name=${this.colourScheme}`
       }
 
-      this.layer = L.tileLayer( tileUrl, {
+      this.layer = L.tileLayer( this.tileUrl, {
         opacity: 1.0,
         maxZoom: 30,
         attribution: this.actualLayer[0],

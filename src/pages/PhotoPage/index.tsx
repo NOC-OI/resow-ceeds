@@ -20,7 +20,7 @@ export function PhotoPage() {
 
   const [showPhotos, setShowPhotos] = useState<object[]>([])
 
-
+  const [contrast, setContrast] = useState<boolean>(false)
   const [layerAction, setLayerAction] = useState('')
   const { id } = useParams();
 
@@ -42,10 +42,17 @@ export function PhotoPage() {
           setPhoto={setPhoto}
           setShowPhotos={setShowPhotos}
           photoId={id}
+          photoPage={true}
+          contrast={contrast}
+          setContrast={setContrast}
         />
       </SideBar>
       <MapHomeSimple
         photoId={id}
+        contrast={contrast}
+        setContrast={setContrast}
+        actualLayer={actualLayer}
+        setActualLayer={setActualLayer}
       />
     </PhotoPageContainer>
   )

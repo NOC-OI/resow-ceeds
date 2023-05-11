@@ -140,7 +140,7 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction, sel
           bounds = [[nE.lat, nE.lng],[sW.lat, sW.lng]]
         });
       } else {
-        const getCOGLayer = new GetTileLayer(layerName, actualLayer)
+        const getCOGLayer = new GetTileLayer(layerName, actualLayer, true)
         await getCOGLayer.getTile().then( function () {
           layer = getCOGLayer.layer
           bounds = [

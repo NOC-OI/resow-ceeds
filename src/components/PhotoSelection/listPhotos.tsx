@@ -1307,7 +1307,7 @@ export const listPhotos: any[] = [{
   layerNames: {
     2012: {
       data_type: 'Photo',
-      photos: await parseCSVPhotos()
+      photos: parseCSVPhotos()
     }
   }
 }]

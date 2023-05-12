@@ -17,10 +17,10 @@ let listValues = [{
         viewParams: 'null;undefined',
       },
     },
-    // "Habitat Map 2": {
-    //   url: 'http://127.0.0.1:8080/v1/tiles/mytiles@1.0.0/{z}/{x}/{y}.mvt',
-    //   data_type: 'MBTiles',
-    // },
+    "Habitat Map 2": {
+      url: 'http://127.0.0.1:8080/v1/tiles/mytiles@1.0.0/{z}/{x}/{y}.mvt',
+      data_type: 'MBTiles',
+    },
     "Biozones": {
       url: 'https://ows.emodnet-seabedhabitats.eu/geoserver/emodnet_view/wms?',
       data_type: 'WMS',

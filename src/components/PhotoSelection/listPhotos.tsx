@@ -1,4 +1,5 @@
 import * as Papa from 'papaparse'
+import fs from 'fs'
 
 let photos: string[] = [
   'M58_10441297_12987744811443_1.tif',
@@ -1220,7 +1221,7 @@ let photos: string[] = [
 ]
 
 
-function parseCSVPhotos(){
+async function parseCSVPhotos(){
   let photos: any[] = []
   Papa.parse("https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output/HF2012_other_data.csv", {
     download: true,
@@ -1236,12 +1237,77 @@ function parseCSVPhotos(){
   return photos
 }
 
+function papaPromise(url: any, stepArr: any){
+  return new Promise(function(resolve, reject){
+      Papa.parse(url, {
+        download: true,
+        header: true,
+        dynamicTyping: true,
+        step: function(row) {
+          let photoDict = JSON.parse(JSON.stringify(row)).data
+          photoDict.active = false
+          photoDict.local_data_type = 'Marker-COG'
+          stepArr.push(photoDict)
+        }
+      });    
+  });
+}
+
+// export async function generateListPhotos(){
+//   const photos = papaPromise("https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output/HF2012_other_data.csv", []);
+//   Promise.all([photos]).then(function(){
+//     return (
+//       [{ 
+//         layerClass: 'Seabed Images',
+//         layerNames: {
+//           2012: {
+//             data_type: 'Photo',
+//             fileName: 
+//             photos: photos
+//           }
+//         }
+//       }]
+//     )  
+//   });
+// }
+
+// export async function generateListPhotos(){
+//   const papaPromise = (importFile: any) => new Promise((resolve, reject) => {
+//     let photos: any[] = []
+//     const file = fs.createReadStream(importFile);
+//     Papa.parse(file, {
+//       download: true,
+//       header: true,
+//       dynamicTyping: true,
+//       step: function(row) {
+//         let photoDict = JSON.parse(JSON.stringify(row)).data
+//         photoDict.active = false
+//         photoDict.local_data_type = 'Marker-COG'
+//         photos.push(photoDict)
+//       }
+//     });
+//   })
+//   await papaPromise("https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output/HF2012_other_data.csv").then(photos => {
+//     return (
+//       [{ 
+//         layerClass: 'Seabed Images',
+//         layerNames: {
+//           2012: {
+//             data_type: 'Photo',
+//             photos: photos
+//           }
+//         }
+//       }]
+//     )  
+//   })
+// }
+
 export const listPhotos: any[] = [{ 
   layerClass: 'Seabed Images',
   layerNames: {
     2012: {
       data_type: 'Photo',
-      photos: parseCSVPhotos()
+      photos: await parseCSVPhotos()
     }
   }
 }]

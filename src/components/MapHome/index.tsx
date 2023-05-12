@@ -90,16 +90,16 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction, sel
     return layer
   }
 
-  const activeIcon = L.icon({
-    iconUrl: '/marker-icon_red.png',
-    shadowUrl: '/marker-shadow.png',
-  });
-  const inactiveIcon = L.icon({
-    iconUrl: '/marker-icon.png',
-    shadowUrl: '/marker-shadow.png',
-  });
 
   async function changeIcons(photo: any) {
+    const activeIcon = L.icon({
+      iconUrl: '/marker-icon_red.png',
+      shadowUrl: '/marker-shadow.png',
+    });
+    const inactiveIcon = L.icon({
+      iconUrl: '/marker-icon.png',
+      shadowUrl: '/marker-shadow.png',
+    });
     map.eachLayer(function(mapLayer: any){
       if(mapLayer.options.dataType === 'marker'){
         if (mapLayer.options.FileName === photo.FileName){

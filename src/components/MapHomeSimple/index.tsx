@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import { GetMBTiles } from '../MapHome/addMBTiles';
 import {} from 'leaflet.vectorgrid'
 import { protobuf } from '../MapHome/addVectorGridL';
+import axios from 'axios';
 
 interface DisplayPositionProps{
   map: any,
@@ -93,42 +94,83 @@ function MapHome1({photoId, contrast, setContrast, actualLayer, setActualLayer}:
     return [photoNumber, photoName, photoClass.replace('-', ' ')]
   }
 
+  // async function getPhotos() {
+  //   const listPhotos
+    
+  // }
   const generateSelectedLayer = async (fitBounds: boolean) => {
     let layer: any
     let layers:any[] = []
     let bounds
     const photoValues = getPhotoInfo()
-    listPhotos.forEach(photos => {
-      if (photos.layerClass === photoValues[2]) {
-        photos.layerNames[photoValues[1]].photos.every((photo: any) => {
-          if (photo.id.toString() === photoValues[0]) {
-            if (photo.local_data_type === 'Marker-COG'){
-              photo.url = `${BASIC_BUCKET_URL}/${photo.FileName}_1.tif`
-              console.log(photo.url)
-              const getCOGLayer = new GetTileLayer(photo, [photo.url], contrast)
-              getCOGLayer.getTile().then( async function () {
-                layer = getCOGLayer.layer
-                bounds = [
-                  [getCOGLayer.bounds[3], getCOGLayer.bounds[0]],
-                  [getCOGLayer.bounds[1], getCOGLayer.bounds[2]]
-                ]
-                map.addLayer(layer, true)
-                layer? bringLayerToFront(layer): null
-                console.log(layer)
-                if(fitBounds){
-                  map.fitBounds(bounds)
-                }
-                setLoading(false)
-                setActualLayer([photo.url])
-              });
-            }      
-            return false
-          } else{
-            return true
-          }
-        });
-      }
-    });
+    await axios.get(
+      'https://haigfras-api.herokuapp.com/csv?filename=HF2012_other_data&columns=active:False,local_data_type:Marker-COG'
+    ).then(photos => {
+      photos.data.every((photo: any) => {
+        console.log(photo)
+        if (photo.id.toString() === photoValues[0]) {
+          if (photo.local_data_type === 'Marker-COG'){
+            photo.url = `${BASIC_BUCKET_URL}/${photo.FileName}_1.tif`
+            console.log(photo.url)
+            const getCOGLayer = new GetTileLayer(photo, [photo.url], contrast)
+            getCOGLayer.getTile().then( async function () {
+              layer = getCOGLayer.layer
+              bounds = [
+                [getCOGLayer.bounds[3], getCOGLayer.bounds[0]],
+                [getCOGLayer.bounds[1], getCOGLayer.bounds[2]]
+              ]
+              map.addLayer(layer, true)
+              layer? bringLayerToFront(layer): null
+              console.log(layer)
+              if(fitBounds){
+                map.fitBounds(bounds)
+              }
+              setLoading(false)
+              setActualLayer([photo.url])
+            });
+          }      
+          return false
+        } else{
+          return true
+        }
+      })
+    })
+    // listPhotos.forEach((photos: any) => {
+    //   if (photos.layerClass === photoValues[2]) {
+    //     console.log(photos.layerNames[photoValues[1]].photos)
+    //     // while (photos.layerNames[photoValues[1]].photos.length === 0){
+    //     //   let x = 1
+    //     // }
+    //     photos.layerNames[photoValues[1]].photos.every((photo: any) => {
+    //       console.log(photo)
+    //       if (photo.id.toString() === photoValues[0]) {
+    //         if (photo.local_data_type === 'Marker-COG'){
+    //           photo.url = `${BASIC_BUCKET_URL}/${photo.FileName}_1.tif`
+    //           console.log(photo.url)
+    //           const getCOGLayer = new GetTileLayer(photo, [photo.url], contrast)
+    //           getCOGLayer.getTile().then( async function () {
+    //             layer = getCOGLayer.layer
+    //             bounds = [
+    //               [getCOGLayer.bounds[3], getCOGLayer.bounds[0]],
+    //               [getCOGLayer.bounds[1], getCOGLayer.bounds[2]]
+    //             ]
+    //             map.addLayer(layer, true)
+    //             layer? bringLayerToFront(layer): null
+    //             console.log(layer)
+    //             if(fitBounds){
+    //               map.fitBounds(bounds)
+    //             }
+    //             setLoading(false)
+    //             setActualLayer([photo.url])
+    //           });
+    //         }      
+    //         return false
+    //       } else{
+    //         return true
+    //       }
+    //     });
+    //   }
+    // });
   }
 
   const fetchData = async (url: string, actualLayer: string) => {

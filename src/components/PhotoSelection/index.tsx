@@ -17,14 +17,13 @@ interface PhotoSelectionProps{
 
 export function PhotoSelection({selectedLayers, setSelectedLayers, actualLayer, setActualLayer, layerAction, setLayerAction, layerLegend, setLayerLegend, setShowPhotos}: PhotoSelectionProps) {
 
-  const [photoClasses, setPhotoClasses] = useState(listPhotos)
   return (
     <PhotoSelectionContainer>
       <PhotoSelectionTitle>
         <h1>Photo Selection</h1>
       </PhotoSelectionTitle>
       <PhotoTypes>
-        {photoClasses.map(layerClass => {
+        {listPhotos.map(layerClass => {
           return (
             <PhotoType
               key={layerClass.layerClass}

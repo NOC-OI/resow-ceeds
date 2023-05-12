@@ -1,5 +1,6 @@
 import * as Papa from 'papaparse'
 import fs from 'fs'
+import axios from 'axios';
 
 let photos: string[] = [
   'M58_10441297_12987744811443_1.tif',
@@ -1237,21 +1238,21 @@ async function parseCSVPhotos(){
   return photos
 }
 
-function papaPromise(url: any, stepArr: any){
-  return new Promise(function(resolve, reject){
-      Papa.parse(url, {
-        download: true,
-        header: true,
-        dynamicTyping: true,
-        step: function(row) {
-          let photoDict = JSON.parse(JSON.stringify(row)).data
-          photoDict.active = false
-          photoDict.local_data_type = 'Marker-COG'
-          stepArr.push(photoDict)
-        }
-      });    
-  });
-}
+// function papaPromise(url: any, stepArr: any){
+//   return new Promise(function(resolve, reject){
+//       Papa.parse(url, {
+//         download: true,
+//         header: true,
+//         dynamicTyping: true,
+//         step: function(row) {
+//           let photoDict = JSON.parse(JSON.stringify(row)).data
+//           photoDict.active = false
+//           photoDict.local_data_type = 'Marker-COG'
+//           stepArr.push(photoDict)
+//         }
+//       });    
+//   });
+// }
 
 // export async function generateListPhotos(){
 //   const photos = papaPromise("https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output/HF2012_other_data.csv", []);
@@ -1301,13 +1302,69 @@ function papaPromise(url: any, stepArr: any){
 //     )  
 //   })
 // }
+async function parseCSV(){
+  await axios.get(
+    'https://haigfras-api.herokuapp.com/csv?filename=HF2012_other_data&columns=active:False,local_data_type:Marker-COG'
+  ).then((photos: any) => {
+    return (
+      [{
+        layerClass: 'Seabed Images',
+        layerNames: {
+          2012: {
+            data_type: 'Photo',
+            photos: photos.data
+          }
+        }
+      }]
+    )
+  })
+}
 
-export const listPhotos: any[] = [{ 
-  layerClass: 'Seabed Images',
-  layerNames: {
-    2012: {
-      data_type: 'Photo',
-      photos: parseCSVPhotos()
+async function logJSONData() {
+  const response = await fetch('https://haigfras-api.herokuapp.com/csv?filename=HF2012_other_data&columns=active:False,local_data_type:Marker-COG');
+  const jsonData = await response.json()
+  const data = [{ 
+    layerClass: 'Seabed Images',
+    layerNames: {
+      2012: {
+        data_type: 'Photo',
+        photos: jsonData
+      }
     }
-  }
-}]
+  }]
+  return data
+}
+
+export const listPhotos = await logJSONData()
+
+// function(){
+//   axios.get(
+//     'https://haigfras-api.herokuapp.com/csv?filename=HF2012_other_data&columns=active:False,local_data_type:Marker-COG'
+//   ).then(result => result.data)
+//   .then(photos => {
+//     return [{
+//       layerClass: 'Seabed Images',
+//       layerNames: {
+//         2012: {
+//           data_type: 'Photo',
+//           photos: photos
+//         }
+//       }
+//     }]
+//   })
+// }
+// export const listPhotos: any[] = (
+//   await parseCSVPhotos().then((photos: any) => {
+//     return (
+//       [{
+//         layerClass: 'Seabed Images',
+//         layerNames: {
+//           2012: {
+//             data_type: 'Photo',
+//             photos: parseCSVPhotos()
+//           }
+//         }
+//       }]
+//     )
+//   })
+// )

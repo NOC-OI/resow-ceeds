@@ -105,7 +105,6 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction, sel
         if (mapLayer.options.FileName === photo.FileName){
           mapLayer.setIcon(activeIcon)
           if (!photo.notCenter){
-            console.log(map)
             map.setView(new L.LatLng(mapLayer._latlng.lat, mapLayer._latlng.lng), map._zoom);
           }
         } else{
@@ -151,7 +150,6 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction, sel
       await layerName.photos.map(async (photo: any) => {
         const getPhotoMarker = new GetPhotoMarker(photo, actualLayer)
         await getPhotoMarker.getMarker().then(async function () {
-          console.log(getPhotoMarker.layer)
           map.addLayer(getPhotoMarker.layer)
           if (getPhotoMarker.layer){
             getPhotoMarker.layer.on('click', async function (e) {

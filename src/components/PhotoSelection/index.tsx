@@ -1,9 +1,7 @@
-import { useState } from "react";
 import { PhotoType } from "../PhotoType";
-import { listPhotos } from "./listPhotos";
 import { PhotoSelectionContainer, PhotoSelectionTitle, PhotoTypes } from "./styles";
 
-interface PhotoSelectionProps{
+interface PhotoSelectionProps{  
   selectedLayers: Object,
   setSelectedLayers: any,
   actualLayer: string[],
@@ -13,9 +11,10 @@ interface PhotoSelectionProps{
   layerLegend: any,
   setLayerLegend: any,
   setShowPhotos: any,
+  listPhotos: any,
 }
 
-export function PhotoSelection({selectedLayers, setSelectedLayers, actualLayer, setActualLayer, layerAction, setLayerAction, layerLegend, setLayerLegend, setShowPhotos}: PhotoSelectionProps) {
+export function PhotoSelection({selectedLayers, setSelectedLayers, actualLayer, setActualLayer, layerAction, setLayerAction, layerLegend, setLayerLegend, setShowPhotos, listPhotos}: PhotoSelectionProps) {
 
   return (
     <PhotoSelectionContainer>
@@ -23,7 +22,7 @@ export function PhotoSelection({selectedLayers, setSelectedLayers, actualLayer, 
         <h1>Photo Selection</h1>
       </PhotoSelectionTitle>
       <PhotoTypes>
-        {listPhotos.map(layerClass => {
+        {listPhotos.map((layerClass: any) => {
           return (
             <PhotoType
               key={layerClass.layerClass}

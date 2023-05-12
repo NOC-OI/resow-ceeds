@@ -107,11 +107,9 @@ function MapHome1({photoId, contrast, setContrast, actualLayer, setActualLayer}:
       'https://haigfras-api.herokuapp.com/csv?filename=HF2012_other_data&columns=active:False,local_data_type:Marker-COG'
     ).then(photos => {
       photos.data.every((photo: any) => {
-        console.log(photo)
         if (photo.id.toString() === photoValues[0]) {
           if (photo.local_data_type === 'Marker-COG'){
             photo.url = `${BASIC_BUCKET_URL}/${photo.FileName}_1.tif`
-            console.log(photo.url)
             const getCOGLayer = new GetTileLayer(photo, [photo.url], contrast)
             getCOGLayer.getTile().then( async function () {
               layer = getCOGLayer.layer
@@ -121,7 +119,6 @@ function MapHome1({photoId, contrast, setContrast, actualLayer, setActualLayer}:
               ]
               map.addLayer(layer, true)
               layer? bringLayerToFront(layer): null
-              console.log(layer)
               if(fitBounds){
                 map.fitBounds(bounds)
               }

@@ -1,6 +1,6 @@
 import { ContrastSelectorContainer, SideSelectionContainer, SideSelectionLink } from "./styles";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCalculator, faCamera, faLayerGroup, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faCalculator, faCamera, faLayerGroup, faTrash, faUser, faUserShield } from "@fortawesome/free-solid-svg-icons";
 import { Icon } from '@iconify/react';
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
@@ -169,6 +169,9 @@ export function SideSelection({layer, setLayer, calc, setCalc, selectedLayers, s
         </SideSelectionLink>
         <SideSelectionLink onClick={handleEraseLayers}>
           <FontAwesomeIcon title={"Clean map"} icon={faTrash} />
+        </SideSelectionLink>
+        <SideSelectionLink>
+          <FontAwesomeIcon title={"Login"} icon={faUser}/>
         </SideSelectionLink>
         {photoPage ? <ContrastSelector contrast={contrast} setContrast={setContrast} /> : null}
       </SideSelectionContainer>

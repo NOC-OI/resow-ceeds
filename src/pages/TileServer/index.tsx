@@ -9,6 +9,7 @@ import { PhotoList } from "../../components/PhotoList";
 import * as L from 'leaflet';
 import { LayerLegend } from "../../components/LayerLegend";
 import { PhotoSelection } from "../../components/PhotoSelection";
+import { listPhotos } from "../../components/PhotoSelection/listPhotos";
 
 
 export function TileServer() {
@@ -23,7 +24,6 @@ export function TileServer() {
     new L.LatLng(39.9, 2.1),
     new L.LatLng(39.9, -16.9)]
   )
-
 
   const [selectedLayers, setSelectedLayers] = useState<Object>({})
 
@@ -45,8 +45,11 @@ export function TileServer() {
     _northEast: {lat: -89, lng:179},
     _southWest: {lat: -89, lng:179}
   })
+  // const [listP, setlistPhotos] = useState({
+  //   await listPhotos.then(p =>{
 
-
+  //   })
+  // })
   return (
     <TileServerContainer>
       <SideBar>
@@ -103,15 +106,16 @@ export function TileServer() {
         }
         {photo?
           <PhotoSelection
-          selectedLayers={selectedLayers}
-          setSelectedLayers={setSelectedLayers}
-          actualLayer={actualLayer}
-          setActualLayer={setActualLayer}
-          layerAction={layerAction}
-          setLayerAction={setLayerAction}
-          layerLegend={layerLegend}
-          setLayerLegend={setLayerLegend}
-          setShowPhotos={setShowPhotos}
+            selectedLayers={selectedLayers}
+            setSelectedLayers={setSelectedLayers}
+            actualLayer={actualLayer}
+            setActualLayer={setActualLayer}
+            layerAction={layerAction}
+            setLayerAction={setLayerAction}
+            layerLegend={layerLegend}
+            setLayerLegend={setLayerLegend}
+            setShowPhotos={setShowPhotos}
+            listPhotos={listPhotos}
           /> :
           null
         }

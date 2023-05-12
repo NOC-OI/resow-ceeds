@@ -155,9 +155,10 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction, sel
       bounds = defaultWMSBounds
       await layerName.photos.map(async (photo: { notCenter: boolean, url: string; local_data_type: string; position: any }) => {
         if (photo.local_data_type === 'Marker-COG'){
-          const getCOGLayer = new GetTileLayer(photo, actualLayer, 'marker')
+          const getCOGLayer = new GetTileLayer(photo, actualLayer, true, 'marker')
           await getCOGLayer.getTile().then(async function () {
-            map.addLayer(getCOGLayer.layer)           
+            console.log(getCOGLayer.layer)       
+            map.addLayer(getCOGLayer.layer)
             if (getCOGLayer.layer){
               getCOGLayer.layer.on('click', async function (e) {
                 const popup = L.popup()

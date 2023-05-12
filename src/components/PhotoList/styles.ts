@@ -23,10 +23,14 @@ export const PhotoListContainer = styled.div`
     text-align: center;
     padding-bottom: 0.375rem;
   }
-  p{
+  a{
     font-size: 0.75rem;
     line-height: 1.6;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
     text-align: center;
+    text-decoration: none;
   }
   svg{
     cursor: pointer;

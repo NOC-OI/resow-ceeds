@@ -54,6 +54,8 @@ function MapHome1({photoId, contrast, setContrast, actualLayer, setActualLayer}:
   const MAPBOX_USERID = 'mapbox/satellite-v9';
   const MAPBOX_ATTRIBUTION = "Map data &copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors, Imagery © <a href='https://www.mapbox.com/'>Mapbox</a>"
 
+  const BASIC_BUCKET_URL = 'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output'
+
   const [errorMessage, setErrorMessage] = useState(false)
 
   const [map, setMap] = useState<any>(null)
@@ -78,7 +80,7 @@ function MapHome1({photoId, contrast, setContrast, actualLayer, setActualLayer}:
     })
   }
 
-  async function getPhotoInfo() {
+  function getPhotoInfo() {
     let returnedPhoto: any
     const photoArray = photoId.split('_')
     const photoNumber = photoArray[photoArray.length - 1]
@@ -88,44 +90,45 @@ function MapHome1({photoId, contrast, setContrast, actualLayer, setActualLayer}:
     let photoClass = (photoArray.length > 1)?
       photoArray[photoArray.length - 1].join('_')
       : photoArray.join('_')
-    photoClass = photoClass.replace('-', ' ')
-    listPhotos.forEach(photos => {
-      if (photos.layerClass === photoClass) {
-        photos.layerNames[photoName].photos.forEach((photo: { id: any; }) => {
-          if (photo.id.toString() === photoNumber) {
-            returnedPhoto = photo
-          }
-        });
-      }
-    });
-    return returnedPhoto
+    return [photoNumber, photoName, photoClass.replace('-', ' ')]
   }
 
   const generateSelectedLayer = async (fitBounds: boolean) => {
     let layer: any
     let layers:any[] = []
     let bounds
-    await getPhotoInfo().then(async (photo) => {
-      if (photo.local_data_type === 'Marker-COG'){
-        const getCOGLayer = new GetTileLayer(photo, [photo.url], contrast)
-        getCOGLayer.getTile().then( async function () {
-          layer = getCOGLayer.layer
-          bounds = [
-            [getCOGLayer.bounds[3], getCOGLayer.bounds[0]],
-            [getCOGLayer.bounds[1], getCOGLayer.bounds[2]]
-          ]
-          map.addLayer(layer, true)
-          layer? bringLayerToFront(layer): null
-          console.log(layer)
-          if(fitBounds){
-            map.fitBounds(bounds)
+    const photoValues = getPhotoInfo()
+    listPhotos.forEach(photos => {
+      if (photos.layerClass === photoValues[2]) {
+        photos.layerNames[photoValues[1]].photos.every((photo: any) => {
+          if (photo.id.toString() === photoValues[0]) {
+            if (photo.local_data_type === 'Marker-COG'){
+              photo.url = `${BASIC_BUCKET_URL}/${photo.FileName}_1.tif`
+              console.log(photo.url)
+              const getCOGLayer = new GetTileLayer(photo, [photo.url], contrast)
+              getCOGLayer.getTile().then( async function () {
+                layer = getCOGLayer.layer
+                bounds = [
+                  [getCOGLayer.bounds[3], getCOGLayer.bounds[0]],
+                  [getCOGLayer.bounds[1], getCOGLayer.bounds[2]]
+                ]
+                map.addLayer(layer, true)
+                layer? bringLayerToFront(layer): null
+                console.log(layer)
+                if(fitBounds){
+                  map.fitBounds(bounds)
+                }
+                setLoading(false)
+                setActualLayer([photo.url])
+              });
+            }      
+            return false
+          } else{
+            return true
           }
-          setLoading(false)
-          setActualLayer([photo.url])
         });
-
       }
-    })
+    });
   }
 
   const fetchData = async (url: string, actualLayer: string) => {

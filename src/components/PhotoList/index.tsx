@@ -5,18 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 
-
-interface ShowPhotoProps {
-  id: number,
-  url: string,
-  low_res_url: string,
-  title: string,
-  description: string,
-  active: boolean,
-  layerName: string,
-}
-
-
 interface PhotoListProps {
   showPhotos: any,
   setShowPhotos: any,
@@ -29,13 +17,9 @@ export function PhotoList({showPhotos, setShowPhotos, activePhoto, setActivePhot
 
   const navigate = useNavigate();
 
-  function handleClickImage(showPhoto: ShowPhotoProps) {
-    let newActualLayer = showPhoto.layerName.replace(' ', '-')
-    window.open(`/photos/${newActualLayer}_${showPhoto.id}`,'_blank')
-    // navigate(`/photos/${newActualLayer}_${showPhoto.id}`)
-  }
+  const BASIC_BUCKET_URL = 'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output'
 
-  function handleClickCard(showPhoto: ShowPhotoProps, idx: number) {
+  function handleClickCard(showPhoto: any) {
     setActivePhoto(showPhoto)
   }
   const [localPhotoList, setLocalPhotoList] = useState(showPhotos)
@@ -56,13 +40,8 @@ export function PhotoList({showPhotos, setShowPhotos, activePhoto, setActivePhot
       if (count >= n) {
         return false // "break"
       }
-      if (el.description !== activePhoto.description){
-        if (el.position){
-          if (el.position[0] > lat[0] && el.position[0] < lat[1] && el.position[1] > lng[0] && el.position[1] < lng[1]){
-            newList.push(el)
-            count++
-          }
-        } else {
+      if (el.FileName !== activePhoto.FileName){
+        if (el.Latitude > lat[0] && el.Latitude < lat[1] && el.Longitude > lng[0] && el.Longitude < lng[1]){
           newList.push(el)
           count++
         }
@@ -90,45 +69,49 @@ export function PhotoList({showPhotos, setShowPhotos, activePhoto, setActivePhot
 
   return (
     <PhotoListContainer>
-      {localPhotoList.map((showPhoto: ShowPhotoProps, idx: number) => {
+      {localPhotoList.map((showPhoto: any) => {
       // {shuffled.slice(0, n).map((showPhoto: ShowPhotoProps) => {
-        showPhoto.low_res_url = `${showPhoto.url.slice(0,-4)}.png`
+        // showPhoto.low_res_url = `${showPhoto.url.slice(0,-4)}.png`
         if (showPhoto.active) {
           return (
-            <CardPhotoActive key={showPhoto.id} onClick={() => handleClickCard(showPhoto, idx)}>
+            <CardPhotoActive key={showPhoto.id} onClick={() => handleClickCard(showPhoto)}>
               <CardImage>
-                <img src={showPhoto.low_res_url} />
+                <img src={`${BASIC_BUCKET_URL}/${showPhoto.FileName}_1.png`} />
               </CardImage>
               <div>
                 <CardDiscription>
-                  <h2>{showPhoto.title}</h2>
-                  <p>{showPhoto.description}</p>
-                  <p title={'Show Image on Map'}>
+                  <h2>{showPhoto.id}</h2>
+                  <a 
+                    href={`/photos/${showPhoto.layerName.replace(' ', '-')}_${showPhoto.id}`}
+                    title={'Show Image on Map'}
+                    target={"_blank"}
+                  >
                     <FontAwesomeIcon
                       icon={faImage}
-                      onClick={() => handleClickImage(showPhoto)}
                     />
-                  </p>
+                  </a>
                 </CardDiscription>
               </div>
             </CardPhotoActive>
           )
         } else {
           return (
-            <CardPhoto key={showPhoto.id} onClick={() => handleClickCard(showPhoto, idx)}>
+            <CardPhoto key={showPhoto.id} onClick={() => handleClickCard(showPhoto)}>
               <CardImage>
-                <img src={showPhoto.low_res_url} />
+                <img src={`${BASIC_BUCKET_URL}/${showPhoto.FileName}_1.png`} />
               </CardImage>
               <div>
                 <CardDiscription>
-                  <h2>{showPhoto.title}</h2>
-                  <p>{showPhoto.description}</p>
-                  <p title={'Show Image on Map'}>
+                  <h2>{showPhoto.id}</h2>
+                  <a 
+                    href={`/photos/${showPhoto.layerName.replace(' ', '-')}_${showPhoto.id}`}
+                    title={'Show Image on Map'}
+                    target={"_blank"}
+                  >
                     <FontAwesomeIcon
-                      onClick={() => handleClickImage(showPhoto)}
                       icon={faImage}
                     />
-                  </p>
+                  </a>
                 </CardDiscription>
               </div>
             </CardPhoto>

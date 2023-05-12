@@ -51,35 +51,38 @@ export function PhotoType({ content, childs, selectedLayers, setSelectedLayers, 
     })
   }
 
-  async function getPhotoLayer(newSelectedLayer: any) {
-    await newSelectedLayer.photos.forEach(async (photo: any, idx: any) => {
-      if (photo.local_data_type === 'Marker-COG'){
-        const TITILER_URL = import.meta.env.VITE_TITILER_URL;
-        await axios.get(`${TITILER_URL}/cog/info?url=${encodeURIComponent(photo.url)}`).then(r =>{
-          const position = [(r.data.bounds[3] + r.data.bounds[1])/2, (r.data.bounds[2] + r.data.bounds[0])/2]
-          newSelectedLayer.photos[idx].position = position
-        })
-      }
-    });
-    return newSelectedLayer
-  }
+  // async function getPhotoLayer(newSelectedLayer: any) {
+  //   await newSelectedLayer.photos.forEach(async (photo: any, idx: any) => {
+  //     if (photo.local_data_type === 'Marker-COG'){
+  //       const TITILER_URL = import.meta.env.VITE_TITILER_URL;
+  //       await axios.get(`${TITILER_URL}/cog/info?url=${encodeURIComponent(photo.url)}`).then(r =>{
+  //         const position = [(r.data.bounds[3] + r.data.bounds[1])/2, (r.data.bounds[2] + r.data.bounds[0])/2]
+  //         newSelectedLayer.photos[idx].position = position
+  //       })
+  //     }
+  //   });
+  //   return newSelectedLayer
+  // }
 
   async function addMapLayer(layerInfo: any) {
     setLayerAction('add')
     const newSelectedLayer = layerInfo.dataInfo
     newSelectedLayer.opacity = defaultOpacity
     newSelectedLayer.zoom = true
-    if (newSelectedLayer.data_type === 'Photo'){
-      await getPhotoLayer(newSelectedLayer).then(layer => {
-        setSelectedLayers({...selectedLayers,
-          [layerInfo.subLayer]: layer
-        })
-      })
-    } else{
-      setSelectedLayers({...selectedLayers,
-        [layerInfo.subLayer]: newSelectedLayer
-      })
-    }
+    setSelectedLayers({...selectedLayers,
+      [layerInfo.subLayer]: newSelectedLayer
+    })
+    // if (newSelectedLayer.data_type === 'Photo'){
+    //   await getPhotoLayer(newSelectedLayer).then(layer => {
+    //     setSelectedLayers({...selectedLayers,
+    //       [layerInfo.subLayer]: layer
+    //     })
+    //   })
+    // } else{
+    //   setSelectedLayers({...selectedLayers,
+    //     [layerInfo.subLayer]: newSelectedLayer
+    //   })
+    // }
   }
 
   useEffect(() => {

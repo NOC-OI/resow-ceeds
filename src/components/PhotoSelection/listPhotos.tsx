@@ -1,3 +1,5 @@
+import * as Papa from 'papaparse'
+
 let photos: string[] = [
   'M58_10441297_12987744811443_1.tif',
   'M58_10441297_12987744866443_1.tif',
@@ -1217,96 +1219,29 @@ let photos: string[] = [
   // 'M58_10441297_12987758284048_1.tif'
 ]
 
-let photoDict: object[] = []
-photos.forEach((photo, idx) => {
-  let value = {
-    url: `https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output/${photo}`,
-    local_data_type: 'Marker-COG',
-    description: `Photo ${idx} 2012`,
-    title: 'Seabed',
-    active: false,
-    id: idx,
-  }
-  photoDict.push(value)
-})
 
-const listValues: object[] = [{ 
+function parseCSVPhotos(){
+  let photos: any[] = []
+  Papa.parse("https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output/HF2012_other_data.csv", {
+    download: true,
+    header: true,
+    dynamicTyping: true,
+    step: function(row) {
+      let photoDict = JSON.parse(JSON.stringify(row)).data
+      photoDict.active = false
+      photoDict.local_data_type = 'Marker-COG'
+      photos.push(photoDict)
+    }
+  });
+  return photos
+}
+
+export const listPhotos: any[] = [{ 
   layerClass: 'Seabed Images',
   layerNames: {
     2012: {
       data_type: 'Photo',
-      photos: photoDict
+      photos: parseCSVPhotos()
     }
   }
 }]
-
-
-// const listValues = [{
-//   layerClass: 'Seabed Images',
-//   layerNames: {
-//     2012: {
-//       data_type: 'Photo',
-//       photos: [
-//         {
-//           url: 'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output/cog_rep_M58_10441297_12987744811443_1.tif',
-//           local_data_type: 'Marker-COG',
-//           description: 'Photo 1 2012',
-//           title: 'Seabed',
-//           active: false,
-//           id: 1,
-//         },
-//         {
-//           url:  'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output/cog_rep_M58_10441297_12987749054970_1.tif',
-//           local_data_type: 'Marker-COG',
-//           description: 'Photo 2 2012',
-//           title: 'Seabed',
-//           active: false,
-//           id: 2,
-//         },
-//         {
-//           url:  'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output/cog_rep_M58_10441297_12987749390121_1.tif',
-//           local_data_type: 'Marker-COG',
-//           description: 'Photo 3 2012',
-//           title: 'Seabed',
-//           active: false,
-//           id: 3,
-//         },
-//         {
-//           url:  'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output/cog_rep_M58_10441297_12987755746830_1.tif',
-//           local_data_type: 'Marker-COG',
-//           description: 'Photo 4 2012',
-//           title: 'Seabed',
-//           active: false,
-//           id: 4,
-//         },
-//         {
-//           url:  'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output/cog_rep_M58_10441297_12987757649461_1.tif',
-//           local_data_type: 'Marker-COG',
-//           description: 'Photo 5 2012',
-//           title: 'Seabed',
-//           active: false,
-//           id: 5,
-//         },
-//       ],
-//     }
-//   },
-// }]
-
-function sortListLayers(listLayers: any[]){
-  let sortedList: string[] = []
-  listLayers.forEach(listLayer => {
-    sortedList.push(listLayer.layerClass)
-  })
-  sortedList.sort()
-  let newSortedList: any[] = []
-  sortedList.forEach(sorted => {
-    listLayers.forEach(listLayer => {
-      if (sorted === listLayer.layerClass){
-        newSortedList.push(listLayer)
-      }
-    })
-  })
-  return newSortedList
-}
-
-export const listPhotos = sortListLayers(listValues)

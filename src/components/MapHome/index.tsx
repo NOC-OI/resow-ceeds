@@ -10,6 +10,7 @@ import React from 'react';
 import { callBetterWMS } from './addBetterWMS';
 import { GetGeoblazeValue } from './getGeoblazeValue';
 import { GetMBTiles } from './addMBTiles';
+import { GetPhotoMarker } from './addPhotoMarker';
 
 interface DisplayPositionProps{
   map: any,
@@ -57,17 +58,11 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction, sel
   const MAPBOX_API_KEY = import.meta.env.VITE_MAPBOX_API_KEY;
   const MAPBOX_USERID = 'mapbox/satellite-v9';
   const MAPBOX_ATTRIBUTION = "Map data &copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors, Imagery © <a href='https://www.mapbox.com/'>Mapbox</a>"
-
   const [map, setMap] = useState<any>(null)
 
   const [depth, setDepth] = useState(null)
   
   const defaultWMSBounds = [[48, -14],[52, -4]]
-
-  // if (map) {
-  //   console.log(map._layers)
-  // }
-  // console.log(selectedLayers)
 
   const [loading, setLoading] = useState<boolean>(false)
 
@@ -107,7 +102,7 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction, sel
   async function changeIcons(photo: any) {
     map.eachLayer(function(mapLayer: any){
       if(mapLayer.options.dataType === 'marker'){
-        if (mapLayer.options.url === photo.url){
+        if (mapLayer.options.FileName === photo.FileName){
           mapLayer.setIcon(activeIcon)
           if (!photo.notCenter){
             console.log(map)
@@ -153,25 +148,42 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction, sel
       let latValues:number[] = []
       let lonValues:number[] = []
       bounds = defaultWMSBounds
-      await layerName.photos.map(async (photo: { notCenter: boolean, url: string; local_data_type: string; position: any }) => {
-        if (photo.local_data_type === 'Marker-COG'){
-          const getCOGLayer = new GetTileLayer(photo, actualLayer, true, 'marker')
-          await getCOGLayer.getTile().then(async function () {
-            console.log(getCOGLayer.layer)       
-            map.addLayer(getCOGLayer.layer)
-            if (getCOGLayer.layer){
-              getCOGLayer.layer.on('click', async function (e) {
-                const popup = L.popup()
-                  .setLatLng(e.latlng)
-                  .setContent(getCOGLayer.popupText)
-                  .openOn(map);
-                photo.notCenter = true
-                // getCOGLayer.layer. zIndexOffset = 9999
-                setActivePhoto(photo)
-              })
-            }
-          });
-        }
+      await layerName.photos.map(async (photo: any) => {
+        const getPhotoMarker = new GetPhotoMarker(photo, actualLayer)
+        await getPhotoMarker.getMarker().then(async function () {
+          console.log(getPhotoMarker.layer)
+          map.addLayer(getPhotoMarker.layer)
+          if (getPhotoMarker.layer){
+            getPhotoMarker.layer.on('click', async function (e) {
+              const popup = L.popup()
+                .setLatLng(e.latlng)
+                .setContent(getPhotoMarker.popupText)
+                .openOn(map);
+              photo.notCenter = true
+              setActivePhoto(photo)
+            })
+          }
+        });
+        
+  
+        // if (photo.local_data_type === 'Marker-COG'){
+        //   const getCOGLayer = new GetTileLayer(photo, actualLayer, true, 'marker')
+        //   await getCOGLayer.getTile().then(async function () {
+        //     console.log(getCOGLayer.layer)       
+        //     map.addLayer(getCOGLayer.layer)
+        //     if (getCOGLayer.layer){
+        //       getCOGLayer.layer.on('click', async function (e) {
+        //         const popup = L.popup()
+        //           .setLatLng(e.latlng)
+        //           .setContent(getCOGLayer.popupText)
+        //           .openOn(map);
+        //         photo.notCenter = true
+        //         // getCOGLayer.layer. zIndexOffset = 9999
+        //         setActivePhoto(photo)
+        //       })
+        //     }
+        //   });
+        // }
       })
     } else if (layerName.data_type === 'MBTiles'){
       bounds = defaultWMSBounds
@@ -207,7 +219,7 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction, sel
       let idx: number = 1
       let newShowPhotos = [...showPhotos]
       newShowPhotos.forEach((photo, i)=> {
-          if (activePhoto.url === photo.url){
+          if (activePhoto.FileName === photo.FileName){
           newShowPhotos[i].active = true
           idx = i
         } else{

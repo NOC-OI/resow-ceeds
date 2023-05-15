@@ -94,11 +94,13 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction, sel
   async function changeIcons(photo: any) {
     const activeIcon = L.icon({
       iconUrl: '/marker-icon_red.png',
-      shadowUrl: '/marker-shadow.png',
+      // shadowUrl: '/marker-shadow.png',
+      iconSize: [33, 55]
     });
     const inactiveIcon = L.icon({
       iconUrl: '/marker-icon.png',
-      shadowUrl: '/marker-shadow.png',
+      // shadowUrl: '/marker-shadow.png',
+      iconSize: [27, 45]
     });
     map.eachLayer(function(mapLayer: any){
       if(mapLayer.options.dataType === 'marker'){
@@ -113,7 +115,6 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction, sel
       }
     })
   }
-
 
 
   async function generateSelectedLayer () {
@@ -358,6 +359,18 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction, sel
     })
   }
 
+  function changeMapMarkerShow() {
+    map.eachLayer(function(layer: any){
+      if (actualLayer.includes(layer.options.attribution)){
+        if(selectedLayers[actualLayer[0]].show.includes(layer.options.FileName)) {
+          layer.setOpacity(1)
+        } else{
+          layer.setOpacity(0)
+        }
+      }
+    })
+  }
+
   useEffect(() => {
     if (layerAction === 'remove') {
       setLoading(true)
@@ -372,6 +385,9 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction, sel
       setLayerAction('')
     } else if (layerAction === 'opacity'){
       changeMapOpacity()
+      setLayerAction('')
+    } else if (layerAction === 'marker-changes'){
+      changeMapMarkerShow()
       setLayerAction('')
     }
   }, [selectedLayers])

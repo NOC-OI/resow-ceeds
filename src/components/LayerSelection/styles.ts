@@ -16,7 +16,8 @@ export const LayerSelectionContainer = styled.div`
 export const LayerSelectionTitle = styled.div`
   width: 100%;
   height: 2.5rem;
-  background: ${(props) => props.theme['blue-500']};
+  background-color: ${(props) => props.theme['blue-500']};
+  background-image: linear-gradient(315deg, ${(props) => props.theme['blue-500']} 0%, ${(props) => props.theme['blue-300']} 74%);
   border-top-right-radius: 16px;
   border-top-left-radius: 16px;
   margin: 0;

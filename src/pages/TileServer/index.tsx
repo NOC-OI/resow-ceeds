@@ -116,6 +116,7 @@ export function TileServer() {
             setLayerLegend={setLayerLegend}
             setShowPhotos={setShowPhotos}
             listPhotos={listPhotos}
+            title={'Photo Selection'}
           /> :
           null
         }

@@ -1,4 +1,4 @@
-import { ContrastSelectorContainer, SideSelectionContainer, SideSelectionLink } from "./styles";
+import { ContrastSelectorContainer, SideSelectionContainer, SideSelectionLink, SideSelectionLinkFinal } from "./styles";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCalculator, faCamera, faLayerGroup, faTrash, faUser, faUserShield } from "@fortawesome/free-solid-svg-icons";
 import { Icon } from '@iconify/react';
@@ -153,28 +153,30 @@ export function SideSelection({layer, setLayer, calc, setCalc, selectedLayers, s
   }
 
   return (
-    <>
-      <SideSelectionContainer>
-        <SideSelectionLink onClick={handleShowLayerSelection}>
-          <FontAwesomeIcon title={"Select Layers"} icon={faLayerGroup} />
-        </SideSelectionLink>
-        <SideSelectionLink onClick={handleShowPhotoSelection}>
-          <FontAwesomeIcon title={"Select Pictures"} icon={faCamera} />
-        </SideSelectionLink>
-        <SideSelectionLink  onClick={handleShowCalcSelection} >
-          <FontAwesomeIcon title={"Use Cases Calculations"} icon={faCalculator} />
-        </SideSelectionLink>
-        <SideSelectionLink onClick={handleGoToBathymetry}>
-          <Icon icon="bi:badge-3d-fill" />
-        </SideSelectionLink>
-        <SideSelectionLink onClick={handleEraseLayers}>
-          <FontAwesomeIcon title={"Clean map"} icon={faTrash} />
-        </SideSelectionLink>
-        <SideSelectionLink>
-          <FontAwesomeIcon title={"Login"} icon={faUser}/>
-        </SideSelectionLink>
-        {photoPage ? <ContrastSelector contrast={contrast} setContrast={setContrast} /> : null}
-      </SideSelectionContainer>
-    </>
+    <div>
+        <SideSelectionContainer>
+          <SideSelectionLink onClick={handleShowLayerSelection}>
+            <FontAwesomeIcon title={"Select Layers"} icon={faLayerGroup} />
+          </SideSelectionLink>
+          <SideSelectionLink onClick={handleShowPhotoSelection}>
+            <FontAwesomeIcon title={"Select Pictures"} icon={faCamera} />
+          </SideSelectionLink>
+          <SideSelectionLink  onClick={handleShowCalcSelection} >
+            <FontAwesomeIcon title={"Use Cases Calculations"} icon={faCalculator} />
+          </SideSelectionLink>
+          <SideSelectionLink onClick={handleGoToBathymetry}>
+            <Icon icon="bi:badge-3d-fill" />
+          </SideSelectionLink>
+          <SideSelectionLink onClick={handleEraseLayers}>
+            <FontAwesomeIcon title={"Clean map"} icon={faTrash} />
+          </SideSelectionLink>
+          <SideSelectionLinkFinal>
+            <SideSelectionLink>
+              <FontAwesomeIcon title={"Login"} icon={faUser}/>
+            </SideSelectionLink>
+          </SideSelectionLinkFinal>
+          {photoPage ? <ContrastSelector contrast={contrast} setContrast={setContrast} /> : null}
+        </SideSelectionContainer>
+    </div>
   )
 }

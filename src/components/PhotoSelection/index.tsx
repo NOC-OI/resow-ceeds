@@ -12,9 +12,10 @@ interface PhotoSelectionProps{
   setLayerLegend: any,
   setShowPhotos: any,
   listPhotos: any,
+  title?: string,
 }
 
-export function PhotoSelection({selectedLayers, setSelectedLayers, actualLayer, setActualLayer, layerAction, setLayerAction, layerLegend, setLayerLegend, setShowPhotos, listPhotos}: PhotoSelectionProps) {
+export function PhotoSelection({selectedLayers, setSelectedLayers, actualLayer, setActualLayer, layerAction, setLayerAction, layerLegend, setLayerLegend, setShowPhotos, listPhotos, title}: PhotoSelectionProps) {
 
   return (
     <PhotoSelectionContainer>

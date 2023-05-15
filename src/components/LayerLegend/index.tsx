@@ -18,9 +18,11 @@ export function LayerLegend({layerLegend, setLayerLegend}: LayerLegendProps) {
       <div>
         <FontAwesomeIcon contentStyleType={'regular'} icon={faCircleXmark} onClick={handleClose} />
       </div>
-      <h1>{layerLegend.layerName}</h1>
       <div>
-        <img src={layerLegend.url} />
+        <h1>{layerLegend.layerName}</h1>
+        <div>
+          <img src={layerLegend.url} />
+        </div>
       </div>
     </LayerLegendContainer>
   )

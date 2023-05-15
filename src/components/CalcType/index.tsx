@@ -10,7 +10,7 @@ interface keyable {
 
 interface CalcTypeProps {
   content: String
-  childs: Object
+  childs: any
   setCalculationValue: any,
   latLonLimits: any,
   selectedArea: any,
@@ -47,7 +47,7 @@ async function handleShowCalcValues(params: keyable, setCalculationValue: any, s
 
 export function CalcType({ content, childs, setCalculationValue, latLonLimits, selectedArea}: CalcTypeProps) {
 
-  const [subCalcs, setSubCalcs] = useState<keyable>({})
+  const [subCalcs, setSubCalcs] = useState([])
 
   const [isActive, setIsActive] = useState(false);
 
@@ -55,7 +55,7 @@ export function CalcType({ content, childs, setCalculationValue, latLonLimits, s
 
   function handleShowCalcOptions() {
     setIsActive(isActive => !isActive)
-    setSubCalcs(subCalcs => Object.keys(subCalcs).length === 0? childs : {})
+    setSubCalcs(subCalcs => subCalcs.length === 0? childs : [])
   }
 
   return (
@@ -69,13 +69,12 @@ export function CalcType({ content, childs, setCalculationValue, latLonLimits, s
           </header>
         </div>
         <div>
-          {Object.keys(subCalcs).map(subCalc => {
-            let newValue = subCalcs[subCalc]
+          {subCalcs.map(subCalc => {
             return (
-              <CalcTypeOptionsContainer key={subCalcs[subCalc]['url']}>
+              <CalcTypeOptionsContainer key={`${content}_${subCalc['name']}_${subCalc['url']}`}>
                 <label>
                   {/* <p>{subCalcs[subCalc]['name']}</p> */}
-                  <p onClick={async() => {await handleShowCalcValues(subCalcs[subCalc], setCalculationValue, setLoading, latLonLimits, selectedArea)}}>{subCalcs[subCalc]['name']}</p>
+                  <p onClick={async() => {await handleShowCalcValues(subCalc, setCalculationValue, setLoading, latLonLimits, selectedArea)}}>{subCalc['name']}</p>
                 </label>
               </CalcTypeOptionsContainer>
             )

@@ -40,6 +40,11 @@ export const SideSelectionLink = styled.header`
   }
 `
 
+export const SideSelectionLinkFinal = styled.header`
+  position: absolute;
+  bottom: 0rem;
+`
+
 export const ContrastSelectorContainer = styled.div`
   left: calc(1.5rem + 0.375rem + 0.25rem);
   top: 0;

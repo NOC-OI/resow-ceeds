@@ -1,18 +1,21 @@
 import styled from 'styled-components'
 
 export const LayerLegendContainer = styled.div`
+  overflow-y: auto;
   right: 0.5rem;
   top: 5vh;
   width: max-content;
   background-color: ${(props) => props.theme['white']};
   z-index: 9999;
-  height: max-content;
+  max-height: 90vh;
   margin-left: 1rem;
   padding: 0.5rem;
   border-radius: 16px;
   box-shadow: 0px 4px 4px ${(props) => props.theme['black']};
   z-index: 9999;
-
+  div:nth-child(2){
+    overflow: hidden;
+  }
   h1{
     font-size: 0.85rem;
     line-height: 1;

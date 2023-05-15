@@ -1321,7 +1321,7 @@ async function parseCSV(){
 }
 
 async function logJSONData() {
-  const response = await fetch('https://haigfras-api.herokuapp.com/csv?filename=HF2012_other_data&columns=active:False,local_data_type:Marker-COG');
+  const response = await fetch('https://haigfras-api.herokuapp.com/csv?filenames=HF2012_other_data,HF2012_annotation_summary&columns=active:False,local_data_type:Marker-COG');
   const jsonData = await response.json()
   const data = [{ 
     layerClass: 'Seabed Images',

@@ -136,9 +136,10 @@ export class GetTileLayer {
     this.bounds = cogInfo.bounds
     if (this.dataType === 'marker'){
 
-      this.icon = L.icon({
+      const inactiveIcon = L.icon({
         iconUrl: '/marker-icon.png',
-        shadowUrl: '/marker-shadow.png',
+        // shadowUrl: '/marker-shadow.png',
+        iconSize: [27, 45]
       });
 
       this.position = [(this.bounds[3] + this.bounds[1])/2,(this.bounds[2] + this.bounds[0])/2]

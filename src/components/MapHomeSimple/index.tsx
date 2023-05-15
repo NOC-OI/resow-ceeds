@@ -104,7 +104,7 @@ function MapHome1({photoId, contrast, setContrast, actualLayer, setActualLayer}:
     let bounds
     const photoValues = getPhotoInfo()
     await axios.get(
-      'https://haigfras-api.herokuapp.com/csv?filename=HF2012_other_data&columns=active:False,local_data_type:Marker-COG'
+      'https://haigfras-api.herokuapp.com/csv?filenames=HF2012_other_data,HF2012_annotation_summary&columns=active:False,local_data_type:Marker-COG,show:True'
     ).then(photos => {
       photos.data.every((photo: any) => {
         if (photo.id.toString() === photoValues[0]) {

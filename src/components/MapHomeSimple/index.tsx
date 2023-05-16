@@ -120,6 +120,7 @@ function MapHome1({photoId, contrast, setContrast, actualLayer, setActualLayer}:
               map.addLayer(layer, true)
               layer? bringLayerToFront(layer): null
               if(fitBounds){
+                // map.fitBounds(defaultWMSBounds)
                 map.fitBounds(bounds)
               }
               setLoading(false)
@@ -132,42 +133,6 @@ function MapHome1({photoId, contrast, setContrast, actualLayer, setActualLayer}:
         }
       })
     })
-    // listPhotos.forEach((photos: any) => {
-    //   if (photos.layerClass === photoValues[2]) {
-    //     console.log(photos.layerNames[photoValues[1]].photos)
-    //     // while (photos.layerNames[photoValues[1]].photos.length === 0){
-    //     //   let x = 1
-    //     // }
-    //     photos.layerNames[photoValues[1]].photos.every((photo: any) => {
-    //       console.log(photo)
-    //       if (photo.id.toString() === photoValues[0]) {
-    //         if (photo.local_data_type === 'Marker-COG'){
-    //           photo.url = `${BASIC_BUCKET_URL}/${photo.FileName}_1.tif`
-    //           console.log(photo.url)
-    //           const getCOGLayer = new GetTileLayer(photo, [photo.url], contrast)
-    //           getCOGLayer.getTile().then( async function () {
-    //             layer = getCOGLayer.layer
-    //             bounds = [
-    //               [getCOGLayer.bounds[3], getCOGLayer.bounds[0]],
-    //               [getCOGLayer.bounds[1], getCOGLayer.bounds[2]]
-    //             ]
-    //             map.addLayer(layer, true)
-    //             layer? bringLayerToFront(layer): null
-    //             console.log(layer)
-    //             if(fitBounds){
-    //               map.fitBounds(bounds)
-    //             }
-    //             setLoading(false)
-    //             setActualLayer([photo.url])
-    //           });
-    //         }      
-    //         return false
-    //       } else{
-    //         return true
-    //       }
-    //     });
-    //   }
-    // });
   }
 
   const fetchData = async (url: string, actualLayer: string) => {
@@ -328,3 +293,40 @@ function mapPropsAreEqual(prevMap: any, nextMap: any) {
 }
 
 export const MapHomeSimple = React.memo(MapHome1, mapPropsAreEqual)
+
+    // listPhotos.forEach((photos: any) => {
+    //   if (photos.layerClass === photoValues[2]) {
+    //     console.log(photos.layerNames[photoValues[1]].photos)
+    //     // while (photos.layerNames[photoValues[1]].photos.length === 0){
+    //     //   let x = 1
+    //     // }
+    //     photos.layerNames[photoValues[1]].photos.every((photo: any) => {
+    //       console.log(photo)
+    //       if (photo.id.toString() === photoValues[0]) {
+    //         if (photo.local_data_type === 'Marker-COG'){
+    //           photo.url = `${BASIC_BUCKET_URL}/${photo.FileName}_1.tif`
+    //           console.log(photo.url)
+    //           const getCOGLayer = new GetTileLayer(photo, [photo.url], contrast)
+    //           getCOGLayer.getTile().then( async function () {
+    //             layer = getCOGLayer.layer
+    //             bounds = [
+    //               [getCOGLayer.bounds[3], getCOGLayer.bounds[0]],
+    //               [getCOGLayer.bounds[1], getCOGLayer.bounds[2]]
+    //             ]
+    //             map.addLayer(layer, true)
+    //             layer? bringLayerToFront(layer): null
+    //             console.log(layer)
+    //             if(fitBounds){
+    //               map.fitBounds(bounds)
+    //             }
+    //             setLoading(false)
+    //             setActualLayer([photo.url])
+    //           });
+    //         }      
+    //         return false
+    //       } else{
+    //         return true
+    //       }
+    //     });
+    //   }
+    // });

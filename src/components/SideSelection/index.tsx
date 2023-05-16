@@ -113,23 +113,27 @@ export function SideSelection({layer, setLayer, calc, setCalc, selectedLayers, s
   }
 
   useEffect(() => {
-    setLoading(true)
-    fetchData()
+    if (!photoId){
+      setLoading(true)
+      fetchData()
+    }
   }, [])
 
   useEffect(() => {
-    if (photo){
-      const photoList: any[] = []
-      Object.keys(selectedLayers).forEach((layer: string) => {
-        if(selectedLayers[layer].data_type === 'Photo'){
-          selectedLayers[layer].photos.forEach((photo: any) => {
-            photoList.push(photo)
-          })
-        }
-      })
-      setShowPhotos(photoList)
-    } else{
-      setShowPhotos([])
+    if (window.location.pathname !== '/3d' ) {
+      if (photo){
+        const photoList: any[] = []
+        Object.keys(selectedLayers).forEach((layer: string) => {
+          if(selectedLayers[layer].data_type === 'Photo'){
+            selectedLayers[layer].photos.forEach((photo: any) => {
+              photoList.push(photo)
+            })
+          }
+        })
+        setShowPhotos(photoList)
+      } else{
+        setShowPhotos([])
+      }
     }
   }, [photo])
 
@@ -173,6 +177,7 @@ export function SideSelection({layer, setLayer, calc, setCalc, selectedLayers, s
           </SideSelectionLinkFinal>
           {photoPage ? <ContrastSelector contrast={contrast} setContrast={setContrast} /> : null}
         </SideSelectionContainer>
+        {loading ? <Loading/> : null }
     </div>
   )
 }

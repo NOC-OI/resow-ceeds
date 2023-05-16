@@ -11,6 +11,7 @@ import { callBetterWMS } from './addBetterWMS';
 import { GetGeoblazeValue } from './getGeoblazeValue';
 import { GetMBTiles } from './addMBTiles';
 import { GetPhotoMarker } from './addPhotoMarker';
+import './styles.css';
 
 interface DisplayPositionProps{
   map: any,
@@ -62,7 +63,12 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction, sel
 
   const [depth, setDepth] = useState(null)
   
-  const defaultWMSBounds = [[48, -14],[52, -4]]
+  const defaultWMSBounds = [[50.02017473656112, -8.322790146359285],[50.57842994645117, -7.102163465517706]]
+
+
+  // if(map){
+  //   console.log(map.getBounds())
+  // }
 
   const [loading, setLoading] = useState<boolean>(false)
 
@@ -208,7 +214,8 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction, sel
       map.addLayer(layer, true)
       layer? bringLayerToFront(layer): null
     }
-    map.fitBounds(bounds)
+    map.fitBounds(defaultWMSBounds)
+    // map.fitBounds(bounds)
     setLoading(false)
   }
 
@@ -341,7 +348,8 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction, sel
             [layer.options.limits[3], layer.options.limits[0]],
             [layer.options.limits[1], layer.options.limits[2]]
           ]
-          map.fitBounds(newBounds)
+          map.fitBounds(defaultWMSBounds)
+          // map.fitBounds(newBounds)
         }
 
         bringLayerToFront(layer)
@@ -396,10 +404,11 @@ function MapHome1({selectedLayers, actualLayer, layerAction, setLayerAction, sel
     () => (
       <MapContainer
         style={{ height: '100vh', width: '100vw' }}
-        center={[50.39415159013279, -7.712108868853798]}
-        zoom={5}
+        center={[50.3, -7.712108868853798]}
+        zoom={10.5}
+        zoomSnap={0.1}
         maxZoom={30}
-        minZoom={2}
+        minZoom={3}
         scrollWheelZoom={true}
         zoomControl={false}
         ref={setMap}

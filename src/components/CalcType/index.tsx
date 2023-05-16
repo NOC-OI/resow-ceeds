@@ -2,6 +2,8 @@ import { ArrowCircleDown, ArrowCircleUp } from "phosphor-react";
 import { useState } from "react";
 import { CalcTypeContainer, CalcTypeOptionsContainer } from "./styles";
 import { Loading } from "../Loading";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 
 interface keyable {
   [key: string]: any
@@ -9,11 +11,13 @@ interface keyable {
 
 
 interface CalcTypeProps {
-  content: String
+  title: string,
+  content: string,
   childs: any
   setCalculationValue: any,
   latLonLimits: any,
   selectedArea: any,
+  setInfoBoxButton?: any,
 }
 
 interface CalcTypeOptionsProps {
@@ -45,7 +49,7 @@ async function handleShowCalcValues(params: keyable, setCalculationValue: any, s
   await getCalculationResults()
 }
 
-export function CalcType({ content, childs, setCalculationValue, latLonLimits, selectedArea}: CalcTypeProps) {
+export function CalcType({ title, content, childs, setCalculationValue, latLonLimits, selectedArea, setInfoBoxButton}: CalcTypeProps) {
 
   const [subCalcs, setSubCalcs] = useState([])
 
@@ -57,21 +61,36 @@ export function CalcType({ content, childs, setCalculationValue, latLonLimits, s
     setIsActive(isActive => !isActive)
     setSubCalcs(subCalcs => subCalcs.length === 0? childs : [])
   }
+  
+  function handleClickLayerInfo(title: string, content: String) {
+    setInfoBoxButton({
+      title: title,
+      content: content
+    })
+  }
 
   return (
       <CalcTypeContainer>
         <div>
-          <header onClick={handleShowCalcOptions}>
-            <p>{content}</p>
-            <span>
-              {isActive? <ArrowCircleUp size={24} /> : <ArrowCircleDown size={24} />}
-            </span>
+          <header>
+            <p onClick={handleShowCalcOptions}>{title}</p>
+            <div>
+              <span>
+                <FontAwesomeIcon
+                  icon={faCircleInfo}
+                  onClick={() => handleClickLayerInfo(title, content)}
+                />
+              </span>
+              <span onClick={handleShowCalcOptions}>
+                {isActive? <ArrowCircleUp size={24}  /> : <ArrowCircleDown size={24} />}
+              </span>
+            </div>
           </header>
         </div>
         <div>
           {subCalcs.map(subCalc => {
             return (
-              <CalcTypeOptionsContainer key={`${content}_${subCalc['name']}_${subCalc['url']}`}>
+              <CalcTypeOptionsContainer key={`${title}_${subCalc['name']}_${subCalc['url']}`}>
                 <label>
                   {/* <p>{subCalcs[subCalc]['name']}</p> */}
                   <p onClick={async() => {await handleShowCalcValues(subCalc, setCalculationValue, setLoading, latLonLimits, selectedArea)}}>{subCalc['name']}</p>

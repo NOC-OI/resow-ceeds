@@ -20,6 +20,7 @@ interface LayerTypeProps {
   setLayerAction: any,
   layerLegend: any,
   setLayerLegend: any,
+  setInfoBoxButton?: any,
 }
 
 interface LayerTypeOptionsProps {
@@ -27,7 +28,7 @@ interface LayerTypeOptionsProps {
 }
 
 
-export function LayerType({ content, childs, selectedLayers, setSelectedLayers, actualLayer, setActualLayer, layerAction, setLayerAction, layerLegend, setLayerLegend }: LayerTypeProps) {
+export function LayerType({ content, childs, selectedLayers, setSelectedLayers, actualLayer, setActualLayer, layerAction, setLayerAction, layerLegend, setLayerLegend, setInfoBoxButton }: LayerTypeProps) {
 
   const [subLayers, setSubLayers] = useState<keyable>({})
 
@@ -92,6 +93,12 @@ export function LayerType({ content, childs, selectedLayers, setSelectedLayers, 
     return selectedLayers[`${content}_${subLayer}`].opacity
   }
 
+  function handleClickLayerInfo(content: String, subLayer: string) {
+    setInfoBoxButton({
+      title: `${content}_${subLayer}`,
+      content: selectedLayers[`${content}_${subLayer}`].content
+    })
+  }
 
   function LayerTypeOptions({subLayer}: LayerTypeOptionsProps) {
 
@@ -156,7 +163,11 @@ export function LayerType({ content, childs, selectedLayers, setSelectedLayers, 
           </label>
           { verifyIfWasSelectedBefore(content, subLayer)? (
             <div>
-              <FontAwesomeIcon icon={faCircleInfo} />
+              <FontAwesomeIcon
+                icon={faCircleInfo}
+                title={'Show Layer Info'}              
+                onClick={() => handleClickLayerInfo(content, subLayer)}
+              />
               <FontAwesomeIcon
                 icon={faList}
                 title="Show Legend"

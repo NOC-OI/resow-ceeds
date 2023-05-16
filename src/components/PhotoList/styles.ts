@@ -10,7 +10,8 @@ export const PhotoListContainer = styled.div`
   min-width: 10vw;
   max-width: 60vw;
   overflow-x: scroll;
-  padding: 0.5rem;
+  margin-left: 1rem;
+  padding: 0.4rem;
   border-radius: 8px;
   box-shadow: 0px 4px 4px ${(props) => props.theme['black']};
   z-index: 9999;

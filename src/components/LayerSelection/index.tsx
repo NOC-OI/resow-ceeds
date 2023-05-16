@@ -13,9 +13,10 @@ interface LayerSelectionProps{
   setLayerAction: any,
   layerLegend: any,
   setLayerLegend: any,
+  setInfoButtonBox?: any,
 }
 
-export function LayerSelection({selectedLayers, setSelectedLayers, actualLayer, setActualLayer, layerAction, setLayerAction, layerLegend, setLayerLegend}: LayerSelectionProps) {
+export function LayerSelection({selectedLayers, setSelectedLayers, actualLayer, setActualLayer, layerAction, setLayerAction, layerLegend, setLayerLegend, setInfoButtonBox}: LayerSelectionProps) {
 
   const [layerClasses, setLayerClasses] = useState(listLayers)
 
@@ -39,6 +40,7 @@ export function LayerSelection({selectedLayers, setSelectedLayers, actualLayer, 
               setLayerAction={setLayerAction}
               layerLegend={layerLegend}
               setLayerLegend={setLayerLegend}
+              setInfoBoxButton={setInfoButtonBox}
             />
           )
         })}

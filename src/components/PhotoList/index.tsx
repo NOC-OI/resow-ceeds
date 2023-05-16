@@ -11,9 +11,10 @@ interface PhotoListProps {
   activePhoto: any,
   setActivePhoto: any,
   mapBounds: any,
+  infoButtonBox?: any,
 }
 
-export function PhotoList({showPhotos, setShowPhotos, activePhoto, setActivePhoto, mapBounds }: PhotoListProps) {
+export function PhotoList({showPhotos, setShowPhotos, activePhoto, setActivePhoto, mapBounds, infoButtonBox }: PhotoListProps) {
 
   const navigate = useNavigate();
 
@@ -29,6 +30,7 @@ export function PhotoList({showPhotos, setShowPhotos, activePhoto, setActivePhot
     const n = shuffled.length > 10? 10: shuffled.length
     const newList: any = []
     let count: number = 0
+    let count2: number = 0
     if (activePhoto){
       count++
       newList.push(activePhoto)        
@@ -41,6 +43,7 @@ export function PhotoList({showPhotos, setShowPhotos, activePhoto, setActivePhot
       }
       if (el.FileName !== activePhoto.FileName){
         if (el.show){
+          count2 ++ 
           if (el.Latitude > lat[0] && el.Latitude < lat[1] && el.Longitude > lng[0] && el.Longitude < lng[1]){
             newList.push(el)
             count++
@@ -49,6 +52,9 @@ export function PhotoList({showPhotos, setShowPhotos, activePhoto, setActivePhot
       }
       return true
     });
+    if(count2 === 0){
+      return []
+    }
     return newList
   }
 
@@ -67,9 +73,13 @@ export function PhotoList({showPhotos, setShowPhotos, activePhoto, setActivePhot
     setLocalPhotoList(newList)
     // }
   }, [showPhotos])
+  const styleValue = {
+    marginLeft: '-21rem'
+  }
 
+  
   return (
-    <PhotoListContainer>
+    <PhotoListContainer style={Object.keys(infoButtonBox).length > 0? styleValue: {}}>
       {localPhotoList.map((showPhoto: any) => {
       // {shuffled.slice(0, n).map((showPhoto: ShowPhotoProps) => {
         // showPhoto.low_res_url = `${showPhoto.url.slice(0,-4)}.png`

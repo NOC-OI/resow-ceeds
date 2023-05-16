@@ -22,6 +22,7 @@ interface PhotoTypeProps {
   layerLegend: any,
   setLayerLegend: any,
   setShowPhotos: any,
+  setInfoBoxButton?: any,
 }
 
 interface PhotoTypeOptionsProps {
@@ -29,7 +30,7 @@ interface PhotoTypeOptionsProps {
 }
 
 
-export function PhotoType({ content, childs, selectedLayers, setSelectedLayers, actualLayer, setActualLayer, layerAction, setLayerAction, layerLegend, setLayerLegend, setShowPhotos }: PhotoTypeProps) {
+export function PhotoType({ content, childs, selectedLayers, setSelectedLayers, actualLayer, setActualLayer, layerAction, setLayerAction, layerLegend, setLayerLegend, setShowPhotos, setInfoBoxButton }: PhotoTypeProps) {
 
   const [subLayers, setSubLayers] = useState<keyable>({})
 
@@ -64,26 +65,6 @@ export function PhotoType({ content, childs, selectedLayers, setSelectedLayers, 
     setIsActive(isActive => !isActive)
     setSubLayers(subLayers => Object.keys(subLayers).length === 0? childs : {})
   }
-
-  // useEffect(() => {
-  //   if (layerAction){
-  //     if (annotationsAll){
-  //       set
-        
-  //     }
-  //     // const photoList: any[] = []
-  //     // Object.keys(selectedLayers).forEach(layer => {
-  //     //   if(selectedLayers[layer].data_type === 'Photo'){
-  //     //     selectedLayers[layer].photos.forEach((photo: any) => {
-  //     //       photo.layerName = actualLayer[0]
-  //     //       photoList.push(photo)
-  //     //     })
-  //     //   }
-  //     // })
-  //     // setShowPhotos(photoList)
-  //   }
-  // }, [annotationsAll])
-
 
   function Annotations(layerInfo: any){
 
@@ -190,7 +171,6 @@ export function PhotoType({ content, childs, selectedLayers, setSelectedLayers, 
           })
         }
       })
-      console.log(photoList)
       setShowPhotos(photoList)
     }
   }, [selectedLayers])
@@ -227,6 +207,14 @@ export function PhotoType({ content, childs, selectedLayers, setSelectedLayers, 
     function handleClickAnnotations() {
       setShowAnnotations((showAnnotations) => !showAnnotations)
     }
+
+    function handleClickLayerInfo() {
+      setInfoBoxButton({
+        title: `${content}_${subLayer}`,
+        content: selectedLayers[`${content}_${subLayer}`].content
+      })
+    }
+
     return (
       <PhotoTypeOptionsContainer>
         <div>
@@ -241,7 +229,7 @@ export function PhotoType({ content, childs, selectedLayers, setSelectedLayers, 
           </label>
           { verifyIfWasSelectedBefore(content, subLayer)? (
             <div>
-              <FontAwesomeIcon icon={faCircleInfo} />
+              <FontAwesomeIcon icon={faCircleInfo} onClick={handleClickLayerInfo} />
               <FontAwesomeIcon
                 icon={faSliders}
                 title="Select by Annotations"

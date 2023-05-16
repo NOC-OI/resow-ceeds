@@ -10,16 +10,6 @@ interface CalculationValueProps {
 
 export function CalculationValue({calculationValue, setCalculationValue}: CalculationValueProps) {
 
-  let param
-  let results: string[][][]
-
-  if (!calculationValue){
-    param = '---'
-    results = [[['---']]]
-  } else{
-    param = Object.keys(calculationValue[Object.keys(calculationValue)[0]])
-    results = Object.values(calculationValue[Object.keys(calculationValue)[0]])
-  }
   function handleClose(){
     setCalculationValue('')
   }
@@ -29,13 +19,47 @@ export function CalculationValue({calculationValue, setCalculationValue}: Calcul
       <div>
         <FontAwesomeIcon icon={faCircleXmark} onClick={handleClose} />
       </div>
-      <h1>{Object.keys(calculationValue)[0]}</h1>
-      {results.map(result => {
-        let elements = Object.values(result)[0]
+      {Object.keys(calculationValue[Object.keys(calculationValue)[0]]).map((column: any, idx: any) => {
+        let newObject = calculationValue[Object.keys(calculationValue)[0]][column]
         return (
-          elements.map(element =>{
+          Object.keys(newObject).map((calc: any, ii: any) => {
+            let newObject2 = newObject[calc]
             return (
-              <p key={element}>{element}</p>
+              newObject2.map((result: any, i: any) => {
+                if(i === 0){
+                  if (ii === 0){
+                    if(idx === 0){
+                      return (
+                        <div key={`${column}_${calc}_${result}`}>
+                          <h1>{column}</h1>
+                          <h2>{calc}</h2>
+                          <p>{result}</p>
+                        </div>
+                      )
+                    } else{
+                      return (
+                        <div key={`${calc}_${result}`}>
+                          <h2>{calc}</h2>
+                          <p>{result}</p>
+                        </div>
+                      )
+                    }
+                  } else{
+                    return (
+                      <div key={`${result}`}>
+                        <h2>{calc}</h2>
+                        <p>{result}</p>
+                      </div>
+                    )
+                  }
+                } else{
+                  return (
+                    <div key={`${result}_1`}>
+                      <p>{result}</p>
+                    </div>
+                  )
+                }
+              })
             )
           })
         )

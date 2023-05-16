@@ -13,9 +13,10 @@ interface CalcSelectionProps{
   setSelectedArea: any,
   latLonLimits: any,
   setLatLonLimits: any,
+  setInfoButtonBox?: any,
 }
 
-export function CalcSelection({setCalculationValue, selectedArea, setSelectedArea, latLonLimits, setLatLonLimits}: CalcSelectionProps) {
+export function CalcSelection({setCalculationValue, selectedArea, setSelectedArea, latLonLimits, setLatLonLimits, setInfoButtonBox}: CalcSelectionProps) {
 
   const [calcClasses, setCalcClasses] = useState(listCalcs);
 
@@ -170,11 +171,13 @@ export function CalcSelection({setCalculationValue, selectedArea, setSelectedAre
             return (
               <CalcType
                 key={calcClass.calcClass}
-                content={calcClass.calcClass}
+                title={calcClass.calcClass}
+                content={calcClass.content}
                 childs={calcClass.calcNames}
                 setCalculationValue={setCalculationValue}
                 latLonLimits={latLonLimits}
                 selectedArea={selectedArea}
+                setInfoBoxButton={setInfoButtonBox}
               />
             )
           })}

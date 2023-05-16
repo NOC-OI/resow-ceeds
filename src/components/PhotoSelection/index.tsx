@@ -13,9 +13,10 @@ interface PhotoSelectionProps{
   setShowPhotos: any,
   listPhotos: any,
   title?: string,
+  setInfoButtonBox?: any,
 }
 
-export function PhotoSelection({selectedLayers, setSelectedLayers, actualLayer, setActualLayer, layerAction, setLayerAction, layerLegend, setLayerLegend, setShowPhotos, listPhotos, title}: PhotoSelectionProps) {
+export function PhotoSelection({selectedLayers, setSelectedLayers, actualLayer, setActualLayer, layerAction, setLayerAction, layerLegend, setLayerLegend, setShowPhotos, listPhotos, title, setInfoButtonBox}: PhotoSelectionProps) {
 
   return (
     <PhotoSelectionContainer>
@@ -38,6 +39,7 @@ export function PhotoSelection({selectedLayers, setSelectedLayers, actualLayer, 
               layerLegend={layerLegend}
               setLayerLegend={setLayerLegend}
               setShowPhotos={setShowPhotos}
+              setInfoBoxButton={setInfoButtonBox}
             />
           )
         })}

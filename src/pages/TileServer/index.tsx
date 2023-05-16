@@ -9,6 +9,7 @@ import { PhotoList } from "../../components/PhotoList";
 import * as L from 'leaflet';
 import { LayerLegend } from "../../components/LayerLegend";
 import { PhotoSelection } from "../../components/PhotoSelection";
+import { InfoButtonBox } from "../../components/InfoButtonBox";
 
 
 export function TileServer() {
@@ -18,10 +19,10 @@ export function TileServer() {
 
   const [selectedArea, setSelectedArea] = useState(false);
 
-  const [latLonLimits, setLatLonLimits] = useState([new L.LatLng(53.1, -16.9),
-    new L.LatLng(53.1, 2.1),
-    new L.LatLng(39.9, 2.1),
-    new L.LatLng(39.9, -16.9)]
+  const [latLonLimits, setLatLonLimits] = useState([new L.LatLng(50.55, -8.21),
+    new L.LatLng(50.55, -7.35),
+    new L.LatLng(50.07, -7.35),
+    new L.LatLng(50.07, -8.21)]
   )
 
   const [selectedLayers, setSelectedLayers] = useState<Object>({})
@@ -37,6 +38,7 @@ export function TileServer() {
   const [showPhotos, setShowPhotos] = useState<object[]>([])
 
   const [layerLegend, setLayerLegend] = useState('');
+  const [infoButtonBox, setInfoButtonBox] = useState({});
 
   const [activePhoto, setActivePhoto] = useState('');
 
@@ -77,6 +79,7 @@ export function TileServer() {
             setLayerAction={setLayerAction}
             layerLegend={layerLegend}
             setLayerLegend={setLayerLegend}
+            setInfoButtonBox={setInfoButtonBox}
           /> :
           null
         }
@@ -86,6 +89,24 @@ export function TileServer() {
             setSelectedArea={setSelectedArea}
             latLonLimits={latLonLimits}
             setLatLonLimits={setLatLonLimits}
+            setInfoButtonBox={setInfoButtonBox}
+          /> :
+          null
+        }
+        {photo?
+          <PhotoSelection
+            selectedLayers={selectedLayers}
+            setSelectedLayers={setSelectedLayers}
+            actualLayer={actualLayer}
+            setActualLayer={setActualLayer}
+            layerAction={layerAction}
+            setLayerAction={setLayerAction}
+            layerLegend={layerLegend}
+            setLayerLegend={setLayerLegend}
+            setShowPhotos={setShowPhotos}
+            listPhotos={listPhotos}
+            title={'Photo Selection'}
+            setInfoButtonBox={setInfoButtonBox}
           /> :
           null
         }
@@ -103,21 +124,12 @@ export function TileServer() {
           />
           : null
         }
-        {photo?
-          <PhotoSelection
-            selectedLayers={selectedLayers}
-            setSelectedLayers={setSelectedLayers}
-            actualLayer={actualLayer}
-            setActualLayer={setActualLayer}
-            layerAction={layerAction}
-            setLayerAction={setLayerAction}
-            layerLegend={layerLegend}
-            setLayerLegend={setLayerLegend}
-            setShowPhotos={setShowPhotos}
-            listPhotos={listPhotos}
-            title={'Photo Selection'}
-          /> :
-          null
+        {Object.keys(infoButtonBox).length !== 0?
+          <InfoButtonBox
+            infoButtonBox={infoButtonBox}
+            setInfoButtonBox={setInfoButtonBox}
+          />
+          : null
         }
         {showPhotos.length > 0?
           <PhotoList
@@ -126,6 +138,7 @@ export function TileServer() {
             activePhoto={activePhoto}
             setActivePhoto={setActivePhoto}
             mapBounds={mapBounds}
+            infoButtonBox={infoButtonBox}
           />
           : null
         }

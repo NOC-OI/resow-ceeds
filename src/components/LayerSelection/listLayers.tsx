@@ -16,10 +16,27 @@ let listValues = [{
         height: '20',
         viewParams: 'null;undefined',
       },
+      content: 'Output of the 2021 EUSeaMap broad-scale predictive model, produced by EMODnet Seabed Habitats. \n \
+        The extent of the mapped area includes the Mediterranean Sea, Black Sea, Baltic Sea, and areas of the North Eastern Atlantic extending from the Canary Islands in the south to the Barents Sea in the north. \n \
+        The map was produced using a "top-down" modelling approach using classified habitat descriptors to determine a final output habitat. \n \
+        Habitat descriptors differ per region but include: \n \
+        - Biological zone \n \
+        - Energy class \n \
+        - Oxygen regime \n \
+        - Salinity regime \n \
+        - Seabed substrate \n \
+        - Riverine input \n \
+        Habitat descriptors (excepting Substrate) are calculated using underlying physical data and thresholds derived from statistical analyses or expert judgement on known conditions. \n \
+        The model is produced using R and Arc Model Builder (10.1). \n \
+        The model was created using raster input layers with a cell size of 0.00104dd (roughly 100 metres). The model includes the sublittoral zone only; due to the high variability of the littoral zone, a lack of detailed substrate data and the resolution of the model, it is difficult to predict littoral habitats at this scale. \n \
+        EUSeaMap is classified into EUNIS 2019 level 3 (or more detailed levels where appropriate), EUNIS 2019 level 2 , EUNIS 2007-2011, the MSFD benthic broad habitat types, the HELCOM HUB classification in the Baltic, and the recently revised habitat classification in the Mediterranean. In the Black Sea, EUSeaMap is not classified into EUNIS 2007-2011 (due to inapplicability), but is classified according to a classification that was developed by EMODnet Seabed Habitats (Populus et a, 2017, and for a revised version Vasquez et al, 2020, See Online resources). \n \
+        Reports that provide methods used for the classification of the predicted habitats into the new 2019 EUNIS classification, regional classifications, and MSFD BBHT (v.2017) are linked in Online Resources. \n \
+        A report on the methods used in the 2021 version of EUSeaMap (Vasquez et al., 2021) and reports on previous versions (v2016 and V2019) are linked in Online Resources. \n '
     },
     "Habitat Map 2": {
       url: 'http://127.0.0.1:8080/v1/tiles/mytiles@1.0.0/{z}/{x}/{y}.mvt',
       data_type: 'MBTiles',
+      content: 'This layer represents...',
     },
     "Biozones": {
       url: 'https://ows.emodnet-seabedhabitats.eu/geoserver/emodnet_view/wms?',
@@ -36,6 +53,7 @@ let listValues = [{
         height: '20',
         viewParams: 'null;undefined',
       },
+      content: 'This layer represents...',
     },
     "Energy Class": {
       url: 'https://ows.emodnet-seabedhabitats.eu/geoserver/emodnet_view/wms?',
@@ -52,6 +70,7 @@ let listValues = [{
         height: '20',
         viewParams: 'null;undefined',
       },
+      content: 'This layer represents...',
     },
     "JNCC Broad-scale Habitats - Polygon": {
       url: 'https://mpa-ows.jncc.gov.uk/mpa_mapper/wms?',
@@ -68,6 +87,22 @@ let listValues = [{
         height: '20',
         viewParams: 'null;undefined',
       },
+      content: 'Output of the 2021 EUSeaMap broad-scale predictive model, produced by EMODnet Seabed Habitats. \n \
+        The extent of the mapped area includes the Mediterranean Sea, Black Sea, Baltic Sea, and areas of the North Eastern Atlantic extending from the Canary Islands in the south to the Barents Sea in the north. \n \
+        The map was produced using a "top-down" modelling approach using classified habitat descriptors to determine a final output habitat. \n \
+        Habitat descriptors differ per region but include: \n \
+        - Biological zone \n \
+        - Energy class \n \
+        - Oxygen regime \n \
+        - Salinity regime \n \
+        - Seabed substrate \n \
+        - Riverine input \n \
+        Habitat descriptors (excepting Substrate) are calculated using underlying physical data and thresholds derived from statistical analyses or expert judgement on known conditions. \n \
+        The model is produced using R and Arc Model Builder (10.1). \n \
+        The model was created using raster input layers with a cell size of 0.00104dd (roughly 100 metres). The model includes the sublittoral zone only; due to the high variability of the littoral zone, a lack of detailed substrate data and the resolution of the model, it is difficult to predict littoral habitats at this scale. \n \
+        EUSeaMap is classified into EUNIS 2019 level 3 (or more detailed levels where appropriate), EUNIS 2019 level 2 , EUNIS 2007-2011, the MSFD benthic broad habitat types, the HELCOM HUB classification in the Baltic, and the recently revised habitat classification in the Mediterranean. In the Black Sea, EUSeaMap is not classified into EUNIS 2007-2011 (due to inapplicability), but is classified according to a classification that was developed by EMODnet Seabed Habitats (Populus et a, 2017, and for a revised version Vasquez et al, 2020, See Online resources). \n \
+        Reports that provide methods used for the classification of the predicted habitats into the new 2019 EUNIS classification, regional classifications, and MSFD BBHT (v.2017) are linked in Online Resources. \n \
+        A report on the methods used in the 2021 version of EUSeaMap (Vasquez et al., 2021) and reports on previous versions (v2016 and V2019) are linked in Online Resources. \n '
     },
     "JNCC Broad-scale Habitats - Points": {
       url: 'https://mpa-ows.jncc.gov.uk/mpa_mapper/wms?',
@@ -84,6 +119,7 @@ let listValues = [{
         height: '20',
         viewParams: 'null;undefined',
       },
+      content: 'This layer represents...',
     },
     "Annex I - Reefs": {
       url: 'https://mpa-ows.jncc.gov.uk/mpa_mapper/wms?',
@@ -100,6 +136,7 @@ let listValues = [{
         height: '20',
         viewParams: 'null;undefined',
       },
+      content: 'This layer represents...',
     },
   },
 },
@@ -121,6 +158,7 @@ let listValues = [{
         height: '20',
         viewParams: 'null;undefined',
       },
+      content: 'This layer represents...',
     },
     "Fraction of Mixoplancton": {
       url: 'https://ows.emodnet.eu/geoserver/biology/ows?',
@@ -137,6 +175,7 @@ let listValues = [{
         height: '20',
         viewParams: 'null;undefined',
       },
+      content: 'This layer represents...',
     },
     "Invasive Macroalgae": {
       url: 'https://geo.vliz.be/geoserver/Emodnetbio/wms?',
@@ -153,6 +192,7 @@ let listValues = [{
         height: '20',
         viewParams: 'null;undefined',
       },
+      content: 'This layer represents...',
     },
   },
 
@@ -176,6 +216,7 @@ let listValues = [{
         height: '20',
         viewParams: 'null;undefined',
       },
+      content: 'This layer represents...',
     },
     "Geological Process Features": {
       url: 'https://mpa-ows.jncc.gov.uk/mpa_mapper/wms?',
@@ -192,6 +233,7 @@ let listValues = [{
         height: '20',
         viewParams: 'null;undefined',
       },
+      content: 'This layer represents...',
     },
   },
 },
@@ -213,6 +255,7 @@ let listValues = [{
         height: '20',
         viewParams: 'null;undefined',
       },
+      content: 'This layer represents...',
     },
     "UK Continental Shelf and ZEE": {
       url: 'https://mpa-ows.jncc.gov.uk/mpa_mapper/wms?',
@@ -229,6 +272,7 @@ let listValues = [{
         height: '20',
         viewParams: 'null;undefined',
       },
+      content: 'This layer represents...',
     },
     "UK Waters": {
       url: 'https://mpa-ows.jncc.gov.uk/mpa_mapper/wms?',
@@ -245,6 +289,7 @@ let listValues = [{
         height: '20',
         viewParams: 'null;undefined',
       },
+      content: 'This layer represents...',
     },
     "Biogeogaphic Regions": {
       url: 'https://mpa-ows.jncc.gov.uk/mpa_mapper/wms?',
@@ -261,6 +306,7 @@ let listValues = [{
         height: '20',
         viewParams: 'null;undefined',
       },
+      content: 'This layer represents...',
     },
   },
 },
@@ -283,6 +329,22 @@ let listValues = [{
         height: '20',
         viewParams: 'null;undefined',
       },
+      content: 'Output of the 2021 EUSeaMap broad-scale predictive model, produced by EMODnet Seabed Habitats. \n \
+        The extent of the mapped area includes the Mediterranean Sea, Black Sea, Baltic Sea, and areas of the North Eastern Atlantic extending from the Canary Islands in the south to the Barents Sea in the north. \n \
+        The map was produced using a "top-down" modelling approach using classified habitat descriptors to determine a final output habitat. \n \
+        Habitat descriptors differ per region but include: \n \
+        - Biological zone \n \
+        - Energy class \n \
+        - Oxygen regime \n \
+        - Salinity regime \n \
+        - Seabed substrate \n \
+        - Riverine input \n \
+        Habitat descriptors (excepting Substrate) are calculated using underlying physical data and thresholds derived from statistical analyses or expert judgement on known conditions. \n \
+        The model is produced using R and Arc Model Builder (10.1). \n \
+        The model was created using raster input layers with a cell size of 0.00104dd (roughly 100 metres). The model includes the sublittoral zone only; due to the high variability of the littoral zone, a lack of detailed substrate data and the resolution of the model, it is difficult to predict littoral habitats at this scale. \n \
+        EUSeaMap is classified into EUNIS 2019 level 3 (or more detailed levels where appropriate), EUNIS 2019 level 2 , EUNIS 2007-2011, the MSFD benthic broad habitat types, the HELCOM HUB classification in the Baltic, and the recently revised habitat classification in the Mediterranean. In the Black Sea, EUSeaMap is not classified into EUNIS 2007-2011 (due to inapplicability), but is classified according to a classification that was developed by EMODnet Seabed Habitats (Populus et a, 2017, and for a revised version Vasquez et al, 2020, See Online resources). \n \
+        Reports that provide methods used for the classification of the predicted habitats into the new 2019 EUNIS classification, regional classifications, and MSFD BBHT (v.2017) are linked in Online Resources. \n \
+        A report on the methods used in the 2021 version of EUSeaMap (Vasquez et al., 2021) and reports on previous versions (v2016 and V2019) are linked in Online Resources. \n '
     },
     "Dissolved Oxygen": {
       url: 'https://ec.oceanbrowser.net/emodnet/Python/web/wms?',
@@ -300,6 +362,7 @@ let listValues = [{
         height: '20',
         viewParams: 'null;undefined',
       },
+      content: 'This layer represents...',
     },
     "Inorganic Nitrogen": {
       url: 'https://ec.oceanbrowser.net/emodnet/Python/web/wms?',
@@ -317,6 +380,7 @@ let listValues = [{
         height: '20',
         viewParams: 'null;undefined',
       },
+      content: 'This layer represents...',
     },
     "Phosphate": {
       url: 'https://ec.oceanbrowser.net/emodnet/Python/web/wms?',
@@ -334,6 +398,7 @@ let listValues = [{
         height: '20',
         viewParams: 'null;undefined',
       },
+      content: 'This layer represents...',
     },
     "Silicate": {
       url: 'https://ec.oceanbrowser.net/emodnet/Python/web/wms?',
@@ -351,6 +416,7 @@ let listValues = [{
         height: '20',
         viewParams: 'null;undefined',
       },
+      content: 'This layer represents...',
     },
   },
 },
@@ -359,41 +425,16 @@ let listValues = [{
   layerNames: {
     Emodnet: {
       url: 'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output/cog_rep_EMODNet_2020.tif',
-      data_type: 'COG'
+      data_type: 'COG',
+      content: 'This layer represents...',
     },
     Gebco: {
       url: 'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output/cog_rep_gebco_2022.tif',
-      data_type: 'COG'
+      data_type: 'COG',
+      content: 'This layer represents...',
     }
   },
-}
-// ,
-// {
-//   layerClass: 'Seabed Images',
-//   layerNames: {
-//     Image1: {
-//       url: 'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output/output_raster_cog.tif',
-//       data_type: 'COG'
-//     },
-//     Image2: {
-//       url:  'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output/cog_rep_M58_10441297_12987749054970_1.tif',
-//       data_type: 'COG'
-//     },
-//     Image3: {
-//       url:  'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output/cog_rep_M58_10441297_12987749390121_1.tif',
-//       data_type: 'COG'
-//     },
-//     Image4: {
-//       url:  'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output/cog_rep_M58_10441297_12987755746830_1.tif',
-//       data_type: 'COG'
-//     },
-//     Image5: {
-//       url:  'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output/cog_rep_M58_10441297_12987757649461_1.tif',
-//       data_type: 'COG'
-//     },
-//   },
-// }
-]
+}]
 
 function sortListLayers(listLayers: any[]){
   let sortedList: string[] = []

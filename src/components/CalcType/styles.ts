@@ -9,13 +9,29 @@ export const CalcTypeContainer = styled.div`
   font-weight: bold;
   box-shadow: 0px 4px 4px ${(props) => props.theme['black']};
   header{
-    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: space-between;
     font-size: 0.9rem;
-    &:hover {
-      color: ${(props) => props.theme['yellow-700']};
+    p{
+      cursor: pointer;
+      &:hover {
+        color: ${(props) => props.theme['yellow-700']};
+      }
+    }
+    svg{
+      cursor: pointer;
+      &:hover {
+        color: ${(props) => props.theme['yellow-700']};
+      }
+    }
+    span:first-child{
+      padding-right: 0.25rem;
+      svg{
+        padding-bottom:0.25rem;
+        width: 1rem;
+        height: 1rem;
+      }
     }
   }
 `

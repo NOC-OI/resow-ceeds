@@ -164,13 +164,13 @@ export function SideSelection({layer, setLayer, calc, setCalc, selectedLayers, s
           <SideSelectionLink  onClick={handleShowCalcSelection} >
             <FontAwesomeIcon title={"Use Cases Calculations"} icon={faCalculator} />
           </SideSelectionLink>
-          <SideSelectionLink onClick={handleGoToBathymetry}>
+          {/* <SideSelectionLink onClick={handleGoToBathymetry}>
             <Icon icon="bi:badge-3d-fill" />
-          </SideSelectionLink>
-          <SideSelectionLink onClick={handleEraseLayers}>
-            <FontAwesomeIcon title={"Clean map"} icon={faTrash} />
-          </SideSelectionLink>
+          </SideSelectionLink> */}
           <SideSelectionLinkFinal>
+            <SideSelectionLink onClick={handleEraseLayers}>
+              <FontAwesomeIcon title={"Clean map"} icon={faTrash} />
+            </SideSelectionLink>
             <SideSelectionLink>
               <FontAwesomeIcon title={"Login"} icon={faUser}/>
             </SideSelectionLink>

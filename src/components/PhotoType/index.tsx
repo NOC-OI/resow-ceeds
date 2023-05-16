@@ -87,40 +87,64 @@ export function PhotoType({ content, childs, selectedLayers, setSelectedLayers, 
 
   function Annotations(layerInfo: any){
 
-    function changeMapMarkers() {
+    useEffect(() => {
+      if (layerAction){
+        const newSelectedLayer = selectedLayers[`${layerInfo.content}_${layerInfo.subLayer}`]
+        newSelectedLayer.show = []
+        newSelectedLayer.photos.map((photo: any) => {
+          if(annotations.length > 0){
+            annotations.every((annotation: any) => {
+              if (photo[annotation] === 1){
+                photo.show = true
+                return false
+              } else{
+                photo.show = false
+                return true
+              }
+            })
+          } else {
+            photo.show=false
+          }
+          if (photo.show){
+            newSelectedLayer.show.push(photo.FileName)
+          }
+        })
+        setSelectedLayers((selectedLayers: any) => {
+          const copy = {...selectedLayers}
+          delete copy[`${layerInfo.content}_${layerInfo.subLayer}`]
+          return {[`${layerInfo.content}_${layerInfo.subLayer}`]: newSelectedLayer,...copy}
+        })
+      }
+    }, [annotations])
+  
+    function handleChangePhotos(e: any){
       setLayerAction('marker-changes')
-      const newSelectedLayer = selectedLayers[`${layerInfo.content}_${layerInfo.subLayer}`]
-      newSelectedLayer.show = []
-      newSelectedLayer.photos.map((photo: any) => {
-        if (annotationsAll){
-          photo.show=true
-          newSelectedLayer.show.push(photo.FileName)
-        }else{
-          photo.show=false
+      if(e.target.value === 'SELECT ALL'){
+        if(e.target.checked) {
+          setAnnotations(organisms)
+          setAnnotationsAll(true)
+        } else {
+          setAnnotations([])
+          setAnnotationsAll(false)
         }
-      })
-      setSelectedLayers((selectedLayers: any) => {
-        const copy = {...selectedLayers}
-        delete copy[layerInfo.subLayer]
-        return {[layerInfo.subLayer]: newSelectedLayer,...copy}
-      })
+      } else{
+        if(e.target.checked){
+          setAnnotations([e.target.value, ...annotations])
+        } else{
+          setAnnotations((annotations:any) => annotations.filter(function(el: any) {
+            return el !== e.target.value 
+          }))
+        }
+      }
+      setActualLayer([`${layerInfo.content}_${layerInfo.subLayer}`])
     }
-    
-    function handleChangeAllPhotos(){
-      setAnnotations((annotations:any) => annotations.length > 0? [] : organisms)
-      setAnnotationsAll((annotationsAll) => !annotationsAll)
-      setActualLayer([subLayers.sublayer])
-
-      changeMapMarkers()
-    }
-    console.log(layerInfo)
 
     let c = 1
     return (
       <AnnotationsContainer>
         <div key={`${layerInfo.content}_${layerInfo.subLayer}_ALL`}>
           <input
-            onChange={handleChangeAllPhotos}
+            onChange={handleChangePhotos}
             value={'SELECT ALL'}
             type="checkbox"
             checked={annotationsAll? true: false}
@@ -131,7 +155,7 @@ export function PhotoType({ content, childs, selectedLayers, setSelectedLayers, 
           return (
             <div key={`${layerInfo.content}_${layerInfo.subLayer}_${organism}_${c++}`} >
               <input
-                onChange={handleChangeAllPhotos}
+                onChange={handleChangePhotos}
                 value={organism}
                 type="checkbox"
                 checked={annotations.includes(organism)? true: false}
@@ -166,10 +190,10 @@ export function PhotoType({ content, childs, selectedLayers, setSelectedLayers, 
           })
         }
       })
+      console.log(photoList)
       setShowPhotos(photoList)
     }
   }, [selectedLayers])
-
 
 
   function removeMapLayer(layerInfo: any) {

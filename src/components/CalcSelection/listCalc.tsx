@@ -74,11 +74,11 @@ let listValues = [{
   calcClass: 'Data explotation',
   calcNames: [
     {
-      name: 'Number of Zones',
+      name: 'Bathymetry',
       url: '/data?filename=haigfras_classification&calc=count&column=all&extension=ddgeoparquet',
     },
     {
-      name: 'Names of Zones',
+      name: 'Seabed images (AUV)',
       url: '/data?filename=haigfras_classification&calc=unique&column=all&extension=ddgeoparquet',
     },
   ]

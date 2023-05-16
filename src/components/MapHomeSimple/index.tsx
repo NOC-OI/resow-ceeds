@@ -8,7 +8,7 @@ import { GetCOGLayer, GetTifLayer, GetTileLayer } from '../MapHome/addGeoraster'
 import { Loading } from '../Loading';
 import React from 'react';
 import { GetGeoblazeValue } from '../MapHome/getGeoblazeValue';
-import { listPhotos } from '../PhotoSelection/listPhotos';
+// import { listPhotos } from '../PhotoSelection/listPhotos';
 import { useNavigate } from 'react-router-dom';
 import { GetMBTiles } from '../MapHome/addMBTiles';
 import {} from 'leaflet.vectorgrid'

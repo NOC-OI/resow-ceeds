@@ -36,14 +36,15 @@ export function PhotoList({showPhotos, setShowPhotos, activePhoto, setActivePhot
     let lat = [mapBounds._southWest.lat, mapBounds._northEast.lat]
     let lng = [mapBounds._southWest.lng, mapBounds._northEast.lng]
     shuffled.every((el: any) => {
-
       if (count >= n) {
         return false // "break"
       }
       if (el.FileName !== activePhoto.FileName){
-        if (el.Latitude > lat[0] && el.Latitude < lat[1] && el.Longitude > lng[0] && el.Longitude < lng[1]){
-          newList.push(el)
-          count++
+        if (el.show){
+          if (el.Latitude > lat[0] && el.Latitude < lat[1] && el.Longitude > lng[0] && el.Longitude < lng[1]){
+            newList.push(el)
+            count++
+          }
         }
       }
       return true
@@ -61,10 +62,10 @@ export function PhotoList({showPhotos, setShowPhotos, activePhoto, setActivePhot
   }, [mapBounds])
 
   useEffect(() => {
-    if (activePhoto){
-      const newList = reorderPhotos()
-      setLocalPhotoList(newList)
-    }
+    // if (activePhoto){
+    const newList = reorderPhotos()
+    setLocalPhotoList(newList)
+    // }
   }, [showPhotos])
 
   return (

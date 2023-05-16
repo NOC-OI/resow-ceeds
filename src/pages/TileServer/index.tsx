@@ -9,7 +9,6 @@ import { PhotoList } from "../../components/PhotoList";
 import * as L from 'leaflet';
 import { LayerLegend } from "../../components/LayerLegend";
 import { PhotoSelection } from "../../components/PhotoSelection";
-import { listPhotos } from "../../components/PhotoSelection/listPhotos";
 
 
 export function TileServer() {
@@ -45,11 +44,9 @@ export function TileServer() {
     _northEast: {lat: -89, lng:179},
     _southWest: {lat: -89, lng:179}
   })
-  // const [listP, setlistPhotos] = useState({
-  //   await listPhotos.then(p =>{
 
-  //   })
-  // })
+  const [listPhotos, setListPhotos] = useState([])
+
   return (
     <TileServerContainer>
       <SideBar>
@@ -67,6 +64,8 @@ export function TileServer() {
           photo={photo}
           setPhoto={setPhoto}
           setShowPhotos={setShowPhotos}
+          listPhotos={listPhotos}
+          setListPhotos={setListPhotos}
         />
         {layer ?
           <LayerSelection

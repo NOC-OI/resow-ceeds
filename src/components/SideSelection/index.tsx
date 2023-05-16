@@ -3,7 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCalculator, faCamera, faLayerGroup, faTrash, faUser, faUserShield } from "@fortawesome/free-solid-svg-icons";
 import { Icon } from '@iconify/react';
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { GetPhotos } from "./loadPhotos";
+import { Loading } from "../Loading";
 
 interface keyable {
   [key: string]: any
@@ -27,6 +29,8 @@ interface SideSelectionProps{
   photoPage?: boolean,
   contrast?: boolean,
   setContrast?: any,
+  listPhotos?: any,
+  setListPhotos?: any,
 }
 
 interface ContrastSelectorProps{
@@ -35,14 +39,6 @@ interface ContrastSelectorProps{
 }
 
 function ContrastSelector({ contrast, setContrast }: ContrastSelectorProps) {
-
-  // const [position, setPosition] = useState(null)
-
-  // useEffect(() => {
-  //   map.on('mousemove', (e: any) => {
-  //     setPosition(e.latlng)
-  //   })
-  // }, [map])
   function handleChangeContrast() {
     setContrast((contrast: boolean) => !contrast)
   }
@@ -61,10 +57,11 @@ function ContrastSelector({ contrast, setContrast }: ContrastSelectorProps) {
   )
 }
 
-
-export function SideSelection({layer, setLayer, calc, setCalc, selectedLayers, setSelectedLayers, actualLayer, setActualLayer, setLayerAction, setSelectedArea, photo, setPhoto, setShowPhotos, photoId, photoPage, contrast, setContrast}: SideSelectionProps ) {
+export function SideSelection({layer, setLayer, calc, setCalc, selectedLayers, setSelectedLayers, actualLayer, setActualLayer, setLayerAction, setSelectedArea, photo, setPhoto, setShowPhotos, photoId, photoPage, contrast, setContrast, listPhotos, setListPhotos}: SideSelectionProps ) {
 
   const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(false)
 
   function handleShowLayerSelection() {
     if (window.location.pathname === '/3d' || window.location.pathname.slice(0,7) === '/photos') {
@@ -92,7 +89,8 @@ export function SideSelection({layer, setLayer, calc, setCalc, selectedLayers, s
       setLayer(false)
     }
   }
-  function handleShowPhotoSelection() {
+
+  async function handleShowPhotoSelection() {
     if (window.location.pathname === '/3d' || window.location.pathname.slice(0,7) === '/photos') {
       navigate('/')
       setLayer(false)
@@ -102,24 +100,22 @@ export function SideSelection({layer, setLayer, calc, setCalc, selectedLayers, s
       setPhoto((photo: any) => !photo)
       setLayer(false)
       setCalc(false)
+
     }
   }
 
+  const fetchData = async () => {
+    const getPhotos = new GetPhotos()
+    await getPhotos.loadCSV().then(async function() {
+      setListPhotos(getPhotos.data)
+      setLoading(false)
+    })
+  }
+
   useEffect(() => {
-    if (photo){
-      const photoList: any[] = []
-      Object.keys(selectedLayers).forEach((layer: string) => {
-        if(selectedLayers[layer].data_type === 'Photo'){
-          selectedLayers[layer].photos.forEach((photo: any) => {
-            photoList.push(photo)
-          })
-        }
-      })
-      setShowPhotos(photoList)
-    } else{
-      setShowPhotos([])
-    }
-  }, [photo])
+    setLoading(true)
+    fetchData()
+  }, [])
 
   useEffect(() => {
     if (photo){
@@ -180,3 +176,4 @@ export function SideSelection({layer, setLayer, calc, setCalc, selectedLayers, s
     </div>
   )
 }
+

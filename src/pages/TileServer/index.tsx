@@ -1,29 +1,29 @@
-import { useState } from "react";
-import { LayerSelection } from "../../components/LayerSelection";
-import { CalcSelection } from "../../components/CalcSelection";
-import { MapHome } from "../../components/MapHome";
-import { SideSelection } from "../../components/SideSelection";
-import { TileServerContainer, SideBar } from "./styles";
-import { CalculationValue } from "../../components/CalculationValue";
-import { PhotoList } from "../../components/PhotoList";
-import * as L from 'leaflet';
-import { LayerLegend } from "../../components/LayerLegend";
-import { PhotoSelection } from "../../components/PhotoSelection";
-import { InfoButtonBox } from "../../components/InfoButtonBox";
-
+import { useState } from 'react'
+import { DataExplorationSelection } from '../../components/DataExplorationSelection'
+import { CalcSelection } from '../../components/CalcSelection'
+import { MapHome } from '../../components/MapHome'
+import { SideSelection } from '../../components/SideSelection'
+import { TileServerContainer, SideBar } from './styles'
+import { CalculationValue } from '../../components/CalculationValue'
+import { PhotoList } from '../../components/PhotoList'
+import * as L from 'leaflet'
+import { DataExplorationLegend } from '../../components/DataExplorationLegend'
+import { InfoButtonBox } from '../../components/InfoButtonBox'
+import { HabitatSelection } from '../../components/HabitatSelection'
+import { BiodiversitySelection } from '../../components/BiodiversitySelection'
+import { IndicatorSpeciesSelection } from '../../components/IndicatorSpeciesSelection'
 
 export function TileServer() {
-  const [layer, setLayer] = useState<boolean>(false)
+  const [selectedSidebarOption, setSelectedSidebarOption] = useState<string>('')
 
-  const [calc, setCalc] = useState<boolean>(false)
+  const [selectedArea, setSelectedArea] = useState(false)
 
-  const [selectedArea, setSelectedArea] = useState(false);
-
-  const [latLonLimits, setLatLonLimits] = useState([new L.LatLng(50.55, -8.21),
+  const [latLonLimits, setLatLonLimits] = useState([
+    new L.LatLng(50.55, -8.21),
     new L.LatLng(50.55, -7.35),
     new L.LatLng(50.07, -7.35),
-    new L.LatLng(50.07, -8.21)]
-  )
+    new L.LatLng(50.07, -8.21),
+  ])
 
   const [selectedLayers, setSelectedLayers] = useState<Object>({})
 
@@ -31,46 +31,40 @@ export function TileServer() {
 
   const [layerAction, setLayerAction] = useState('')
 
-  const [calculationValue, setCalculationValue] = useState('');
-
-  const [photo, setPhoto] = useState<boolean>(false);
+  const [calculationValue, setCalculationValue] = useState('')
 
   const [showPhotos, setShowPhotos] = useState<object[]>([])
 
-  const [layerLegend, setLayerLegend] = useState('');
-  const [infoButtonBox, setInfoButtonBox] = useState({});
+  const [layerLegend, setLayerLegend] = useState('')
+  const [infoButtonBox, setInfoButtonBox] = useState({})
 
-  const [activePhoto, setActivePhoto] = useState('');
+  const [activePhoto, setActivePhoto] = useState('')
 
   const [mapBounds, setMapBounds] = useState({
-    _northEast: {lat: -89, lng:179},
-    _southWest: {lat: -89, lng:179}
+    _northEast: { lat: -89, lng: 179 },
+    _southWest: { lat: -89, lng: 179 },
   })
 
-  const [listPhotos, setListPhotos] = useState([])
+  const [listLayers, setListLayers] = useState([])
 
   return (
     <TileServerContainer>
       <SideBar>
         <SideSelection
-          layer={layer}
-          setLayer={setLayer}
-          calc={calc}
-          setCalc={setCalc}
+          selectedSidebarOption={selectedSidebarOption}
+          setSelectedSidebarOption={setSelectedSidebarOption}
           selectedLayers={selectedLayers}
           setSelectedLayers={setSelectedLayers}
           actualLayer={actualLayer}
           setActualLayer={setActualLayer}
           setLayerAction={setLayerAction}
           setSelectedArea={setSelectedArea}
-          photo={photo}
-          setPhoto={setPhoto}
           setShowPhotos={setShowPhotos}
-          listPhotos={listPhotos}
-          setListPhotos={setListPhotos}
+          listLayers={listLayers}
+          setListLayers={setListLayers}
         />
-        {layer ?
-          <LayerSelection
+        {selectedSidebarOption === 'Data Exploration' && (
+          <DataExplorationSelection
             selectedLayers={selectedLayers}
             setSelectedLayers={setSelectedLayers}
             actualLayer={actualLayer}
@@ -80,68 +74,87 @@ export function TileServer() {
             layerLegend={layerLegend}
             setLayerLegend={setLayerLegend}
             setInfoButtonBox={setInfoButtonBox}
-          /> :
-          null
-        }
-        {calc ?
-          <CalcSelection setCalculationValue={setCalculationValue}
+            listLayers={listLayers}
+            setShowPhotos={setShowPhotos}
+          />
+        )}
+        {selectedSidebarOption === 'calc' && (
+          <CalcSelection
+            setCalculationValue={setCalculationValue}
             selectedArea={selectedArea}
             setSelectedArea={setSelectedArea}
             latLonLimits={latLonLimits}
             setLatLonLimits={setLatLonLimits}
             setInfoButtonBox={setInfoButtonBox}
-          /> :
-          null
-        }
-        {photo?
-          <PhotoSelection
-            selectedLayers={selectedLayers}
-            setSelectedLayers={setSelectedLayers}
-            actualLayer={actualLayer}
-            setActualLayer={setActualLayer}
-            layerAction={layerAction}
-            setLayerAction={setLayerAction}
-            layerLegend={layerLegend}
-            setLayerLegend={setLayerLegend}
-            setShowPhotos={setShowPhotos}
-            listPhotos={listPhotos}
-            title={'Photo Selection'}
+          />
+        )}
+        {selectedSidebarOption === 'Habitats' && (
+          <HabitatSelection
+            setCalculationValue={setCalculationValue}
+            selectedArea={selectedArea}
+            setSelectedArea={setSelectedArea}
+            latLonLimits={latLonLimits}
+            setLatLonLimits={setLatLonLimits}
             setInfoButtonBox={setInfoButtonBox}
-          /> :
-          null
-        }
-        {layerLegend?
-          <LayerLegend
+          />
+        )}
+        {selectedSidebarOption === 'Indicator Species' && (
+          <IndicatorSpeciesSelection
+            setCalculationValue={setCalculationValue}
+            selectedArea={selectedArea}
+            setSelectedArea={setSelectedArea}
+            latLonLimits={latLonLimits}
+            setLatLonLimits={setLatLonLimits}
+            setInfoButtonBox={setInfoButtonBox}
+          />
+        )}
+        {selectedSidebarOption === 'Biodiversity' && (
+          <BiodiversitySelection
+            setCalculationValue={setCalculationValue}
+            selectedArea={selectedArea}
+            setSelectedArea={setSelectedArea}
+            latLonLimits={latLonLimits}
+            setLatLonLimits={setLatLonLimits}
+            setInfoButtonBox={setInfoButtonBox}
+          />
+        )}
+        {layerLegend ? (
+          <DataExplorationLegend
             layerLegend={layerLegend}
             setLayerLegend={setLayerLegend}
           />
-          : null
-        }
-        {calculationValue?
+        ) : null}
+        {calculationValue ? (
           <CalculationValue
             calculationValue={calculationValue}
             setCalculationValue={setCalculationValue}
+            selectedLayers={selectedLayers}
+            setSelectedLayers={setSelectedLayers}
+            listLayers={listLayers}
+            layerAction={layerAction}
+            setLayerAction={setLayerAction}
+            actualLayer={actualLayer}
+            setActualLayer={setActualLayer}
+            setShowPhotos={setShowPhotos}
           />
-          : null
-        }
-        {Object.keys(infoButtonBox).length !== 0?
+        ) : null}
+        {Object.keys(infoButtonBox).length !== 0 ? (
           <InfoButtonBox
             infoButtonBox={infoButtonBox}
             setInfoButtonBox={setInfoButtonBox}
           />
-          : null
-        }
-        {showPhotos.length > 0?
-          <PhotoList
-            showPhotos={showPhotos}
-            setShowPhotos={setShowPhotos}
-            activePhoto={activePhoto}
-            setActivePhoto={setActivePhoto}
-            mapBounds={mapBounds}
-            infoButtonBox={infoButtonBox}
-          />
-          : null
-        }
+        ) : null}
+        {showPhotos.length > 0 &&
+          selectedSidebarOption === 'Data Exploration' && (
+            <PhotoList
+              showPhotos={showPhotos}
+              setShowPhotos={setShowPhotos}
+              activePhoto={activePhoto}
+              setActivePhoto={setActivePhoto}
+              mapBounds={mapBounds}
+              infoButtonBox={infoButtonBox}
+            />
+          )}
       </SideBar>
       <MapHome
         selectedLayers={selectedLayers}

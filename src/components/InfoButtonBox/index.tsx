@@ -1,16 +1,17 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { InfoButtonBoxContainer } from "./styles";
-import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { InfoButtonBoxContainer } from './styles'
+import { faCircleXmark } from '@fortawesome/free-solid-svg-icons'
 
 interface InfoButtonBoxProps {
-  infoButtonBox: any,
-  setInfoButtonBox: any,
+  infoButtonBox: any
+  setInfoButtonBox: any
 }
 
-
-export function InfoButtonBox({infoButtonBox, setInfoButtonBox}: InfoButtonBoxProps) {
-
-  function handleClose(){
+export function InfoButtonBox({
+  infoButtonBox,
+  setInfoButtonBox,
+}: InfoButtonBoxProps) {
+  function handleClose() {
     setInfoButtonBox({})
   }
 

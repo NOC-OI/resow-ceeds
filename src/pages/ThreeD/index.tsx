@@ -1,6 +1,6 @@
 import { ThreeDContainer } from "./styles";
 import { useState } from "react";
-import { LayerSelection } from "../../components/LayerSelection";
+import { LayerSelection } from "../../components/DataExplorationSelection";
 import { SideSelection } from "../../components/SideSelection";
 import { SideBar } from "../TileServer/styles";
 import { ThreeDMap } from "../../components/ThreeDMap";

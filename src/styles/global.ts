@@ -1,6 +1,10 @@
 import { createGlobalStyle } from 'styled-components'
 
 export const GlobalStyle = createGlobalStyle`
+
+  @tailwind base;
+  @tailwind components;
+  @tailwind utilities;
   * {
     margin: 0;
     padding: 0;
@@ -14,7 +18,7 @@ export const GlobalStyle = createGlobalStyle`
   body{
     height: 100vh;
     width: 100vw;
-    color: ${(props) => props.theme['black']};
+    color: ${(props) => props.theme.black};
     -webkit-font-smoothing: antialiased;
   }
 

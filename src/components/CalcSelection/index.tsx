@@ -1,24 +1,39 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { CalcType } from "../CalcType";
-import { listCalcs } from "./listCalc";
-import { ActiveButton, Button, CalcButtonSelection, CalcSelectionArea, CalcSelectionContainer, CalcSelectionTitle, CalcTypes, CalcTypesWithoutTitle, LatLonLimitsContainer } from "./styles";
-import { useState } from "react";
-import { faGlobe, faObjectUngroup } from "@fortawesome/free-solid-svg-icons";
-import * as L from 'leaflet';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { CalcType } from '../CalcType'
+import { listCalcs } from './listCalc'
+import {
+  ActiveButton,
+  Button,
+  CalcButtonSelection,
+  CalcSelectionArea,
+  CalcSelectionContainer,
+  CalcSelectionTitle,
+  CalcTypes,
+  CalcTypesWithoutTitle,
+  LatLonLimitsContainer,
+} from './styles'
+import { useState } from 'react'
+import { faGlobe, faObjectUngroup } from '@fortawesome/free-solid-svg-icons'
+import * as L from 'leaflet'
 
-
-interface CalcSelectionProps{
-  setCalculationValue: any,
-  selectedArea: boolean,
-  setSelectedArea: any,
-  latLonLimits: any,
-  setLatLonLimits: any,
-  setInfoButtonBox?: any,
+interface CalcSelectionProps {
+  setCalculationValue: any
+  selectedArea: boolean
+  setSelectedArea: any
+  latLonLimits: any
+  setLatLonLimits: any
+  setInfoButtonBox?: any
 }
 
-export function CalcSelection({setCalculationValue, selectedArea, setSelectedArea, latLonLimits, setLatLonLimits, setInfoButtonBox}: CalcSelectionProps) {
-
-  const [calcClasses, setCalcClasses] = useState(listCalcs);
+export function CalcSelection({
+  setCalculationValue,
+  selectedArea,
+  setSelectedArea,
+  latLonLimits,
+  setLatLonLimits,
+  setInfoButtonBox,
+}: CalcSelectionProps) {
+  const [calcClasses, setCalcClasses] = useState(listCalcs)
 
   function handleWorldClick() {
     setSelectedArea(false)
@@ -27,53 +42,54 @@ export function CalcSelection({setCalculationValue, selectedArea, setSelectedAre
     setSelectedArea(true)
   }
 
-  function updateLatLonValue(e: any){
-    let newLatLonLimits = latLonLimits
-    let changedValue =  e.target.name
+  function updateLatLonValue(e: any) {
+    const newLatLonLimits = latLonLimits
+    const changedValue = e.target.name
     let newMinLat = parseFloat(newLatLonLimits[2].lat)
     let newMinLon = parseFloat(newLatLonLimits[0].lng)
     let newMaxLat = parseFloat(newLatLonLimits[0].lat)
     let newMaxLon = parseFloat(newLatLonLimits[2].lng)
-    if (changedValue === 'minLat'){
-      if (e.target.value){
+    if (changedValue === 'minLat') {
+      if (e.target.value) {
         newMinLat = parseFloat(e.target.value)
-        if (newMinLat >= newMaxLat){
+        if (newMinLat >= newMaxLat) {
           newMaxLat = newMinLat + 1
         }
       }
-    } else if (changedValue === 'minLon'){
-      if (e.target.value){
+    } else if (changedValue === 'minLon') {
+      if (e.target.value) {
         newMinLon = parseFloat(e.target.value)
-        if (newMinLon >= newMaxLon){
+        if (newMinLon >= newMaxLon) {
           newMaxLon = newMinLon + 1
         }
       }
-    } else if (changedValue === 'maxLat'){
-      if (e.target.value){
+    } else if (changedValue === 'maxLat') {
+      if (e.target.value) {
         newMaxLat = parseFloat(e.target.value)
-        if (newMinLat >= newMaxLat){
-          newMinLat = newMaxLat -1
+        if (newMinLat >= newMaxLat) {
+          newMinLat = newMaxLat - 1
         }
       }
-    } else if (changedValue === 'maxLon'){
-      if (e.target.value){
+    } else if (changedValue === 'maxLon') {
+      if (e.target.value) {
         newMaxLon = parseFloat(e.target.value)
-        if (newMinLon >= newMaxLon){
+        if (newMinLon >= newMaxLon) {
           newMinLon = newMaxLon - 1
         }
       }
     }
-    setLatLonLimits([new L.LatLng(newMaxLat, newMinLon),
+    setLatLonLimits([
+      new L.LatLng(newMaxLat, newMinLon),
       new L.LatLng(newMaxLat, newMaxLon),
       new L.LatLng(newMinLat, newMaxLon),
-      new L.LatLng(newMinLat, newMinLon)
+      new L.LatLng(newMinLat, newMinLon),
     ])
   }
 
   const isSelectedAreaSelected = !selectedArea
 
-  function LatLonLimits(){
-    return(
+  function LatLonLimits() {
+    return (
       <LatLonLimitsContainer>
         <label>
           <p>Min Lat (DD°):</p>
@@ -138,36 +154,52 @@ export function CalcSelection({setCalculationValue, selectedArea, setSelectedAre
       </CalcSelectionTitle>
       <CalcSelectionArea>
         <h1>SELECT AREA</h1>
-        {!selectedArea?
+        {!selectedArea ? (
           <CalcButtonSelection>
             <div>
               <ActiveButton>
-                <FontAwesomeIcon onClick={handleWorldClick}  title="All the World" icon={faGlobe} />
+                <FontAwesomeIcon
+                  onClick={handleWorldClick}
+                  title="All the World"
+                  icon={faGlobe}
+                />
               </ActiveButton>
               <Button>
-                <FontAwesomeIcon onClick={handleMapSelectClick} title="Draw a polygon on the map" icon={faObjectUngroup} />
+                <FontAwesomeIcon
+                  onClick={handleMapSelectClick}
+                  title="Draw a polygon on the map"
+                  icon={faObjectUngroup}
+                />
               </Button>
             </div>
-            <LatLonLimits/>
+            <LatLonLimits />
           </CalcButtonSelection>
-          :
+        ) : (
           <CalcButtonSelection>
             <div>
               <Button>
-                <FontAwesomeIcon onClick={handleWorldClick}  title="All the World" icon={faGlobe} />
+                <FontAwesomeIcon
+                  onClick={handleWorldClick}
+                  title="All the World"
+                  icon={faGlobe}
+                />
               </Button>
               <ActiveButton>
-                <FontAwesomeIcon onClick={handleMapSelectClick} title="Draw a polygon on the map" icon={faObjectUngroup} />
+                <FontAwesomeIcon
+                  onClick={handleMapSelectClick}
+                  title="Draw a polygon on the map"
+                  icon={faObjectUngroup}
+                />
               </ActiveButton>
             </div>
-            <LatLonLimits/>
+            <LatLonLimits />
           </CalcButtonSelection>
-        }
+        )}
       </CalcSelectionArea>
       <CalcTypes>
         <h1>SELECT USE CASE</h1>
         <CalcTypesWithoutTitle>
-          {calcClasses.map(calcClass => {
+          {calcClasses.map((calcClass) => {
             return (
               <CalcType
                 key={calcClass.calcClass}
@@ -177,7 +209,7 @@ export function CalcSelection({setCalculationValue, selectedArea, setSelectedAre
                 setCalculationValue={setCalculationValue}
                 latLonLimits={latLonLimits}
                 selectedArea={selectedArea}
-                setInfoBoxButton={setInfoButtonBox}
+                setInfoButtonBox={setInfoButtonBox}
               />
             )
           })}

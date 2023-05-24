@@ -1,46 +1,54 @@
-import { ArrowCircleDown, ArrowCircleUp } from "phosphor-react";
-import { useState } from "react";
-import { CalcTypeContainer, CalcTypeOptionsContainer } from "./styles";
-import { Loading } from "../Loading";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
+import { ArrowCircleDown, ArrowCircleUp } from 'phosphor-react'
+import { useState } from 'react'
+import { CalcTypeContainer, CalcTypeOptionsContainer } from './styles'
+import { Loading } from '../Loading'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCircleInfo } from '@fortawesome/free-solid-svg-icons'
 
 interface keyable {
   [key: string]: any
 }
 
-
 interface CalcTypeProps {
-  title: string,
-  content: string,
+  title: string
+  content: string
   childs: any
-  setCalculationValue: any,
-  latLonLimits: any,
-  selectedArea: any,
-  setInfoBoxButton?: any,
+  setCalculationValue: any
+  latLonLimits: any
+  selectedArea: any
+  setInfoButtonBox?: any
 }
 
 interface CalcTypeOptionsProps {
-  subCalc: any,
+  subCalc: any
 }
 
-async function handleShowCalcValues(params: keyable, setCalculationValue: any, setLoading: any, latLonLimits: any, selectedArea: any){
+async function handleShowCalcValues(
+  params: keyable,
+  setCalculationValue: any,
+  setLoading: any,
+  latLonLimits: any,
+  selectedArea: any,
+) {
   setLoading(true)
   setCalculationValue(null)
 
   const baseUrl = 'https://haigfras-api.herokuapp.com'
-  let url = `${baseUrl}${params['url']}`
+  let url = `${baseUrl}${params.url}`
   if (selectedArea) {
     url = `${url}&bbox=${latLonLimits[2].lat},${latLonLimits[0].lng},${latLonLimits[0].lat},${latLonLimits[2].lng}`
   }
 
   async function getCalculationResults() {
     const response = await fetch(url, {
-        method: 'GET',
-        mode: 'cors',
-        headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin':'*'},
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
     })
-    const data = await response.json();
+    const data = await response.json()
     const newCalculationValue: Object = {}
     newCalculationValue[params.name as keyof Object] = data
     setCalculationValue(newCalculationValue)
@@ -49,58 +57,83 @@ async function handleShowCalcValues(params: keyable, setCalculationValue: any, s
   await getCalculationResults()
 }
 
-export function CalcType({ title, content, childs, setCalculationValue, latLonLimits, selectedArea, setInfoBoxButton}: CalcTypeProps) {
-
+export function CalcType({
+  title,
+  content,
+  childs,
+  setCalculationValue,
+  latLonLimits,
+  selectedArea,
+  setInfoButtonBox,
+}: CalcTypeProps) {
   const [subCalcs, setSubCalcs] = useState([])
 
-  const [isActive, setIsActive] = useState(false);
+  const [isActive, setIsActive] = useState(false)
 
   const [loading, setLoading] = useState<boolean>(false)
 
   function handleShowCalcOptions() {
-    setIsActive(isActive => !isActive)
-    setSubCalcs(subCalcs => subCalcs.length === 0? childs : [])
+    setIsActive((isActive) => !isActive)
+    setSubCalcs((subCalcs) => (subCalcs.length === 0 ? childs : []))
   }
-  
+
   function handleClickLayerInfo(title: string, content: String) {
-    setInfoBoxButton({
-      title: title,
-      content: content
+    setInfoButtonBox({
+      title,
+      content,
     })
   }
 
   return (
-      <CalcTypeContainer>
-        <div>
-          <header>
-            <p onClick={handleShowCalcOptions}>{title}</p>
-            <div>
-              <span>
-                <FontAwesomeIcon
-                  icon={faCircleInfo}
-                  onClick={() => handleClickLayerInfo(title, content)}
-                />
-              </span>
-              <span onClick={handleShowCalcOptions}>
-                {isActive? <ArrowCircleUp size={24}  /> : <ArrowCircleDown size={24} />}
-              </span>
-            </div>
-          </header>
-        </div>
-        <div>
-          {subCalcs.map(subCalc => {
-            return (
-              <CalcTypeOptionsContainer key={`${title}_${subCalc['name']}_${subCalc['url']}`}>
-                <label>
-                  {/* <p>{subCalcs[subCalc]['name']}</p> */}
-                  <p onClick={async() => {await handleShowCalcValues(subCalc, setCalculationValue, setLoading, latLonLimits, selectedArea)}}>{subCalc['name']}</p>
-                </label>
-              </CalcTypeOptionsContainer>
-            )
-          })}
-        </div>
-        {loading ? <Loading/> : null }
-      </CalcTypeContainer>
+    <CalcTypeContainer>
+      <div>
+        <header>
+          <p onClick={handleShowCalcOptions}>{title}</p>
+          <div>
+            <span>
+              <FontAwesomeIcon
+                icon={faCircleInfo}
+                onClick={() => handleClickLayerInfo(title, content)}
+              />
+            </span>
+            <span onClick={handleShowCalcOptions}>
+              {isActive ? (
+                <ArrowCircleUp size={24} />
+              ) : (
+                <ArrowCircleDown size={24} />
+              )}
+            </span>
+          </div>
+        </header>
+      </div>
+      <div>
+        {subCalcs.map((subCalc) => {
+          return (
+            <CalcTypeOptionsContainer
+              key={`${title}_${subCalc.name}_${subCalc.url}`}
+            >
+              <label>
+                {/* <p>{subCalcs[subCalc]['name']}</p> */}
+                <p
+                  onClick={async () => {
+                    await handleShowCalcValues(
+                      subCalc,
+                      setCalculationValue,
+                      setLoading,
+                      latLonLimits,
+                      selectedArea,
+                    )
+                  }}
+                >
+                  {subCalc.name}
+                </p>
+              </label>
+            </CalcTypeOptionsContainer>
+          )
+        })}
+      </div>
+      {loading ? <Loading /> : null}
+    </CalcTypeContainer>
   )
 }
 

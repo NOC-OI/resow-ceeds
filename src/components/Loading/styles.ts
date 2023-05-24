@@ -10,7 +10,10 @@ const breatheAnimation = keyframes`
 `
 export const LoadingContainer = styled.div`
   position: absolute;
-  top: 0; right: 0; bottom: 0; left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   margin: auto;
   z-index: 9999;
   width: 100px;
@@ -27,7 +30,7 @@ export const LoadingSpinner = styled.div`
     transform-origin: 40px 40px;
     animation-name: ${breatheAnimation} 1.2s linear infinite;
     &:after {
-      content: " ";
+      content: ' ';
       display: block;
       position: absolute;
       top: 3px;
@@ -35,7 +38,7 @@ export const LoadingSpinner = styled.div`
       width: 6px;
       height: 18px;
       border-radius: 20%;
-      background: #D49511;
+      background: #d49511;
     }
     &:nth-child(1) {
       transform: rotate(0deg);

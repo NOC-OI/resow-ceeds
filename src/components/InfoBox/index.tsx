@@ -1,41 +1,52 @@
-import internal from "stream";
-import { InfoBoxContainer } from "./styles";
+import { InfoBoxContainer } from './styles'
 
 interface keyable {
   [key: string]: any
 }
 
 interface InfoBoxProps {
-  position: null | keyable,
-  depth: null | number,
+  position: null | keyable
+  depth: null | number
 }
 
-
-export function InfoBox({position = null, depth = null }: InfoBoxProps) {
+export function InfoBox({ position = null, depth = null }: InfoBoxProps) {
   let lat
   let lng
 
-  if (position === null){
+  if (position === null) {
     lat = '---'
     lng = '---'
-  } else{
+  } else {
     let tempLat = position.lat.toFixed(6)
     let latSignal
-    tempLat >= 0 ? latSignal = 'N' : (latSignal = 'S', tempLat = tempLat *(-1))
-    let latDegrees = String(Math.floor(tempLat)).padStart(2, '0')
-    let latMinutes = String(Math.floor((tempLat % 1) * 60)).padStart(2, '0')
-    let latSeconds = String(Math.floor((((tempLat % 1) * 60)  % 1)*60)).padStart(2, '0')
+    if (tempLat >= 0) {
+      latSignal = 'N'
+    } else {
+      latSignal = 'S'
+      tempLat = tempLat * -1
+    }
+    const latDegrees = String(Math.floor(tempLat)).padStart(2, '0')
+    const latMinutes = String(Math.floor((tempLat % 1) * 60)).padStart(2, '0')
+    const latSeconds = String(
+      Math.floor((((tempLat % 1) * 60) % 1) * 60),
+    ).padStart(2, '0')
     lat = `${latDegrees}°${latMinutes}'${latSeconds}${latSignal}`
 
     let tempLng = position.lng.toFixed(6)
     let lngSignal
-    tempLng >= 0 ? lngSignal = 'W' : (lngSignal = 'E', tempLng = tempLng *(-1))
-    let lngDegrees = String(Math.floor(tempLng)).padStart(2, '0')
-    let lngMinutes = String(Math.floor((tempLng % 1) * 60)).padStart(2, '0')
-    let lngSeconds = String(Math.floor((((tempLng % 1) * 60)  % 1)*60)).padStart(2, '0')
+    if (tempLng >= 0) {
+      lngSignal = 'W'
+    } else {
+      lngSignal = 'E'
+      tempLng = tempLng * -1
+    }
+    const lngDegrees = String(Math.floor(tempLng)).padStart(2, '0')
+    const lngMinutes = String(Math.floor((tempLng % 1) * 60)).padStart(2, '0')
+    const lngSeconds = String(
+      Math.floor((((tempLng % 1) * 60) % 1) * 60),
+    ).padStart(2, '0')
     lng = `${lngDegrees}°${lngMinutes}'${lngSeconds}${lngSignal}`
   }
-
 
   return (
     <InfoBoxContainer>
@@ -50,7 +61,7 @@ export function InfoBox({position = null, depth = null }: InfoBoxProps) {
       </div>
       <div>
         <p>Depth:</p>
-        <span>{depth? `${depth} m` : `-- m` }</span>
+        <span>{depth ? `${depth} m` : `-- m`}</span>
       </div>
     </InfoBoxContainer>
   )

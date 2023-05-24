@@ -1,79 +1,81 @@
-import $ from 'jquery';
+import $ from 'jquery'
+import * as L from 'leaflet'
 
-const betterWMS = L.TileLayer.WMS.extend({
-
+const BetterWMS = L.TileLayer.WMS.extend({
   onAdd: function (map) {
     // Triggered when the layer is added to a map.
     //   Register a click listener, then do all the upstream WMS things
-    L.TileLayer.WMS.prototype.onAdd.call(this, map);
-    map.on('click', this.getFeatureInfo, this);
+    L.TileLayer.WMS.prototype.onAdd.call(this, map)
+    map.on('click', this.getFeatureInfo, this)
   },
 
   onRemove: function (map) {
     // Triggered when the layer is removed from a map.
     //   Unregister a click listener, then do all the upstream WMS things
-    L.TileLayer.WMS.prototype.onRemove.call(this, map);
-    map.off('click', this.getFeatureInfo, this);
+    L.TileLayer.WMS.prototype.onRemove.call(this, map)
+    map.off('click', this.getFeatureInfo, this)
   },
 
   getFeatureInfo: function (evt) {
     // Make an AJAX request to the server and hope for the best
-    var url = this.getFeatureInfoUrl(evt.latlng),
-        showResults = L.Util.bind(this.showGetFeatureInfo, this);
+    const url = this.getFeatureInfoUrl(evt.latlng)
+    const showResults = L.Util.bind(this.showGetFeatureInfo, this)
 
     $.ajax({
-      url: url,
+      url,
       success: function (data, status, xhr) {
-        var err = typeof data === 'string' ? null : data;
-        showResults(err, evt.latlng, data);
+        const err = typeof data === 'string' ? null : data
+        showResults(err, evt.latlng, data)
       },
       error: function (xhr, status, error) {
-        showResults(error);
-      }
-    });
+        showResults(error)
+      },
+    })
   },
 
   getFeatureInfoUrl: function (latlng) {
     // Construct a GetFeatureInfo request URL given a point
     // console.log(this._map.project(this._map.getBounds()._northEast))
     // this._map.getBounds()
-    var point = this._map.latLngToContainerPoint(latlng, this._map.getZoom()),
-        size = this._map.getSize(),
-        crs = L.CRS.EPSG3857,
-        // these are the SouthWest and NorthEast points
-        // projected from LatLng into used crs
-        sw = crs.project(this._map.getBounds().getSouthWest()),
-        ne = crs.project(this._map.getBounds().getNorthEast()),
+    const point = this._map.latLngToContainerPoint(latlng, this._map.getZoom())
+    const size = this._map.getSize()
+    const crs = L.CRS.EPSG3857
+    // these are the SouthWest and NorthEast points
+    // projected from LatLng into used crs
+    const sw = crs.project(this._map.getBounds().getSouthWest())
+    const ne = crs.project(this._map.getBounds().getNorthEast())
 
-        params = {
-          request: 'GetFeatureInfo',
-          service: 'WMS',
-          crs: 'EPSG:3857',
-          styles: this.wmsParams.styles,
-          transparent: this.wmsParams.transparent,
-          version: this.wmsParams.version,
-          format: this.wmsParams.format,
-          bbox: sw.x + ',' + sw.y + ',' + ne.x + ',' + ne.y,
-          // bbox: this._map.getBounds().toBBoxString(),
-          height: size.y,
-          width: size.x,
-          layers: this.wmsParams.layers,
-          query_layers: this.wmsParams.layers,
-          info_format: 'text/html'
-        };
+    const params = {
+      request: 'GetFeatureInfo',
+      service: 'WMS',
+      crs: 'EPSG:3857',
+      styles: this.wmsParams.styles,
+      transparent: this.wmsParams.transparent,
+      version: this.wmsParams.version,
+      format: this.wmsParams.format,
+      bbox: sw.x + ',' + sw.y + ',' + ne.x + ',' + ne.y,
+      // bbox: this._map.getBounds().toBBoxString(),
+      height: size.y,
+      width: size.x,
+      layers: this.wmsParams.layers,
+      query_layers: this.wmsParams.layers,
+      info_format: 'text/html',
+    }
 
-    params[params.version === '1.3.0' ? 'i' : 'x'] = Math.round(point.x);
-    params[params.version === '1.3.0' ? 'j' : 'y'] = Math.round(point.y);
-    let new_url = this._url + L.Util.getParamString(params, this._url, true);
+    params[params.version === '1.3.0' ? 'i' : 'x'] = Math.round(point.x)
+    params[params.version === '1.3.0' ? 'j' : 'y'] = Math.round(point.y)
+    const newUrl = this._url + L.Util.getParamString(params, this._url, true)
 
-    return new_url
+    return newUrl
   },
 
   showGetFeatureInfo: function (err, latlng, content) {
-    if (err) { console.log(err); return; } // do nothing if there's an error
+    if (err) {
+      return
+    } // do nothing if there's an error
 
     // Otherwise show the content in a popup, or something.
-    let verifyContent = content.split("body")[1]
+    let verifyContent = content.split('body')[1]
     verifyContent = verifyContent.replace(/(\r|\n|\s|>|<)/g, '')
     // verifyContent = verifyContent.replace(/\n/g, '')
     // verifyContent = verifyContent.replace(/\s/g, '')
@@ -81,18 +83,18 @@ const betterWMS = L.TileLayer.WMS.extend({
     // verifyContent = verifyContent.replace('>', '')
     verifyContent = verifyContent.replace('/', '')
     let newContent = content
-    if (!verifyContent){
+    if (!verifyContent) {
       newContent = 'No data available'
     }
     L.popup({ maxWidth: 200 })
       .setLatLng(latlng)
       .setContent(newContent)
-      .openOn(this._map);
-  }
-});
+      .openOn(this._map)
+  },
+})
 
-export const callBetterWMS = (url, params) =>{
-  const layer = new betterWMS(url, params)
+export const callBetterWMS = (url, params) => {
+  const layer = new BetterWMS(url, params)
   return layer
 }
 
@@ -131,6 +133,5 @@ export const callBetterWMS = (url, params) =>{
 // &INFO_FORMAT=text/html
 // &I=630
 // &J=147
-
 
 // https://emodnet.ec.europa.eu/geoviewer/proxy//https://ows.emodnet-seabedhabitats.eu/geoserver/emodnet_view/wms?&SERVICE=WMS&VERSION=1.3.0&REQUEST=GetFeatureInfo&TRANSPARENT=true&QUERY_LAYERS=eusm2021_eunis2019_group&LAYERS=eusm2021_eunis2019_group&STYLES=&viewParams=null%3Bundefined&TIME=&INFO_FORMAT=text%2Fhtml&feature_count=26&I=175&J=39&WIDTH=256&HEIGHT=256&CRS=EPSG%3A4326

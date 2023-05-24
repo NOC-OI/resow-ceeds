@@ -1,11 +1,11 @@
-import chroma from "chroma-js";
-import axios from 'axios';
+/* eslint-disable no-undef */
+// import chroma from 'chroma-js'
+import axios from 'axios'
 import { parse, stringify } from 'qs'
-import 'leaflet/dist/leaflet';
-
+import 'leaflet/dist/leaflet'
 
 export class GetCOGLayer {
-  constructor (layerName, actualLayer) {
+  constructor(layerName, actualLayer) {
     this.layerName = layerName
     this.actualLayer = actualLayer
     this.url = layerName.url
@@ -14,8 +14,7 @@ export class GetCOGLayer {
 
   async parseGeo() {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const self = this
-    const scale = chroma.scale(['white', 'black']).domain([-11022, 0]);
+    // const scale = chroma.scale(['white', 'black']).domain([-11022, 0])
 
     // await fetch(this.url)
     // .then(async response => await response.arrayBuffer())
@@ -43,7 +42,7 @@ export class GetCOGLayer {
       //   console.log("clipped values are", values);
       // });
       this.layer = new GeoRasterLayer({
-        georaster: georaster,
+        georaster,
         attribution: this.actualLayer[0],
         resolution: 256,
         opacity: 0.7,
@@ -56,14 +55,13 @@ export class GetCOGLayer {
         // }
         // mask: continent,
         // mask_strategy: "inside"
-      });
-    });
+      })
+    })
   }
 }
 
-
 export class GetTifLayer {
-  constructor (url, actualLayer, resolution=64) {
+  constructor(url, actualLayer, resolution = 64) {
     this.actualLayer = actualLayer
     this.url = url
     this.layer = null
@@ -72,45 +70,42 @@ export class GetTifLayer {
   }
 
   async parseGeo() {
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const self = this
     // const scale = chroma.scale(['white', 'black']).domain([-11022, 0]);
 
     await fetch(this.url)
-    .then(async response => await response.arrayBuffer())
-    .then(async arrayBuffer => {
-      await parseGeoraster(arrayBuffer).then(async georaster => {
-        const min = georaster.mins[0];
-        const max = georaster.maxs[0];
-        const range = georaster.ranges[0];
-        // var scale = chroma.scale("Viridis");
-        this.georaster = georaster
-        this.layer = await new GeoRasterLayer({
-          georaster: georaster,
-          opacity: 0,
-          // pixelValuesToColorFn: function(pixelValues) {
-          //   var pixelValue = pixelValues[0]; // there's just one band in this raster
+      .then(async (response) => await response.arrayBuffer())
+      .then(async (arrayBuffer) => {
+        await parseGeoraster(arrayBuffer).then(async (georaster) => {
+          // const min = georaster.mins[0]
+          // const max = georaster.maxs[0]
+          // const range = georaster.ranges[0]
+          // var scale = chroma.scale("Viridis");
+          this.georaster = georaster
+          this.layer = await new GeoRasterLayer({
+            georaster,
+            opacity: 0,
+            // pixelValuesToColorFn: function(pixelValues) {
+            //   var pixelValue = pixelValues[0]; // there's just one band in this raster
 
-          //   // if there's zero wind, don't return a color
-          //   if (pixelValue === 0) return null;
+            //   // if there's zero wind, don't return a color
+            //   if (pixelValue === 0) return null;
 
-          //   // scale to 0 - 1 used by chroma
-          //   var scaledPixelValue = (pixelValue - min) / range;
+            //   // scale to 0 - 1 used by chroma
+            //   var scaledPixelValue = (pixelValue - min) / range;
 
-          //   var color = scale(scaledPixelValue).hex();
+            //   var color = scale(scaledPixelValue).hex();
 
-          //   return color;
-          // },
-          resolution: this.resolution
-        });
-      });
-    });
+            //   return color;
+            // },
+            resolution: this.resolution,
+          })
+        })
+      })
   }
 }
 
-
 export class GetTileLayer {
-  constructor (layerName, actualLayer, contrast, dataType='COG') {
+  constructor(layerName, actualLayer, contrast, dataType = 'COG') {
     this.layerName = layerName
     this.actualLayer = actualLayer
     this.url = layerName.url
@@ -126,32 +121,39 @@ export class GetTileLayer {
     this.tileUrl = null
     this.contrast = contrast
   }
+
   async getTile() {
+    const TITILER_URL = import.meta.env.VITE_TITILER_URL
 
-    const TITILER_URL = import.meta.env.VITE_TITILER_URL;
-
-    const cogInfo = await axios.get(`${TITILER_URL}/cog/info?url=${encodeURIComponent(this.url)}`).then(r => r.data)
-    const cogStats = await axios.get(`${TITILER_URL}/cog/statistics?url=${encodeURIComponent(this.url)}`).then(r => r.data)
+    const cogInfo = await axios
+      .get(`${TITILER_URL}/cog/info?url=${encodeURIComponent(this.url)}`)
+      .then((r) => r.data)
+    const cogStats = await axios
+      .get(`${TITILER_URL}/cog/statistics?url=${encodeURIComponent(this.url)}`)
+      .then((r) => r.data)
 
     this.bounds = cogInfo.bounds
-    if (this.dataType === 'marker'){
-
-      const inactiveIcon = L.icon({
+    if (this.dataType === 'marker') {
+      this.icon = L.icon({
         iconUrl: '/marker-icon.png',
         // shadowUrl: '/marker-shadow.png',
-        iconSize: [27, 45]
-      });
+        iconSize: [27, 45],
+      })
 
-      this.position = [(this.bounds[3] + this.bounds[1])/2,(this.bounds[2] + this.bounds[0])/2]
-      this.layer = L.marker([
-        (this.bounds[3] + this.bounds[1])/2,
-        (this.bounds[2] + this.bounds[0])/2
-      ],
+      this.position = [
+        (this.bounds[3] + this.bounds[1]) / 2,
+        (this.bounds[2] + this.bounds[0]) / 2,
+      ]
+      this.layer = L.marker(
+        [
+          (this.bounds[3] + this.bounds[1]) / 2,
+          (this.bounds[2] + this.bounds[0]) / 2,
+        ],
         {
           riseOnHover: true,
           autoPanOnFocus: false,
-          icon: this.icon
-        }
+          icon: this.icon,
+        },
       )
       this.popupText = `
         <b>${this.actualLayer[0]}</b><br>
@@ -168,7 +170,6 @@ export class GetTileLayer {
       this.layer.options.attribution = this.actualLayer[0]
       this.layer.options.url = this.layerName.url
       this.layer.options.dataType = this.dataType
-
     } else {
       const bands = []
       for (let i = 0; i < cogInfo.band_descriptions.length; i++) {
@@ -185,10 +186,12 @@ export class GetTileLayer {
       // })
       for (let i = 0; i < bands.length; i++) {
         const stats = cogStats[bands[i]]
-        if (this.contrast){
-          stats? this.rescale.push(`${stats.percentile_2},${stats.percentile_98}`): this.rescale.push('0,255')
+        if (this.contrast) {
+          stats
+            ? this.rescale.push(`${stats.percentile_2},${stats.percentile_98}`)
+            : this.rescale.push('0,255')
         } else {
-        // stats? rescale.push(`0,${stats.percentile_98}`): rescale.push('0,255')
+          // stats? rescale.push(`0,${stats.percentile_98}`): rescale.push('0,255')
           this.rescale.push('0,255')
         }
       }
@@ -199,36 +202,34 @@ export class GetTileLayer {
       //   stats? rescale.push('0,255'): rescale.push('0,255')
       // }
       // console.log(cogStats)
-      
+
       const url = this.url
       this.args = {
         bidx: bidx.length === 1 ? bidx[0] : bidx,
         rescale: this.rescale.length === 1 ? this.rescale[0] : this.rescale,
-        url
+        url,
       }
 
-      this.tileJson = await axios.get(
-        `${TITILER_URL}/cog/WebMercatorQuad/tilejson.json`,
-        {
+      this.tileJson = await axios
+        .get(`${TITILER_URL}/cog/WebMercatorQuad/tilejson.json`, {
           params: this.args,
           paramsSerializer: {
-            encode: params => parse(params),
-            serialize: params => stringify(params, { arrayFormat: 'repeat' })
-          }
-        }
-      ).then(r => r.data)
+            encode: (params) => parse(params),
+            serialize: (params) => stringify(params, { arrayFormat: 'repeat' }),
+          },
+        })
+        .then((r) => r.data)
 
-      
       this.tileUrl = this.tileJson.tiles[0]
       if (bands.length === 1) {
         this.tileUrl += `&colormap_name=${this.colourScheme}`
       }
 
-      this.layer = L.tileLayer( this.tileUrl, {
+      this.layer = L.tileLayer(this.tileUrl, {
         opacity: 1.0,
         maxZoom: 30,
         attribution: this.actualLayer[0],
-        limits: this.bounds
+        limits: this.bounds,
       })
     }
   }

@@ -12,6 +12,7 @@ import { InfoButtonBox } from '../../components/InfoButtonBox'
 import { HabitatSelection } from '../../components/HabitatSelection'
 import { BiodiversitySelection } from '../../components/BiodiversitySelection'
 import { IndicatorSpeciesSelection } from '../../components/IndicatorSpeciesSelection'
+import { SurveyDesignSelection } from '../../components/SurveyDesignSelection'
 
 export function TileServer() {
   const [selectedSidebarOption, setSelectedSidebarOption] = useState<string>('')
@@ -46,7 +47,6 @@ export function TileServer() {
   })
 
   const [listLayers, setListLayers] = useState([])
-
   return (
     <TileServerContainer>
       <SideBar>
@@ -106,10 +106,28 @@ export function TileServer() {
             latLonLimits={latLonLimits}
             setLatLonLimits={setLatLonLimits}
             setInfoButtonBox={setInfoButtonBox}
+            selectedLayers={selectedLayers}
+            setSelectedLayers={setSelectedLayers}
+            layerAction={layerAction}
+            setLayerAction={setLayerAction}
+            actualLayer={actualLayer}
+            setActualLayer={setActualLayer}
+            listLayers={listLayers}
+            setShowPhotos={setShowPhotos}
           />
         )}
         {selectedSidebarOption === 'Biodiversity' && (
           <BiodiversitySelection
+            setCalculationValue={setCalculationValue}
+            selectedArea={selectedArea}
+            setSelectedArea={setSelectedArea}
+            latLonLimits={latLonLimits}
+            setLatLonLimits={setLatLonLimits}
+            setInfoButtonBox={setInfoButtonBox}
+          />
+        )}
+        {selectedSidebarOption === 'Survey Design' && (
+          <SurveyDesignSelection
             setCalculationValue={setCalculationValue}
             selectedArea={selectedArea}
             setSelectedArea={setSelectedArea}
@@ -124,7 +142,7 @@ export function TileServer() {
             setLayerLegend={setLayerLegend}
           />
         ) : null}
-        {calculationValue ? (
+        {calculationValue && (
           <CalculationValue
             calculationValue={calculationValue}
             setCalculationValue={setCalculationValue}
@@ -137,7 +155,7 @@ export function TileServer() {
             setActualLayer={setActualLayer}
             setShowPhotos={setShowPhotos}
           />
-        ) : null}
+        )}
         {Object.keys(infoButtonBox).length !== 0 ? (
           <InfoButtonBox
             infoButtonBox={infoButtonBox}
@@ -169,6 +187,7 @@ export function TileServer() {
         setActivePhoto={setActivePhoto}
         mapBounds={mapBounds}
         setMapBounds={setMapBounds}
+        selectedSidebarOption={selectedSidebarOption}
       />
     </TileServerContainer>
   )

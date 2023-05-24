@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faCircleQuestion,
   faCircleUser,
+  faCompassDrafting,
   faFishFins,
   faLayerGroup,
   faTrash,
@@ -98,7 +99,6 @@ export function SideSelection({
       }
     }
   }
-
   const fetchData = async () => {
     const getLayers = new GetLayers()
     await getLayers.loadCSV().then(async function () {
@@ -117,7 +117,7 @@ export function SideSelection({
 
   useEffect(() => {
     if (window.location.pathname !== '/3d') {
-      if (setSelectedSidebarOption === 'Data Exploration') {
+      if (selectedSidebarOption === 'Data Exploration') {
         const photoList: any[] = []
         Object.keys(selectedLayers).forEach((layer: string) => {
           if (selectedLayers[layer].data_type === 'Photo') {
@@ -174,6 +174,14 @@ export function SideSelection({
           className={selectedSidebarOption === 'Biodiversity' ? 'active' : ''}
         >
           <Biodiversity />
+        </SideSelectionLink>
+        <SideSelectionLink
+          title={'Survey Design'}
+          onClick={handleShowSelection}
+          id={'Survey Design'}
+          className={selectedSidebarOption === 'Survey Design' ? 'active' : ''}
+        >
+          <FontAwesomeIcon icon={faCompassDrafting} />
         </SideSelectionLink>
         <SideSelectionLink
           title={'Data Exploration'}

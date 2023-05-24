@@ -1,48 +1,33 @@
+import { listSurveyDesign } from './listSurveyDesign'
 import {
   LayerSelectionContainer,
   LayerSelectionTitle,
   LayerTypes,
 } from '../DataExplorationSelection/styles'
+// import { AreaSelector } from '../AreaSelector'
 import { Info } from 'phosphor-react'
-import { IndicatorSpeciesType } from '../IndicatorSpeciesType'
-import { listIndicatorSpecies } from './listIndicatorSpecies'
+import { SurveyDesignType } from '../SurveyDesignType'
 
-interface IndicatorSpeciesSelectionProps {
+interface SurveyDesignSelectionProps {
   setCalculationValue: any
   selectedArea: boolean
   setSelectedArea: any
   latLonLimits: any
   setLatLonLimits: any
   setInfoButtonBox?: any
-  selectedLayers: any
-  setSelectedLayers: any
-  layerAction: any
-  setLayerAction: any
-  actualLayer: any
-  setActualLayer: any
-  listLayers: any
-  setShowPhotos: any
 }
 
-export function IndicatorSpeciesSelection({
+export function SurveyDesignSelection({
   setCalculationValue,
   selectedArea,
   setSelectedArea,
   latLonLimits,
   setLatLonLimits,
   setInfoButtonBox,
-  selectedLayers,
-  setSelectedLayers,
-  layerAction,
-  setLayerAction,
-  actualLayer,
-  setActualLayer,
-  listLayers,
-  setShowPhotos,
-}: IndicatorSpeciesSelectionProps) {
-  // const [calcClasses, setCalcClasses] = useState(listBiodiversities)
+}: SurveyDesignSelectionProps) {
+  // const [calcClasses, setCalcClasses] = useState(listHabitats)
 
-  const calcClasses = listIndicatorSpecies
+  const calcClasses = listSurveyDesign
 
   function handleClickLayerInfo(title: String, content: string) {
     setInfoButtonBox({
@@ -55,14 +40,11 @@ export function IndicatorSpeciesSelection({
     <LayerSelectionContainer>
       <LayerSelectionTitle>
         <div>
-          <h1>Indicator Species</h1>
+          <h1>Survey Design</h1>
           <Info
             size={20}
             onClick={() =>
-              handleClickLayerInfo(
-                'Indicator Species',
-                'Some information about...',
-              )
+              handleClickLayerInfo('Survey Design', 'Some information about...')
             }
           />
         </div>
@@ -78,7 +60,7 @@ export function IndicatorSpeciesSelection({
         /> */}
         {calcClasses.map((calcClass) => {
           return (
-            <IndicatorSpeciesType
+            <SurveyDesignType
               key={calcClass.calcClass}
               title={calcClass.calcClass}
               content={calcClass.content}
@@ -87,14 +69,6 @@ export function IndicatorSpeciesSelection({
               latLonLimits={latLonLimits}
               selectedArea={selectedArea}
               setInfoButtonBox={setInfoButtonBox}
-              selectedLayers={selectedLayers}
-              setSelectedLayers={setSelectedLayers}
-              layerAction={layerAction}
-              setLayerAction={setLayerAction}
-              actualLayer={actualLayer}
-              setActualLayer={setActualLayer}
-              listLayers={listLayers}
-              setShowPhotos={setShowPhotos}
             />
           )
         })}

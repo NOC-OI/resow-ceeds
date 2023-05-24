@@ -33,7 +33,7 @@ export function PhotoList({
     setActivePhoto(showPhoto)
   }
   const [localPhotoList, setLocalPhotoList] = useState(showPhotos)
-
+  console.log(activePhoto)
   function reorderPhotos() {
     const shuffled = showPhotos.sort(() => 0.5 - Math.random())
     const n = shuffled.length > 10 ? 10 : shuffled.length
@@ -122,7 +122,6 @@ export function PhotoList({
             </CardPhotoActive>
           )
         } else {
-          console.log(showPhoto)
           return (
             <CardPhoto
               key={showPhoto.id}

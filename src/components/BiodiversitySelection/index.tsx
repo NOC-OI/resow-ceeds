@@ -11,9 +11,9 @@ import { BiodiversityType } from '../BiodiversityType'
 interface BiodiversitySelectionProps {
   setCalculationValue: any
   selectedArea: boolean
-  setSelectedArea: any
+  setSelectedArea?: any
   latLonLimits: any
-  setLatLonLimits: any
+  setLatLonLimits?: any
   setInfoButtonBox?: any
 }
 

@@ -1,56 +1,24 @@
 import { ArrowCircleDown, ArrowCircleUp } from 'phosphor-react'
 import { useState } from 'react'
-import { CalcTypeContainer, CalcTypeOptionsContainer } from './styles'
-import { Loading } from '../Loading'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCircleInfo } from '@fortawesome/free-solid-svg-icons'
-
-interface keyable {
-  [key: string]: any
-}
+import { LayerTypeContainer } from '../DataExplorationType/styles'
+import { IndicatorSpeciesTypeOptions } from '../IndicatorSpeciesTypeOptions'
 
 interface IndicatorSpeciesTypeProps {
-  title: string
-  content: string
+  title: any
+  content: any
   childs: any
   setCalculationValue: any
   latLonLimits: any
   selectedArea: any
-  setInfoButtonBox?: any
-}
-
-async function handleShowCalcValues(
-  params: keyable,
-  setCalculationValue: any,
-  setLoading: any,
-  latLonLimits: any,
-  selectedArea: any,
-) {
-  setLoading(true)
-  setCalculationValue(null)
-
-  const baseUrl = 'https://haigfras-api.herokuapp.com'
-  let url = `${baseUrl}${params.url}`
-  if (selectedArea) {
-    url = `${url}&bbox=${latLonLimits[2].lat},${latLonLimits[0].lng},${latLonLimits[0].lat},${latLonLimits[2].lng}`
-  }
-
-  async function getCalculationResults() {
-    const response = await fetch(url, {
-      method: 'GET',
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-      },
-    })
-    const data = await response.json()
-    const newCalculationValue: Object = {}
-    newCalculationValue[params.name as keyof Object] = data
-    setCalculationValue(newCalculationValue)
-    setLoading(false)
-  }
-  await getCalculationResults()
+  setInfoButtonBox: any
+  selectedLayers: any
+  setSelectedLayers: any
+  layerAction: any
+  setLayerAction: any
+  actualLayer: any
+  setActualLayer: any
+  listLayers: any
+  setShowPhotos: any
 }
 
 export function IndicatorSpeciesType({
@@ -61,76 +29,63 @@ export function IndicatorSpeciesType({
   latLonLimits,
   selectedArea,
   setInfoButtonBox,
+  selectedLayers,
+  setSelectedLayers,
+  layerAction,
+  setLayerAction,
+  actualLayer,
+  setActualLayer,
+  listLayers,
+  setShowPhotos,
 }: IndicatorSpeciesTypeProps) {
-  const [subCalcs, setSubCalcs] = useState([])
+  const [subLayers, setSubLayers] = useState([])
 
   const [isActive, setIsActive] = useState(false)
 
-  const [loading, setLoading] = useState<boolean>(false)
+  const [isClicked, setIsClicked] = useState('')
 
-  function handleShowCalcOptions() {
+  function handleShowLayers() {
     setIsActive((isActive) => !isActive)
-    setSubCalcs((subCalcs) => (subCalcs.length === 0 ? childs : []))
+    setSubLayers((subLayers) =>
+      Object.keys(subLayers).length === 0 ? childs : [],
+    )
   }
-
-  function handleClickLayerInfo(title: string, content: String) {
-    setInfoButtonBox({
-      title,
-      content,
-    })
-  }
-
   return (
-    <CalcTypeContainer>
+    <LayerTypeContainer>
       <div>
-        <header>
-          <p onClick={handleShowCalcOptions}>{title}</p>
-          <div>
-            <span>
-              <FontAwesomeIcon
-                icon={faCircleInfo}
-                onClick={() => handleClickLayerInfo(title, content)}
-              />
-            </span>
-            <span onClick={handleShowCalcOptions}>
-              {isActive ? (
-                <ArrowCircleUp size={24} />
-              ) : (
-                <ArrowCircleDown size={24} />
-              )}
-            </span>
-          </div>
+        <header onClick={handleShowLayers}>
+          <p>{title}</p>
+          <span>
+            {isActive ? (
+              <ArrowCircleUp size={24} />
+            ) : (
+              <ArrowCircleDown size={24} />
+            )}
+          </span>
         </header>
       </div>
       <div>
-        {subCalcs.map((subCalc: any) => {
+        {subLayers.map((subLayer: any) => {
           return (
-            <CalcTypeOptionsContainer
-              key={`${title}_${subCalc.name}_${subCalc.url}`}
-            >
-              <label>
-                {/* <p>{subCalcs[subCalc]['name']}</p> */}
-                <p
-                  onClick={async () => {
-                    await handleShowCalcValues(
-                      subCalc,
-                      setCalculationValue,
-                      setLoading,
-                      latLonLimits,
-                      selectedArea,
-                    )
-                  }}
-                >
-                  {subCalc.name}
-                </p>
-              </label>
-            </CalcTypeOptionsContainer>
+            <IndicatorSpeciesTypeOptions
+              key={`${content}_${subLayer.name}`}
+              subLayer={subLayer}
+              subLayers={subLayers}
+              setInfoButtonBox={setInfoButtonBox}
+              isClicked={isClicked}
+              setIsClicked={setIsClicked}
+              selectedLayers={selectedLayers}
+              setSelectedLayers={setSelectedLayers}
+              layerAction={layerAction}
+              setLayerAction={setLayerAction}
+              actualLayer={actualLayer}
+              setActualLayer={setActualLayer}
+              listLayers={listLayers}
+              setShowPhotos={setShowPhotos}
+            />
           )
         })}
       </div>
-      {loading ? <Loading /> : null}
-    </CalcTypeContainer>
+    </LayerTypeContainer>
   )
 }
-
-// https://mpa-ows.jncc.gov.uk/geoserver/mpa_mapper/wms?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&FORMAT=image%2Fpng8&TRANSPARENT=true&LAYERS=prot_annexi_reef_full&TILED=TRUE&WIDTH=256&HEIGHT=256&CRS=EPSG%3A4327&STYLES=&BBOX=40%2C-10%2C50%2C2

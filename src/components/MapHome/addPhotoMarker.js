@@ -130,6 +130,8 @@ export class GetPhotoMarker {
     this.layer.options.attribution = this.actualLayer[0]
     this.layer.options.organismList = organismList
     this.layer.options.FileName = this.layerName.FileName
+    this.layer.options.layerName = this.layerName
+    this.layer.options.popupText = this.popupText
     this.fileName = this.layerName.FileName
     this.layer.options.dataType = 'marker'
   }

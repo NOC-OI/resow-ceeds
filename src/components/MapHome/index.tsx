@@ -17,6 +17,7 @@ import { callBetterWMS } from './addBetterWMS'
 import { GetGeoblazeValue } from './getGeoblazeValue'
 import { GetMBTiles } from './addMBTiles'
 import { GetPhotoMarker } from './addPhotoMarker'
+import * as turf from '@turf/turf'
 
 interface DisplayPositionProps {
   map: any
@@ -51,6 +52,7 @@ interface MapProps {
   setActivePhoto: any
   mapBounds: any
   setMapBounds: any
+  selectedSidebarOption: any
 }
 
 function MapHome1({
@@ -66,6 +68,7 @@ function MapHome1({
   setActivePhoto,
   mapBounds,
   setMapBounds,
+  selectedSidebarOption,
 }: MapProps) {
   // const MAPBOX_API_KEY = import.meta.env.VITE_MAPBOX_API_KEY
   // const MAPBOX_USERID = 'mapbox/satellite-v9'
@@ -80,11 +83,28 @@ function MapHome1({
     [50.57842994645117, -7.102163465517706],
   ]
 
-  // if(map){
-  //   console.log(map.getBounds())
+  // if (map) {
+  //   // console.log(Object.keys(map._layers).length)
+  //   // console.log(map._layers)
   // }
 
   const [loading, setLoading] = useState<boolean>(false)
+
+  const activeIcon = L.icon({
+    iconUrl: '/marker-icon_red.png',
+    // shadowUrl: '/marker-shadow.png',
+    iconSize: [40, 40],
+  })
+  const inactiveIcon = L.icon({
+    iconUrl: '/marker-icon.png',
+    // shadowUrl: '/marker-shadow.png',
+    iconSize: [30, 30],
+  })
+  const smallIcon = L.icon({
+    iconUrl: '/marker-icon.png',
+    // shadowUrl: '/marker-shadow.png',
+    iconSize: [0.1, 0.1],
+  })
 
   function bringLayerToFront(layer: any) {
     layer.bringToFront()
@@ -102,6 +122,18 @@ function MapHome1({
 
   useEffect(() => {
     if (map) {
+      if (selectedSidebarOption !== 'Data Exploration') {
+        map.setView(new L.LatLng(50.3, -7.712108868853798), 10.5)
+        map.options.minZoom = 10
+      } else {
+        // map.setView(new L.LatLng(50.3, -7.712108868853798), 10.5)
+        map.options.minZoom = 3
+      }
+    }
+  }, [selectedSidebarOption])
+
+  useEffect(() => {
+    if (map) {
       map.on('moveend', function () {
         setMapBounds(map.getBounds())
       })
@@ -115,16 +147,6 @@ function MapHome1({
   }
 
   async function changeIcons(photo: any) {
-    const activeIcon = L.icon({
-      iconUrl: '/marker-icon_red.png',
-      // shadowUrl: '/marker-shadow.png',
-      iconSize: [40, 40],
-    })
-    const inactiveIcon = L.icon({
-      iconUrl: '/marker-icon.png',
-      // shadowUrl: '/marker-shadow.png',
-      iconSize: [30, 30],
-    })
     map.eachLayer(function (mapLayer: any) {
       if (mapLayer.options.dataType === 'marker') {
         if (mapLayer.options.FileName === photo.FileName) {
@@ -178,41 +200,46 @@ function MapHome1({
         await getPhotoMarker.getMarker().then(async function () {
           map.addLayer(getPhotoMarker.layer)
           if (getPhotoMarker.layer) {
+            getPhotoMarker.layer.on('click', async function (e) {
+              L.popup()
+                .setLatLng(e.latlng)
+                .setContent(getPhotoMarker.popupText)
+                .openOn(map)
+              photo.notCenter = true
+              setActivePhoto(photo)
+            })
             if (layerName.show.includes(getPhotoMarker.fileName)) {
               getPhotoMarker.layer.setOpacity(1)
-              getPhotoMarker.layer.on('click', async function (e) {
-                L.popup()
-                  .setLatLng(e.latlng)
-                  .setContent(getPhotoMarker.popupText)
-                  .openOn(map)
-                photo.notCenter = true
-                setActivePhoto(photo)
-              })
+              getPhotoMarker.layer.setIcon(inactiveIcon)
+              getPhotoMarker.layer.setZIndexOffset(9999)
             } else {
               getPhotoMarker.layer.setOpacity(0)
+              getPhotoMarker.layer.setIcon(smallIcon)
+              getPhotoMarker.layer.setZIndexOffset(-9999)
             }
           }
         })
-
-        // if (photo.local_data_type === 'Marker-COG'){
-        //   const getCOGLayer = new GetTileLayer(photo, actualLayer, true, 'marker')
-        //   await getCOGLayer.getTile().then(async function () {
-        //     console.log(getCOGLayer.layer)
-        //     map.addLayer(getCOGLayer.layer)
-        //     if (getCOGLayer.layer){
-        //       getCOGLayer.layer.on('click', async function (e) {
-        //         const popup = L.popup()
-        //           .setLatLng(e.latlng)
-        //           .setContent(getCOGLayer.popupText)
-        //           .openOn(map);
-        //         photo.notCenter = true
-        //         // getCOGLayer.layer. zIndexOffset = 9999
-        //         setActivePhoto(photo)
-        //       })
-        //     }
-        //   });
-        // }
       })
+    } else if (layerName.data_type === 'Photo-Limits') {
+      const markers: any = [] // L.layerGroup().addTo(map)
+      layerName.photos.map(async (photo: any) => {
+        markers.push(turf.point([photo.Longitude, photo.Latitude]))
+      })
+
+      const myStyle = {
+        color: '#ff7800',
+        fillColor: '#ff7800',
+        weight: 3,
+        opacity: 0.7,
+      }
+
+      const turfConvex = turf.convex(turf.featureCollection(markers))
+      if (turfConvex) {
+        layer = L.geoJson(turfConvex, {
+          style: myStyle,
+        })
+      }
+      // console.log(layer)
     } else if (layerName.data_type === 'MBTiles') {
       // bounds = defaultWMSBounds
       const getMBTilesLayer = new GetMBTiles(layerName, actualLayer)
@@ -239,6 +266,8 @@ function MapHome1({
     if (layerName.data_type !== 'Photo') {
       layer.options.attribution = actualLayer[0]
       map.addLayer(layer, true)
+      console.log(map._layers)
+
       layer && bringLayerToFront(layer)
     }
     bounds = defaultWMSBounds
@@ -396,8 +425,18 @@ function MapHome1({
           selectedLayers[actualLayer[0]].show.includes(layer.options.FileName)
         ) {
           layer.setOpacity(1)
+          layer.setZIndexOffset(9999)
+          layer.on('click', async function (e: any) {
+            L.popup()
+              .setLatLng(e.latlng)
+              .setContent(layer.options.popupText)
+              .openOn(map)
+            setActivePhoto(layer.options.layerName)
+          })
         } else {
           layer.setOpacity(0)
+          layer.setZIndexOffset(-9999)
+          layer.off('click')
         }
       }
     })

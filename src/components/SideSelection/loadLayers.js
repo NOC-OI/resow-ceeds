@@ -55,6 +55,16 @@ export class GetLayers {
             },
           },
         }
+
+        this.data['Seabed Images - Limits'] = {
+          layerNames: {
+            2012: {
+              data_type: 'Photo-Limits',
+              photos: jsonData,
+              content: '',
+            },
+          },
+        }
         // this.sortedData = Object.keys(this.data)
         //   .sort()
         //   .reduce((objEntries, key) => {

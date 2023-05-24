@@ -19,9 +19,9 @@ interface CalcTypeProps {
   setInfoButtonBox?: any
 }
 
-interface CalcTypeOptionsProps {
-  subCalc: any
-}
+// interface CalcTypeOptionsProps {
+//   subCalc: any
+// }
 
 async function handleShowCalcValues(
   params: keyable,

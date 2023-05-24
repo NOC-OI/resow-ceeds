@@ -2,6 +2,7 @@ import { ArrowCircleDown, ArrowCircleUp } from 'phosphor-react'
 import { useState } from 'react'
 import { LayerTypeContainer } from '../DataExplorationType/styles'
 import { IndicatorSpeciesTypeOptions } from '../IndicatorSpeciesTypeOptions'
+import { Loading } from '../Loading'
 
 interface IndicatorSpeciesTypeProps {
   title: any
@@ -44,6 +45,8 @@ export function IndicatorSpeciesType({
 
   const [isClicked, setIsClicked] = useState('')
 
+  const [loading, setLoading] = useState<boolean>(false)
+
   function handleShowLayers() {
     setIsActive((isActive) => !isActive)
     setSubLayers((subLayers) =>
@@ -82,10 +85,13 @@ export function IndicatorSpeciesType({
               setActualLayer={setActualLayer}
               listLayers={listLayers}
               setShowPhotos={setShowPhotos}
+              setLoading={setLoading}
+              setCalculationValue={setCalculationValue}
             />
           )
         })}
       </div>
+      {loading && <Loading />}
     </LayerTypeContainer>
   )
 }

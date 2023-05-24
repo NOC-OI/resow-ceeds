@@ -20,7 +20,7 @@ const calcNames: any[] = []
 organisms.forEach((organism: string) => {
   calcNames.push({
     name: organism,
-    url: '/data?filename=HF2012_other_data,HF2012_annotation_summary&calc=unique&crs=epsg%3A4326&extension=csv&column=Substratum',
+    url: '/data?filename=HF2012_other_data,HF2012_annotation_summary&calc=organism&crs=epsg%3A4326&extension=csv&agg_columns=sum:Area_seabed_m2,first:FileName',
   })
 })
 

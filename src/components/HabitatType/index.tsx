@@ -128,7 +128,7 @@ export function HabitatType({
           )
         })}
       </div>
-      {loading ? <Loading /> : null}
+      {loading && <Loading />}
     </CalcTypeContainer>
   )
 }

@@ -116,68 +116,87 @@ export function CalculationValue({
           return Object.keys(newObject).map((calc: any, ii: any) => {
             const newObject2 = newObject[calc]
             return newObject2.map((result: any, i: any) => {
+              console.log(column, calc, result)
               if (i === 0) {
                 if (ii === 0) {
                   if (idx === 0) {
                     return (
                       <div key={`${column}_${calc}_${result}`}>
                         <h1>{column}</h1>
-                        <h2>{calc}</h2>
-                        {result.length ? (
-                          <>
-                            <div className="flex justify-center pb-5">
-                              <Button
-                                value={`${column}_${result[0]}`}
-                                onClick={handleChangeMapLayer}
-                                id={`${column}_${calc}_${result}`}
-                                className={
-                                  activeButton === `${column}_${calc}_${result}`
-                                    ? 'active-button'
-                                    : ''
-                                }
-                              >
-                                <p>{result[0]}</p>
-                                <CalculationValueImage>
-                                  <img
-                                    src={`${BASIC_BUCKET_URL}/${result[1]}_1.png`}
-                                  />
-                                </CalculationValueImage>
-                              </Button>
-                            </div>
-                          </>
+                        {calc === 'FileName' ? (
+                          <CalculationValueImage>
+                            <img src={`${BASIC_BUCKET_URL}/${result}_1.png`} />
+                          </CalculationValueImage>
                         ) : (
-                          <p>{result}</p>
+                          <>
+                            <h2>{calc}</h2>
+                            {typeof result === 'object' ? (
+                              <>
+                                <div className="flex justify-center pb-5">
+                                  <Button
+                                    value={`${column}_${result[0]}`}
+                                    onClick={handleChangeMapLayer}
+                                    id={`${column}_${calc}_${result}`}
+                                    className={
+                                      activeButton ===
+                                      `${column}_${calc}_${result}`
+                                        ? 'active-button'
+                                        : ''
+                                    }
+                                  >
+                                    <p>{result[0]}</p>
+                                    <CalculationValueImage>
+                                      <img
+                                        src={`${BASIC_BUCKET_URL}/${result[1]}_1.png`}
+                                      />
+                                    </CalculationValueImage>
+                                  </Button>
+                                </div>
+                              </>
+                            ) : (
+                              <p>{result}</p>
+                            )}
+                          </>
                         )}
                       </div>
                     )
                   } else {
                     return (
                       <div key={`${calc}_${result}`}>
-                        <h2>{calc}</h2>
-                        {result.length ? (
-                          <>
-                            <div className="flex justify-center pb-5">
-                              <Button
-                                value={`${column}_${result[0]}`}
-                                onClick={handleChangeMapLayer}
-                                id={`${column}_${calc}_${result}`}
-                                className={
-                                  activeButton === `${column}_${calc}_${result}`
-                                    ? 'active-button'
-                                    : ''
-                                }
-                              >
-                                <p>{result[0]}</p>
-                                <CalculationValueImage>
-                                  <img
-                                    src={`${BASIC_BUCKET_URL}/${result[1]}_1.png`}
-                                  />
-                                </CalculationValueImage>
-                              </Button>
-                            </div>
-                          </>
+                        {calc === 'FileName' ? (
+                          <CalculationValueImage>
+                            <img src={`${BASIC_BUCKET_URL}/${result}_1.png`} />
+                          </CalculationValueImage>
                         ) : (
-                          <p>{result}</p>
+                          <>
+                            <h2>{calc}</h2>
+                            {typeof result === 'object' ? (
+                              <>
+                                <div className="flex justify-center pb-5">
+                                  <Button
+                                    value={`${column}_${result[0]}`}
+                                    onClick={handleChangeMapLayer}
+                                    id={`${column}_${calc}_${result}`}
+                                    className={
+                                      activeButton ===
+                                      `${column}_${calc}_${result}`
+                                        ? 'active-button'
+                                        : ''
+                                    }
+                                  >
+                                    <p>{result[0]}</p>
+                                    <CalculationValueImage>
+                                      <img
+                                        src={`${BASIC_BUCKET_URL}/${result[1]}_1.png`}
+                                      />
+                                    </CalculationValueImage>
+                                  </Button>
+                                </div>
+                              </>
+                            ) : (
+                              <p>{result}</p>
+                            )}
+                          </>
                         )}
                       </div>
                     )
@@ -185,32 +204,41 @@ export function CalculationValue({
                 } else {
                   return (
                     <div key={`${result}`}>
-                      <h2>{calc}</h2>
-                      {result.length ? (
-                        <>
-                          <div className="flex justify-center pb-5">
-                            <Button
-                              value={`${column}_${result[0]}`}
-                              onClick={handleChangeMapLayer}
-                              id={`${column}_${calc}_${result}`}
-                              className={
-                                activeButton === `${column}_${calc}_${result}`
-                                  ? 'active-button'
-                                  : ''
-                              }
-                            >
-                              <p>{result[0]}</p>
-                              <CalculationValueImage>
-                                <img
-                                  src={`${BASIC_BUCKET_URL}/${result[1]}_1.png`}
-                                />
-                              </CalculationValueImage>
-                            </Button>
-                          </div>
-                        </>
+                      {calc === 'FileName' ? (
+                        <CalculationValueImage>
+                          <img src={`${BASIC_BUCKET_URL}/${result}_1.png`} />
+                        </CalculationValueImage>
                       ) : (
-                        <p>{result}</p>
-                      )}
+                        <>
+                          <h2>{calc}</h2>
+                          {typeof result === 'object' ? (
+                            <>
+                              <div className="flex justify-center pb-5">
+                                <Button
+                                  value={`${column}_${result[0]}`}
+                                  onClick={handleChangeMapLayer}
+                                  id={`${column}_${calc}_${result}`}
+                                  className={
+                                    activeButton ===
+                                    `${column}_${calc}_${result}`
+                                      ? 'active-button'
+                                      : ''
+                                  }
+                                >
+                                  <p>{result[0]}</p>
+                                  <CalculationValueImage>
+                                    <img
+                                      src={`${BASIC_BUCKET_URL}/${result[1]}_1.png`}
+                                    />
+                                  </CalculationValueImage>
+                                </Button>
+                              </div>
+                            </>
+                          ) : (
+                            <p>{result}</p>
+                          )}
+                        </>
+                      )}{' '}
                     </div>
                   )
                 }

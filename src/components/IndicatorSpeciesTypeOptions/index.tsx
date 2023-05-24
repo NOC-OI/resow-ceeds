@@ -15,6 +15,8 @@ interface IndicatorSpeciesTypeOptionsProps {
   setActualLayer: any
   listLayers: any
   setShowPhotos: any
+  setLoading: any
+  setCalculationValue: any
 }
 
 export function IndicatorSpeciesTypeOptions({
@@ -31,6 +33,8 @@ export function IndicatorSpeciesTypeOptions({
   setActualLayer,
   listLayers,
   setShowPhotos,
+  setLoading,
+  setCalculationValue,
 }: IndicatorSpeciesTypeOptionsProps) {
   function verifyIfWasSelectedBefore(subLayer: string) {
     return !!selectedLayers[subLayer]
@@ -59,12 +63,27 @@ export function IndicatorSpeciesTypeOptions({
       }
     })
   }
-
   async function fetchDatatoUpdateCalculationBox(result: any) {
-    setInfoButtonBox({
-      title: result.toUpperCase(),
-      content: ['XXXXX'],
-    })
+    setLoading(true)
+    setCalculationValue(null)
+    const baseUrl = 'https://haigfras-api.herokuapp.com'
+    const url = `${baseUrl}${subLayer.url},count:${subLayer.name}&column=${subLayer.name}`
+    async function getCalculationResults() {
+      const response = await fetch(url, {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+        },
+      })
+      const data = await response.json()
+      const newCalculationValue: Object = {}
+      newCalculationValue[subLayer.name as keyof Object] = data
+      setCalculationValue(newCalculationValue)
+      setLoading(false)
+    }
+    await getCalculationResults()
   }
 
   async function handleChangeMapLayer(e: any) {
@@ -88,6 +107,7 @@ export function IndicatorSpeciesTypeOptions({
     }
     await fetchDatatoUpdateCalculationBox(result)
   }
+
   useEffect(() => {
     if (layerAction) {
       const photoList: any[] = []

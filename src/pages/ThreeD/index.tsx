@@ -1,9 +1,8 @@
-import { ThreeDContainer } from "./styles";
-import { useState } from "react";
-import { LayerSelection } from "../../components/DataExplorationSelection";
-import { SideSelection } from "../../components/SideSelection";
-import { SideBar } from "../TileServer/styles";
-import { ThreeDMap } from "../../components/ThreeDMap";
+import { ThreeDContainer } from './styles'
+import { useState } from 'react'
+import { SideSelection } from '../../components/SideSelection'
+import { SideBar } from '../TileServer/styles'
+import { ThreeDMap } from '../../components/ThreeDMap'
 
 export function ThreeD() {
   const [layer, setLayer] = useState<boolean>(false)
@@ -18,8 +17,6 @@ export function ThreeD() {
     <ThreeDContainer>
       <SideBar>
         <SideSelection
-          layer={layer}
-          setLayer={setLayer}
           selectedLayers={selectedLayers}
           setSelectedLayers={setSelectedLayers}
           actualLayer={actualLayer}
@@ -38,8 +35,7 @@ export function ThreeD() {
           null
         } */}
       </SideBar>
-      <ThreeDMap
-      />
+      <ThreeDMap />
     </ThreeDContainer>
   )
 }

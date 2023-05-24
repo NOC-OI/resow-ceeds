@@ -110,7 +110,7 @@ export function CalcType({
         {subCalcs.map((subCalc) => {
           return (
             <CalcTypeOptionsContainer
-              key={`${title}_${subCalc.name}_${subCalc.url}`}
+            // key={`${title}_${subCalc.name}_${subCalc.url}`}
             >
               <label>
                 {/* <p>{subCalcs[subCalc]['name']}</p> */}
@@ -125,7 +125,7 @@ export function CalcType({
                     )
                   }}
                 >
-                  {subCalc.name}
+                  {/* {subCalc.name} */}
                 </p>
               </label>
             </CalcTypeOptionsContainer>

@@ -60,7 +60,7 @@ export function IndicatorSpeciesTypeOptions({
     })
   }
 
-  async function fetchDatatoUpdateCalculationBox(result) {
+  async function fetchDatatoUpdateCalculationBox(result: any) {
     setInfoButtonBox({
       title: result.toUpperCase(),
       content: ['XXXXX'],

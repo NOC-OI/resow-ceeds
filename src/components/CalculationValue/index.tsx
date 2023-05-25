@@ -238,7 +238,7 @@ export function CalculationValue({
                             <p>{result}</p>
                           )}
                         </>
-                      )}{' '}
+                      )}
                     </div>
                   )
                 }

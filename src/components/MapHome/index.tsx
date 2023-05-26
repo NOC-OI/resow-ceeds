@@ -471,7 +471,7 @@ function MapHome1({
         zoom={10.5}
         zoomSnap={0.1}
         maxZoom={30}
-        minZoom={3}
+        minZoom={10}
         scrollWheelZoom={true}
         zoomControl={false}
         ref={setMap}

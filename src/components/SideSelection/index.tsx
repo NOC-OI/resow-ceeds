@@ -150,6 +150,15 @@ export function SideSelection({
     <div>
       <SideSelectionContainer>
         <SideSelectionLink
+          title={'Habitats'}
+          onClick={handleShowSelection}
+          id={'Habitats'}
+          className={selectedSidebarOption === 'Habitats' ? 'active' : ''}
+        >
+          <Species />
+        </SideSelectionLink>
+
+        <SideSelectionLink
           title={'Indicator Species'}
           onClick={handleShowSelection}
           id={'Indicator Species'}
@@ -158,14 +167,6 @@ export function SideSelection({
           }
         >
           <FontAwesomeIcon icon={faFishFins} />
-        </SideSelectionLink>
-        <SideSelectionLink
-          title={'Habitats'}
-          onClick={handleShowSelection}
-          id={'Habitats'}
-          className={selectedSidebarOption === 'Habitats' ? 'active' : ''}
-        >
-          <Species />
         </SideSelectionLink>
         <SideSelectionLink
           title={'Biodiversity'}

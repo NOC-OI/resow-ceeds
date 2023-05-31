@@ -18,6 +18,12 @@ import { GetGeoblazeValue } from './getGeoblazeValue'
 import { GetMBTiles } from './addMBTiles'
 import { GetPhotoMarker } from './addPhotoMarker'
 import * as turf from '@turf/turf'
+import chroma from 'chroma-js'
+
+const colorScale = chroma
+  .scale(['#f00', '#0f0', '#00f', 'gray'])
+  .mode('hsl')
+  .colors(30)
 
 interface DisplayPositionProps {
   map: any
@@ -76,7 +82,7 @@ function MapHome1({
   //   "Map data &copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors, Imagery © <a href='https://www.mapbox.com/'>Mapbox</a>"
   const [map, setMap] = useState<any>(null)
 
-  const [depth, setDepth] = useState(null)
+  const [depth, setDepth] = useState({})
 
   const defaultWMSBounds = [
     [50.02017473656112, -8.322790146359285],
@@ -93,13 +99,13 @@ function MapHome1({
   const activeIcon = L.icon({
     iconUrl: '/marker-icon_red.png',
     // shadowUrl: '/marker-shadow.png',
-    iconSize: [40, 40],
-  })
-  const inactiveIcon = L.icon({
-    iconUrl: '/marker-icon.png',
-    // shadowUrl: '/marker-shadow.png',
     iconSize: [30, 30],
   })
+  // const inactiveIcon = L.icon({
+  //   iconUrl: '/marker-icon.png',
+  //   // shadowUrl: '/marker-shadow.png',
+  //   iconSize: [20, 20],
+  // })
   const smallIcon = L.icon({
     iconUrl: '/marker-icon.png',
     // shadowUrl: '/marker-shadow.png',
@@ -140,8 +146,8 @@ function MapHome1({
     }
   }, [map])
 
-  async function getWMSLayer(layerName: any) {
-    layerName.params.attribution = actualLayer[0]
+  async function getWMSLayer(layerName: any, actual: any) {
+    layerName.params.attribution = actual
     const layer = callBetterWMS(layerName.url, layerName.params)
     return layer
   }
@@ -158,121 +164,187 @@ function MapHome1({
             )
           }
         } else {
-          mapLayer.setIcon(inactiveIcon)
+          const icon = L.divIcon({
+            html: `<div class='all-icon'>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 50 50"
+              >
+                <circle
+                  cx="25"
+                  cy="25"
+                  r="24"
+                  stroke="black"
+                  fill="${mapLayer.options.color}"
+                />
+              </svg>
+            </div>`,
+            iconSize: [0, 0],
+            iconAnchor: [0, 0],
+          })
+          mapLayer.setIcon(icon)
         }
       }
     })
   }
-
   async function generateSelectedLayer() {
-    const layerName = selectedLayers[actualLayer[0]]
-    let layer
-    let bounds
-    if (layerName.data_type === 'WMS') {
-      layer = await getWMSLayer(layerName)
-      bounds = defaultWMSBounds
-    } else if (layerName.data_type === 'COG') {
-      if (window.location.pathname === '/notileserver') {
-        const getCOGLayer = new GetCOGLayer(layerName, actualLayer)
-        await getCOGLayer.parseGeo().then(function () {
-          layer = getCOGLayer.layer
-          const nE = layer.getBounds().getNorthEast()
-          const sW = layer.getBounds().getSouthWest()
-          bounds = [
-            [nE.lat, nE.lng],
-            [sW.lat, sW.lng],
-          ]
-        })
-      } else {
-        const getCOGLayer = new GetTileLayer(layerName, actualLayer, true)
-        await getCOGLayer.getTile().then(function () {
-          layer = getCOGLayer.layer
-          bounds = [
-            [getCOGLayer.bounds[3], getCOGLayer.bounds[0]],
-            [getCOGLayer.bounds[1], getCOGLayer.bounds[2]],
-          ]
-        })
-      }
-    } else if (layerName.data_type === 'Photo') {
-      // bounds = defaultWMSBounds
-      await layerName.photos.map(async (photo: any) => {
-        const getPhotoMarker = new GetPhotoMarker(photo, actualLayer)
-        await getPhotoMarker.getMarker().then(async function () {
-          map.addLayer(getPhotoMarker.layer)
-          if (getPhotoMarker.layer) {
-            getPhotoMarker.layer.on('click', async function (e) {
-              L.popup()
-                .setLatLng(e.latlng)
-                .setContent(getPhotoMarker.popupText)
-                .openOn(map)
-              photo.notCenter = true
-              setActivePhoto(photo)
-            })
-            if (layerName.show.includes(getPhotoMarker.fileName)) {
-              getPhotoMarker.layer.setOpacity(1)
-              getPhotoMarker.layer.setIcon(inactiveIcon)
-              getPhotoMarker.layer.setZIndexOffset(9999)
-            } else {
-              getPhotoMarker.layer.setOpacity(0)
-              getPhotoMarker.layer.setIcon(smallIcon)
-              getPhotoMarker.layer.setZIndexOffset(-9999)
-            }
-          }
-        })
-      })
-    } else if (layerName.data_type === 'Photo-Limits') {
-      const markers: any = [] // L.layerGroup().addTo(map)
-      layerName.photos.map(async (photo: any) => {
-        markers.push(turf.point([photo.Longitude, photo.Latitude]))
-      })
-
-      const myStyle = {
-        color: '#ff7800',
-        fillColor: '#ff7800',
-        weight: 3,
-        opacity: 0.7,
-      }
-
-      const turfConvex = turf.convex(turf.featureCollection(markers))
-      if (turfConvex) {
-        layer = L.geoJson(turfConvex, {
-          style: myStyle,
-        })
-      }
-      // console.log(layer)
-    } else if (layerName.data_type === 'MBTiles') {
-      // bounds = defaultWMSBounds
-      const getMBTilesLayer = new GetMBTiles(layerName, actualLayer)
-      await getMBTilesLayer.getLayer().then(async function () {
-        layer = getMBTilesLayer.layer
-        if (layer) {
-          layer.on('click', async function (e: any) {
-            const strContent: string[] = []
-            Object.keys(e.layer.properties).forEach((c) => {
-              strContent.push(
-                `<p>${c}: ${
-                  e.layer.properties[c] === ' ' ? '--' : e.layer.properties[c]
-                }<p>`,
-              )
-            })
-            L.popup({ maxWidth: 200 })
-              .setLatLng(e.latlng)
-              .setContent(strContent.join(''))
-              .openOn(map)
+    actualLayer.forEach(async (actual) => {
+      const layerName = selectedLayers[actual]
+      let layer: any
+      let bounds
+      if (layerName.data_type === 'WMS') {
+        layer = await getWMSLayer(layerName, actual)
+        bounds = defaultWMSBounds
+      } else if (layerName.data_type === 'COG') {
+        if (window.location.pathname === '/notileserver') {
+          const getCOGLayer = new GetCOGLayer(layerName, actual)
+          await getCOGLayer.parseGeo().then(function () {
+            layer = getCOGLayer.layer
+            const nE = layer.getBounds().getNorthEast()
+            const sW = layer.getBounds().getSouthWest()
+            bounds = [
+              [nE.lat, nE.lng],
+              [sW.lat, sW.lng],
+            ]
+          })
+        } else {
+          const getCOGLayer = new GetTileLayer(layerName, actual, true)
+          await getCOGLayer.getTile().then(function () {
+            layer = getCOGLayer.layer
+            bounds = [
+              [getCOGLayer.bounds[3], getCOGLayer.bounds[0]],
+              [getCOGLayer.bounds[1], getCOGLayer.bounds[2]],
+            ]
           })
         }
-      })
-    }
-    if (layerName.data_type !== 'Photo') {
-      layer.options.attribution = actualLayer[0]
-      map.addLayer(layer, true)
-      console.log(map._layers)
+      } else if (layerName.data_type === 'Photo') {
+        // bounds = defaultWMSBounds
+        const color = colorScale[Math.floor(Math.random() * 30)]
+        await layerName.photos.map(async (photo: any) => {
+          const getPhotoMarker = new GetPhotoMarker(photo, actual, color)
+          await getPhotoMarker.getMarker().then(async function () {
+            map.addLayer(getPhotoMarker.layer)
+            if (getPhotoMarker.layer) {
+              getPhotoMarker.layer.on('click', async function (e) {
+                L.popup()
+                  .setLatLng(e.latlng)
+                  .setContent(getPhotoMarker.popupText)
+                  .openOn(map)
+                photo.notCenter = true
+                setActivePhoto(photo)
+              })
+              if (layerName.show.includes(getPhotoMarker.fileName)) {
+                getPhotoMarker.layer.setOpacity(1)
+                // getPhotoMarker.layer.setIcon(inactiveIcon)
+                getPhotoMarker.layer.setZIndexOffset(9999)
+              } else {
+                getPhotoMarker.layer.setOpacity(0)
+                getPhotoMarker.layer.setIcon(smallIcon)
+                getPhotoMarker.layer.setZIndexOffset(-9999)
+              }
+            }
+          })
+        })
+      } else if (layerName.data_type === 'Photo-Limits') {
+        const markers: any = [] // L.layerGroup().addTo(map)
+        layerName.photos.map(async (photo: any) => {
+          markers.push(
+            turf.point([photo.Longitude + 0.003, photo.Latitude + 0.003]),
+          )
+          markers.push(
+            turf.point([photo.Longitude - 0.003, photo.Latitude - 0.003]),
+          )
+        })
+        const color = colorScale[Math.floor(Math.random() * 30)]
+        const myStyle = {
+          color,
+          fillColor: color,
+          weight: 3,
+          opacity: 0.6,
+        }
 
-      layer && bringLayerToFront(layer)
-    }
-    bounds = defaultWMSBounds
-    map.fitBounds(bounds)
-    // map.fitBounds(bounds)
+        const turfConvex = turf.convex(turf.featureCollection(markers))
+
+        if (turfConvex) {
+          layer = L.geoJson(turfConvex, {
+            style: myStyle,
+          })
+        }
+        // console.log(layer)
+      } else if (layerName.data_type === 'MBTiles') {
+        // bounds = defaultWMSBounds
+        const getMBTilesLayer = new GetMBTiles(layerName, actual)
+        await getMBTilesLayer.getLayer().then(async function () {
+          layer = getMBTilesLayer.layer
+          if (layer) {
+            layer.on('click', async function (e: any) {
+              const strContent: string[] = []
+              Object.keys(e.layer.properties).forEach((c) => {
+                strContent.push(
+                  `<p>${c}: ${
+                    e.layer.properties[c] === ' ' ? '--' : e.layer.properties[c]
+                  }<p>`,
+                )
+              })
+              L.popup({ maxWidth: 200 })
+                .setLatLng(e.latlng)
+                .setContent(strContent.join(''))
+                .openOn(map)
+            })
+          }
+        })
+      }
+      if (layerName.data_type !== 'Photo') {
+        layer.options.attribution = actual
+        map.addLayer(layer, true)
+        // console.log(map._layers)
+
+        if (layerName.data_type === 'COG') {
+          map.on('mousemove', function (evt: { originalEvent: any }) {
+            const latlng = map.mouseEventToLatLng(evt.originalEvent)
+            const tileSize = { x: 256, y: 256 }
+            const pixelPoint = map
+              .project(latlng, Math.floor(map.getZoom()))
+              .floor()
+            const coords = pixelPoint.unscaleBy(tileSize).floor()
+            coords.z = Math.floor(map.getZoom()) // { x: 212, y: 387, z: 10 }
+
+            const getGeoblazeValue = new GetGeoblazeValue(layer, latlng, coords)
+            getGeoblazeValue.getGeoblaze().then(function () {
+              const dep = getGeoblazeValue.dep
+              const depthName = actual.split('_')[1]
+              if (dep) {
+                if (dep > 0.0) {
+                  setDepth((depth: any) => {
+                    const copy = { ...depth }
+                    copy[depthName] = dep.toFixed(2)
+                    return {
+                      ...copy,
+                    }
+                  })
+                }
+              } else {
+                setDepth((depth: any) => {
+                  const copy = { ...depth }
+                  delete copy[depthName]
+                  return {
+                    ...copy,
+                  }
+                })
+              }
+            })
+            // x.split('_')[1]
+          })
+        }
+
+        layer && bringLayerToFront(layer)
+      }
+      bounds = defaultWMSBounds
+      map.fitBounds(bounds)
+      // map.fitBounds(bounds)
+    })
     setLoading(false)
   }
 
@@ -287,7 +359,8 @@ function MapHome1({
         }
       })
       changeIcons(activePhoto)
-      setShowPhotos(newShowPhotos)
+      setShowPhotos([])
+      // setShowPhotos(newShowPhotos)
     }
   }, [activePhoto])
 
@@ -295,7 +368,7 @@ function MapHome1({
     map.eachLayer(function (layer: any) {
       if (actualLayer.includes(layer.options.attribution)) {
         map.removeLayer(layer)
-        if (activePhoto.layerName === actualLayer[0]) {
+        if (activePhoto.layerName === layer.options.attribution) {
           setActivePhoto('')
         }
         // map.setView(new L.LatLng(50.39415159013279, -7.712108868853798), 5);
@@ -332,9 +405,21 @@ function MapHome1({
               getGeoblazeValue.getGeoblaze().then(function () {
                 const dep = getGeoblazeValue.dep
                 if (dep) {
-                  setDepth(dep[0].toFixed(0))
+                  setDepth((depth: any) => {
+                    const copy = { ...depth }
+                    copy.Depth = dep.toFixed(2)
+                    return {
+                      ...copy,
+                    }
+                  })
                 } else {
-                  setDepth(null)
+                  setDepth((depth: any) => {
+                    const copy = { ...depth }
+                    copy.Depth = null
+                    return {
+                      ...copy,
+                    }
+                  })
                 }
               })
             })
@@ -391,7 +476,7 @@ function MapHome1({
   async function changeMapZoom() {
     map.eachLayer(function (layer: any) {
       if (actualLayer.includes(layer.options.attribution)) {
-        if (selectedLayers[actualLayer[0]].data_type === 'COG') {
+        if (selectedLayers[layer.options.attribution].data_type === 'COG') {
           // const newBounds = [
           //   [layer.options.limits[3], layer.options.limits[0]],
           //   [layer.options.limits[1], layer.options.limits[2]],
@@ -401,7 +486,7 @@ function MapHome1({
         } else {
           map.fitBounds(defaultWMSBounds)
         }
-        if (selectedLayers[actualLayer[0]].data_type !== 'Photo') {
+        if (selectedLayers[layer.options.attribution].data_type !== 'Photo') {
           bringLayerToFront(layer)
         }
         setLayerAction('')
@@ -413,7 +498,7 @@ function MapHome1({
   function changeMapOpacity() {
     map.eachLayer(function (layer: any) {
       if (actualLayer.includes(layer.options.attribution)) {
-        layer.setOpacity(selectedLayers[actualLayer[0]].opacity)
+        layer.setOpacity(selectedLayers[layer.options.attribution].opacity)
       }
     })
   }
@@ -421,24 +506,35 @@ function MapHome1({
   function changeMapMarkerShow() {
     map.eachLayer(function (layer: any) {
       if (actualLayer.includes(layer.options.attribution)) {
-        if (
-          selectedLayers[actualLayer[0]].show.includes(layer.options.FileName)
-        ) {
-          layer.setOpacity(1)
-          layer.setZIndexOffset(9999)
-          layer.on('click', async function (e: any) {
-            L.popup()
-              .setLatLng(e.latlng)
-              .setContent(layer.options.popupText)
-              .openOn(map)
-            setActivePhoto(layer.options.layerName)
-          })
-        } else {
-          layer.setOpacity(0)
-          layer.setZIndexOffset(-9999)
-          layer.off('click')
+        map.removeLayer(layer)
+        if (activePhoto.layerName === layer.options.attribution) {
+          setActivePhoto('')
         }
       }
+    })
+    actualLayer.forEach(async (actual) => {
+      const color = colorScale[Math.floor(Math.random() * 30)]
+      await selectedLayers[actual].photos.map(async (photo: any) => {
+        const getPhotoMarker = new GetPhotoMarker(photo, actual, color)
+        await getPhotoMarker.getMarker().then(async function () {
+          if (getPhotoMarker.layer) {
+            if (selectedLayers[actual].show.includes(getPhotoMarker.fileName)) {
+              map.addLayer(getPhotoMarker.layer)
+              getPhotoMarker.layer.on('click', async function (e) {
+                L.popup()
+                  .setLatLng(e.latlng)
+                  .setContent(getPhotoMarker.popupText)
+                  .openOn(map)
+                photo.notCenter = true
+                setActivePhoto(photo)
+              })
+              getPhotoMarker.layer.setOpacity(1)
+              // getPhotoMarker.layer.setIcon(inactiveIcon)
+              getPhotoMarker.layer.setZIndexOffset(9999)
+            }
+          }
+        })
+      })
     })
   }
 
@@ -545,7 +641,7 @@ function MapHome1({
         </LayersControl>
       </MapContainer>
     ),
-    [map],
+    [L.map],
   )
 
   return (

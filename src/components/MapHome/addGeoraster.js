@@ -22,7 +22,7 @@ export class GetCOGLayer {
     //   await parseGeoraster(arrayBuffer).then(async georaster => {
     //     this.layer = new GeoRasterLayer({
     //       georaster: georaster,
-    //       attribution: this.actualLayer[0],
+    //       attribution: this.actualLayer,
     //       resolution: 256,
     //       opacity: 0.7,
     //       debugLevel: 0,
@@ -43,7 +43,7 @@ export class GetCOGLayer {
       // });
       this.layer = new GeoRasterLayer({
         georaster,
-        attribution: this.actualLayer[0],
+        attribution: this.actualLayer,
         resolution: 256,
         opacity: 0.7,
         keepBuffer: 25,
@@ -156,7 +156,7 @@ export class GetTileLayer {
         },
       )
       this.popupText = `
-        <b>${this.actualLayer[0]}</b><br>
+        <b>${this.actualLayer}</b><br>
         CEDA: XXXXXXXX<br>
         TILE NUMBER:<em>10</em><br>
         TOTAL AREA OF SURVEY:<em>2km²</em><br>
@@ -167,7 +167,7 @@ export class GetTileLayer {
         <em>XXXXX</em><br>
         <em>XXXXX</em><br>
       `
-      this.layer.options.attribution = this.actualLayer[0]
+      this.layer.options.attribution = this.actualLayer
       this.layer.options.url = this.layerName.url
       this.layer.options.dataType = this.dataType
     } else {
@@ -228,7 +228,8 @@ export class GetTileLayer {
       this.layer = L.tileLayer(this.tileUrl, {
         opacity: 1.0,
         maxZoom: 30,
-        attribution: this.actualLayer[0],
+        attribution: this.actualLayer,
+        url: this.url,
         limits: this.bounds,
       })
     }

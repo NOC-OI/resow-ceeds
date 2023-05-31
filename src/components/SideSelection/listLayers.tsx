@@ -429,13 +429,27 @@ export const listLayers = {
       Emodnet: {
         url: 'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output/cog_rep_EMODNet_2020.tif',
         data_type: 'COG',
+        get_value: { depth: 'm' },
         content: 'This layer represents...',
       },
       Gebco: {
         url: 'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output/cog_rep_gebco_2022.tif',
         data_type: 'COG',
+        get_value: { depth: 'm' },
+        content: 'This layer represents...',
+      },
+      AUV: {
+        url: 'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/bathymetry/test_auv_bathymetry.tif',
+        data_type: 'COG',
+        get_value: { depth: 'm' },
         content: 'This layer represents...',
       },
     },
+  },
+  'Seabed Images': {
+    layerNames: {},
+  },
+  'Seabed Images - Limits': {
+    layerNames: {},
   },
 }

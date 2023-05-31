@@ -1,11 +1,11 @@
-import 'leaflet/dist/leaflet';
-import L from 'leaflet';
+import 'leaflet/dist/leaflet'
 import {} from 'leaflet.vectorgrid/dist/Leaflet.VectorGrid.bundled.js'
 // import PropTypes from 'prop-types';
 // import { childrenType, GridLayer } from 'react-leaflet';
-import { protobuf } from '../MapHome/addVectorGridL';
+import { protobuf } from '../MapHome/addVectorGridL'
 
-const eunis = ['A5.37: Deep circalittoral mud',
+const eunis = [
+  'A5.37: Deep circalittoral mud',
   'A5.23 or A5.24: Infralittoral fine sand or Infralittoral muddy sand',
   'A5.25 or A5.26: Circalittoral fine sand or Circalittoral muddy sand',
   'A5.27: Deep circalittoral sand',
@@ -27,12 +27,17 @@ const eunis = ['A5.37: Deep circalittoral mud',
   'A4.27: Faunal communities on deep moderate energy circalittoral rock',
   'A4.33: Faunal communities on deep low energy circalittoral rock',
   'A4.12 or A4.27 or A4.33: Sponge communities on deep circalittoral rock or Faunal communities on deep moderate energy circalittoral rock or Faunal communities on deep low energy circalittoral rock',
-  'A5.34: Infralittoral fine mud', 'A5.36: Circalittoral fine mud',
-  'A5.33: Infralittoral sandy mud', 'A5.35: Circalittoral sandy mud',
-  'A5.6: Sublittoral biogenic reefs', 'A6.11: Deep-sea rock',
-  'A6.5: Deep-sea mud', 'A6: Deep-sea bed',
+  'A5.34: Infralittoral fine mud',
+  'A5.36: Circalittoral fine mud',
+  'A5.33: Infralittoral sandy mud',
+  'A5.35: Circalittoral sandy mud',
+  'A5.6: Sublittoral biogenic reefs',
+  'A6.11: Deep-sea rock',
+  'A6.5: Deep-sea mud',
+  'A6: Deep-sea bed',
   'A6.2: Deep-sea mixed substrata',
-  'A6.3 Deep-sea sand or A6.4 Deep-sea muddy sand', 'Na',
+  'A6.3 Deep-sea sand or A6.4 Deep-sea muddy sand',
+  'Na',
   'A5.33 or A5.34: Infralittoral sandy mud or Infralittoral fine mud',
   'A5.35 or A5.36: Circalittoral sandy mud or Circalittoral fine mud',
   'A6.611: Deep-sea Lophelia pertusa reefs',
@@ -46,10 +51,11 @@ const eunis = ['A5.37: Deep circalittoral mud',
   'A5.435: Oyster beds on shallow sublittoral muddy mixed sediment',
   'A5.631: Circalittoral Lophelia pertusa reefs',
   'A5.434: [Limaria hians] beds in tide-swept sublittoral muddy mixed sediment',
-  'A5.613: [Serpula vermicularis] reefs on very sheltered circalittoral muddy sand'
+  'A5.613: [Serpula vermicularis] reefs on very sheltered circalittoral muddy sand',
 ]
 
-const colors = ['#A3A300',
+const colors = [
+  '#A3A300',
   '#A7A200',
   '#AB4F00',
   '#AF0000',
@@ -96,11 +102,11 @@ const colors = ['#A3A300',
   '#FF9F9C',
   '#FFD1A4',
   '#FFFEAB',
-  '#FFFFB3'
+  '#FFFFB3',
 ]
 
 export class GetMBTiles {
-  constructor (layerName, actualLayer) {
+  constructor(layerName, actualLayer) {
     this.layerName = layerName
     this.actualLayer = actualLayer
     this.url = layerName.url
@@ -112,28 +118,31 @@ export class GetMBTiles {
   async getLayer() {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
 
-    var vectorTileOptions = {
+    const vectorTileOptions = {
       interactive: true,
       vectorTileLayerStyles: {
-        clipped_clipped_EUSeaMap_2021: function(properties, zoom) {
-            var eu = properties.EUNIScombD;
-            var color = '#cf52d3';
-    
-            eunis.forEach((t, idx) => {
-              if (eu === t){
-                color = colors[idx]
-              }
-            })
-            return {
-                weight: 0,
-                color: color,
-                fillColor: color,
-                fillOpacity: 0.7,
-                fill: true
+        clipped_clipped_EUSeaMap_2021: function (properties, zoom) {
+          const eu = properties.EUNIScombD
+          let color = '#cf52d3'
+
+          eunis.forEach((t, idx) => {
+            if (eu === t) {
+              color = colors[idx]
             }
-        }
-      }
-    };
-    this.layer = protobuf('http://127.0.0.1:8080/v1/tiles/mytiles@1.0.0/{z}/{x}/{y}.mvt',vectorTileOptions)
-  };
+          })
+          return {
+            weight: 0,
+            color,
+            fillColor: color,
+            fillOpacity: 0.7,
+            fill: true,
+          }
+        },
+      },
+    }
+    this.layer = protobuf(
+      'http://127.0.0.1:8080/v1/tiles/mytiles@1.0.0/{z}/{x}/{y}.mvt',
+      vectorTileOptions,
+    )
+  }
 }

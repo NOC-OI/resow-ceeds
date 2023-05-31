@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { AnnotationsContainer } from './styles'
-import { center } from '@turf/turf'
 
 interface keyable {
   [key: string]: any

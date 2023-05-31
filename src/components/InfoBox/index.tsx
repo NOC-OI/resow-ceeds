@@ -6,10 +6,10 @@ interface keyable {
 
 interface InfoBoxProps {
   position: null | keyable
-  depth: null | number
+  depth: keyable
 }
 
-export function InfoBox({ position = null, depth = null }: InfoBoxProps) {
+export function InfoBox({ position = null, depth = {} }: InfoBoxProps) {
   let lat
   let lng
 
@@ -47,7 +47,6 @@ export function InfoBox({ position = null, depth = null }: InfoBoxProps) {
     ).padStart(2, '0')
     lng = `${lngDegrees}°${lngMinutes}'${lngSeconds}${lngSignal}`
   }
-
   return (
     <InfoBoxContainer>
       <h1>Haig Fras</h1>
@@ -59,10 +58,14 @@ export function InfoBox({ position = null, depth = null }: InfoBoxProps) {
         <p>Lon:</p>
         <span>{lng}</span>
       </div>
-      <div>
-        <p>Depth:</p>
-        <span>{depth ? `${depth} m` : `-- m`}</span>
-      </div>
+      {Object.keys(depth).map((d) => {
+        return (
+          <div key={d}>
+            <p>{d}:</p>
+            <span>{depth[d] ? `${depth[d]} m` : `-- m`}</span>
+          </div>
+        )
+      })}
     </InfoBoxContainer>
   )
 }

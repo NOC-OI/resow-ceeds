@@ -54,39 +54,54 @@ export function CalculationValue({
     })
   }
 
-  function changeMapLayer(layerInfo: any) {
+  function changeMapLayer(newSelectedLayers: any) {
     setLayerAction('marker-changes')
-    const newSelectedLayer = layerInfo.dataInfo
     setSelectedLayers((selectedLayers: any) => {
       const copy = { ...selectedLayers }
-      delete copy[layerInfo.subLayer]
-      return {
-        [layerInfo.subLayer]: newSelectedLayer,
-        ...copy,
-      }
+      newSelectedLayers.forEach((layerInfo: any) => {
+        delete copy[layerInfo.subLayer]
+        layerInfo.dataInfo.opacity = 1
+        layerInfo.dataInfo.zoom = true
+        copy[layerInfo.subLayer] = layerInfo.dataInfo
+      })
+      return copy
     })
   }
 
   async function handleChangeMapLayer(e: any) {
     setActiveButton(e.currentTarget.id)
-    const [column, result] = e.currentTarget.value.split('_')
-    const layerInfo = {
-      subLayer: 'Seabed Images_2012',
-      dataInfo: listLayers['Seabed Images'].layerNames['2012'],
-    }
-    setActualLayer([layerInfo.subLayer])
-    layerInfo.dataInfo.show = []
-    layerInfo.dataInfo.photos.forEach((photo: any) => {
-      if (photo[column] === result) {
-        layerInfo.dataInfo.show.push(photo.FileName)
-      }
+    const buttonValue = JSON.parse(e.currentTarget.value)
+    const [column, result] = buttonValue.result.split('_')
+    const newActualLayers: string[] = []
+    const newSelectedLayers: { subLayer: string; dataInfo: any }[] = []
+    Object.keys(buttonValue.value.layers).forEach((newActualLayer) => {
+      buttonValue.value.layers[newActualLayer].forEach((layerClass: any) => {
+        newActualLayers.push(`${newActualLayer}_${layerClass}`)
+        const layerInfo = {
+          subLayer: `${newActualLayer}_${layerClass}`,
+          dataInfo: listLayers[newActualLayer].layerNames[layerClass],
+        }
+        if (verifyIfWasSelectedBefore(`${newActualLayer}_${layerClass}`)) {
+          layerInfo.dataInfo.selectedBefore = true
+        } else {
+          layerInfo.dataInfo.selectedBefore = false
+        }
+        layerInfo.dataInfo.show = []
+        layerInfo.dataInfo.photos.forEach((photo: any) => {
+          if (photo[column] === result) {
+            layerInfo.dataInfo.show.push(photo.FileName)
+          }
+        })
+        console.log(layerInfo.dataInfo.show)
+        newSelectedLayers.push(layerInfo)
+      })
     })
-
-    if (verifyIfWasSelectedBefore(layerInfo.subLayer)) {
-      changeMapLayer(layerInfo)
-    } else {
-      addMapLayer(layerInfo)
-    }
+    setActualLayer(newActualLayers)
+    // if (verifyIfWasSelectedBefore(layerInfo.subLayer)) {
+    changeMapLayer(newSelectedLayers)
+    // } else {
+    //   addMapLayer(layerInfo)
+    // }
   }
 
   useEffect(() => {
@@ -100,183 +115,93 @@ export function CalculationValue({
           })
         }
       })
-      setShowPhotos(photoList)
+      setShowPhotos([])
+      // setShowPhotos(photoList)
     }
   }, [selectedLayers])
-
   return (
     <CalculationValueContainer>
       <div className="flex justify-end">
         <FontAwesomeIcon icon={faCircleXmark} onClick={handleClose} />
       </div>
-      {Object.keys(calculationValue[Object.keys(calculationValue)[0]]).map(
-        (column: any, idx: any) => {
-          const newObject =
-            calculationValue[Object.keys(calculationValue)[0]][column]
-          return Object.keys(newObject).map((calc: any, ii: any) => {
-            const newObject2 = newObject[calc]
-            return newObject2.map((result: any, i: any) => {
-              console.log(column, calc, result)
-              if (i === 0) {
-                if (ii === 0) {
-                  if (idx === 0) {
-                    return (
-                      <div key={`${column}_${calc}_${result}`}>
-                        <h1>{column}</h1>
-                        {calc === 'FileName' ? (
-                          <CalculationValueImage>
-                            <img src={`${BASIC_BUCKET_URL}/${result}_1.png`} />
-                          </CalculationValueImage>
-                        ) : (
-                          <>
-                            <h2>{calc}</h2>
-                            {typeof result === 'object' ? (
-                              <>
-                                <div className="flex justify-center pb-5">
-                                  <Button
-                                    value={`${column}_${result[0]}`}
-                                    onClick={handleChangeMapLayer}
-                                    id={`${column}_${calc}_${result}`}
-                                    className={
-                                      activeButton ===
-                                      `${column}_${calc}_${result}`
-                                        ? 'active-button'
-                                        : ''
-                                    }
-                                  >
-                                    <p>{result[0]}</p>
-                                    <CalculationValueImage>
-                                      <img
-                                        src={`${BASIC_BUCKET_URL}/${result[1]}_1.png`}
-                                      />
-                                    </CalculationValueImage>
-                                  </Button>
-                                </div>
-                              </>
-                            ) : (
-                              <p>{result}</p>
-                            )}
-                          </>
-                        )}
-                      </div>
-                    )
-                  } else {
-                    return (
-                      <div key={`${calc}_${result}`}>
-                        {calc === 'FileName' ? (
-                          <CalculationValueImage>
-                            <img src={`${BASIC_BUCKET_URL}/${result}_1.png`} />
-                          </CalculationValueImage>
-                        ) : (
-                          <>
-                            <h2>{calc}</h2>
-                            {typeof result === 'object' ? (
-                              <>
-                                <div className="flex justify-center pb-5">
-                                  <Button
-                                    value={`${column}_${result[0]}`}
-                                    onClick={handleChangeMapLayer}
-                                    id={`${column}_${calc}_${result}`}
-                                    className={
-                                      activeButton ===
-                                      `${column}_${calc}_${result}`
-                                        ? 'active-button'
-                                        : ''
-                                    }
-                                  >
-                                    <p>{result[0]}</p>
-                                    <CalculationValueImage>
-                                      <img
-                                        src={`${BASIC_BUCKET_URL}/${result[1]}_1.png`}
-                                      />
-                                    </CalculationValueImage>
-                                  </Button>
-                                </div>
-                              </>
-                            ) : (
-                              <p>{result}</p>
-                            )}
-                          </>
-                        )}
-                      </div>
-                    )
-                  }
-                } else {
-                  return (
-                    <div key={`${result}`}>
-                      {calc === 'FileName' ? (
-                        <CalculationValueImage>
-                          <img src={`${BASIC_BUCKET_URL}/${result}_1.png`} />
-                        </CalculationValueImage>
-                      ) : (
-                        <>
-                          <h2>{calc}</h2>
-                          {typeof result === 'object' ? (
-                            <>
-                              <div className="flex justify-center pb-5">
-                                <Button
-                                  value={`${column}_${result[0]}`}
-                                  onClick={handleChangeMapLayer}
-                                  id={`${column}_${calc}_${result}`}
-                                  className={
-                                    activeButton ===
-                                    `${column}_${calc}_${result}`
-                                      ? 'active-button'
-                                      : ''
-                                  }
-                                >
-                                  <p>{result[0]}</p>
-                                  <CalculationValueImage>
-                                    <img
-                                      src={`${BASIC_BUCKET_URL}/${result[1]}_1.png`}
-                                    />
-                                  </CalculationValueImage>
-                                </Button>
-                              </div>
-                            </>
-                          ) : (
-                            <p>{result}</p>
-                          )}
-                        </>
-                      )}
-                    </div>
-                  )
-                }
-              } else {
-                return (
-                  <div key={`${result}_1`}>
-                    {result.length ? (
-                      <>
-                        <div className="flex justify-center  pb-5">
-                          <Button
-                            value={`${column}_${result[0]}`}
-                            onClick={handleChangeMapLayer}
-                            id={`${column}_${calc}_${result}`}
-                            className={
-                              activeButton === `${column}_${calc}_${result}`
-                                ? 'active-button'
-                                : ''
-                            }
+      {Object.keys(calculationValue.result).map((column) => {
+        return (
+          <div key={column}>
+            <h1>{column}</h1>
+            {Object.keys(calculationValue.result[column]).map((calc) => {
+              return (
+                <div key={`${column}_${calc}`}>
+                  <h2>{calc}</h2>
+                  {calculationValue.result[column][calc].map(
+                    (results: any, i: any) => {
+                      if (typeof results === 'object') {
+                        const name = results[column]
+                        return (
+                          <div
+                            className="flex justify-center pb-5"
+                            key={`${column}_${calc}_${name}`}
                           >
-                            <p>{result[0]}</p>
-                            <CalculationValueImage>
-                              <img
-                                src={`${BASIC_BUCKET_URL}/${result[1]}_1.png`}
-                              />
-                            </CalculationValueImage>
-                          </Button>
-                        </div>
-                      </>
-                    ) : (
-                      <p>{result}</p>
-                    )}
-                  </div>
-                )
-              }
-            })
-          })
-        },
-      )}
+                            <Button
+                              value={JSON.stringify({
+                                value: calculationValue,
+                                result: `${column}_${name}`,
+                              })}
+                              onClick={handleChangeMapLayer}
+                              id={`${column}_${calc}_${name}`}
+                              className={
+                                activeButton === `${column}_${calc}_${name}`
+                                  ? 'active-button'
+                                  : ''
+                              }
+                            >
+                              {Object.keys(
+                                calculationValue.result[column][calc][i],
+                              ).map((key) => {
+                                const result =
+                                  calculationValue.result[column][calc][i][key]
+                                if (key === 'FileName') {
+                                  const extension =
+                                    calculationValue.result[column][calc][i]
+                                      .FileFormat
+                                  return (
+                                    <CalculationValueImage
+                                      key={`${result}.${extension}`}
+                                    >
+                                      <img
+                                        src={`${BASIC_BUCKET_URL}/${result}.${extension}`}
+                                      />
+                                    </CalculationValueImage>
+                                  )
+                                } else if (key !== 'FileFormat') {
+                                  return (
+                                    <div key={`${key}_${results}`}>
+                                      <p>
+                                        {key}: {result}
+                                      </p>
+                                    </div>
+                                  )
+                                } else {
+                                  return null
+                                }
+                              })}
+                            </Button>
+                          </div>
+                        )
+                      } else {
+                        return (
+                          <div key={results}>
+                            <p>{results}</p>
+                          </div>
+                        )
+                      }
+                    },
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        )
+      })}
     </CalculationValueContainer>
   )
 }

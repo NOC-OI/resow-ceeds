@@ -45,9 +45,10 @@ async function handleShowCalcValues(
       },
     })
     const data = await response.json()
-    const newCalculationValue: Object = {}
-    newCalculationValue[params.name as keyof Object] = data
-    setCalculationValue(newCalculationValue)
+    params.result = data
+    // const newCalculationValue = dat: Object = {}
+    // newCalculationValue[params.name as keyof Object] = data
+    setCalculationValue(params)
     setLoading(false)
   }
   await getCalculationResults()

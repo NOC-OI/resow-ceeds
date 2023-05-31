@@ -60,7 +60,8 @@ export function DataExplorationType({
           })
         }
       })
-      setShowPhotos(photoList)
+      setShowPhotos([])
+      // setShowPhotos(photoList)
     }
   }, [selectedLayers])
 

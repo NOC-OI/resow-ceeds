@@ -126,7 +126,8 @@ export function SideSelection({
             })
           }
         })
-        setShowPhotos(photoList)
+        setShowPhotos([])
+        // setShowPhotos(photoList)
       } else {
         setShowPhotos([])
       }
@@ -157,7 +158,6 @@ export function SideSelection({
         >
           <Species />
         </SideSelectionLink>
-
         <SideSelectionLink
           title={'Indicator Species'}
           onClick={handleShowSelection}

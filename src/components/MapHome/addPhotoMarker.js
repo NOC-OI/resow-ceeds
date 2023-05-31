@@ -2,19 +2,41 @@ import 'leaflet/dist/leaflet'
 import * as L from 'leaflet'
 
 export class GetPhotoMarker {
-  constructor(layerName, actualLayer) {
+  constructor(layerName, actualLayer, color) {
     this.layerName = layerName
     this.actualLayer = actualLayer
     this.layer = null
     this.popupText = ''
     this.fileName = null
+    this.color = color
   }
 
   async getMarker() {
-    const icon = L.icon({
-      iconUrl: '/marker-icon.png',
-      // shadowUrl: '/marker-shadow.png',
-      iconSize: [30, 30],
+    // const icon = L.icon({
+    //   iconUrl: '/marker-icon.png',
+    //   // shadowUrl: '/marker-shadow.png',
+    //   iconSize: [20, 20],
+    // })
+
+    const icon = L.divIcon({
+      html: `<div class='all-icon'>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 50 50"
+        >
+          <circle
+            cx="25"
+            cy="25"
+            r="24"
+            stroke="black"
+            fill="${this.color}"
+          />
+        </svg>
+      </div>`,
+      iconSize: [0, 0],
+      iconAnchor: [0, 0],
     })
     this.layer = L.marker([this.layerName.Latitude, this.layerName.Longitude], {
       riseOnHover: true,
@@ -22,83 +44,90 @@ export class GetPhotoMarker {
       icon,
     })
     const organisms = [
-      'antedon',
-      'anthozoa',
-      'anthozoa_01',
-      'anthozoa_03',
-      'anthozoa_05',
-      'anthozoa_06',
-      'anthozoa_07',
-      'anthozoa_08',
-      'anthozoa_11',
-      'anthozoa_16',
-      'anthozoa_19',
-      'anthozoa_24',
-      'anthozoa_34',
-      'anthozoa_39',
-      'asterias_rubens',
-      'asteroid_01',
-      'asteroid_07',
-      'asteroidea',
-      'astropecten_irregularis',
-      'axinellidae',
-      'bolocera',
-      'bryozoa_01',
-      'callionymus',
-      'caryophyllia_smithii',
-      'cerianthid_01',
-      'cerianthid_03',
-      'echinoid_01',
-      'echinoidea',
-      'echinus_esculentus',
-      'eledone_02',
-      'eledone_cirrhosa',
-      'fish',
-      'fish_10',
-      'flatfish',
-      'gadidae',
-      'gadiforme_09',
-      'gaidropsarus_vulgaris',
-      'galeus',
-      'hippoglossoides_platessoides',
-      'hydroid_01',
-      'inachidae_01',
-      'inachidae_02',
-      'INDETERMINATE',
-      'indeterminate_29',
-      'indeterminate_36',
-      'lepidorhombus_whiffiagonis',
-      'leucoraja_naevus',
-      'liocarcinus',
-      'lithodes_maja',
-      'luidia_ciliaris',
-      'luidia_sarsii',
-      'marthasterias_glacialis',
-      'microchirus_variegatus',
-      'munida',
-      'ophiuroid_01',
-      'ophiuroid_02',
-      'paguridae_01',
-      'paguridae_02',
-      'parazoanthus',
-      'pentapora_foliacea',
-      'porania_pulvillus',
-      'porcellanidae',
-      'porella',
-      'porifera_02',
-      'porifera_03',
-      'porifera_20',
-      'porifera_22',
-      'porifera_23',
-      'porifera_24',
-      'porifera_25',
-      'rajidae_01',
-      'reteporella',
-      'salmacina_dysteri',
-      'scyliorhinus_canicula',
-      'squid',
-      'stichastrella_rosea',
-      'urticina',
+      'Abietinaria',
+      'Actiniaria',
+      'Actinopterygii',
+      'Adamsia palliata',
+      'Aeolidiidae',
+      'Aglaophenia',
+      'Amphiura',
+      'Ancula gibbosa',
+      'Antedon bifida',
+      'Anthozoa',
+      'Ascidiacea',
+      'Astropecten irregularis',
+      'Atrina fragilis',
+      'Aulactinia verrucosa',
+      'Aureliania heterocera',
+      'Axinella sp',
+      'Buccinidae',
+      'Cariidea',
+      'Caryophyllia smithii',
+      'Cerianthus lloydii',
+      'Chelidonichthys lucernus',
+      'Ciocalypta penicillus',
+      'Colus gracilis',
+      'Coryphella',
+      'Ctenolabrus rupestris',
+      'Dysidea fragilis',
+      'Ebalia',
+      'Echinus acutus',
+      'Edwardsiella carnea',
+      'Euspira pulchella',
+      'Galathea sp',
+      'Gobiidae',
+      'Goniodoris nodosa',
+      'Halcampoides elongatus',
+      'Harmothoe extenuata?',
+      'Henricia',
+      'Holothuroidea',
+      'Hyas sp',
+      'Hymedesmia paupertas',
+      'Janolus cristatus',
+      'Lanice conchilega',
+      'Luidia sarsi',
+      'Marthasterias glacialis',
+      'Munida',
+      'Munida rugosa',
+      'Nassarius incrassatus',
+      'Nemertesia sp',
+      'Nereididae?',
+      'Novocrania anomala',
+      'Omalesecosa ramulosa',
+      'Ophiocomina nigra',
+      'Ophiothrix fragilis',
+      'Ophiura sp',
+      'Ophiuroidea',
+      'Osmerus eperlonus',
+      'Paguridae',
+      'Pagurus prideaux',
+      'Palliolum tigerinum',
+      'Parazoanthus anguicomus',
+      'Pecten maximus',
+      'Phynorhombus norvegicus?',
+      'Plumulariidae',
+      'Pollachius pollachius?',
+      'Polymastia',
+      'Polymastia boletiformis',
+      'Polymastia penicillus',
+      'Porania pulvillus',
+      'Porifera',
+      'Porifera #1',
+      'Porifera #4',
+      'Psammechinus miliaris',
+      'Reteporella',
+      'Salmacina dysteri',
+      'Solea solea',
+      'Spatangoida',
+      'Triglidae',
+      'Trisopterus luscus',
+      'Tubulariidae',
+      'Urticina eques',
+      'Urticina felina',
+      'Urticina?',
+      'Luidia ciliaris',
+      'Mesacmaea mitchellii',
+      'Processa',
     ]
     const organismList = []
     organisms.forEach((organism) => {
@@ -108,14 +137,43 @@ export class GetPhotoMarker {
     })
 
     this.popupText = `
-      <b>${this.actualLayer[0]}</b><br>
-      IMAGE ID: <em>${this.layerName.id}</em><br>
-      AREA OF SURVEY: <em>${this.layerName.Area_seabed_m2.toFixed(2)}m²</em><br>
-      HABITAT: <em>${this.layerName.Habitat}</em><br>
-      SUBSTRATE: <em>${this.layerName.Substratum}</em><br>
+      <b>${this.actualLayer}</b><br>
+      IMAGE NAME: <em>${this.layerName.FileName}</em><br>
+      ${
+        this.layerName.Area_seabed_m2
+          ? `AREA OF SURVEY: <em>${this.layerName.Area_seabed_m2.toFixed(
+              2,
+            )}m²</em><br>`
+          : ''
+      }
+      ${
+        this.layerName.Habitat
+          ? `HABITAT: <em>${this.layerName.Habitat}</em><br>`
+          : ''
+      }
+      ${
+        this.layerName['EUNIS.Habitat']
+          ? `HABITAT: <em>${this.layerName['EUNIS.Habitat']}</em><br>`
+          : ''
+      }
+      ${
+        this.layerName.UKMarineHabitat
+          ? `UK Marine HABITAT: <em>${this.layerName.UKMarineHabitat}</em><br>`
+          : ''
+      }
+      ${
+        this.layerName.Substratum
+          ? `Substratum: <em>${this.layerName.Substratum}</em><br>`
+          : ''
+      }
+      ${
+        this.layerName.Caption
+          ? `Caption: <em>${this.layerName.Caption}</em><br>`
+          : ''
+      }
       ANNOTATION: <em>${organismList.join(', ')}</em><br>
       <a 
-        href='/photos/${this.actualLayer[0].replace(' ', '-')}_${
+        href='/photos/${this.actualLayer.replace(' ', '-')}_${
       this.layerName.id
     }'
         title='Show Image'
@@ -127,11 +185,12 @@ export class GetPhotoMarker {
         </svg>
       </a>  
     `
-    this.layer.options.attribution = this.actualLayer[0]
+    this.layer.options.attribution = this.actualLayer
     this.layer.options.organismList = organismList
     this.layer.options.FileName = this.layerName.FileName
     this.layer.options.layerName = this.layerName
     this.layer.options.popupText = this.popupText
+    this.layer.options.color = this.color
     this.fileName = this.layerName.FileName
     this.layer.options.dataType = 'marker'
   }

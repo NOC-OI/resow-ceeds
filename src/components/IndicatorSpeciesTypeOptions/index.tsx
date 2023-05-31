@@ -119,7 +119,8 @@ export function IndicatorSpeciesTypeOptions({
           })
         }
       })
-      setShowPhotos(photoList)
+      setShowPhotos([])
+      // setShowPhotos(photoList)
     }
   }, [selectedLayers])
 

@@ -98,7 +98,7 @@ export function TileServer() {
             setInfoButtonBox={setInfoButtonBox}
           />
         )}
-        {selectedSidebarOption === 'Indicator Species' && (
+        {selectedSidebarOption === 'Species of Interest' && (
           <IndicatorSpeciesSelection
             setCalculationValue={setCalculationValue}
             selectedArea={selectedArea}

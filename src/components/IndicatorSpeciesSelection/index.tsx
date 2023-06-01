@@ -55,12 +55,12 @@ export function IndicatorSpeciesSelection({
     <LayerSelectionContainer>
       <LayerSelectionTitle>
         <div>
-          <h1>Indicator Species</h1>
+          <h1>Species of Interest</h1>
           <Info
             size={20}
             onClick={() =>
               handleClickLayerInfo(
-                'Indicator Species',
+                'Species of Interest',
                 'Some information about...',
               )
             }

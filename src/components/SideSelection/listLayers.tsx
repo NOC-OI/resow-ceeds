@@ -35,11 +35,16 @@ export const listLayers = {
         Reports that provide methods used for the classification of the predicted habitats into the new 2019 EUNIS classification, regional classifications, and MSFD BBHT (v.2017) are linked in Online Resources. \n \
         A report on the methods used in the 2021 version of EUSeaMap (Vasquez et al., 2021) and reports on previous versions (v2016 and V2019) are linked in Online Resources. \n ',
       },
-      // "Habitat Map 2": {
-      //   url: 'http://127.0.0.1:8080/v1/tiles/mytiles@1.0.0/{z}/{x}/{y}.mvt',
-      //   data_type: 'MBTiles',
-      //   content: 'This layer represents...',
-      // },
+      'Habitat Map 2': {
+        url: 'http://127.0.0.1:8080/v1/tiles/mytiles.all@1.0.0/{z}/{x}/{y}.mvt',
+        data_type: 'MBTiles',
+        content: 'This layer represents...',
+      },
+      'Habitat Map 3': {
+        url: 'http://127.0.0.1:8080/v1/tiles/mytiles.clipped_EUSeaMap_2021@1.0.0/{z}/{x}/{y}.mvt',
+        data_type: 'MBTiles',
+        content: 'This layer represents...',
+      },
       Biozones: {
         url: 'https://ows.emodnet-seabedhabitats.eu/geoserver/emodnet_view/wms?',
         data_type: 'WMS',
@@ -420,6 +425,15 @@ export const listLayers = {
           height: '20',
           viewParams: 'null;undefined',
         },
+        content: 'This layer represents...',
+      },
+    },
+  },
+  Sidescan: {
+    layerNames: {
+      2012: {
+        url: 'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/bathymetry/sidescan_2012.tif',
+        data_type: 'COG',
         content: 'This layer represents...',
       },
     },

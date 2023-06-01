@@ -159,11 +159,11 @@ export function SideSelection({
           <Species />
         </SideSelectionLink>
         <SideSelectionLink
-          title={'Indicator Species'}
+          title={'Species of Interest'}
           onClick={handleShowSelection}
-          id={'Indicator Species'}
+          id={'Species of Interest'}
           className={
-            selectedSidebarOption === 'Indicator Species' ? 'active' : ''
+            selectedSidebarOption === 'Species of Interest' ? 'active' : ''
           }
         >
           <FontAwesomeIcon icon={faFishFins} />

@@ -301,7 +301,7 @@ function MapHome1({
         map.addLayer(layer, true)
         // console.log(map._layers)
 
-        if (layerName.data_type === 'COG') {
+        if (layerName.data_type === 'COG' && layerName.get_value) {
           map.on('mousemove', function (evt: { originalEvent: any }) {
             const latlng = map.mouseEventToLatLng(evt.originalEvent)
             const tileSize = { x: 256, y: 256 }

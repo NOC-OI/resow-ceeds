@@ -1,14 +1,18 @@
 const listValues = [
   {
-    calcClass: 'Community Analysis',
+    calcClass: 'Information',
     content: 'This calculation uses XXXXX...',
     calcNames: [
       {
-        name: 'Select sample unit size',
+        name: 'Target Sample Size',
         url: '/data?filename=HF2012_other_data,HF2012_annotation_summary&calc=count&crs=epsg%3A4326&extension=csv&column=Habitat',
       },
       {
-        name: 'Create sample units',
+        name: 'Number of Sample Units',
+        url: '/data?filename=HF2012_other_data,HF2012_annotation_summary&calc=unique&crs=epsg%3A4326&extension=csv&column=Habitat',
+      },
+      {
+        name: 'Mean Sample Unit Size',
         url: '/data?filename=HF2012_other_data,HF2012_annotation_summary&calc=unique&crs=epsg%3A4326&extension=csv&column=Habitat',
       },
     ],

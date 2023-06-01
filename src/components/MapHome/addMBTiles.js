@@ -141,7 +141,7 @@ export class GetMBTiles {
       },
     }
     this.layer = protobuf(
-      'http://127.0.0.1:8080/v1/tiles/mytiles@1.0.0/{z}/{x}/{y}.mvt',
+      'http://127.0.0.1:8000/v1/tiles/mytiles@1.0.0/{z}/{x}/{y}.mvt',
       vectorTileOptions,
     )
   }

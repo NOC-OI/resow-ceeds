@@ -40,34 +40,14 @@ export function IndicatorSpeciesTypeOptions({
     return !!selectedLayers[subLayer]
   }
 
-  function addMapLayer(layerInfo: any) {
-    setLayerAction('add')
-    const newSelectedLayer = layerInfo.dataInfo
-    newSelectedLayer.opacity = 1
-    newSelectedLayer.zoom = true
-    setSelectedLayers({
-      ...selectedLayers,
-      [layerInfo.subLayer]: newSelectedLayer,
-    })
-  }
-
-  function changeMapLayer(layerInfo: any) {
-    setLayerAction('marker-changes')
-    const newSelectedLayer = layerInfo.dataInfo
-    setSelectedLayers((selectedLayers: any) => {
-      const copy = { ...selectedLayers }
-      delete copy[layerInfo.subLayer]
-      return {
-        [layerInfo.subLayer]: newSelectedLayer,
-        ...copy,
-      }
-    })
-  }
   async function fetchDatatoUpdateCalculationBox(result: any) {
     setLoading(true)
     setCalculationValue(null)
     const baseUrl = 'https://haigfras-api.herokuapp.com'
-    const url = `${baseUrl}${subLayer.url},count:${subLayer.name}&column=${subLayer.name}`
+    const url = `${baseUrl}${subLayer.url},count:${encodeURIComponent(
+      subLayer.name,
+    )}&column=${encodeURIComponent(subLayer.name)}`
+    console.log(url)
     async function getCalculationResults() {
       const response = await fetch(url, {
         method: 'GET',
@@ -77,35 +57,62 @@ export function IndicatorSpeciesTypeOptions({
           'Access-Control-Allow-Origin': '*',
         },
       })
+      console.log(url)
       const data = await response.json()
-      const newCalculationValue: Object = {}
-      newCalculationValue[subLayer.name as keyof Object] = data
-      setCalculationValue(newCalculationValue)
+      subLayer.result = data
+      setCalculationValue(subLayer)
       setLoading(false)
     }
     await getCalculationResults()
   }
 
+  function changeMapLayer(newSelectedLayers: any) {
+    setLayerAction('marker-changes')
+    setSelectedLayers((selectedLayers: any) => {
+      const copy = { ...selectedLayers }
+      newSelectedLayers.forEach((layerInfo: any) => {
+        delete copy[layerInfo.subLayer]
+        layerInfo.dataInfo.opacity = 1
+        layerInfo.dataInfo.zoom = true
+        copy[layerInfo.subLayer] = layerInfo.dataInfo
+      })
+      return copy
+    })
+  }
+
   async function handleChangeMapLayer(e: any) {
     setIsClicked(e.currentTarget.id)
-    const result = e.currentTarget.value
-    const layerInfo = {
-      subLayer: 'Seabed Images_2012',
-      dataInfo: listLayers['Seabed Images'].layerNames['2012'],
-    }
-    setActualLayer([layerInfo.subLayer])
-    layerInfo.dataInfo.show = []
-    layerInfo.dataInfo.photos.forEach((photo: any) => {
-      if (photo[result] > 0) {
-        layerInfo.dataInfo.show.push(photo.FileName)
-      }
+    const buttonValue = JSON.parse(e.currentTarget.value)
+    const newActualLayers: string[] = []
+    const newSelectedLayers: { subLayer: string; dataInfo: any }[] = []
+    Object.keys(buttonValue.layers).forEach((newActualLayer) => {
+      buttonValue.layers[newActualLayer].forEach((layerClass: any) => {
+        newActualLayers.push(`${newActualLayer}_${layerClass}`)
+        const layerInfo = {
+          subLayer: `${newActualLayer}_${layerClass}`,
+          dataInfo: listLayers[newActualLayer].layerNames[layerClass],
+        }
+        if (verifyIfWasSelectedBefore(`${newActualLayer}_${layerClass}`)) {
+          layerInfo.dataInfo.selectedBefore = true
+        } else {
+          layerInfo.dataInfo.selectedBefore = false
+        }
+        layerInfo.dataInfo.show = []
+        layerInfo.dataInfo.photos.forEach((photo: any) => {
+          if (photo[buttonValue.name] > 0) {
+            layerInfo.dataInfo.show.push(photo.FileName)
+          }
+        })
+        console.log(layerInfo.dataInfo.show)
+        newSelectedLayers.push(layerInfo)
+      })
     })
-    if (verifyIfWasSelectedBefore(layerInfo.subLayer)) {
-      changeMapLayer(layerInfo)
-    } else {
-      addMapLayer(layerInfo)
-    }
-    await fetchDatatoUpdateCalculationBox(result)
+    console.log(newSelectedLayers)
+    setActualLayer(newActualLayers)
+    // if (verifyIfWasSelectedBefore(layerInfo.subLayer)) {
+    changeMapLayer(newSelectedLayers)
+
+    await fetchDatatoUpdateCalculationBox(buttonValue)
   }
 
   useEffect(() => {
@@ -130,7 +137,7 @@ export function IndicatorSpeciesTypeOptions({
         <label key={`${subLayer.name}_${subLayer}`} htmlFor={subLayer.name}>
           <input
             onChange={handleChangeMapLayer}
-            value={subLayer.name}
+            value={JSON.stringify(subLayer)}
             type="radio"
             checked={isClicked === subLayer.name}
             id={subLayer.name}

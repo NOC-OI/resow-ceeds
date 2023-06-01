@@ -43,16 +43,16 @@ export function CalculationValue({
     return !!selectedLayers[subLayer]
   }
 
-  function addMapLayer(layerInfo: any) {
-    setLayerAction('add')
-    const newSelectedLayer = layerInfo.dataInfo
-    newSelectedLayer.opacity = 1
-    newSelectedLayer.zoom = true
-    setSelectedLayers({
-      ...selectedLayers,
-      [layerInfo.subLayer]: newSelectedLayer,
-    })
-  }
+  // function addMapLayer(layerInfo: any) {
+  //   setLayerAction('add')
+  //   const newSelectedLayer = layerInfo.dataInfo
+  //   newSelectedLayer.opacity = 1
+  //   newSelectedLayer.zoom = true
+  //   setSelectedLayers({
+  //     ...selectedLayers,
+  //     [layerInfo.subLayer]: newSelectedLayer,
+  //   })
+  // }
 
   function changeMapLayer(newSelectedLayers: any) {
     setLayerAction('marker-changes')
@@ -131,7 +131,7 @@ export function CalculationValue({
             {Object.keys(calculationValue.result[column]).map((calc) => {
               return (
                 <div key={`${column}_${calc}`}>
-                  <h2>{calc}</h2>
+                  {calc !== 'Types' && <h2>{calc}</h2>}
                   {calculationValue.result[column][calc].map(
                     (results: any, i: any) => {
                       if (typeof results === 'object') {
@@ -153,6 +153,7 @@ export function CalculationValue({
                                   ? 'active-button'
                                   : ''
                               }
+                              disabled={!!calculationValue.button}
                             >
                               {Object.keys(
                                 calculationValue.result[column][calc][i],

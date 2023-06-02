@@ -121,7 +121,7 @@ export class GetMBTiles {
     const vectorTileOptions = {
       interactive: true,
       vectorTileLayerStyles: {
-        clipped_clipped_EUSeaMap_2021: function (properties, zoom) {
+        all: function (properties, zoom) {
           const eu = properties.EUNIScombD
           let color = '#cf52d3'
 

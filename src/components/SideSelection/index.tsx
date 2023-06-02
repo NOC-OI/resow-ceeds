@@ -40,6 +40,8 @@ interface SideSelectionProps {
   setContrast?: any
   listLayers?: any
   setListLayers?: any
+  showPopup?: any
+  setShowPopup?: any
 }
 
 // interface ContrastSelectorProps {
@@ -79,6 +81,8 @@ export function SideSelection({
   setContrast,
   listLayers,
   setListLayers,
+  showPopup,
+  setShowPopup,
 }: SideSelectionProps) {
   const navigate = useNavigate()
 
@@ -145,6 +149,10 @@ export function SideSelection({
     if (window.location.pathname !== '/3d') {
       navigate('/3d')
     }
+  }
+
+  function handleToogleFullPagePopup() {
+    setShowPopup((showPopup: any) => !showPopup)
   }
 
   return (
@@ -225,7 +233,10 @@ export function SideSelection({
             <FontAwesomeIcon icon={faCalculator} />
           </SideSelectionLink> */}
           <SideSelectionLink title={'Information about the application'}>
-            <FontAwesomeIcon icon={faCircleQuestion} />
+            <FontAwesomeIcon
+              icon={faCircleQuestion}
+              onClick={handleToogleFullPagePopup}
+            />
           </SideSelectionLink>
           <SideSelectionLink title={'Login'}>
             <FontAwesomeIcon icon={faCircleUser} />{' '}

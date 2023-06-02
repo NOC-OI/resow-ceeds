@@ -5,6 +5,7 @@ import {
   GeoJSON,
   LayersControl,
   Pane,
+  ScaleControl,
 } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import React, { useEffect, useMemo, useState } from 'react'
@@ -19,6 +20,7 @@ import { GetMBTiles } from './addMBTiles'
 import { GetPhotoMarker } from './addPhotoMarker'
 import * as turf from '@turf/turf'
 import chroma from 'chroma-js'
+import LeafletRuler from '../LeafletRuler'
 
 const colorScale = chroma
   .scale(['#f00', '#0f0', '#00f', 'gray'])
@@ -639,6 +641,8 @@ function MapHome1({
             />
           </LayersControl.Overlay>
         </LayersControl>
+        <LeafletRuler />
+        <ScaleControl position="topright" />
       </MapContainer>
     ),
     [L.map],

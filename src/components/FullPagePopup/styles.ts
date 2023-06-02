@@ -1,0 +1,45 @@
+import styled from 'styled-components'
+
+export const FullPagePopupContainer = styled.div`
+  position: fixed;
+  left: 0%;
+  right: 0%;
+  top: 0%;
+  bottom: 0%;
+  height: 100%;
+  width: 100%;
+  /* left: 10%;
+  right: 10%;
+  top: 10%;
+  bottom: 10%;
+  height: 80%;
+  width: 80%; */
+
+  /* position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0; */
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 9999;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  svg {
+    cursor: pointer;
+    padding-bottom: 1rem;
+    height: 2rem;
+  }
+
+  h2 {
+    background: -webkit-linear-gradient(
+      315deg,
+      ${(props) => props.theme['blue-500']} 0%,
+      ${(props) => props.theme['blue-300']} 74%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+`

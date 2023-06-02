@@ -13,6 +13,7 @@ import { HabitatSelection } from '../../components/HabitatSelection'
 import { BiodiversitySelection } from '../../components/BiodiversitySelection'
 import { IndicatorSpeciesSelection } from '../../components/IndicatorSpeciesSelection'
 import { SurveyDesignSelection } from '../../components/SurveyDesignSelection'
+import { FullPagePopup } from '../../components/FullPagePopup'
 
 export function TileServer() {
   const [selectedSidebarOption, setSelectedSidebarOption] = useState<string>('')
@@ -47,6 +48,9 @@ export function TileServer() {
   })
 
   const [listLayers, setListLayers] = useState([])
+
+  const [showPopup, setShowPopup] = useState(true)
+
   return (
     <TileServerContainer>
       <SideBar>
@@ -62,6 +66,8 @@ export function TileServer() {
           setShowPhotos={setShowPhotos}
           listLayers={listLayers}
           setListLayers={setListLayers}
+          showPopup={showPopup}
+          setShowPopup={setShowPopup}
         />
         {selectedSidebarOption === 'Data Exploration' && (
           <DataExplorationSelection
@@ -189,6 +195,7 @@ export function TileServer() {
         setMapBounds={setMapBounds}
         selectedSidebarOption={selectedSidebarOption}
       />
+      {showPopup && <FullPagePopup setShowPopup={setShowPopup} />}
     </TileServerContainer>
   )
 }

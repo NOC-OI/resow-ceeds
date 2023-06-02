@@ -38,7 +38,7 @@ export function FullPagePopup({ setShowPopup }: FullPagePopupProps) {
         <div className="p-4">
           {/* <h3 className="text-center font-bold p-4 text-lg">Other Topics...</h3> */}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-3 gap-1">
             <div className="p-4 cursor-pointer">
               <FontAwesomeIcon icon={faVideo} />
               <p className="text-center text-sm">Tutorial</p>

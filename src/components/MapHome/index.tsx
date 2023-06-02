@@ -641,8 +641,8 @@ function MapHome1({
             />
           </LayersControl.Overlay>
         </LayersControl>
-        <LeafletRuler />
         <ScaleControl position="topright" />
+        <LeafletRuler />
       </MapContainer>
     ),
     [L.map],

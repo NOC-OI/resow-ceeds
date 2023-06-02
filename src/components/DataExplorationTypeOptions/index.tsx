@@ -3,6 +3,7 @@ import { LayerTypeOptionsContainer } from './styles'
 import {
   faCircleInfo,
   faList,
+  faLock,
   faMagnifyingGlass,
   faSliders,
 } from '@fortawesome/free-solid-svg-icons'
@@ -218,8 +219,19 @@ export function DataExplorationTypeOptions({
             type="checkbox"
             checked={verifyIfWasSelectedBefore(content, subLayer)}
             id={`${content}_${subLayer}`}
+            disabled={!!subLayers[subLayer].protected}
+            className={subLayers[subLayer].protected && 'cursor-not-allowed'}
           />
-          <p>{subLayer}</p>
+          <p className={subLayers[subLayer].protected && 'cursor-not-allowed'}>
+            {subLayer}
+          </p>
+          {subLayers[subLayer].protected ? (
+            <FontAwesomeIcon
+              icon={faLock}
+              title={'You need to login to access this data'}
+              className="pb-0.5"
+            />
+          ) : null}
         </label>
         {verifyIfWasSelectedBefore(content, subLayer) ? (
           <div>

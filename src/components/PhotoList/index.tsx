@@ -53,10 +53,10 @@ export function PhotoList({
         if (el.show) {
           count2++
           if (
-            el.Latitude > lat[0] &&
-            el.Latitude < lat[1] &&
-            el.Longitude > lng[0] &&
-            el.Longitude < lng[1]
+            el.latitude > lat[0] &&
+            el.latitude < lat[1] &&
+            el.longitude > lng[0] &&
+            el.longitude < lng[1]
           ) {
             newList.push(el)
             count++

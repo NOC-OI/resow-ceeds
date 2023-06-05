@@ -127,7 +127,7 @@ export function CalculationValue({
       {Object.keys(calculationValue.result).map((column) => {
         return (
           <div key={column}>
-            <h1>{column}</h1>
+            <h1 className="capitalize">{column}</h1>
             {Object.keys(calculationValue.result[column]).map((calc) => {
               return (
                 <div key={`${column}_${calc}`}>
@@ -153,7 +153,7 @@ export function CalculationValue({
                                   ? 'active-button'
                                   : ''
                               }
-                              disabled={!!calculationValue.button}
+                              disabled={!calculationValue.button}
                             >
                               {Object.keys(
                                 calculationValue.result[column][calc][i],
@@ -176,8 +176,11 @@ export function CalculationValue({
                                 } else if (key !== 'fileformat') {
                                   return (
                                     <div key={`${key}_${results}`}>
-                                      <p>
-                                        {key}: {result}
+                                      <p className="capitalize">
+                                        {key}:{' '}
+                                        {typeof result === 'number'
+                                          ? result.toFixed(0)
+                                          : result}
                                       </p>
                                     </div>
                                   )
@@ -191,7 +194,11 @@ export function CalculationValue({
                       } else {
                         return (
                           <div key={results}>
-                            <p>{results}</p>
+                            <p className="capitalize">
+                              {typeof results === 'number'
+                                ? results.toFixed(0)
+                                : results}
+                            </p>
                           </div>
                         )
                       }

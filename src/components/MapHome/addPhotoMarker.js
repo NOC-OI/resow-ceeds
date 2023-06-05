@@ -38,7 +38,7 @@ export class GetPhotoMarker {
       iconSize: [0, 0],
       iconAnchor: [0, 0],
     })
-    this.layer = L.marker([this.layerName.Latitude, this.layerName.Longitude], {
+    this.layer = L.marker([this.layerName.latitude, this.layerName.longitude], {
       riseOnHover: true,
       autoPanOnFocus: false,
       icon,

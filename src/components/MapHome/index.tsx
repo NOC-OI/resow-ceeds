@@ -253,10 +253,10 @@ function MapHome1({
         const markers: any = [] // L.layerGroup().addTo(map)
         layerName.photos.map(async (photo: any) => {
           markers.push(
-            turf.point([photo.Longitude + 0.003, photo.Latitude + 0.003]),
+            turf.point([photo.longitude + 0.003, photo.latitude + 0.003]),
           )
           markers.push(
-            turf.point([photo.Longitude - 0.003, photo.Latitude - 0.003]),
+            turf.point([photo.longitude - 0.003, photo.latitude - 0.003]),
           )
         })
         const color = colorScale[Math.floor(Math.random() * 30)]

@@ -44,9 +44,7 @@ export function IndicatorSpeciesTypeOptions({
     setLoading(true)
     setCalculationValue(null)
     const baseUrl = 'https://haigfras-api.herokuapp.com'
-    const url = `${baseUrl}${subLayer.url},count:${encodeURIComponent(
-      subLayer.name,
-    )}&column=${encodeURIComponent(subLayer.name)}`
+    const url = `${baseUrl}${subLayer.url}`
     console.log(url)
     async function getCalculationResults() {
       const response = await fetch(url, {
@@ -57,9 +55,12 @@ export function IndicatorSpeciesTypeOptions({
           'Access-Control-Allow-Origin': '*',
         },
       })
-      console.log(url)
       const data = await response.json()
+      const deleteKey = Object.keys(data)[0]
+      data[subLayer.name] = data[deleteKey]
+      delete data[deleteKey]
       subLayer.result = data
+      console.log(data)
       setCalculationValue(subLayer)
       setLoading(false)
     }
@@ -93,13 +94,15 @@ export function IndicatorSpeciesTypeOptions({
           dataInfo: listLayers[newActualLayer].layerNames[layerClass],
         }
         if (verifyIfWasSelectedBefore(`${newActualLayer}_${layerClass}`)) {
-          layerInfo.dataInfo.selectedBefore = true
+          // eslint-disable-next-line dot-notation
+          layerInfo.dataInfo['selectedBefore'] = true
         } else {
-          layerInfo.dataInfo.selectedBefore = false
+          // eslint-disable-next-line dot-notation
+          layerInfo.dataInfo['selectedBefore'] = false
         }
         layerInfo.dataInfo.show = []
         layerInfo.dataInfo.photos.forEach((photo: any) => {
-          if (photo[buttonValue.name] > 0) {
+          if (photo[buttonValue.tableName] > 0) {
             layerInfo.dataInfo.show.push(photo.filename)
           }
         })

@@ -89,7 +89,7 @@ export function CalculationValue({
         layerInfo.dataInfo.show = []
         layerInfo.dataInfo.photos.forEach((photo: any) => {
           if (photo[column] === result) {
-            layerInfo.dataInfo.show.push(photo.FileName)
+            layerInfo.dataInfo.show.push(photo.filename)
           }
         })
         console.log(layerInfo.dataInfo.show)
@@ -160,10 +160,10 @@ export function CalculationValue({
                               ).map((key) => {
                                 const result =
                                   calculationValue.result[column][calc][i][key]
-                                if (key === 'FileName') {
+                                if (key === 'filename') {
                                   const extension =
                                     calculationValue.result[column][calc][i]
-                                      .FileFormat
+                                      .fileformat
                                   return (
                                     <CalculationValueImage
                                       key={`${result}.${extension}`}
@@ -173,7 +173,7 @@ export function CalculationValue({
                                       />
                                     </CalculationValueImage>
                                   )
-                                } else if (key !== 'FileFormat') {
+                                } else if (key !== 'fileformat') {
                                   return (
                                     <div key={`${key}_${results}`}>
                                       <p>

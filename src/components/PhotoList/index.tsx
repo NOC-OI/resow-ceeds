@@ -49,7 +49,7 @@ export function PhotoList({
       if (count >= n) {
         return false // "break"
       }
-      if (el.FileName !== activePhoto.FileName) {
+      if (el.filename !== activePhoto.filename) {
         if (el.show) {
           count2++
           if (
@@ -102,7 +102,7 @@ export function PhotoList({
               onClick={() => handleClickCard(showPhoto)}
             >
               <CardImage>
-                <img src={`${BASIC_BUCKET_URL}/${showPhoto.FileName}_1.png`} />
+                <img src={`${BASIC_BUCKET_URL}/${showPhoto.filename}_1.png`} />
               </CardImage>
               <div>
                 <CardDiscription>
@@ -127,7 +127,7 @@ export function PhotoList({
               onClick={() => handleClickCard(showPhoto)}
             >
               <CardImage>
-                <img src={`${BASIC_BUCKET_URL}/${showPhoto.FileName}_1.png`} />
+                <img src={`${BASIC_BUCKET_URL}/${showPhoto.filename}_1.png`} />
               </CardImage>
               <div>
                 <CardDiscription>

@@ -140,7 +140,7 @@ export function DataExplorationTypeOptions({
       if (e.target.checked) {
         layerInfo.dataInfo.show = []
         layerInfo.dataInfo.photos.forEach((photo: any) => {
-          layerInfo.dataInfo.show.push(photo.FileName)
+          layerInfo.dataInfo.show.push(photo.filename)
         })
         await addMapLayer(layerInfo)
       } else {

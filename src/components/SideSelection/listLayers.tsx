@@ -458,7 +458,7 @@ export const listLayers = {
         get_value: { depth: 'm' },
         content: 'This layer represents...',
       },
-      AUV: {
+      '2018': {
         url: 'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/bathymetry/test_auv_bathymetry.tif',
         data_type: 'COG',
         get_value: { depth: 'm' },

@@ -48,7 +48,7 @@ export function Annotations({
           photo.show = false
         }
         if (photo.show) {
-          newSelectedLayer.show.push(photo.FileName)
+          newSelectedLayer.show.push(photo.filename)
         }
       })
       setSelectedLayers((selectedLayers: any) => {

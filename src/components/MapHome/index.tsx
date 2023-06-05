@@ -157,7 +157,7 @@ function MapHome1({
   async function changeIcons(photo: any) {
     map.eachLayer(function (mapLayer: any) {
       if (mapLayer.options.dataType === 'marker') {
-        if (mapLayer.options.FileName === photo.FileName) {
+        if (mapLayer.options.filename === photo.filename) {
           mapLayer.setIcon(activeIcon)
           if (!photo.notCenter) {
             map.setView(
@@ -354,7 +354,7 @@ function MapHome1({
     if (activePhoto) {
       const newShowPhotos = [...showPhotos]
       newShowPhotos.forEach((photo, i) => {
-        if (activePhoto.FileName === photo.FileName) {
+        if (activePhoto.filename === photo.filename) {
           newShowPhotos[i].active = true
         } else {
           newShowPhotos[i].active = false

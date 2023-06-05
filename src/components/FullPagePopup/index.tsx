@@ -5,7 +5,7 @@ import {
   faVideo,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { FullPagePopupContainer } from './styles'
+import { FullPagePopupContainer, FullPagePopupLink } from './styles'
 
 interface FullPagePopupProps {
   setShowPopup: any
@@ -18,39 +18,33 @@ export function FullPagePopup({ setShowPopup }: FullPagePopupProps) {
 
   return (
     <FullPagePopupContainer onClick={handleClose}>
-      <div className="w-96 align-middle text-center">
+      <div className="w-[40rem] align-middle text-center">
         <FontAwesomeIcon icon={faCircleXmark} onClick={handleClose} />
         <h2 className="text-center font-bold pb-3 capitalize text-3xl">
           Haig Fras Digital Twin - Pilot Study
         </h2>
         <div className="p-4">
-          <p className="text-center text-base">
-            Some important text about the project... <br />
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce
-            semper velit vel turpis efficitur, eu fermentum dui volutpat.
-            Curabitur id ullamcorper eros. Aliquam erat volutpat. Sed eleifend
-            volutpat odio, sed gravida velit ullamcorper at. \n Nulla facilisi.{' '}
-            <br />
-            Duis nec sapien ultrices, ullamcorper ligula in, hendrerit purus. In
-            pulvinar nisl ac ligula ferment
+          <p className="text-center text-base font-bold text-xl">
+            This pilot digital twin aims to monitor changes to benthic
+            communities in the Haig Fras Marine Protected Area based on marine
+            imagery datasets.
           </p>
         </div>
         <div className="p-4">
           {/* <h3 className="text-center font-bold p-4 text-lg">Other Topics...</h3> */}
-
           <div className="grid grid-cols-3 gap-1">
-            <div className="p-4 cursor-pointer">
+            <FullPagePopupLink className="p-4 cursor-pointer">
               <FontAwesomeIcon icon={faVideo} />
               <p className="text-center text-sm">Tutorial</p>
-            </div>
-            <div className="p-4  cursor-pointer">
+            </FullPagePopupLink>
+            <FullPagePopupLink className="p-4  cursor-pointer">
               <FontAwesomeIcon icon={faCode} />
               <p className="text-center text-sm">Technologies</p>
-            </div>
-            <div className="p-4 cursor-pointer">
+            </FullPagePopupLink>
+            <FullPagePopupLink className="p-4 cursor-pointer">
               <FontAwesomeIcon icon={faCashRegister} />
               <p className="text-center text-sm">Asset Register</p>
-            </div>
+            </FullPagePopupLink>
           </div>
         </div>
       </div>

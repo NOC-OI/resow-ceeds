@@ -115,7 +115,7 @@ function MapHome1({
         photos.data.every((photo: any) => {
           if (photo.id.toString() === photoValues[0]) {
             if (photo.local_data_type === 'Marker-COG') {
-              photo.url = `${BASIC_BUCKET_URL}/${photo.FileName}_1.tif`
+              photo.url = `${BASIC_BUCKET_URL}/${photo.filename}_1.tif`
               const getCOGLayer = new GetTileLayer(photo, [photo.url], contrast)
               getCOGLayer.getTile().then(async function () {
                 layer = getCOGLayer.layer
@@ -313,7 +313,7 @@ export const MapHomeSimple = React.memo(MapHome1, mapPropsAreEqual)
 //       console.log(photo)
 //       if (photo.id.toString() === photoValues[0]) {
 //         if (photo.local_data_type === 'Marker-COG'){
-//           photo.url = `${BASIC_BUCKET_URL}/${photo.FileName}_1.tif`
+//           photo.url = `${BASIC_BUCKET_URL}/${photo.filename}_1.tif`
 //           console.log(photo.url)
 //           const getCOGLayer = new GetTileLayer(photo, [photo.url], contrast)
 //           getCOGLayer.getTile().then( async function () {

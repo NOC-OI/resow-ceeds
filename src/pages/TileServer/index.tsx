@@ -130,6 +130,13 @@ export function TileServer() {
             latLonLimits={latLonLimits}
             setLatLonLimits={setLatLonLimits}
             setInfoButtonBox={setInfoButtonBox}
+            selectedLayers={selectedLayers}
+            setSelectedLayers={setSelectedLayers}
+            layerAction={layerAction}
+            setLayerAction={setLayerAction}
+            actualLayer={actualLayer}
+            setActualLayer={setActualLayer}
+            listLayers={listLayers}
           />
         )}
         {selectedSidebarOption === 'Survey Design' && (
@@ -166,6 +173,13 @@ export function TileServer() {
           <InfoButtonBox
             infoButtonBox={infoButtonBox}
             setInfoButtonBox={setInfoButtonBox}
+            selectedLayers={selectedLayers}
+            setSelectedLayers={setSelectedLayers}
+            layerAction={layerAction}
+            setLayerAction={setLayerAction}
+            actualLayer={actualLayer}
+            setActualLayer={setActualLayer}
+            listLayers={listLayers}
           />
         ) : null}
         {showPhotos.length > 0 &&

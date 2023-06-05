@@ -1,3 +1,4 @@
+/* eslint-disable no-multi-str */
 import {
   LayerSelectionContainer,
   LayerSelectionTitle,
@@ -50,7 +51,7 @@ export function DataExplorationSelection({
             onClick={() =>
               handleClickLayerInfo(
                 'Data Exploration',
-                'Some information about...',
+                'XXXXXXXXXXXXXXXXXXXXXXXXX',
               )
             }
           />

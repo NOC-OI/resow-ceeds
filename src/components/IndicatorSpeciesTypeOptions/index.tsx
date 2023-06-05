@@ -100,7 +100,7 @@ export function IndicatorSpeciesTypeOptions({
         layerInfo.dataInfo.show = []
         layerInfo.dataInfo.photos.forEach((photo: any) => {
           if (photo[buttonValue.name] > 0) {
-            layerInfo.dataInfo.show.push(photo.FileName)
+            layerInfo.dataInfo.show.push(photo.filename)
           }
         })
         console.log(layerInfo.dataInfo.show)

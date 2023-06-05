@@ -31,6 +31,9 @@ export const FullPagePopupContainer = styled.div`
     cursor: pointer;
     padding-bottom: 1rem;
     height: 2rem;
+    &:hover {
+      color: ${(props) => props.theme['yellow-700']};
+    }
   }
 
   h2 {
@@ -41,5 +44,10 @@ export const FullPagePopupContainer = styled.div`
     );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+  }
+`
+export const FullPagePopupLink = styled.div`
+  &:hover {
+    color: ${(props) => props.theme['yellow-700']};
   }
 `

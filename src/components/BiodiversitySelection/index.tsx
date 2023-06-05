@@ -1,3 +1,4 @@
+/* eslint-disable no-multi-str */
 import { listBiodiversities } from './listBiodiversities'
 // import { useState } from 'react'
 import {
@@ -15,6 +16,13 @@ interface BiodiversitySelectionProps {
   latLonLimits: any
   setLatLonLimits?: any
   setInfoButtonBox?: any
+  selectedLayers?: any
+  setSelectedLayers?: any
+  layerAction?: any
+  setLayerAction?: any
+  actualLayer?: any
+  setActualLayer?: any
+  listLayers?: any
 }
 
 export function BiodiversitySelection({
@@ -24,15 +32,23 @@ export function BiodiversitySelection({
   latLonLimits,
   setLatLonLimits,
   setInfoButtonBox,
+  selectedLayers,
+  setSelectedLayers,
+  layerAction,
+  setLayerAction,
+  actualLayer,
+  setActualLayer,
+  listLayers,
 }: BiodiversitySelectionProps) {
   // const [calcClasses, setCalcClasses] = useState(listBiodiversities)
 
   const calcClasses = listBiodiversities
 
-  function handleClickLayerInfo(title: String, content: string) {
+  function handleClickLayerInfo(title: String, content: string, link: any) {
     setInfoButtonBox({
       title,
       content,
+      link,
     })
   }
 
@@ -44,7 +60,19 @@ export function BiodiversitySelection({
           <Info
             size={20}
             onClick={() =>
-              handleClickLayerInfo('Biodiversity', 'Some information about...')
+              handleClickLayerInfo(
+                'Biodiversity',
+                'Biodiversity metrics in seabed images captured with the autonomous \
+                underwater vehicle were calculated based on replicate photographic sample \
+                units within each substratum types that were created by randomly selecting \
+                tiles without replacement to meet the target sample unit size (as defined by \
+                Benoist et al 2019). \n \
+                **Target sample unit size:** 150 m2 \n \
+                **Number of sample units in 2012:** hard - 6, hard+coarse - 10, \
+                hard+sand - 10, coarse+hard - 29, sand+hard - 6, coarse - 33, sand - 36\
+                ',
+                { layers: ['Seabed Images_AUV 2012'] },
+              )
             }
           />
         </div>

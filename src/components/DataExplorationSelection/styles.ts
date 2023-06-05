@@ -45,6 +45,7 @@ export const LayerSelectionTitle = styled.div`
     margin-left: 3rem;
     font-size: 1.5rem;
     font-weight: bold;
+    text-transform: capitalize;
   }
 `
 

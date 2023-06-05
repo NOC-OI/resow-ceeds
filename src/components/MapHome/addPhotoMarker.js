@@ -134,7 +134,7 @@ export class GetPhotoMarker {
 
     this.popupText = `
       <b>${this.actualLayer}</b><br>
-      IMAGE NAME: <em>${this.layerName.FileName}</em><br>
+      IMAGE NAME: <em>${this.layerName.filename}</em><br>
       ${
         this.layerName.Area_seabed_m2
           ? `AREA OF SURVEY: <em>${this.layerName.Area_seabed_m2.toFixed(
@@ -183,11 +183,11 @@ export class GetPhotoMarker {
     `
     this.layer.options.attribution = this.actualLayer
     this.layer.options.organismList = organismList
-    this.layer.options.FileName = this.layerName.FileName
+    this.layer.options.filename = this.layerName.filename
     this.layer.options.layerName = this.layerName
     this.layer.options.popupText = this.popupText
     this.layer.options.color = this.color
-    this.fileName = this.layerName.FileName
+    this.fileName = this.layerName.filename
     this.layer.options.dataType = 'marker'
   }
 }

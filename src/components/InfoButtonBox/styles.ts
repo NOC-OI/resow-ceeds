@@ -6,8 +6,8 @@ export const InfoButtonBoxContainer = styled.div`
   width: 20rem;
   background-color: ${(props) => props.theme.white};
   z-index: 9999;
-  max-height: 60vh;
-  overflow-y: auto;
+  max-height: 80vh;
+  height: max-content;
   margin-left: 1rem;
   padding: 0.5rem;
   border-radius: 16px;
@@ -20,11 +20,6 @@ export const InfoButtonBoxContainer = styled.div`
     text-align: center;
     padding-bottom: 0.375rem;
   }
-  p {
-    font-size: 0.75rem;
-    line-height: 1.6;
-    text-align: justify;
-  }
   div:first-child {
     display: flex;
     justify-content: flex-end;
@@ -35,5 +30,16 @@ export const InfoButtonBoxContainer = styled.div`
     &:hover {
       color: ${(props) => props.theme['yellow-700']};
     }
+  }
+`
+
+export const InfoButtonBoxContent = styled.div`
+  max-height: calc(80vh - 2.5rem);
+  overflow-y: auto;
+  p {
+    font-size: 0.75rem;
+    line-height: 1.6;
+    text-align: justify;
+    padding-bottom: 0.5rem;
   }
 `

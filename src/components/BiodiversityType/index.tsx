@@ -46,11 +46,15 @@ async function handleShowCalcValues(
       },
     })
     const data = await response.json()
+    // const deleteKey = Object.keys(data)[0]
+    // eslint-disable-next-line dot-notation
+    // data['Biodiversity'] = data[deleteKey]
+    // delete data[deleteKey]
     params.result = data
     if (params.noButton) {
       params.button = false
     } else {
-      params.button = false
+      params.button = true
     }
     // const newCalculationValue = dat: Object = {}
     // newCalculationValue[params.name as keyof Object] = data

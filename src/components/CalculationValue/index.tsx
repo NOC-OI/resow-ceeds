@@ -135,7 +135,10 @@ export function CalculationValue({
                   {calculationValue.result[column][calc].map(
                     (results: any, i: any) => {
                       if (typeof results === 'object') {
-                        const name = results[column]
+                        let name = results[column]
+                        if (!name) {
+                          name = results[Object.keys(results)[0]]
+                        }
                         return (
                           <div
                             className="flex justify-center pb-5"

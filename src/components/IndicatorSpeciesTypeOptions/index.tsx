@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { LayerTypeOptionsContainer } from '../DataExplorationTypeOptions/styles'
 
 interface IndicatorSpeciesTypeOptionsProps {
+  title: any
   subLayer: any
   subLayers: any
   setInfoButtonBox: any
@@ -20,6 +21,7 @@ interface IndicatorSpeciesTypeOptionsProps {
 }
 
 export function IndicatorSpeciesTypeOptions({
+  title,
   subLayer,
   subLayers,
   setInfoButtonBox,
@@ -45,7 +47,6 @@ export function IndicatorSpeciesTypeOptions({
     setCalculationValue(null)
     const baseUrl = 'https://haigfras-api.herokuapp.com'
     const url = `${baseUrl}${subLayer.url}`
-    console.log(url)
     async function getCalculationResults() {
       const response = await fetch(url, {
         method: 'GET',
@@ -60,7 +61,6 @@ export function IndicatorSpeciesTypeOptions({
       data[subLayer.name] = data[deleteKey]
       delete data[deleteKey]
       subLayer.result = data
-      console.log(data)
       setCalculationValue(subLayer)
       setLoading(false)
     }
@@ -80,14 +80,11 @@ export function IndicatorSpeciesTypeOptions({
       return copy
     })
   }
-
-  async function handleChangeMapLayer(e: any) {
-    setIsClicked(e.currentTarget.id)
-    const buttonValue = JSON.parse(e.currentTarget.value)
+  async function handleChangeMapLayer(subLayer: any) {
     const newActualLayers: string[] = []
     const newSelectedLayers: { subLayer: string; dataInfo: any }[] = []
-    Object.keys(buttonValue.layers).forEach((newActualLayer) => {
-      buttonValue.layers[newActualLayer].forEach((layerClass: any) => {
+    Object.keys(subLayer.layers).forEach((newActualLayer) => {
+      subLayer.layers[newActualLayer].forEach((layerClass: any) => {
         newActualLayers.push(`${newActualLayer}_${layerClass}`)
         const layerInfo = {
           subLayer: `${newActualLayer}_${layerClass}`,
@@ -102,20 +99,18 @@ export function IndicatorSpeciesTypeOptions({
         }
         layerInfo.dataInfo.show = []
         layerInfo.dataInfo.photos.forEach((photo: any) => {
-          if (photo[buttonValue.tableName] > 0) {
+          if (photo[subLayer.tableName] > 0) {
             layerInfo.dataInfo.show.push(photo.filename)
           }
         })
-        console.log(layerInfo.dataInfo.show)
         newSelectedLayers.push(layerInfo)
       })
     })
-    console.log(newSelectedLayers)
     setActualLayer(newActualLayers)
     // if (verifyIfWasSelectedBefore(layerInfo.subLayer)) {
     changeMapLayer(newSelectedLayers)
 
-    await fetchDatatoUpdateCalculationBox(buttonValue)
+    await fetchDatatoUpdateCalculationBox(subLayer)
   }
 
   useEffect(() => {
@@ -138,14 +133,15 @@ export function IndicatorSpeciesTypeOptions({
     <LayerTypeOptionsContainer>
       <div>
         <label key={`${subLayer.name}_${subLayer}`} htmlFor={subLayer.name}>
-          <input
-            onChange={handleChangeMapLayer}
-            value={JSON.stringify(subLayer)}
-            type="radio"
-            checked={isClicked === subLayer.name}
+          {/* <p>{subCalcs[subCalc]['name']}</p> */}
+          <p
+            onClick={async () => {
+              await handleChangeMapLayer(subLayer)
+            }}
             id={subLayer.name}
-          />
-          <p>{subLayer.name}</p>
+          >
+            {subLayer.name}
+          </p>
         </label>
         {/* {verifyIfWasSelectedBefore(content, subLayer) ? (
           <div>

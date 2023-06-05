@@ -140,7 +140,6 @@ export function SideSelection({
 
   function handleEraseLayers() {
     setActualLayer(Object.keys(selectedLayers))
-    setSelectedSidebarOption('')
     setSelectedLayers({})
     setLayerAction('remove')
   }

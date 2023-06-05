@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+.center-element{
+  margin-left: 50%;
+  transform: translateX(-50%);
+}
+
 .all-icon{
   background-size: contain;
   text-align: center;

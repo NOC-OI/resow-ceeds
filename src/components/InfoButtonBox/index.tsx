@@ -67,7 +67,6 @@ export function InfoButtonBox({
 
   async function handleChangeMapLayer(e: any) {
     const buttonValue = e.currentTarget.value
-    console.log(buttonValue)
     const [column, result] = buttonValue.split('_')
     const layerInfo = {
       subLayer: buttonValue,
@@ -95,7 +94,7 @@ export function InfoButtonBox({
         <FontAwesomeIcon icon={faCircleXmark} onClick={handleClose} />
       </div>
       <h1>{infoButtonBox.title}</h1>
-      <InfoButtonBoxContent>
+      <InfoButtonBoxContent className="content-center">
         <ReactMarkdown
           children={infoButtonBox.content}
           remarkPlugins={[remarkGfm, remarkMath, remarkBreaks]}
@@ -106,6 +105,7 @@ export function InfoButtonBox({
           <Button
             value={infoButtonBox.link.layers}
             onClick={handleChangeMapLayer}
+            className="bg-inherit font-bold center-element"
           >
             View Layer
           </Button>

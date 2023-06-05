@@ -71,6 +71,7 @@ export function CalculationValue({
   async function handleChangeMapLayer(e: any) {
     setActiveButton(e.currentTarget.id)
     const buttonValue = JSON.parse(e.currentTarget.value)
+    console.log(buttonValue)
     const [column, result] = buttonValue.result.split('_')
     const newActualLayers: string[] = []
     const newSelectedLayers: { subLayer: string; dataInfo: any }[] = []
@@ -92,7 +93,6 @@ export function CalculationValue({
             layerInfo.dataInfo.show.push(photo.filename)
           }
         })
-        console.log(layerInfo.dataInfo.show)
         newSelectedLayers.push(layerInfo)
       })
     })
@@ -179,7 +179,11 @@ export function CalculationValue({
                                       <p className="capitalize">
                                         {key}:{' '}
                                         {typeof result === 'number'
-                                          ? result.toFixed(0)
+                                          ? calculationValue.decimalPlaces
+                                            ? result.toFixed(
+                                                calculationValue.decimalPlaces,
+                                              )
+                                            : result.toFixed(1)
                                           : result}
                                       </p>
                                     </div>
@@ -196,7 +200,11 @@ export function CalculationValue({
                           <div key={results}>
                             <p className="capitalize">
                               {typeof results === 'number'
-                                ? results.toFixed(0)
+                                ? calculationValue.decimalPlaces
+                                  ? results.toFixed(
+                                      calculationValue.decimalPlaces,
+                                    )
+                                  : results.toFixed(1)
                                 : results}
                             </p>
                           </div>

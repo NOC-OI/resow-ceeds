@@ -46,13 +46,13 @@ export function IndicatorSpeciesType({
   const [isClicked, setIsClicked] = useState('')
 
   const [loading, setLoading] = useState<boolean>(false)
-
   function handleShowLayers() {
     setIsActive((isActive) => !isActive)
     setSubLayers((subLayers) =>
       Object.keys(subLayers).length === 0 ? childs : [],
     )
   }
+  console.log(content)
   return (
     <LayerTypeContainer>
       <div>
@@ -72,6 +72,7 @@ export function IndicatorSpeciesType({
           return (
             <IndicatorSpeciesTypeOptions
               key={`${content}_${subLayer.name}`}
+              title={title}
               subLayer={subLayer}
               subLayers={subLayers}
               setInfoButtonBox={setInfoButtonBox}

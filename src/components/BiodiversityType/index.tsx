@@ -30,6 +30,7 @@ async function handleShowCalcValues(
   setCalculationValue(null)
 
   const baseUrl = 'https://haigfras-api.herokuapp.com'
+  // const baseUrl = 'http://localhost:8000'
   let url = `${baseUrl}${params.url}`
   if (selectedArea) {
     url = `${url}&bbox=${latLonLimits[2].lat},${latLonLimits[0].lng},${latLonLimits[0].lat},${latLonLimits[2].lng}`
@@ -45,9 +46,15 @@ async function handleShowCalcValues(
       },
     })
     const data = await response.json()
-    const newCalculationValue: Object = {}
-    newCalculationValue[params.name as keyof Object] = data
-    setCalculationValue(newCalculationValue)
+    params.result = data
+    if (params.noButton) {
+      params.button = false
+    } else {
+      params.button = false
+    }
+    // const newCalculationValue = dat: Object = {}
+    // newCalculationValue[params.name as keyof Object] = data
+    setCalculationValue(params)
     setLoading(false)
   }
   await getCalculationResults()
@@ -128,7 +135,7 @@ export function BiodiversityType({
           )
         })}
       </div>
-      {loading ? <Loading /> : null}
+      {loading && <Loading />}
     </CalcTypeContainer>
   )
 }

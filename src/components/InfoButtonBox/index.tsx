@@ -52,12 +52,12 @@ export function InfoButtonBox({
   // }
 
   function changeMapLayer(newSelectedLayers: any) {
-    setLayerAction('add')
-    console.log(newSelectedLayers)
+    setLayerAction('marker-changes')
     setSelectedLayers((selectedLayers: any) => {
       const copy = { ...selectedLayers }
       newSelectedLayers.forEach((layerInfo: any) => {
         delete copy[layerInfo.subLayer]
+        layerInfo.dataInfo.plotLimits = true
         layerInfo.dataInfo.opacity = 1
         layerInfo.dataInfo.zoom = true
         copy[layerInfo.subLayer] = layerInfo.dataInfo
@@ -65,17 +65,14 @@ export function InfoButtonBox({
       return copy
     })
   }
-
   async function handleChangeMapLayer(e: any) {
     const buttonValue = e.currentTarget.value
     const [column, result] = buttonValue.split('_')
-    console.log(column)
-    console.log(result)
+
     const layerInfo = {
       subLayer: buttonValue,
       dataInfo: listLayers[column].layerNames[result],
     }
-    console.log(layerInfo)
     if (verifyIfWasSelectedBefore(buttonValue)) {
       layerInfo.dataInfo.selectedBefore = true
     } else {
@@ -85,7 +82,6 @@ export function InfoButtonBox({
     // layerInfo.dataInfo.photos.forEach((photo: any) => {
     //   layerInfo.dataInfo.show.push(photo.filename)
     // })
-    layerInfo.dataInfo.plotLimits = true
     setActualLayer([buttonValue])
     // if (verifyIfWasSelectedBefore(layerInfo.subLayer)) {
     changeMapLayer([layerInfo])

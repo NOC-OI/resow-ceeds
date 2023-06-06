@@ -228,7 +228,6 @@ function MapHome1({
         const markers: any = [] // L.layerGroup().addTo(map)
         const color = colorScale[Math.floor(Math.random() * 30)]
         const color1 = colorScale[Math.floor(Math.random() * 30)]
-        console.log(layerName)
         await layerName.photos.map(async (photo: any) => {
           markers.push(
             turf.point([photo.longitude + 0.003, photo.latitude + 0.003]),
@@ -550,7 +549,14 @@ function MapHome1({
     })
     actualLayer.forEach(async (actual) => {
       const color = colorScale[Math.floor(Math.random() * 30)]
+      const markers: any = []
       await selectedLayers[actual].photos.map(async (photo: any) => {
+        markers.push(
+          turf.point([photo.longitude + 0.003, photo.latitude + 0.003]),
+        )
+        markers.push(
+          turf.point([photo.longitude - 0.003, photo.latitude - 0.003]),
+        )
         const getPhotoMarker = new GetPhotoMarker(photo, actual, color)
         await getPhotoMarker.getMarker().then(async function () {
           if (getPhotoMarker.layer) {
@@ -570,6 +576,28 @@ function MapHome1({
             }
           }
         })
+        const turfConvex = turf.convex(turf.featureCollection(markers))
+        // const turfBbox = turf.bbox(turfConvex)
+        // const bounds = [
+        //   [turfBbox[1] - 0.05, turfBbox[0] - 0.05],
+        //   [turfBbox[3] + 0.05, turfBbox[2] + 0.05],
+        // ]
+        if (selectedLayers[actual].plotLimits) {
+          const color1 = colorScale[Math.floor(Math.random() * 30)]
+          const myStyle = {
+            color1,
+            fillColor: color1,
+            weight: 3,
+            opacity: 0.6,
+          }
+          if (turfConvex) {
+            const turflayer = L.geoJson(turfConvex, {
+              style: myStyle,
+            })
+            turflayer.options.attribution = actual
+            turflayer.addTo(map)
+          }
+        }
       })
     })
   }

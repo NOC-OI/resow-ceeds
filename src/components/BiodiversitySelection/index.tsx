@@ -66,12 +66,12 @@ export function BiodiversitySelection({
                 underwater vehicle were calculated based on replicate photographic sample \
                 units within each substratum types that were created by randomly selecting \
                 tiles without replacement to meet the target sample unit size (as defined by \
-                Benoist et al 2019). \n \
-                **Target sample unit size:** 150 m2 \n \
+                Benoist *et al*. 2019). \n \
+                **Target sample unit size:** 150 m$^2$ \n \
                 **Number of sample units in 2012:** hard - 6, hard+coarse - 10, \
                 hard+sand - 10, coarse+hard - 29, sand+hard - 6, coarse - 33, sand - 36\
                 ',
-                { layers: ['Seabed Images_AUV 2012'] },
+                { layers: ['Seabed Images_2012 AUV Image Survey'] },
               )
             }
           />

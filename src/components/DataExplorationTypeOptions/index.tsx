@@ -130,7 +130,7 @@ export function DataExplorationTypeOptions({
 
   function handleClickLayerInfo(content: String, subLayer: string) {
     setInfoButtonBox({
-      title: `${content}_${subLayer}`,
+      title: `${content} - ${subLayer}`,
       content: selectedLayers[`${content}_${subLayer}`].content,
     })
   }
@@ -144,6 +144,7 @@ export function DataExplorationTypeOptions({
         layerInfo.dataInfo.photos.forEach((photo: any) => {
           layerInfo.dataInfo.show.push(photo.filename)
         })
+        layerInfo.dataInfo.plotLimits = true
         await addMapLayer(layerInfo)
       } else {
         setShowAnnotations(false)
@@ -160,9 +161,9 @@ export function DataExplorationTypeOptions({
     }
   }
 
-  function handleClickAnnotations() {
-    setShowAnnotations((showAnnotations) => !showAnnotations)
-  }
+  // function handleClickAnnotations() {
+  //   setShowAnnotations((showAnnotations) => !showAnnotations)
+  // }
 
   function handleClickZoom() {
     const layerInfo = JSON.parse(
@@ -264,7 +265,12 @@ export function DataExplorationTypeOptions({
               title="Zoom to the layer"
               onClick={handleClickZoom}
             />
-            {subLayers[subLayer].data_type !== 'Photo' ? (
+            <FontAwesomeIcon
+              icon={faSliders}
+              title="Change Opacity"
+              onClick={handleClickSlider}
+            />
+            {/* {subLayers[subLayer].data_type !== 'Photo' ? (
               <FontAwesomeIcon
                 icon={faSliders}
                 title="Change Opacity"
@@ -276,7 +282,7 @@ export function DataExplorationTypeOptions({
                 title="Select by Annotations"
                 onClick={handleClickAnnotations}
               />
-            )}
+            )} */}
           </div>
         ) : null}
       </div>
@@ -293,7 +299,7 @@ export function DataExplorationTypeOptions({
           organisms={organisms}
         />
       )}
-      {opacityIsClicked && (
+      {opacityIsClicked && verifyIfWasSelectedBefore(content, subLayer) && (
         <input
           type="range"
           step={0.1}

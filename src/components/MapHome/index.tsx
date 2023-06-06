@@ -204,27 +204,38 @@ function MapHome1({
           const getCOGLayer = new GetCOGLayer(layerName, actual)
           await getCOGLayer.parseGeo().then(function () {
             layer = getCOGLayer.layer
-            const nE = layer.getBounds().getNorthEast()
-            const sW = layer.getBounds().getSouthWest()
-            bounds = [
-              [nE.lat, nE.lng],
-              [sW.lat, sW.lng],
-            ]
+            // const nE = layer.getBounds().getNorthEast()
+            // const sW = layer.getBounds().getSouthWest()
+            // bounds = [
+            //   [nE.lat, nE.lng],
+            //   [sW.lat, sW.lng],
+            // ]
+            bounds = defaultWMSBounds
           })
         } else {
           const getCOGLayer = new GetTileLayer(layerName, actual, true)
           await getCOGLayer.getTile().then(function () {
             layer = getCOGLayer.layer
-            bounds = [
-              [getCOGLayer.bounds[3], getCOGLayer.bounds[0]],
-              [getCOGLayer.bounds[1], getCOGLayer.bounds[2]],
-            ]
+            // bounds = [
+            //   [getCOGLayer.bounds[3], getCOGLayer.bounds[0]],
+            //   [getCOGLayer.bounds[1], getCOGLayer.bounds[2]],
+            // ]
+            bounds = defaultWMSBounds
           })
         }
       } else if (layerName.data_type === 'Photo') {
         // bounds = defaultWMSBounds
+        const markers: any = [] // L.layerGroup().addTo(map)
         const color = colorScale[Math.floor(Math.random() * 30)]
+        const color1 = colorScale[Math.floor(Math.random() * 30)]
+        console.log(layerName)
         await layerName.photos.map(async (photo: any) => {
+          markers.push(
+            turf.point([photo.longitude + 0.003, photo.latitude + 0.003]),
+          )
+          markers.push(
+            turf.point([photo.longitude - 0.003, photo.latitude - 0.003]),
+          )
           const getPhotoMarker = new GetPhotoMarker(photo, actual, color)
           await getPhotoMarker.getMarker().then(async function () {
             map.addLayer(getPhotoMarker.layer)
@@ -249,6 +260,28 @@ function MapHome1({
             }
           })
         })
+        const turfConvex = turf.convex(turf.featureCollection(markers))
+        const turfBbox = turf.bbox(turfConvex)
+        bounds = [
+          [turfBbox[1] - 0.05, turfBbox[0] - 0.05],
+          [turfBbox[3] + 0.05, turfBbox[2] + 0.05],
+        ]
+        console.log(console.log(bounds))
+        if (layerName.plotLimits) {
+          const myStyle = {
+            color1,
+            fillColor: color1,
+            weight: 3,
+            opacity: 0.6,
+          }
+          if (turfConvex) {
+            const turflayer = L.geoJson(turfConvex, {
+              style: myStyle,
+            })
+            turflayer.options.attribution = actual
+            turflayer.addTo(map)
+          }
+        }
       } else if (layerName.data_type === 'Photo-Limits') {
         const markers: any = [] // L.layerGroup().addTo(map)
         layerName.photos.map(async (photo: any) => {
@@ -343,9 +376,10 @@ function MapHome1({
 
         layer && bringLayerToFront(layer)
       }
-      bounds = defaultWMSBounds
+      if (layerName.data_type !== 'Photo') {
+        bounds = defaultWMSBounds
+      }
       map.fitBounds(bounds)
-      // map.fitBounds(bounds)
     })
     setLoading(false)
   }

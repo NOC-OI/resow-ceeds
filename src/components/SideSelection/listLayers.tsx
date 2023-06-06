@@ -1,5 +1,40 @@
 /* eslint-disable no-multi-str */
 export const listLayers = {
+  Bathymetry: {
+    layerNames: {
+      Emodnet: {
+        url: 'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output/cog_rep_EMODNet_2020.tif',
+        data_type: 'COG',
+        get_value: { depth: 'm' },
+        content: 'This layer represents...',
+      },
+      Gebco: {
+        url: 'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output/cog_rep_gebco_2022.tif',
+        data_type: 'COG',
+        get_value: { depth: 'm' },
+        content: 'This layer represents...',
+      },
+      '2018': {
+        url: 'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/bathymetry/test_auv_bathymetry.tif',
+        data_type: 'COG',
+        get_value: { depth: 'm' },
+        content: 'This layer represents...',
+      },
+    },
+  },
+  'Seabed Images': {
+    layerNames: {},
+  },
+  Sidescan: {
+    layerNames: {
+      2012: {
+        url: 'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/bathymetry/sidescan_2012.tif',
+        data_type: 'COG',
+        content: 'This layer represents...',
+        protected: true,
+      },
+    },
+  },
   'Seabed Habitats': {
     layerNames: {
       'Habitat Map': {
@@ -428,43 +463,5 @@ export const listLayers = {
         content: 'This layer represents...',
       },
     },
-  },
-  Sidescan: {
-    layerNames: {
-      2012: {
-        url: 'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/bathymetry/sidescan_2012.tif',
-        data_type: 'COG',
-        content: 'This layer represents...',
-        protected: true,
-      },
-    },
-  },
-  Bathymetry: {
-    layerNames: {
-      Emodnet: {
-        url: 'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output/cog_rep_EMODNet_2020.tif',
-        data_type: 'COG',
-        get_value: { depth: 'm' },
-        content: 'This layer represents...',
-      },
-      Gebco: {
-        url: 'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output/cog_rep_gebco_2022.tif',
-        data_type: 'COG',
-        get_value: { depth: 'm' },
-        content: 'This layer represents...',
-      },
-      '2018': {
-        url: 'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/bathymetry/test_auv_bathymetry.tif',
-        data_type: 'COG',
-        get_value: { depth: 'm' },
-        content: 'This layer represents...',
-      },
-    },
-  },
-  'Seabed Images': {
-    layerNames: {},
-  },
-  'Seabed Images - Limits': {
-    layerNames: {},
   },
 }

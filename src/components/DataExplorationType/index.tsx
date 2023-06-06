@@ -1,7 +1,8 @@
 import { ArrowCircleDown, ArrowCircleUp } from 'phosphor-react'
 import { useEffect, useState } from 'react'
-import { LayerTypeContainer } from './styles'
+// import { LayerTypeContainer } from './styles'
 import { DataExplorationTypeOptions } from '../DataExplorationTypeOptions'
+import { CalcTypeContainer } from '../BiodiversityType/styles'
 
 interface keyable {
   [key: string]: any
@@ -68,7 +69,7 @@ export function DataExplorationType({
   }, [selectedLayers])
 
   return (
-    <LayerTypeContainer>
+    <CalcTypeContainer>
       <div>
         <header onClick={handleShowLayers}>
           <p>{content}</p>
@@ -104,6 +105,6 @@ export function DataExplorationType({
           )
         })}
       </div>
-    </LayerTypeContainer>
+    </CalcTypeContainer>
   )
 }

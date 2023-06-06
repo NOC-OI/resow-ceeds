@@ -5,7 +5,7 @@ import {
   faVideo,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { FullPagePopupContainer, FullPagePopupLink } from './styles'
+import { FullPagePopupContainer } from './styles'
 
 interface FullPagePopupProps {
   setShowPopup: any
@@ -33,18 +33,22 @@ export function FullPagePopup({ setShowPopup }: FullPagePopupProps) {
         <div className="p-4">
           {/* <h3 className="text-center font-bold p-4 text-lg">Other Topics...</h3> */}
           <div className="grid grid-cols-3 gap-1">
-            <FullPagePopupLink className="p-4 cursor-pointer">
+            <a href="" target="_blank" className="p-4 cursor-pointer">
               <FontAwesomeIcon icon={faVideo} />
-              <p className="text-center text-sm">Tutorial</p>
-            </FullPagePopupLink>
-            <FullPagePopupLink className="p-4  cursor-pointer">
+              <p className="text-center text-sm font-bold">Tutorial</p>
+            </a>
+            <a href="" target="_blank" className="p-4 cursor-pointer">
               <FontAwesomeIcon icon={faCode} />
-              <p className="text-center text-sm">Technologies</p>
-            </FullPagePopupLink>
-            <FullPagePopupLink className="p-4 cursor-pointer">
+              <p className="text-center text-sm font-bold">Technologies</p>
+            </a>
+            <a
+              href="https://catalogue-imfe.ceh.ac.uk/pimfe/documents"
+              target="_blank"
+              className="p-4 cursor-pointer"
+            >
               <FontAwesomeIcon icon={faCashRegister} />
-              <p className="text-center text-sm">Asset Register</p>
-            </FullPagePopupLink>
+              <p className="text-center text-sm font-bold">Asset Register</p>
+            </a>
           </div>
         </div>
       </div>

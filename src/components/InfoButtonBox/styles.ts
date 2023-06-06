@@ -34,8 +34,9 @@ export const InfoButtonBoxContainer = styled.div`
 `
 
 export const InfoButtonBoxContent = styled.div`
-  max-height: calc(80vh - 2.5rem);
+  max-height: calc(80vh - 3.5rem);
   overflow-y: auto;
+  overflow-x: hidden;
   p {
     font-size: 0.75rem;
     line-height: 1.6;

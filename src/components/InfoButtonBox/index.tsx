@@ -52,7 +52,8 @@ export function InfoButtonBox({
   // }
 
   function changeMapLayer(newSelectedLayers: any) {
-    setLayerAction('marker-changes')
+    setLayerAction('add')
+    console.log(newSelectedLayers)
     setSelectedLayers((selectedLayers: any) => {
       const copy = { ...selectedLayers }
       newSelectedLayers.forEach((layerInfo: any) => {
@@ -68,19 +69,23 @@ export function InfoButtonBox({
   async function handleChangeMapLayer(e: any) {
     const buttonValue = e.currentTarget.value
     const [column, result] = buttonValue.split('_')
+    console.log(column)
+    console.log(result)
     const layerInfo = {
       subLayer: buttonValue,
       dataInfo: listLayers[column].layerNames[result],
     }
+    console.log(layerInfo)
     if (verifyIfWasSelectedBefore(buttonValue)) {
       layerInfo.dataInfo.selectedBefore = true
     } else {
       layerInfo.dataInfo.selectedBefore = false
     }
     layerInfo.dataInfo.show = []
-    layerInfo.dataInfo.photos.forEach((photo: any) => {
-      layerInfo.dataInfo.show.push(photo.filename)
-    })
+    // layerInfo.dataInfo.photos.forEach((photo: any) => {
+    //   layerInfo.dataInfo.show.push(photo.filename)
+    // })
+    layerInfo.dataInfo.plotLimits = true
     setActualLayer([buttonValue])
     // if (verifyIfWasSelectedBefore(layerInfo.subLayer)) {
     changeMapLayer([layerInfo])
@@ -93,8 +98,15 @@ export function InfoButtonBox({
       <div>
         <FontAwesomeIcon icon={faCircleXmark} onClick={handleClose} />
       </div>
-      <h1>{infoButtonBox.title}</h1>
-      <InfoButtonBoxContent className="content-center">
+      <div className="font-bold text-center pb-3">
+        <ReactMarkdown
+          children={infoButtonBox.title}
+          remarkPlugins={[remarkGfm, remarkMath, remarkBreaks]}
+          rehypePlugins={[rehypeKatex]}
+          linkTarget={'_blank'}
+        />
+      </div>
+      <InfoButtonBoxContent className="content-center pb-2">
         <ReactMarkdown
           children={infoButtonBox.content}
           remarkPlugins={[remarkGfm, remarkMath, remarkBreaks]}

@@ -49,3 +49,17 @@ export const CalculationValueImage = styled.div`
     height: auto;
   }
 `
+
+export const CalculationValueTitle = styled.div`
+  p {
+    font-weight: bold;
+    text-align: center;
+    font-size: 1rem;
+    line-height: 1.6;
+    text-align: center;
+    padding-bottom: 0.375rem;
+    ::first-letter {
+      text-transform: uppercase;
+    }
+  }
+`

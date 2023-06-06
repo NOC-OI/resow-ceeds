@@ -2,6 +2,7 @@ import styled from 'styled-components'
 
 export const LayerTypeOptionsContainer = styled.div`
   font-size: 0.65rem;
+  font-weight: normal;
   div {
     display: flex;
     justify-content: space-between;

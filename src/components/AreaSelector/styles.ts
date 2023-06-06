@@ -73,7 +73,7 @@ export const ActiveButton = styled.button`
 
 export const Button = styled.button`
   /* height: 2rem; */
-  width: max-content;
+  width: 100%;
   color: ${(props) => props.theme.black};
   border-radius: 9px;
   padding: 0.375rem;

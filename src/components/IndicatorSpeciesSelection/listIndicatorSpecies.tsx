@@ -31,7 +31,7 @@ interface keyable {
   [key: string]: any
 }
 const organisms: keyable = {
-  pentapora_foliacea: 'Pentapora foliacea',
+  pentapora_foliacea: '*Pentapora foliacea*',
   galeus: 'Cartilagenous fish',
 }
 
@@ -57,8 +57,10 @@ Object.keys(organisms).forEach((organism: string) => {
   listValues[1].calcNames.push({
     name: organisms[organism],
     url: `/data?filename=output:HF2012_alltile_otherdata,output:HF2012_alltile_counts,jncc:JNCC_CEND1012_otherdata&calc=organism&crs=epsg%3A4326&extension=csv&exclude_index=True&column=${organism}&agg_columns=first:filename,first:fileformat,sum:${organism},density:area_seabed_m2`,
-    layers: { 'Seabed Images': ['AUV 2012', 'JNCC 1012'] },
+    layers: { 'Seabed Images': ['2012 AUV Image Survey', 'JNCC 1012'] },
     tableName: organism,
+    noButton: true,
+    decimalPlaces: 1,
   })
 })
 

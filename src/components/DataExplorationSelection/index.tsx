@@ -53,7 +53,10 @@ export function DataExplorationSelection({
             onClick={() =>
               handleClickLayerInfo(
                 'Data Exploration',
-                'XXXXXXXXXXXXXXXXXXXXXXXXX',
+                'A GIS tool to explore the available data layers \
+                for the region. \n \
+                A description of all data used is available in the \
+                [Asset Register](https://catalogue-imfe.ceh.ac.uk/pimfe/documents).',
               )
             }
           />

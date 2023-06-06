@@ -1,8 +1,14 @@
 import { ArrowCircleDown, ArrowCircleUp } from 'phosphor-react'
 import { useState } from 'react'
-import { LayerTypeContainer } from '../DataExplorationType/styles'
+// import { LayerTypeContainer } from '../DataExplorationType/styles'
 import { IndicatorSpeciesTypeOptions } from '../IndicatorSpeciesTypeOptions'
 import { Loading } from '../Loading'
+import { CalcTypeContainer } from '../BiodiversityType/styles'
+import ReactMarkdown from 'react-markdown'
+import rehypeKatex from 'rehype-katex'
+import remarkBreaks from 'remark-breaks'
+import remarkGfm from 'remark-gfm'
+import remarkMath from 'remark-math'
 
 interface IndicatorSpeciesTypeProps {
   title: any
@@ -52,12 +58,16 @@ export function IndicatorSpeciesType({
       Object.keys(subLayers).length === 0 ? childs : [],
     )
   }
-  console.log(content)
   return (
-    <LayerTypeContainer>
+    <CalcTypeContainer>
       <div>
         <header onClick={handleShowLayers}>
-          <p>{title}</p>
+          <ReactMarkdown
+            children={title}
+            remarkPlugins={[remarkGfm, remarkMath, remarkBreaks]}
+            rehypePlugins={[rehypeKatex]}
+            linkTarget={'_blank'}
+          />
           <span>
             {isActive ? (
               <ArrowCircleUp size={24} />
@@ -93,6 +103,6 @@ export function IndicatorSpeciesType({
         })}
       </div>
       {loading && <Loading />}
-    </LayerTypeContainer>
+    </CalcTypeContainer>
   )
 }

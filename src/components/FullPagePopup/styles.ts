@@ -22,7 +22,7 @@ export const FullPagePopupContainer = styled.div`
   bottom: 0; */
   background: rgba(0, 0, 0, 0.8);
   z-index: 9999;
-  color: white;
+  color: ${(props) => props.theme.white};
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -31,6 +31,13 @@ export const FullPagePopupContainer = styled.div`
     cursor: pointer;
     padding-bottom: 1rem;
     height: 2rem;
+    &:hover {
+      color: ${(props) => props.theme['yellow-700']};
+    }
+  }
+  a {
+    color: ${(props) => props.theme.white};
+    text-decoration: none;
     &:hover {
       color: ${(props) => props.theme['yellow-700']};
     }
@@ -44,10 +51,5 @@ export const FullPagePopupContainer = styled.div`
     );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-  }
-`
-export const FullPagePopupLink = styled.div`
-  &:hover {
-    color: ${(props) => props.theme['yellow-700']};
   }
 `

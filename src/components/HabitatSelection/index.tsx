@@ -67,7 +67,7 @@ export function HabitatSelection({
                 Circalittoral fine mud, Sublittoral mixed sediment, Circalittoral sandy mud, \
                 Circalittoral mixed sediment, Offshore circalittoral sand, Offshore \
                 circalittoral coarse sediment, Offshore circalittoral mixed sediment \n \
-                Note: Habitats as classified by Benoist et al 2019 have been approximately \
+                Note: Habitats as classified by Benoist *et al*. 2019 have been approximately \
                 mapped to the Marine Habitat Classification for Britain.',
               )
             }

@@ -4,6 +4,11 @@ import { CalcTypeContainer, CalcTypeOptionsContainer } from './styles'
 import { Loading } from '../Loading'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons'
+import ReactMarkdown from 'react-markdown'
+import rehypeKatex from 'rehype-katex'
+import remarkBreaks from 'remark-breaks'
+import remarkGfm from 'remark-gfm'
+import remarkMath from 'remark-math'
 
 interface keyable {
   [key: string]: any
@@ -86,7 +91,14 @@ export function HabitatType({
     <CalcTypeContainer>
       <div>
         <header>
-          <p onClick={handleShowCalcOptions}>{title}</p>
+          <div onClick={handleShowCalcOptions}>
+            <ReactMarkdown
+              children={title}
+              remarkPlugins={[remarkGfm, remarkMath, remarkBreaks]}
+              rehypePlugins={[rehypeKatex]}
+              linkTarget={'_blank'}
+            />
+          </div>
           <div>
             <span>
               <FontAwesomeIcon

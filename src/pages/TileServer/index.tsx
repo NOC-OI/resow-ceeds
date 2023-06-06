@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { DataExplorationSelection } from '../../components/DataExplorationSelection'
-import { CalcSelection } from '../../components/CalcSelection'
 import { MapHome } from '../../components/MapHome'
 import { SideSelection } from '../../components/SideSelection'
 import { TileServerContainer, SideBar } from './styles'
@@ -104,16 +103,6 @@ export function TileServer() {
             listLayers={listLayers}
             setShowPhotos={setShowPhotos}
             isLogged={isLogged}
-          />
-        )}
-        {selectedSidebarOption === 'calc' && (
-          <CalcSelection
-            setCalculationValue={setCalculationValue}
-            selectedArea={selectedArea}
-            setSelectedArea={setSelectedArea}
-            latLonLimits={latLonLimits}
-            setLatLonLimits={setLatLonLimits}
-            setInfoButtonBox={setInfoButtonBox}
           />
         )}
         {selectedSidebarOption === 'Habitats' && (

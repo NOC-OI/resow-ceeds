@@ -20,51 +20,57 @@ const listValues = [
   //   ],
   // },
   {
-    calcClass: 'Community Metrics',
-    content: 'This calculation uses XXXXX...',
+    calcClass: 'Diversity Across survey',
+    content:
+      'Number of morphotypes using all tiles from seabed images captured with the autonomous \
+    underwater vehicle in 2012 survey.',
     calcNames: [
       {
-        name: 'Density of benthic megafauna',
-        url: '/data?filename=output:HF2012_SU&crs=epsg%3A4326&extension=csv&calc=biodiversity&column=substratum',
-        layers: { 'Seabed Images': ['AUV 2012'] },
-        decimalPlaces: 3,
+        name: 'Number of morphotypes',
+        url: '/data?filename=output:HF2012_alltile_counts&calc=biodiversity1&crs=epsg%3A4326&extension=csv',
+        layers: { 'Seabed Images': ['2012 AUV Image Survey'] },
+        noButton: true,
+        decimalPlaces: 0,
       },
     ],
   },
   {
-    calcClass: 'Biodiversity Metrics',
+    calcClass: 'Diversity by Substrate',
     content:
       "Biodiversity metrics exponential Shannon index (expH') and the \
-     inverse form of Simpson’s index (1/D) (Magurran 2004) are computed for \
+     inverse form of Simpson's index (1/D) (Magurran 2004) are computed for \
      each substrate type. Values are shown as mean +/- standard deviation \
      across sample units. \n \
      Reference: Magurran, A.E., 2004. Measuring Biological Diversity. \
      Blackwell Publishing, Oxford, UK.",
     calcNames: [
       {
-        name: 'Diversity across survey',
-        url: '/data?filename=output:HF2012_alltile_counts&calc=biodiversity1&crs=epsg%3A4326&extension=csv',
-        layers: { 'Seabed Images': ['AUV 2012'] },
+        name: 'Density of benthic megafauna',
+        url: '/data?filename=output:HF2012_SU&crs=epsg%3A4326&extension=csv&calc=biodiversity&column=substratum',
+        layers: { 'Seabed Images': ['2012 AUV Image Survey'] },
+        decimalPlaces: 3,
         noButton: true,
-        decimalPlaces: 0,
       },
       {
         name: 'Number of morphotypes per sample unit',
         url: '/data?filename=output:HF2012_SU&crs=epsg%3A4326&extension=csv&calc=biodiversity2&column=substratum',
-        layers: { 'Seabed Images': ['AUV 2012'] },
+        layers: { 'Seabed Images': ['2012 AUV Image Survey'] },
         decimalPlaces: 3,
+        noButton: true,
       },
       {
         name: "Shannon index (expH') per sample unit",
         url: '/data?filename=output:HF2012_SU&crs=epsg%3A4326&extension=csv&calc=biodiversity3&column=substratum',
-        layers: { 'Seabed Images': ['AUV 2012'] },
+        layers: { 'Seabed Images': ['2012 AUV Image Survey'] },
         decimalPlaces: 2,
+        noButton: true,
       },
       {
         name: "Inverse Simpson's index per sample unit",
         url: '/data?filename=output:HF2012_SU&crs=epsg%3A4326&extension=csv&calc=biodiversity4&column=substratum',
-        layers: { 'Seabed Images': ['AUV 2012'] },
+        layers: { 'Seabed Images': ['2012 AUV Image Survey'] },
         decimalPlaces: 2,
+        noButton: true,
       },
     ],
   },
@@ -77,12 +83,12 @@ function sortListLayers(values: any[]) {
 // {
 //   name: 'Number',
 //   url: '/data?filename=output:HF2012_alltile_otherdata,output:HF2012_alltile_counts&calc=count&crs=epsg%3A4326&extension=csv&column=substratum',
-//   layers: { 'Seabed Images': ['AUV 2012'] },
+//   layers: { 'Seabed Images': ['2012 AUV Image Survey'] },
 // },
 // {
 //   name: 'Types',
 //   url: '/data?filename=output:HF2012_alltile_otherdata,output:HF2012_alltile_counts&calc=agg&crs=epsg%3A4326&extension=csv&agg_columns=sum:area_seabed_m2,first:filename,first:fileformat,count:latitude&column=substratum',
-//   layers: { 'Seabed Images': ['AUV 2012'] },
+//   layers: { 'Seabed Images': ['2012 AUV Image Survey'] },
 // },
 
 export const listBiodiversities = sortListLayers(listValues)

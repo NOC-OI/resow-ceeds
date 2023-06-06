@@ -1,5 +1,10 @@
 import { useEffect } from 'react'
-import { LayerTypeOptionsContainer } from '../DataExplorationTypeOptions/styles'
+import { CalcTypeOptionsContainer } from '../BiodiversityType/styles'
+import ReactMarkdown from 'react-markdown'
+import rehypeKatex from 'rehype-katex'
+import remarkBreaks from 'remark-breaks'
+import remarkGfm from 'remark-gfm'
+import remarkMath from 'remark-math'
 
 interface IndicatorSpeciesTypeOptionsProps {
   title: any
@@ -45,7 +50,8 @@ export function IndicatorSpeciesTypeOptions({
   async function fetchDatatoUpdateCalculationBox(result: any) {
     setLoading(true)
     setCalculationValue(null)
-    const baseUrl = 'https://haigfras-api.herokuapp.com'
+    const baseUrl = 'http://localhost:8000'
+    // const baseUrl = 'https://haigfras-api.herokuapp.com'
     const url = `${baseUrl}${subLayer.url}`
     async function getCalculationResults() {
       const response = await fetch(url, {
@@ -130,18 +136,22 @@ export function IndicatorSpeciesTypeOptions({
   }, [selectedLayers])
 
   return (
-    <LayerTypeOptionsContainer>
+    <CalcTypeOptionsContainer>
       <div>
-        <label key={`${subLayer.name}_${subLayer}`} htmlFor={subLayer.name}>
+        <label
+          key={`${subLayer.name}_${subLayer}`}
+          htmlFor={subLayer.name}
+          onClick={async () => {
+            await handleChangeMapLayer(subLayer)
+          }}
+        >
           {/* <p>{subCalcs[subCalc]['name']}</p> */}
-          <p
-            onClick={async () => {
-              await handleChangeMapLayer(subLayer)
-            }}
-            id={subLayer.name}
-          >
-            {subLayer.name}
-          </p>
+          <ReactMarkdown
+            children={subLayer.name}
+            remarkPlugins={[remarkGfm, remarkMath, remarkBreaks]}
+            rehypePlugins={[rehypeKatex]}
+            linkTarget={'_blank'}
+          />
         </label>
         {/* {verifyIfWasSelectedBefore(content, subLayer) ? (
           <div>
@@ -153,6 +163,6 @@ export function IndicatorSpeciesTypeOptions({
           </div>
         ) : null} */}
       </div>
-    </LayerTypeOptionsContainer>
+    </CalcTypeOptionsContainer>
   )
 }

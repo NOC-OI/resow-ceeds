@@ -1,9 +1,18 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { CalculationValueContainer, CalculationValueImage } from './styles'
+import {
+  CalculationValueContainer,
+  CalculationValueImage,
+  CalculationValueTitle,
+} from './styles'
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons'
 import { Button } from '../AreaSelector/styles'
 import '../../../index.css'
 import { useEffect, useState } from 'react'
+import ReactMarkdown from 'react-markdown'
+import rehypeKatex from 'rehype-katex'
+import remarkBreaks from 'remark-breaks'
+import remarkGfm from 'remark-gfm'
+import remarkMath from 'remark-math'
 
 interface CalculationValueProps {
   calculationValue: any
@@ -71,7 +80,6 @@ export function CalculationValue({
   async function handleChangeMapLayer(e: any) {
     setActiveButton(e.currentTarget.id)
     const buttonValue = JSON.parse(e.currentTarget.value)
-    console.log(buttonValue)
     const [column, result] = buttonValue.result.split('_')
     const newActualLayers: string[] = []
     const newSelectedLayers: { subLayer: string; dataInfo: any }[] = []
@@ -127,7 +135,14 @@ export function CalculationValue({
       {Object.keys(calculationValue.result).map((column) => {
         return (
           <div key={column}>
-            <h1 className="capitalize">{column}</h1>
+            <CalculationValueTitle>
+              <ReactMarkdown
+                children={column}
+                remarkPlugins={[remarkGfm, remarkMath, remarkBreaks]}
+                rehypePlugins={[rehypeKatex]}
+                linkTarget={'_blank'}
+              />
+            </CalculationValueTitle>
             {Object.keys(calculationValue.result[column]).map((calc) => {
               return (
                 <div key={`${column}_${calc}`}>
@@ -156,6 +171,13 @@ export function CalculationValue({
                                   ? 'active-button'
                                   : ''
                               }
+                              style={
+                                !calculationValue.button
+                                  ? {
+                                      cursor: 'default',
+                                    }
+                                  : {}
+                              }
                               disabled={!calculationValue.button}
                             >
                               {Object.keys(
@@ -179,14 +201,14 @@ export function CalculationValue({
                                 } else if (key !== 'fileformat') {
                                   return (
                                     <div key={`${key}_${results}`}>
-                                      <p className="capitalize">
+                                      <p className="">
                                         {key}:{' '}
                                         {typeof result === 'number'
                                           ? calculationValue.decimalPlaces
                                             ? result.toFixed(
                                                 calculationValue.decimalPlaces,
                                               )
-                                            : result.toFixed(1)
+                                            : result.toFixed(0)
                                           : result}
                                       </p>
                                     </div>
@@ -201,13 +223,13 @@ export function CalculationValue({
                       } else {
                         return (
                           <div key={results}>
-                            <p className="capitalize">
+                            <p className="">
                               {typeof results === 'number'
                                 ? calculationValue.decimalPlaces
                                   ? results.toFixed(
                                       calculationValue.decimalPlaces,
                                     )
-                                  : results.toFixed(1)
+                                  : results.toFixed(0)
                                 : results}
                             </p>
                           </div>

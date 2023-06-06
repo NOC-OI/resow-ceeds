@@ -37,11 +37,6 @@ export class GetLayers {
             photos: jsonData,
             content: data.content,
           }
-          this.data['Seabed Images - Limits'].layerNames[data.name] = {
-            data_type: 'Photo-Limits',
-            photos: jsonData,
-            content: '',
-          }
         })
     })
   }
@@ -49,7 +44,7 @@ export class GetLayers {
   async loadCSV() {
     await this.logJSONData([
       {
-        name: 'AUV 2012',
+        name: '2012 AUV Image Survey',
         files: 'output:HF2012_alltile_otherdata,output:HF2012_alltile_counts',
         content:
           'Haig Fras 2012 autonomous underwater vehicle image survey - mosaicked tiles used for \
@@ -87,9 +82,9 @@ export class GetLayers {
           [CEDA Link](https://www.ceda.ac.uk/)',
       },
       {
-        name: 'JNCC 1012',
+        name: 'JNCC CEND1012 Survey',
         files: 'jncc:JNCC_CEND1012_otherdata',
-        content: '',
+        content: 'JNCC Offshore Survey Benthic Images CEND1012',
       },
     ])
   }

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { DataExplorationSelection } from '../../components/DataExplorationSelection'
 import { CalcSelection } from '../../components/CalcSelection'
 import { MapHome } from '../../components/MapHome'
@@ -14,6 +14,9 @@ import { BiodiversitySelection } from '../../components/BiodiversitySelection'
 import { IndicatorSpeciesSelection } from '../../components/IndicatorSpeciesSelection'
 import { SurveyDesignSelection } from '../../components/SurveyDesignSelection'
 import { FullPagePopup } from '../../components/FullPagePopup'
+import { LoginPopup } from '../../components/LoginPopup'
+import { FlashMessages } from '../../components/FlashMessages'
+import Cookies from 'js-cookie'
 
 export function TileServer() {
   const [selectedSidebarOption, setSelectedSidebarOption] = useState<string>('')
@@ -51,6 +54,21 @@ export function TileServer() {
 
   const [showPopup, setShowPopup] = useState(true)
 
+  const [showLogin, setShowLogin] = useState(false)
+  const [isLogged, setIsLogged] = useState(!!Cookies.get('imfe_logged'))
+
+  const [showFlash, setShowFlash] = useState(false)
+  const [flashMessage, setFlashMessage] = useState({
+    messageType: '',
+    content: '',
+  })
+
+  useEffect(() => {
+    if (flashMessage.messageType) {
+      setShowFlash(true)
+    }
+  }, [isLogged])
+
   return (
     <TileServerContainer>
       <SideBar>
@@ -68,6 +86,9 @@ export function TileServer() {
           setListLayers={setListLayers}
           showPopup={showPopup}
           setShowPopup={setShowPopup}
+          showLogin={showLogin}
+          setShowLogin={setShowLogin}
+          isLogged={isLogged}
         />
         {selectedSidebarOption === 'Data Exploration' && (
           <DataExplorationSelection
@@ -82,6 +103,7 @@ export function TileServer() {
             setInfoButtonBox={setInfoButtonBox}
             listLayers={listLayers}
             setShowPhotos={setShowPhotos}
+            isLogged={isLogged}
           />
         )}
         {selectedSidebarOption === 'calc' && (
@@ -210,6 +232,27 @@ export function TileServer() {
         selectedSidebarOption={selectedSidebarOption}
       />
       {showPopup && <FullPagePopup setShowPopup={setShowPopup} />}
+      {showLogin && (
+        <LoginPopup
+          isLogged={isLogged}
+          setIsLogged={setIsLogged}
+          setShowLogin={setShowLogin}
+          setFlashMessage={setFlashMessage}
+          setShowFlash={setShowFlash}
+        />
+      )}
+
+      {showFlash && (
+        <FlashMessages
+          type={flashMessage.messageType}
+          message={flashMessage.content}
+          duration={5000}
+          active={showFlash}
+          setActive={setShowFlash}
+          position={'bcenter'}
+          width={'medium'}
+        />
+      )}
     </TileServerContainer>
   )
 }

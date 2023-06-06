@@ -19,6 +19,7 @@ interface DataExplorationSelectionProps {
   setInfoButtonBox?: any
   listLayers?: any
   setShowPhotos?: any
+  isLogged?: any
 }
 
 export function DataExplorationSelection({
@@ -33,6 +34,7 @@ export function DataExplorationSelection({
   setInfoButtonBox,
   listLayers,
   setShowPhotos,
+  isLogged,
 }: DataExplorationSelectionProps) {
   function handleClickLayerInfo(title: String, content: string) {
     setInfoButtonBox({
@@ -74,6 +76,7 @@ export function DataExplorationSelection({
               setLayerLegend={setLayerLegend}
               setInfoButtonBox={setInfoButtonBox}
               setShowPhotos={setShowPhotos}
+              isLogged={isLogged}
             />
           )
         })}

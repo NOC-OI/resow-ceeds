@@ -42,6 +42,9 @@ interface SideSelectionProps {
   setListLayers?: any
   showPopup?: any
   setShowPopup?: any
+  showLogin?: any
+  setShowLogin?: any
+  isLogged?: any
 }
 
 // interface ContrastSelectorProps {
@@ -83,6 +86,9 @@ export function SideSelection({
   setListLayers,
   showPopup,
   setShowPopup,
+  showLogin,
+  setShowLogin,
+  isLogged,
 }: SideSelectionProps) {
   const navigate = useNavigate()
 
@@ -152,6 +158,10 @@ export function SideSelection({
 
   function handleToogleFullPagePopup() {
     setShowPopup((showPopup: any) => !showPopup)
+  }
+
+  function handleToogleLoginPopup() {
+    setShowLogin((showLogin: any) => !showLogin)
   }
 
   return (
@@ -237,8 +247,11 @@ export function SideSelection({
               onClick={handleToogleFullPagePopup}
             />
           </SideSelectionLink>
-          <SideSelectionLink title={'Login'}>
-            <FontAwesomeIcon icon={faCircleUser} />{' '}
+          <SideSelectionLink title={isLogged ? 'Logout' : 'Login'}>
+            <FontAwesomeIcon
+              icon={faCircleUser}
+              onClick={handleToogleLoginPopup}
+            />
           </SideSelectionLink>
         </SideSelectionLinkFinal>
         {/* {photoPage ? (

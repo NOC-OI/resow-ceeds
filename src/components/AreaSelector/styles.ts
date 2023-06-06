@@ -84,7 +84,7 @@ export const Button = styled.button`
   text-align: center;
   &:hover {
     background: ${(props) => props.theme['yellow-400']};
-    color: ${(props) => props.theme.white};
+    color: ${(props) => props.theme['gray-500']};
   }
   p {
     font-weight: bold;

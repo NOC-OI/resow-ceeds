@@ -21,6 +21,24 @@
   position: relative;
 }
 
+.normal-button{
+  /* height: 2rem; */
+  color: #000000;
+  border-radius: 8px;
+  padding-top: 0.375rem;
+  padding-bottom: 0.375rem;
+  box-shadow: 0px 4px 4px #000000;
+  cursor: pointer;
+  text-align: center;
+  font-weight: bold;
+}
+
+.normal-button:hover {
+    background: #FFD886;
+    color: #696969;
+}
+
+
 .circle-color{
   position: absolute;
   -webkit-text-stroke: 1px rgb(30,30,30);

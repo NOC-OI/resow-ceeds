@@ -46,6 +46,7 @@ const listValues = [
         url: '/data?filename=output:HF2012_alltile_counts&calc=biodiversity1&crs=epsg%3A4326&extension=csv',
         layers: { 'Seabed Images': ['AUV 2012'] },
         noButton: true,
+        decimalPlaces: 0,
       },
       {
         name: 'Number of morphotypes per sample unit',

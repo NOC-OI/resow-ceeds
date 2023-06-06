@@ -20,6 +20,7 @@ interface DataExplorationTypeProps {
   setLayerLegend: any
   setInfoButtonBox?: any
   setShowPhotos?: any
+  isLogged?: any
 }
 
 export function DataExplorationType({
@@ -35,6 +36,7 @@ export function DataExplorationType({
   setLayerLegend,
   setInfoButtonBox,
   setShowPhotos,
+  isLogged,
 }: DataExplorationTypeProps) {
   const [subLayers, setSubLayers] = useState<keyable>({})
 
@@ -97,6 +99,7 @@ export function DataExplorationType({
               selectedLayers={selectedLayers}
               setSelectedLayers={setSelectedLayers}
               setInfoButtonBox={setInfoButtonBox}
+              isLogged={isLogged}
             />
           )
         })}

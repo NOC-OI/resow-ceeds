@@ -54,6 +54,7 @@ interface DataExplorationTypeOptionsProps {
   selectedLayers: any
   setSelectedLayers: any
   setInfoButtonBox: any
+  isLogged?: any
 }
 
 export function DataExplorationTypeOptions({
@@ -70,6 +71,7 @@ export function DataExplorationTypeOptions({
   selectedLayers,
   setSelectedLayers,
   setInfoButtonBox,
+  isLogged,
 }: DataExplorationTypeOptionsProps) {
   const [opacityIsClicked, setOpacityIsClicked] = useState(
     activeOpacity === `${content}_${subLayer}`,
@@ -219,13 +221,23 @@ export function DataExplorationTypeOptions({
             type="checkbox"
             checked={verifyIfWasSelectedBefore(content, subLayer)}
             id={`${content}_${subLayer}`}
-            disabled={!!subLayers[subLayer].protected}
-            className={subLayers[subLayer].protected && 'cursor-not-allowed'}
+            disabled={isLogged ? false : !!subLayers[subLayer].protected}
+            className={
+              isLogged
+                ? ''
+                : subLayers[subLayer].protected && 'cursor-not-allowed'
+            }
           />
-          <p className={subLayers[subLayer].protected && 'cursor-not-allowed'}>
+          <p
+            className={
+              isLogged
+                ? ''
+                : subLayers[subLayer].protected && 'cursor-not-allowed'
+            }
+          >
             {subLayer}
           </p>
-          {subLayers[subLayer].protected ? (
+          {isLogged ? null : subLayers[subLayer].protected ? (
             <FontAwesomeIcon
               icon={faLock}
               title={'You need to login to access this data'}

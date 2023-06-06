@@ -435,11 +435,6 @@ export const listLayers = {
         url: 'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/bathymetry/sidescan_2012.tif',
         data_type: 'COG',
         content: 'This layer represents...',
-      },
-      '2012 Test Lock': {
-        url: 'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/bathymetry/sidescan_2012.tif',
-        data_type: 'COG',
-        content: 'This layer represents...',
         protected: true,
       },
     },

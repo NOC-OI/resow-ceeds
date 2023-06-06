@@ -32,8 +32,8 @@ async function handleShowCalcValues(
   setCalculationValue(null)
   setIsActiveText(activeText)
 
-  // const baseUrl = 'https://haigfras-api.herokuapp.com'
-  const baseUrl = 'http://localhost:8000'
+  const baseUrl = 'https://haigfras-api.herokuapp.com'
+  // const baseUrl = 'http://localhost:8000'
   let url = `${baseUrl}${params.url}`
   if (selectedArea) {
     url = `${url}&bbox=${latLonLimits[2].lat},${latLonLimits[0].lng},${latLonLimits[0].lat},${latLonLimits[2].lng}`

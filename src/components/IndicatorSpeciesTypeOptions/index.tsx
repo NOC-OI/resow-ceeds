@@ -50,8 +50,8 @@ export function IndicatorSpeciesTypeOptions({
   async function fetchDatatoUpdateCalculationBox(result: any) {
     setLoading(true)
     setCalculationValue(null)
-    const baseUrl = 'http://localhost:8000'
-    // const baseUrl = 'https://haigfras-api.herokuapp.com'
+    // const baseUrl = 'http://localhost:8000'
+    const baseUrl = 'https://haigfras-api.herokuapp.com'
     const url = `${baseUrl}${subLayer.url}`
     async function getCalculationResults() {
       const response = await fetch(url, {

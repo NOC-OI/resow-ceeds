@@ -25,9 +25,12 @@ async function handleShowCalcValues(
   setLoading: any,
   latLonLimits: any,
   selectedArea: any,
+  setIsActiveText: any,
+  activeText: any,
 ) {
   setLoading(true)
   setCalculationValue(null)
+  setIsActiveText(activeText)
 
   const baseUrl = 'https://haigfras-api.herokuapp.com'
   // const baseUrl = 'http://localhost:8000'
@@ -76,6 +79,7 @@ export function BiodiversityType({
   const [subCalcs, setSubCalcs] = useState([])
 
   const [isActive, setIsActive] = useState(false)
+  const [isActiveText, setIsActiveText] = useState('')
 
   const [loading, setLoading] = useState<boolean>(false)
 
@@ -122,6 +126,11 @@ export function BiodiversityType({
               <label>
                 {/* <p>{subCalcs[subCalc]['name']}</p> */}
                 <p
+                  className={
+                    isActiveText === `${title}_${subCalc.name}_${subCalc.url}`
+                      ? 'active-text'
+                      : ''
+                  }
                   onClick={async () => {
                     await handleShowCalcValues(
                       subCalc,
@@ -129,6 +138,8 @@ export function BiodiversityType({
                       setLoading,
                       latLonLimits,
                       selectedArea,
+                      setIsActiveText,
+                      `${title}_${subCalc.name}_${subCalc.url}`,
                     )
                   }}
                 >

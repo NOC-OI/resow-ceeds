@@ -44,6 +44,9 @@
   -webkit-text-stroke: 1px rgb(30,30,30);
 }
 
+.active-text{
+  color: #D49511 !important;
+}
 .active svg{
   color: #FFD886 !important;
 }

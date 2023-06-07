@@ -71,7 +71,7 @@ export const listLayers = {
         A report on the methods used in the 2021 version of EUSeaMap (Vasquez et al., 2021) and reports on previous versions (v2016 and V2019) are linked in Online Resources. \n ',
       },
       'Habitat Map - MBTiles': {
-        url: 'http://127.0.0.1:8082/v1/tiles/mytiles@1.0.0/{z}/{x}/{y}.mvt',
+        url: 'https://imfe-pilot-mbtiles.noc.ac.uk/v1/tiles/mytiles@1.0.0/{z}/{x}/{y}.mvt',
         data_type: 'MBTiles',
         content: 'This layer represents...',
       },

@@ -62,7 +62,7 @@ const listValues: any[] = [
 Object.keys(organisms).forEach((organism: string) => {
   listValues[1].calcNames.push({
     name: organisms[organism][0],
-    url: `/data?filename=output:HF2012_alltile_otherdata,output:HF2012_alltile_counts,jncc:JNCC_CEND1012_otherdata&calc=organism&crs=epsg%3A4326&extension=csv&exclude_index=True&column=${organism}&agg_columns=first:filename,first:fileformat,sum:${organism},density:area_seabed_m2`,
+    url: `data?filename=output:HF2012_alltile_otherdata,output:HF2012_alltile_counts,jncc:JNCC_CEND1012_otherdata&calc=organism&crs=epsg%3A4326&extension=csv&exclude_index=True&column=${organism}&agg_columns=first:filename,first:fileformat,sum:${organism},density:area_seabed_m2`,
     layers: {
       'Seabed Images': ['2012 AUV Image Survey', 'JNCC CEND1012 Survey'],
     },

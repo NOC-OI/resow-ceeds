@@ -109,7 +109,7 @@ function MapHome1({
     const photoValues = getPhotoInfo()
     await axios
       .get(
-        'https://imfe-pilot.ddns.net//csv?filenames=HF2012_other_data,HF2012_annotation_summary&columns=active:False,local_data_type:Marker-COG,show:True',
+        'https://imfe-pilot.ddns.net/csv?filenames=HF2012_other_data,HF2012_annotation_summary&columns=active:False,local_data_type:Marker-COG,show:True',
       )
       .then((photos) => {
         photos.data.every((photo: any) => {

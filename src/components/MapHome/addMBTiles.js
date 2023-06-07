@@ -140,9 +140,6 @@ export class GetMBTiles {
         },
       },
     }
-    this.layer = protobuf(
-      'http://127.0.0.1:8000/v1/tiles/mytiles@1.0.0/{z}/{x}/{y}.mvt',
-      vectorTileOptions,
-    )
+    this.layer = protobuf(this.url, vectorTileOptions)
   }
 }

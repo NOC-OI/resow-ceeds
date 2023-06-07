@@ -96,6 +96,8 @@ export function IndicatorSpeciesTypeOptions({
           subLayer: `${newActualLayer}_${layerClass}`,
           dataInfo: listLayers[newActualLayer].layerNames[layerClass],
         }
+        console.log(newActualLayer)
+        console.log(`${newActualLayer}_${layerClass}`)
         if (verifyIfWasSelectedBefore(`${newActualLayer}_${layerClass}`)) {
           // eslint-disable-next-line dot-notation
           layerInfo.dataInfo['selectedBefore'] = true

@@ -28,7 +28,7 @@ export class GetLayers {
     await url.forEach(async (data) => {
       await fetch(
         // `https://imfe-pilot.ddns.net/api/csv?filenames=${data.files}&columns=active:False,local_data_type:Marker-COG,show:True`,
-        `https://imfe-pilot.ddns.net//csv?filenames=${data.files}&columns=active:False,local_data_type:Marker-COG,show:True`,
+        `https://imfe-pilot.ddns.net/csv?filenames=${data.files}&columns=active:False,local_data_type:Marker-COG,show:True`,
       )
         .then((response) => response.json())
         .then((jsonData) => {

@@ -193,9 +193,31 @@ export function CalculationValue({
                                     <CalculationValueImage
                                       key={`${result}.${extension}`}
                                     >
-                                      <img
-                                        src={`${BASIC_BUCKET_URL}/${result}.${extension}`}
-                                      />
+                                      {calculationValue.sampleImage ? (
+                                        <img
+                                          src={calculationValue.sampleImage}
+                                        />
+                                      ) : (
+                                        <img
+                                          src={`${BASIC_BUCKET_URL}/${result}.${extension}`}
+                                        />
+                                      )}
+                                    </CalculationValueImage>
+                                  )
+                                } else if (key.slice(-5, -1) === 'Imag') {
+                                  return (
+                                    <CalculationValueImage
+                                      key={`${key}_${result}`}
+                                    >
+                                      {calculationValue.sampleImage ? (
+                                        <img
+                                          src={calculationValue.sampleImage}
+                                        />
+                                      ) : (
+                                        <img
+                                          src={`${BASIC_BUCKET_URL}/${result}`}
+                                        />
+                                      )}
                                     </CalculationValueImage>
                                   )
                                 } else if (key !== 'fileformat') {

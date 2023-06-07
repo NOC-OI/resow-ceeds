@@ -32,7 +32,7 @@ async function handleShowCalcValues(
   setCalculationValue(null)
   setIsActiveText(activeText)
 
-  const baseUrl = 'https://haigfras-api.herokuapp.com'
+  const baseUrl = 'https://imfe-pilot.ddns.net/'
   // const baseUrl = 'http://localhost:8000'
   let url = `${baseUrl}${params.url}`
   if (selectedArea) {

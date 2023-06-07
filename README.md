@@ -25,7 +25,7 @@ Acessing JNCC and EMODNET WMS services to add layers to map.
 
 ### Use cases calculation
 
-Performing calculations based on information provided by the user. The calculations are performed in an API, available at [https://haigfras-api.herokuapp.com/](https://haigfras-api.herokuapp.com/) and in the repository [api_calculations_use_cases](https://git.noc.ac.uk/ocean-informatics/imfepilot/api_calculations_use_cases).
+Performing calculations based on information provided by the user. The calculations are performed in an API, available at [https://imfe-pilot.ddns.net//](https://imfe-pilot.ddns.net//) and in the repository [api_calculations_use_cases](https://git.noc.ac.uk/ocean-informatics/imfepilot/api_calculations_use_cases).
 
 ### 3D Map
 

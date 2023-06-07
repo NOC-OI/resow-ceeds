@@ -1,3 +1,4 @@
+/* eslint-disable no-multi-str */
 import {
   LayerSelectionContainer,
   LayerSelectionTitle,
@@ -61,7 +62,15 @@ export function IndicatorSpeciesSelection({
             onClick={() =>
               handleClickLayerInfo(
                 'Species of Interest',
-                'Some information about...',
+                '**Sea pens** \n \
+                JNCC lists sea pens as a Habitat Feature of Conservation Importance \
+                in the summary of the Greater Haig Fras MPA \
+                (https://jncc.gov.uk/our-work/greater-haig-fras-mpa/). Note that sea \
+                pens were not observed in seabed photographs captured during the \
+                autonomous underwater vehicle surveys. \n \
+                **Species of conservation interest** \n \
+                These are species of general interest for conservation in the area: \
+                Pentapora foliacea, Cartilagenous fish',
               )
             }
           />

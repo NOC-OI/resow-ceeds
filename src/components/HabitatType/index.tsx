@@ -34,7 +34,7 @@ async function handleShowCalcValues(
   setLoading(true)
   setCalculationValue(null)
 
-  const baseUrl = 'https://haigfras-api.herokuapp.com'
+  const baseUrl = 'https://imfe-pilot.ddns.net/'
   let url = `${baseUrl}${params.url}`
   if (selectedArea) {
     url = `${url}&bbox=${latLonLimits[2].lat},${latLonLimits[0].lng},${latLonLimits[0].lat},${latLonLimits[2].lng}`

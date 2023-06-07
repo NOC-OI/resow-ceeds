@@ -10,7 +10,7 @@ const listValues = [
       },
       {
         name: 'Types',
-        url: '/data?filename=output:HF2012_alltile_otherdata,output:HF2012_alltile_counts&calc=agg&crs=epsg%3A4326&extension=csv&agg_columns=first:filename,first:fileformat&column=habitat',
+        url: '/data?filename=output:HF2012_alltile_otherdata,output:HF2012_alltile_counts&calc=agg&crs=epsg%3A4326&extension=csv&agg_columns=first:habitatImage&column=habitat',
         layers: { 'Seabed Images': ['2012 AUV Image Survey'] },
       },
       // {
@@ -31,7 +31,7 @@ const listValues = [
       },
       {
         name: 'Types',
-        url: '/data?filename=output:HF2012_alltile_otherdata,output:HF2012_alltile_counts,jncc:JNCC_CEND1012_otherdata&calc=agg&crs=epsg%3A4326&extension=csv&agg_columns=first:filename,first:fileformat&column=UKMarineHabitat',
+        url: '/data?filename=output:HF2012_alltile_otherdata,output:HF2012_alltile_counts,jncc:JNCC_CEND1012_otherdata&calc=agg&crs=epsg%3A4326&extension=csv&agg_columns=first:UKMarineHabitatImage&column=UKMarineHabitat',
         layers: { 'Seabed Images': ['2012 AUV Image Survey', 'JNCC 1012'] },
       },
     ],
@@ -47,7 +47,7 @@ const listValues = [
       },
       {
         name: 'Types',
-        url: '/data?filename=output:HF2012_alltile_otherdata,output:HF2012_alltile_counts&calc=agg&crs=epsg%3A4326&extension=csv&agg_columns=first:filename,first:fileformat&column=substratum',
+        url: '/data?filename=output:HF2012_alltile_otherdata,output:HF2012_alltile_counts&calc=agg&crs=epsg%3A4326&extension=csv&agg_columns=first:substratumImage&column=substratum',
         layers: { 'Seabed Images': ['2012 AUV Image Survey'] },
       },
     ],

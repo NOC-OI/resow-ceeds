@@ -41,7 +41,8 @@ export const CalculationValueContainer = styled.div`
 export const CalculationValueImage = styled.div`
   margin-top: 1rem;
   margin-bottom: 1rem;
-  height: 10rem;
+  height: max-content;
+  max-height: 10rem;
   overflow: hidden;
   img {
     width: 10rem;

@@ -51,7 +51,7 @@ export function IndicatorSpeciesTypeOptions({
     setLoading(true)
     setCalculationValue(null)
     // const baseUrl = 'http://localhost:8000'
-    const baseUrl = 'https://haigfras-api.herokuapp.com'
+    const baseUrl = 'https://imfe-pilot.ddns.net/'
     const url = `${baseUrl}${subLayer.url}`
     async function getCalculationResults() {
       const response = await fetch(url, {

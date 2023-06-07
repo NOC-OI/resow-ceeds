@@ -265,7 +265,6 @@ function MapHome1({
           [turfBbox[1] - 0.05, turfBbox[0] - 0.05],
           [turfBbox[3] + 0.05, turfBbox[2] + 0.05],
         ]
-        console.log(console.log(bounds))
         if (layerName.plotLimits) {
           const myStyle = {
             color1,
@@ -576,13 +575,13 @@ function MapHome1({
             }
           }
         })
-        const turfConvex = turf.convex(turf.featureCollection(markers))
         // const turfBbox = turf.bbox(turfConvex)
         // const bounds = [
         //   [turfBbox[1] - 0.05, turfBbox[0] - 0.05],
         //   [turfBbox[3] + 0.05, turfBbox[2] + 0.05],
         // ]
         if (selectedLayers[actual].plotLimits) {
+          const turfConvex = turf.convex(turf.featureCollection(markers))
           const color1 = colorScale[Math.floor(Math.random() * 30)]
           const myStyle = {
             color1,

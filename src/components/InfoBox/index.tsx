@@ -58,14 +58,20 @@ export function InfoBox({ position = null, depth = {} }: InfoBoxProps) {
         <p>Lon:</p>
         <span>{lng}</span>
       </div>
-      {Object.keys(depth).map((d) => {
-        return (
-          <div key={d}>
-            <p>{d}:</p>
-            <span>{depth[d] ? `${depth[d]} m` : `-- m`}</span>
-          </div>
-        )
-      })}
+      <div>
+        <p>Depth:</p>
+        {depth['2018 Bathymetry Survey'] ? (
+          <span>{`${depth['2018 Bathymetry Survey']} m`}</span>
+        ) : depth.Emodnet ? (
+          <span>{`${depth.Emodnet} m`}</span>
+        ) : depth.Gebco ? (
+          <span>{`${depth.Gebco} m`}</span>
+        ) : depth.Depth ? (
+          <span>{`${depth.Depth} m`}</span>
+        ) : (
+          <span>-- m</span>
+        )}
+      </div>
     </InfoBoxContainer>
   )
 }

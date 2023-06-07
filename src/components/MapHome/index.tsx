@@ -336,38 +336,44 @@ function MapHome1({
 
         if (layerName.data_type === 'COG' && layerName.get_value) {
           map.on('mousemove', function (evt: { originalEvent: any }) {
-            const latlng = map.mouseEventToLatLng(evt.originalEvent)
-            const tileSize = { x: 256, y: 256 }
-            const pixelPoint = map
-              .project(latlng, Math.floor(map.getZoom()))
-              .floor()
-            const coords = pixelPoint.unscaleBy(tileSize).floor()
-            coords.z = Math.floor(map.getZoom()) // { x: 212, y: 387, z: 10 }
+            if (selectedLayers[actual]) {
+              const latlng = map.mouseEventToLatLng(evt.originalEvent)
+              const tileSize = { x: 256, y: 256 }
+              const pixelPoint = map
+                .project(latlng, Math.floor(map.getZoom()))
+                .floor()
+              const coords = pixelPoint.unscaleBy(tileSize).floor()
+              coords.z = Math.floor(map.getZoom()) // { x: 212, y: 387, z: 10 }
 
-            const getGeoblazeValue = new GetGeoblazeValue(layer, latlng, coords)
-            getGeoblazeValue.getGeoblaze().then(function () {
-              const dep = getGeoblazeValue.dep
-              const depthName = actual.split('_')[1]
-              if (dep) {
-                if (dep > 0.0) {
+              const getGeoblazeValue = new GetGeoblazeValue(
+                layer,
+                latlng,
+                coords,
+              )
+              getGeoblazeValue.getGeoblaze().then(function () {
+                const dep = getGeoblazeValue.dep
+                const depthName = actual.split('_')[1]
+                if (dep) {
+                  if (dep > 0.0) {
+                    setDepth((depth: any) => {
+                      const copy = { ...depth }
+                      copy[depthName] = dep.toFixed(2)
+                      return {
+                        ...copy,
+                      }
+                    })
+                  }
+                } else {
                   setDepth((depth: any) => {
                     const copy = { ...depth }
-                    copy[depthName] = dep.toFixed(2)
+                    delete copy[depthName]
                     return {
                       ...copy,
                     }
                   })
                 }
-              } else {
-                setDepth((depth: any) => {
-                  const copy = { ...depth }
-                  delete copy[depthName]
-                  return {
-                    ...copy,
-                  }
-                })
-              }
-            })
+              })
+            }
             // x.split('_')[1]
           })
         }

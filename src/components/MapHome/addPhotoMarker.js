@@ -134,7 +134,7 @@ export class GetPhotoMarker {
 
     this.popupText = `
       <b>${this.actualLayer}</b><br>
-      IMAGE NAME: <em>${this.layerName.filename}</em><br>
+      IMAGE NAME: <em><a href="${BASIC_BUCKET_URL}/output/${this.layerName.filename}">${this.layerName.filename}</a></em><br>
       ${
         this.layerName.Area_seabed_m2
           ? `AREA OF SURVEY: <em>${this.layerName.Area_seabed_m2.toFixed(

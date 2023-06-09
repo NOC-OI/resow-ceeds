@@ -134,7 +134,7 @@ export class GetPhotoMarker {
 
     this.popupText = `
       <b>${this.actualLayer}</b><br>
-      IMAGE NAME: <em><a href="https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output/${this.layerName.filename}">${this.layerName.filename}</a></em><br>
+      IMAGE NAME: <em><a href="https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output/${this.layerName.filename}.jpg">${this.layerName.filename}</a></em><br>
       ${
         this.layerName.Area_seabed_m2
           ? `AREA OF SURVEY: <em>${this.layerName.Area_seabed_m2.toFixed(

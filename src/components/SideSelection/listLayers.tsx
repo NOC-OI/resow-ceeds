@@ -178,7 +178,7 @@ export const listLayers = {
       },
     },
   },
-  Biology: {
+  /*Biology: {
     layerNames: {
       'Presence/Absence Benthos': {
         url: 'https://ows.emodnet.eu/geoserver/biology/ows?',
@@ -271,7 +271,7 @@ export const listLayers = {
         content: 'This layer represents...',
       },
     },
-  },
+  },*/
   'Administrative Areas': {
     layerNames: {
       'UK Territorial Sea Limit': {
@@ -344,7 +344,7 @@ export const listLayers = {
       },
     },
   },
-  Chemistry: {
+/*  Chemistry: {
     layerNames: {
       'Chlorophyll-a': {
         url: 'https://ec.oceanbrowser.net/emodnet/Python/web/wms?',
@@ -458,5 +458,5 @@ export const listLayers = {
         content: 'This layer represents...',
       },
     },
-  },
+  },*/
 }

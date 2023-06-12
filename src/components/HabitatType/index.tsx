@@ -50,12 +50,11 @@ async function handleShowCalcValues(
       },
     })
     const data = await response.json()
-    const deleteKey = Object.keys(data)[0]
-    data[`${deleteKey} ${params.name.toLowerCase()}`] = data[deleteKey]
-    delete data[deleteKey]
+    // const deleteKey = Object.keys(data)[0]
+    // data[`${deleteKey} ${params.name.toLowerCase()}`] = data[deleteKey]
+    // delete data[deleteKey]
     params.result = data
     params.button = true
-
     // const newCalculationValue = dat: Object = {}
     // newCalculationValue[params.name as keyof Object] = data
     setCalculationValue(params)

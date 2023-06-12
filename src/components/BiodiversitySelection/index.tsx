@@ -68,8 +68,14 @@ export function BiodiversitySelection({
                 tiles without replacement to meet the target sample unit size (as defined by \
                 Benoist *et al*. 2019). \n \
                 **Target sample unit size:** 150 m$^2$ \n \
-                **Number of sample units in 2012:** hard - 6, hard+coarse - 10, \
-                hard+sand - 10, coarse+hard - 29, sand+hard - 6, coarse - 33, sand - 36\
+                **Number of sample units in 2012:** \n \
+                - hard: 6  \n \
+                - hard+coarse: 10  \n \
+                - hard+sand: 10 \n \
+                - coarse+hard: 29 \n \
+                - sand+hard: 6 \n \
+                - coarse: 33 \n \
+                - sand: 36 \
                 ',
                 { layers: ['Seabed Images_2012 AUV Image Survey'] },
               )

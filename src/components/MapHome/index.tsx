@@ -86,9 +86,11 @@ function MapHome1({
 
   const [depth, setDepth] = useState({})
 
+  const defaultView = [50.3, -8.1421]
+
   const defaultWMSBounds = [
-    [50.02017473656112, -8.322790146359285],
-    [50.57842994645117, -7.102163465517706],
+    [50.020174, -8.58279],
+    [50.578429, -7.70616],
   ]
 
   // if (map) {
@@ -101,7 +103,7 @@ function MapHome1({
   const activeIcon = L.icon({
     iconUrl: '/marker-icon_red.png',
     // shadowUrl: '/marker-shadow.png',
-    iconSize: [30, 30],
+    iconSize: [25, 25],
   })
   // const inactiveIcon = L.icon({
   //   iconUrl: '/marker-icon.png',
@@ -131,7 +133,7 @@ function MapHome1({
   useEffect(() => {
     if (map) {
       if (selectedSidebarOption !== 'Data Exploration') {
-        map.setView(new L.LatLng(50.3, -7.712108868853798), 10.5)
+        map.setView(new L.LatLng(defaultView[0], defaultView[1]), 10.5)
         map.options.minZoom = 10
       } else {
         // map.setView(new L.LatLng(50.3, -7.712108868853798), 10.5)
@@ -170,8 +172,8 @@ function MapHome1({
             html: `<div class='all-icon'>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
+                width="15"
+                height="15"
                 viewBox="0 0 50 50"
               >
                 <circle
@@ -262,8 +264,8 @@ function MapHome1({
         const turfConvex = turf.convex(turf.featureCollection(markers))
         const turfBbox = turf.bbox(turfConvex)
         bounds = [
-          [turfBbox[1] - 0.05, turfBbox[0] - 0.05],
-          [turfBbox[3] + 0.05, turfBbox[2] + 0.05],
+          [turfBbox[1] - 0.05, turfBbox[0] - 0.35],
+          [turfBbox[3] + 0.05, turfBbox[2] + 0.15],
         ]
         if (layerName.plotLimits) {
           const myStyle = {
@@ -552,10 +554,12 @@ function MapHome1({
         }
       }
     })
+    const markersAll: any = []
     actualLayer.forEach(async (actual) => {
       const color = colorScale[Math.floor(Math.random() * 30)]
       const markers: any = []
       await selectedLayers[actual].photos.map(async (photo: any) => {
+        markersAll.push(turf.point([photo.longitude, photo.latitude]))
         markers.push(
           turf.point([photo.longitude + 0.003, photo.latitude + 0.003]),
         )
@@ -581,30 +585,32 @@ function MapHome1({
             }
           }
         })
-        // const turfBbox = turf.bbox(turfConvex)
-        // const bounds = [
-        //   [turfBbox[1] - 0.05, turfBbox[0] - 0.05],
-        //   [turfBbox[3] + 0.05, turfBbox[2] + 0.05],
-        // ]
-        if (selectedLayers[actual].plotLimits) {
-          const turfConvex = turf.convex(turf.featureCollection(markers))
-          const color1 = colorScale[Math.floor(Math.random() * 30)]
-          const myStyle = {
-            color1,
-            fillColor: color1,
-            weight: 3,
-            opacity: 0.6,
-          }
-          if (turfConvex) {
-            const turflayer = L.geoJson(turfConvex, {
-              style: myStyle,
-            })
-            turflayer.options.attribution = actual
-            turflayer.addTo(map)
-          }
-        }
       })
+      if (selectedLayers[actual].plotLimits) {
+        const turfConvex = turf.convex(turf.featureCollection(markers))
+        const color1 = colorScale[Math.floor(Math.random() * 30)]
+        const myStyle = {
+          color1,
+          fillColor: color1,
+          weight: 3,
+          opacity: 0.6,
+        }
+        if (turfConvex) {
+          const turflayer = L.geoJson(turfConvex, {
+            style: myStyle,
+          })
+          turflayer.options.attribution = actual
+          turflayer.addTo(map)
+        }
+      }
     })
+    const turfConvexAll = turf.convex(turf.featureCollection(markersAll))
+    const turfBbox = turf.bbox(turfConvexAll)
+    const bounds = [
+      [turfBbox[1] - 0.05, turfBbox[0] - 0.35],
+      [turfBbox[3] + 0.05, turfBbox[2] + 0.15],
+    ]
+    map.fitBounds(bounds)
   }
 
   useEffect(() => {
@@ -632,7 +638,7 @@ function MapHome1({
     () => (
       <MapContainer
         style={{ height: '100vh', width: '100vw' }}
-        center={[50.3, -7.712108868853798]}
+        center={new L.LatLng(defaultView[0], defaultView[1])}
         zoom={10.5}
         zoomSnap={0.1}
         maxZoom={30}

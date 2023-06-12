@@ -81,6 +81,7 @@ export function IndicatorSpeciesTypeOptions({
         delete copy[layerInfo.subLayer]
         layerInfo.dataInfo.opacity = 1
         layerInfo.dataInfo.zoom = true
+        layerInfo.dataInfo.plotLimits = true
         copy[layerInfo.subLayer] = layerInfo.dataInfo
       })
       return copy
@@ -96,8 +97,6 @@ export function IndicatorSpeciesTypeOptions({
           subLayer: `${newActualLayer}_${layerClass}`,
           dataInfo: listLayers[newActualLayer].layerNames[layerClass],
         }
-        console.log(newActualLayer)
-        console.log(`${newActualLayer}_${layerClass}`)
         if (verifyIfWasSelectedBefore(`${newActualLayer}_${layerClass}`)) {
           // eslint-disable-next-line dot-notation
           layerInfo.dataInfo['selectedBefore'] = true

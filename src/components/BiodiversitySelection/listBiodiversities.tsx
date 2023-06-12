@@ -20,13 +20,13 @@ const listValues = [
   //   ],
   // },
   {
-    calcClass: 'Diversity Across survey',
+    calcClass: 'Diversity across survey',
     content:
       'Number of morphotypes using all tiles from seabed images captured with the autonomous \
     underwater vehicle in 2012 survey.',
     calcNames: [
       {
-        name: 'Number of morphotypes',
+        name: 'Morphotypes',
         url: 'data?filename=output:HF2012_alltile_counts&calc=biodiversity1&crs=epsg%3A4326&extension=csv',
         layers: { 'Seabed Images': ['2012 AUV Image Survey'] },
         noButton: true,

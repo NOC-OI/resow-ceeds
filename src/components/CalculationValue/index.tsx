@@ -70,6 +70,7 @@ export function CalculationValue({
       newSelectedLayers.forEach((layerInfo: any) => {
         delete copy[layerInfo.subLayer]
         layerInfo.dataInfo.opacity = 1
+        layerInfo.dataInfo.plotLimits = true
         layerInfo.dataInfo.zoom = true
         copy[layerInfo.subLayer] = layerInfo.dataInfo
       })
@@ -146,7 +147,7 @@ export function CalculationValue({
             {Object.keys(calculationValue.result[column]).map((calc) => {
               return (
                 <div key={`${column}_${calc}`}>
-                  {calc !== 'Types' && <h2>{calc}</h2>}
+                  {/* {calc !== 'Types' && <h2>{calc}</h2>} */}
                   {calculationValue.result[column][calc].map(
                     (results: any, i: any) => {
                       if (typeof results === 'object') {
@@ -224,7 +225,7 @@ export function CalculationValue({
                                   return (
                                     <div key={`${key}_${results}`}>
                                       <p className="">
-                                        {key}:{' '}
+                                        {key !== 'Result' && `${key}: `}
                                         {typeof result === 'number'
                                           ? calculationValue.decimalPlaces
                                             ? result.toFixed(

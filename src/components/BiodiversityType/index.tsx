@@ -51,7 +51,7 @@ async function handleShowCalcValues(
     const data = await response.json()
     const deleteKey = Object.keys(data)[0]
     // eslint-disable-next-line dot-notation
-    data['Biodiversity'] = data[deleteKey]
+    data[params.name] = data[deleteKey]
     delete data[deleteKey]
     params.result = data
     if (params.noButton) {

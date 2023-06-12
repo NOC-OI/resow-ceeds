@@ -22,8 +22,8 @@ export class GetPhotoMarker {
       html: `<div class='all-icon'>
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
+          width="15"
+          height="15"
           viewBox="0 0 50 50"
         >
           <circle
@@ -134,7 +134,7 @@ export class GetPhotoMarker {
 
     this.popupText = `
       <b>${this.actualLayer}</b><br>
-      IMAGE NAME: <em><a href="https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output/${this.layerName.filename}.jpg">${this.layerName.filename}</a></em><br>
+      IMAGE NAME: <em>${this.layerName.filename}</em><br>
       ${
         this.layerName.Area_seabed_m2
           ? `AREA OF SURVEY: <em>${this.layerName.Area_seabed_m2.toFixed(
@@ -167,21 +167,19 @@ export class GetPhotoMarker {
           ? `Caption: <em>${this.layerName.Caption}</em><br>`
           : ''
       }
-    `
+      <a href="https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output/${
+        this.layerName.filename
+      }.jpg" title='Show Image'
+          target="_blank"
+          style="display: flex; justify-content: center;"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+            <path fill-rule="evenodd" d="M1.5 6a2.25 2.25 0 012.25-2.25h16.5A2.25 2.25 0 0122.5 6v12a2.25 2.25 0 01-2.25 2.25H3.75A2.25 2.25 0 011.5 18V6zM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0021 18v-1.94l-2.69-2.689a1.5 1.5 0 00-2.12 0l-.88.879.97.97a.75.75 0 11-1.06 1.06l-5.16-5.159a1.5 1.5 0 00-2.12 0L3 16.061zm10.125-7.81a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0z" clip-rule="evenodd" />
+          </svg>
+        </a>
+      `
 
     //   ANNOTATION: <em>${organismList.join(', ')}</em><br>
-    //   <a
-    //     href='/photos/${this.actualLayer.replace(' ', '-')}_${
-    //   this.layerName.id
-    // }'
-    //     title='Show Image'
-    //     target="_blank"
-    //     style="display: flex; justify-content: center;"
-    //   >
-    //     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-    //       <path fill-rule="evenodd" d="M1.5 6a2.25 2.25 0 012.25-2.25h16.5A2.25 2.25 0 0122.5 6v12a2.25 2.25 0 01-2.25 2.25H3.75A2.25 2.25 0 011.5 18V6zM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0021 18v-1.94l-2.69-2.689a1.5 1.5 0 00-2.12 0l-.88.879.97.97a.75.75 0 11-1.06 1.06l-5.16-5.159a1.5 1.5 0 00-2.12 0L3 16.061zm10.125-7.81a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0z" clip-rule="evenodd" />
-    //     </svg>
-    //   </a>
 
     this.layer.options.attribution = this.actualLayer
     this.layer.options.organismList = organismList

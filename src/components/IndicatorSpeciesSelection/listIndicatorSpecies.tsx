@@ -33,14 +33,13 @@ interface keyable {
 const organisms: keyable = {
   pentapora_foliacea: [
     '*Pentapora foliacea*',
-    'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output/M58_10441297_12987756293370_1.png',
+    'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output/M58_10441297_12987746513824.jpg',
   ],
   galeus: [
     'Cartilagenous fish',
-    'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output/M58_10441297_12987756293370_1.png',
+    'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output/M58_10441297_12987756293370.jpg',
   ],
 }
-
 const listValues: any[] = [
   {
     calcClass: 'Sea pen',
@@ -64,7 +63,7 @@ Object.keys(organisms).forEach((organism: string) => {
     name: organisms[organism][0],
     url: `data?filename=output:HF2012_alltile_otherdata,output:HF2012_alltile_counts,jncc:JNCC_CEND1012_otherdata&calc=organism&crs=epsg%3A4326&extension=csv&exclude_index=True&column=${organism}&agg_columns=first:filename,first:fileformat,sum:${organism},density:area_seabed_m2`,
     layers: {
-      'Seabed Images': ['2012 AUV Image Survey', 'JNCC CEND1012 Survey'],
+      'Seabed Images': ['2012 AUV Image Survey'],
     },
     tableName: organism,
     noButton: true,

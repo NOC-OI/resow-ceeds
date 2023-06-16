@@ -12,7 +12,7 @@ export function Router() {
       <Route path="/" element={<DefaulLayout />}>
         <Route path="/tileserver" element={<TileServer />} />
         <Route path="/" element={<TileServer />} />
-        <Route path="/notileserver" element={<TileServer />} />
+        {/* <Route path="/notileserver" element={<TileServer />} /> */}
         <Route path="/3d" element={<ThreeD />} />
         <Route path="/photos/:id" element={<PhotoPage />} />
         <Route path="/login" element={<LoginPage />} />

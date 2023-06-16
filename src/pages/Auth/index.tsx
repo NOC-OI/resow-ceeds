@@ -14,13 +14,15 @@ export function Auth() {
       const searchParams = new URLSearchParams(document.location.search)
       const code = searchParams.get('code')
       let response
+
       try {
         response = await axios.post('https://imfe-pilot.ddns.net/user', null, {
           params: {
             code,
           },
         })
-      } catch {
+      } catch (error) {
+        console.log(error)
         navigate('/login?message=not-allowed')
         return
       }

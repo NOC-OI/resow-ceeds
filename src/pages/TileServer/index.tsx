@@ -16,8 +16,11 @@ import { FullPagePopup } from '../../components/FullPagePopup'
 import { LoginPopup } from '../../components/LoginPopup'
 import { FlashMessages } from '../../components/FlashMessages'
 import Cookies from 'js-cookie'
+import { useNavigate } from 'react-router-dom'
 
 export function TileServer() {
+  const navigate = useNavigate()
+
   const [selectedSidebarOption, setSelectedSidebarOption] = useState<string>('')
 
   const [selectedArea, setSelectedArea] = useState(false)
@@ -54,7 +57,7 @@ export function TileServer() {
   const [showPopup, setShowPopup] = useState(true)
 
   const [showLogin, setShowLogin] = useState(false)
-  const [isLogged, setIsLogged] = useState(!!Cookies.get('imfe_logged'))
+  const [isLogged, setIsLogged] = useState(!!Cookies.get('token'))
 
   const [showFlash, setShowFlash] = useState(false)
   const [flashMessage, setFlashMessage] = useState({
@@ -67,6 +70,65 @@ export function TileServer() {
       setShowFlash(true)
     }
   }, [isLogged])
+
+  useEffect(() => {
+    if (!isLogged) {
+      navigate('/login')
+      setShowFlash(true)
+    }
+  }, [])
+
+  // const store = useStore();
+
+  // const fetchUser = async () => {
+  //   try {
+  //     store.setRequestLoading(true);
+  //     const VITE_SERVER_ENDPOINT = import.meta.env.VITE_SERVER_ENDPOINT;
+  //     const response = await fetch(`${VITE_SERVER_ENDPOINT}/api/users/`, {
+  //       credentials: "include",
+  //     });
+  //     if (!response.ok) {
+  //       throw await response.json();
+  //     }
+
+  //     const data = await response.json();
+  //     const user = data.data.user as IUser;
+  //     store.setRequestLoading(false);
+  //     console.log(user);
+
+  //     store.setAuthUser(user);
+  //   } catch (error: any) {
+  //     store.setRequestLoading(false);
+  //     if (error.error) {
+  //       error.error.forEach((err: any) => {
+  //         toast.error(err.message, {
+  //           position: "top-right",
+  //         });
+  //       });
+  //       return;
+  //     }
+  //     const resMessage =
+  //       (error.response &&
+  //         error.response.data &&
+  //         error.response.data.message) ||
+  //       error.message ||
+  //       error.toString();
+
+  //     if (error?.message === "You are not logged in") {
+  //       navigate("/login");
+  //     }
+
+  //     toast.error(resMessage, {
+  //       position: "top-right",
+  //     });
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchUser();
+  // }, []);
+
+  // const user = store.authUser;
 
   return (
     <TileServerContainer>

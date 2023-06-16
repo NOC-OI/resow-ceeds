@@ -25,14 +25,22 @@ import mkcert from 'vite-plugin-mkcert'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), mkcert()],
+  plugins: [react()],
   server: {
     host: true,
     strictPort: true,
     port: 8080,
-    https: true,
   },
 })
+// export default defineConfig({
+//   plugins: [react(), mkcert()],
+//   server: {
+//     host: true,
+//     strictPort: true,
+//     port: 8080,
+//     https: true,
+//   },
+// })
 
 // export default defineConfig({
 //   base: './',

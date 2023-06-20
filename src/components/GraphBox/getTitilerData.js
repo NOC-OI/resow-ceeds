@@ -6,6 +6,7 @@ export class GetTitilerData {
     this.graphData = graphData
     this.url = url
     this.dataGraph = { distance: [], value: [] }
+    this.dataGraph = []
   }
 
   async fetchData() {
@@ -31,8 +32,10 @@ export class GetTitilerData {
         latitudes[idx]
       }?url=${encodeURIComponent(this.url)}`
       await axios.get(newUrl).then(async (r) => {
-        this.dataGraph.distance.push(distance)
-        this.dataGraph.value.push(r.data.values[0])
+        this.dataGraph.push({
+          x: distance,
+          y: r.data.values[0],
+        })
       })
     })
   }

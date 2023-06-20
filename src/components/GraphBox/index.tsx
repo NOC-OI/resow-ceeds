@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { InfoButtonBoxContainer } from './styles'
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons'
 import { useEffect, useState } from 'react'
-import Plot from 'react-plotly.js'
+import { VictoryChart, VictoryLine, VictoryTheme } from 'victory'
 import { Loading } from '../Loading'
 import { GetTitilerData } from './getTitilerData'
 
@@ -13,9 +13,9 @@ interface GraphBoxProps {
   setGetPolyline: any
 }
 
-interface keyable {
-  [key: string]: any
-}
+// interface keyable {
+//   [key: string]: any
+// }
 
 export function GraphBox({
   graphData,
@@ -23,7 +23,7 @@ export function GraphBox({
   actualLayer,
   setGetPolyline,
 }: GraphBoxProps) {
-  const [data, setData] = useState<keyable>({})
+  const [data, setData] = useState<any[]>([])
 
   const [loading, setLoading] = useState<boolean>(true)
 
@@ -37,19 +37,33 @@ export function GraphBox({
     getTitilerData.fetchData().then(async function () {
       setData(getTitilerData.dataGraph)
       setLoading(false)
+      console.log('xxxxxxxxxxxxxx')
     })
   }, [])
-
   return (
     <InfoButtonBoxContainer>
       <div>
         <FontAwesomeIcon icon={faCircleXmark} onClick={handleClose} />
       </div>
       <div className="font-bold text-center pb-3">Graph</div>
-      {loading ? (
+      {data.length === 0 ? (
         <Loading />
       ) : (
-        <Plot
+        <VictoryChart theme={VictoryTheme.material}>
+          <VictoryLine
+            style={{
+              data: { stroke: '#c43a31' },
+              parent: { border: '1px solid #ccc' },
+            }}
+            data={data}
+          />
+        </VictoryChart>
+      )}
+    </InfoButtonBoxContainer>
+  )
+}
+
+/* <Plot
           data={[
             {
               x: data.distance,
@@ -65,8 +79,4 @@ export function GraphBox({
             margin: { l: 20, r: 20, t: 20, b: 20 },
           }}
           config={{ responsive: true, displayModeBar: false }}
-        />
-      )}
-    </InfoButtonBoxContainer>
-  )
-}
+        /> */

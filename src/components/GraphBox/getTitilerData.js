@@ -1,5 +1,5 @@
 import axios from 'axios'
-import * as haversine from 'haversine'
+import haversine from 'haversine'
 
 export class GetTitilerData {
   constructor(graphData, url) {

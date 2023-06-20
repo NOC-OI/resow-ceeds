@@ -23,5 +23,7 @@ RUN apt-get install nginx -y
 WORKDIR /var/www/html/
 RUN rm -rf ./*
 COPY --from=build /app/dist /var/www/html/
-  EXPOSE 80
+RUN rm /etc/nginx/sites-available/default
+COPY ./default /etc/nginx/sites-available/
+EXPOSE 80
 CMD ["nginx","-g","daemon off;"]

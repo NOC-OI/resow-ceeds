@@ -16,7 +16,7 @@ export function Auth() {
       let response
 
       try {
-        response = await axios.post('https://imfe-pilot.ddns.net/user', null, {
+        response = await axios.post('https://imfe-pilot.ddns.net/user', {
           params: {
             code,
           },

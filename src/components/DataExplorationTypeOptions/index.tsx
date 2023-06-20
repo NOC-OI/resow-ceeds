@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { LayerTypeOptionsContainer } from './styles'
 import {
+  faChartSimple,
   faCircleInfo,
   faList,
   faLock,
@@ -55,6 +56,8 @@ interface DataExplorationTypeOptionsProps {
   setSelectedLayers: any
   setInfoButtonBox: any
   isLogged?: any
+  getPolyline: any
+  setGetPolyline: any
 }
 
 export function DataExplorationTypeOptions({
@@ -72,6 +75,8 @@ export function DataExplorationTypeOptions({
   setSelectedLayers,
   setInfoButtonBox,
   isLogged,
+  getPolyline,
+  setGetPolyline,
 }: DataExplorationTypeOptionsProps) {
   const [opacityIsClicked, setOpacityIsClicked] = useState(
     activeOpacity === `${content}_${subLayer}`,
@@ -206,6 +211,12 @@ export function DataExplorationTypeOptions({
     setActualLayer([layerInfo.subLayer])
     changeMapOpacity(layerInfo, e.target.value)
   }
+
+  function handleGenerateGraph() {
+    setGetPolyline((getPolyline: any) => !getPolyline)
+    setActualLayer([subLayers[subLayer].url])
+  }
+
   return (
     <LayerTypeOptionsContainer>
       <div>
@@ -253,11 +264,20 @@ export function DataExplorationTypeOptions({
               title={'Show Layer Info'}
               onClick={() => handleClickLayerInfo(content, subLayer)}
             />
-            {subLayers[subLayer].data_type !== 'Photo' ? (
+            {subLayers[subLayer].data_type !== 'Photo' &&
+            subLayers[subLayer].data_type !== 'COG' ? (
               <FontAwesomeIcon
                 icon={faList}
                 title="Show Legend"
                 onClick={handleClickLegend}
+              />
+            ) : null}
+            {subLayers[subLayer].data_type === 'COG' ? (
+              <FontAwesomeIcon
+                icon={faChartSimple}
+                title="Make a graph"
+                onClick={handleGenerateGraph}
+                className={getPolyline ? 'active' : ''}
               />
             ) : null}
             <FontAwesomeIcon

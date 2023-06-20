@@ -1,6 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
-  ActiveButton,
   AreaSelectorContainer,
   Button,
   ButtonSelection,
@@ -139,37 +138,26 @@ export function AreaSelector({
   return (
     <AreaSelectorContainer>
       <h1>SELECT AREA</h1>
-      {!selectedArea ? (
-        <ButtonSelection>
-          <div>
-            <ActiveButton onClick={handleWorldClick}>
-              <FontAwesomeIcon title="All the World" icon={faGlobe} />
-            </ActiveButton>
-            <Button onClick={handleMapSelectClick}>
-              <FontAwesomeIcon
-                title="Draw a polygon on the map"
-                icon={faObjectUngroup}
-              />
-            </Button>
-          </div>
-          <LatLonLimits />
-        </ButtonSelection>
-      ) : (
-        <ButtonSelection>
-          <div>
-            <Button onClick={handleWorldClick}>
-              <FontAwesomeIcon title="All the World" icon={faGlobe} />
-            </Button>
-            <ActiveButton onClick={handleMapSelectClick}>
-              <FontAwesomeIcon
-                title="Draw a polygon on the map"
-                icon={faObjectUngroup}
-              />
-            </ActiveButton>
-          </div>
-          <LatLonLimits />
-        </ButtonSelection>
-      )}
+      <ButtonSelection>
+        <div>
+          <Button
+            onClick={handleWorldClick}
+            className={!selectedArea ? 'active-button' : ''}
+          >
+            <FontAwesomeIcon title="All the World" icon={faGlobe} />
+          </Button>
+          <Button
+            onClick={handleMapSelectClick}
+            className={selectedArea ? 'active-button' : ''}
+          >
+            <FontAwesomeIcon
+              title="Draw a polygon on the map"
+              icon={faObjectUngroup}
+            />
+          </Button>
+        </div>
+        <LatLonLimits />
+      </ButtonSelection>
     </AreaSelectorContainer>
   )
 }

@@ -132,6 +132,9 @@ export class GetTileLayer {
       .get(`${TITILER_URL}/cog/statistics?url=${encodeURIComponent(this.url)}`)
       .then((r) => r.data)
 
+    console.log(cogInfo)
+    console.log(cogStats)
+
     this.bounds = cogInfo.bounds
     if (this.dataType === 'marker') {
       this.icon = L.icon({

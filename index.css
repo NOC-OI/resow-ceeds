@@ -66,6 +66,10 @@
 .active svg{
   color: #FFD886 !important;
 }
+.active{
+  color: #FFD886 !important;
+}
+
 
 .active-button{
   color: #000000;

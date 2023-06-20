@@ -17,6 +17,7 @@ import { LoginPopup } from '../../components/LoginPopup'
 import { FlashMessages } from '../../components/FlashMessages'
 import Cookies from 'js-cookie'
 import { useNavigate } from 'react-router-dom'
+import { GraphBox } from '../../components/GraphBox'
 
 export function TileServer() {
   const navigate = useNavigate()
@@ -31,6 +32,8 @@ export function TileServer() {
     new L.LatLng(50.07, -7.35),
     new L.LatLng(50.07, -8.21),
   ])
+
+  const [graphData, setGraphData] = useState(null)
 
   const [selectedLayers, setSelectedLayers] = useState<Object>({})
 
@@ -52,6 +55,8 @@ export function TileServer() {
     _southWest: { lat: -89, lng: 179 },
   })
 
+  const [getPolyline, setGetPolyline] = useState(false)
+
   const [listLayers, setListLayers] = useState([])
 
   const [showPopup, setShowPopup] = useState(true)
@@ -71,12 +76,12 @@ export function TileServer() {
     }
   }, [isLogged])
 
-  useEffect(() => {
-    if (!isLogged) {
-      navigate('/login')
-      setShowFlash(true)
-    }
-  }, [])
+  // useEffect(() => {
+  //   if (!isLogged) {
+  //     navigate('/login')
+  //     setShowFlash(true)
+  //   }
+  // }, [])
 
   // const store = useStore();
 
@@ -165,6 +170,8 @@ export function TileServer() {
             listLayers={listLayers}
             setShowPhotos={setShowPhotos}
             isLogged={isLogged}
+            getPolyline={getPolyline}
+            setGetPolyline={setGetPolyline}
           />
         )}
         {selectedSidebarOption === 'Habitats' && (
@@ -222,6 +229,14 @@ export function TileServer() {
             setInfoButtonBox={setInfoButtonBox}
           />
         )}
+        {graphData ? (
+          <GraphBox
+            graphData={graphData}
+            setGraphData={setGraphData}
+            actualLayer={actualLayer}
+            setGetPolyline={setGetPolyline}
+          />
+        ) : null}
         {layerLegend ? (
           <DataExplorationLegend
             layerLegend={layerLegend}
@@ -281,6 +296,9 @@ export function TileServer() {
         mapBounds={mapBounds}
         setMapBounds={setMapBounds}
         selectedSidebarOption={selectedSidebarOption}
+        getPolyline={getPolyline}
+        setGetPolyline={setGetPolyline}
+        setGraphData={setGraphData}
       />
       {showPopup && <FullPagePopup setShowPopup={setShowPopup} />}
       {showLogin && (

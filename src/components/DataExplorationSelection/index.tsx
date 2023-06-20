@@ -20,6 +20,8 @@ interface DataExplorationSelectionProps {
   listLayers?: any
   setShowPhotos?: any
   isLogged?: any
+  getPolyline?: any
+  setGetPolyline?: any
 }
 
 export function DataExplorationSelection({
@@ -35,6 +37,8 @@ export function DataExplorationSelection({
   listLayers,
   setShowPhotos,
   isLogged,
+  getPolyline,
+  setGetPolyline,
 }: DataExplorationSelectionProps) {
   function handleClickLayerInfo(title: String, content: string) {
     setInfoButtonBox({
@@ -80,6 +84,8 @@ export function DataExplorationSelection({
               setInfoButtonBox={setInfoButtonBox}
               setShowPhotos={setShowPhotos}
               isLogged={isLogged}
+              getPolyline={getPolyline}
+              setGetPolyline={setGetPolyline}
             />
           )
         })}

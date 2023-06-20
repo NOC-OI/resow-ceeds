@@ -22,6 +22,8 @@ interface DataExplorationTypeProps {
   setInfoButtonBox?: any
   setShowPhotos?: any
   isLogged?: any
+  getPolyline: any
+  setGetPolyline: any
 }
 
 export function DataExplorationType({
@@ -38,6 +40,8 @@ export function DataExplorationType({
   setInfoButtonBox,
   setShowPhotos,
   isLogged,
+  getPolyline,
+  setGetPolyline,
 }: DataExplorationTypeProps) {
   const [subLayers, setSubLayers] = useState<keyable>({})
 
@@ -101,6 +105,8 @@ export function DataExplorationType({
               setSelectedLayers={setSelectedLayers}
               setInfoButtonBox={setInfoButtonBox}
               isLogged={isLogged}
+              getPolyline={getPolyline}
+              setGetPolyline={setGetPolyline}
             />
           )
         })}

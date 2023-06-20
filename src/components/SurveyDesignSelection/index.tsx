@@ -7,6 +7,7 @@ import {
 // import { AreaSelector } from '../AreaSelector'
 import { Info } from 'phosphor-react'
 import { SurveyDesignType } from '../SurveyDesignType'
+import { AreaSelector } from '../AreaSelector'
 
 interface SurveyDesignSelectionProps {
   setCalculationValue: any
@@ -50,14 +51,14 @@ export function SurveyDesignSelection({
         </div>
       </LayerSelectionTitle>
       <LayerTypes>
-        {/* <AreaSelector
+        <AreaSelector
           setCalculationValue={setCalculationValue}
           selectedArea={selectedArea}
           setSelectedArea={setSelectedArea}
           latLonLimits={latLonLimits}
           setLatLonLimits={setLatLonLimits}
           setInfoButtonBox={setInfoButtonBox}
-        /> */}
+        />
         {calcClasses.map((calcClass) => {
           return (
             <SurveyDesignType

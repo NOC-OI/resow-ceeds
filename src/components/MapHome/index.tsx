@@ -61,6 +61,9 @@ interface MapProps {
   mapBounds: any
   setMapBounds: any
   selectedSidebarOption: any
+  getPolyline: any
+  setGetPolyline: any
+  setGraphData: any
 }
 
 function MapHome1({
@@ -77,6 +80,9 @@ function MapHome1({
   mapBounds,
   setMapBounds,
   selectedSidebarOption,
+  getPolyline,
+  setGetPolyline,
+  setGraphData,
 }: MapProps) {
   // const MAPBOX_API_KEY = import.meta.env.VITE_MAPBOX_API_KEY
   // const MAPBOX_USERID = 'mapbox/satellite-v9'
@@ -634,6 +640,97 @@ function MapHome1({
     }
   }, [selectedLayers])
 
+  function handleSetLatlng(e: any) {
+    let counter = 0
+    const lineLayer: any[] = []
+    Object.keys(map._layers).forEach((layer) => {
+      if (map._layers[layer].options.attribution) {
+        if (map._layers[layer].options.attribution === 'draw-polyline1') {
+          if (lineLayer.length === 0) {
+            lineLayer.push(map._layers[layer]._latlng)
+            counter += 1
+          }
+        }
+        if (map._layers[layer].options.attribution === 'draw-polyline2') {
+          if (lineLayer.length === 1) {
+            lineLayer.push(map._layers[layer]._latlng)
+            counter += 1
+          }
+        }
+      }
+    })
+    if (counter === 0) {
+      const markerLayer = L.marker(e.latlng, {
+        attribution: 'draw-polyline1',
+      })
+        .addTo(map)
+        .bindPopup('Point <br/>' + e.latlng)
+      lineLayer.push(markerLayer.getLatLng())
+    } else if (counter === 1) {
+      const markerLayer = L.marker(e.latlng, {
+        attribution: 'draw-polyline2',
+      })
+        .addTo(map)
+        .bindPopup('Point <br/>' + e.latlng)
+      if (lineLayer.length === 1) {
+        lineLayer.push(markerLayer.getLatLng())
+      }
+      L.polyline([lineLayer[0], lineLayer[1]], {
+        color: 'red',
+        attribution: 'draw-polyline3',
+      }).addTo(map)
+      map.dragging.enable()
+      map.touchZoom.enable()
+      map.doubleClickZoom.enable()
+      map.scrollWheelZoom.enable()
+      map.boxZoom.enable()
+      map.keyboard.enable()
+      map.off('click', handleSetLatlng)
+      setGraphData(lineLayer)
+    } else {
+      map.dragging.enable()
+      map.touchZoom.enable()
+      map.doubleClickZoom.enable()
+      map.scrollWheelZoom.enable()
+      map.boxZoom.enable()
+      map.keyboard.enable()
+      map.off('click', handleSetLatlng)
+    }
+  }
+
+  useEffect(() => {
+    if (map) {
+      if (getPolyline) {
+        window.alert('Select two points in the map to make a graph')
+        map.dragging.disable()
+        map.touchZoom.disable()
+        map.doubleClickZoom.disable()
+        map.scrollWheelZoom.disable()
+        map.boxZoom.disable()
+        map.keyboard.disable()
+        map.on('click', handleSetLatlng)
+      } else {
+        Object.keys(map._layers).forEach((layer) => {
+          if (map._layers[layer].options) {
+            if (map._layers[layer].options.attribution) {
+              if (map._layers[layer].options.attribution === 'draw-polyline1') {
+                map.removeLayer(map._layers[layer])
+              } else if (
+                map._layers[layer].options.attribution === 'draw-polyline2'
+              ) {
+                map.removeLayer(map._layers[layer])
+              } else if (
+                map._layers[layer].options.attribution === 'draw-polyline3'
+              ) {
+                map.removeLayer(map._layers[layer])
+              }
+            }
+          }
+        })
+      }
+    }
+  }, [getPolyline])
+
   const displayMap = useMemo(
     () => (
       <MapContainer
@@ -718,7 +815,7 @@ function MapHome1({
         <LeafletRuler />
       </MapContainer>
     ),
-    [L.map],
+    [map],
   )
 
   return (
@@ -738,7 +835,8 @@ function mapPropsAreEqual(prevMap: any, nextMap: any) {
     prevMap.selectedArea === nextMap.selectedArea &&
     prevMap.latLonLimits === nextMap.latLonLimits &&
     prevMap.showPhotos === nextMap.showPhotos &&
-    prevMap.activePhoto === nextMap.activePhoto
+    prevMap.activePhoto === nextMap.activePhoto &&
+    prevMap.getPolyline === nextMap.getPolyline
   )
 }
 

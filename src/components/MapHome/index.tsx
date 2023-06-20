@@ -10,7 +10,7 @@ import {
 import 'leaflet/dist/leaflet.css'
 import React, { useEffect, useMemo, useState } from 'react'
 import * as L from 'leaflet'
-import { coastline } from '../../coastline'
+// import { coastline } from '../../coastline'
 import { InfoBox } from '../InfoBox'
 import { GetCOGLayer, GetTifLayer, GetTileLayer } from './addGeoraster'
 import { Loading } from '../Loading'
@@ -798,7 +798,7 @@ function MapHome1({
               zIndex={9998}
             />
           </LayersControl.Overlay>
-          <LayersControl.Overlay name="Coastline">
+          {/* <LayersControl.Overlay name="Coastline">
             <GeoJSON
               attribution="Coastlines"
               data={coastline}
@@ -809,7 +809,7 @@ function MapHome1({
                 fillOpacity: 0,
               }}
             />
-          </LayersControl.Overlay>
+          </LayersControl.Overlay> */}
         </LayersControl>
         <ScaleControl position="topright" />
         <LeafletRuler />

@@ -1,5 +1,6 @@
 import 'leaflet/dist/leaflet'
 import 'leaflet-draw'
+import * as L from 'leaflet'
 
 export class AddLeafletDraw {
   constructor(map) {
@@ -8,16 +9,14 @@ export class AddLeafletDraw {
   }
 
   add() {
-    const drawLayer = new L.Draw.Rectangle(this.map)
+    // const drawLayer = new L.Draw.Rectangle(this.map)
     // var drawnItems = new L.FeatureGroup();
     // this.map.addLayer(drawnItems);
-
     // this.drawControl = new L.Control.Draw({
     //     edit: {
     //         featureGroup: drawnItems
     //     },
     //     position: 'topright',
-
     // });
     // this.map.addControl(this.drawControl);
   }

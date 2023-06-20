@@ -16,30 +16,24 @@ export function Auth() {
       let response
 
       try {
-        response = await fetch('https://imfe-pilot.ddns.net/user', {
-          method: 'POST',
-          body: JSON.stringify({ code }),
-          mode: 'cors',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        })
-        // response = await axios({
-        //   method: 'post',
-        //   baseURL: 'https://imfe-pilot.ddns.net/user',
-        //   url: '/user',
-        //   params: {
-        //     code,
+        // response = await fetch('https://imfe-pilot.ddns.net/user', {
+        //   method: 'POST',
+        //   body: JSON.stringify({ code }),
+        //   mode: 'cors',
+        //   headers: {
+        //     'Content-Type': 'application/json',
         //   },
         // })
+        response = await axios.post(
+          `https://imfe-pilot.ddns.net/user/?code=${code}`,
+        )
       } catch (error) {
         console.log(error)
         navigate('/login?message=not-allowed')
         return
       }
-      const user = await response.json()
 
-      // const user = response.data
+      const user = response.data
       // const redirectURL = redirectTo ?? new URL('/', request.url)
 
       const cookieExpiresInSeconds = 60 * 60 * 24 * 30

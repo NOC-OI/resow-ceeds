@@ -76,12 +76,12 @@ export function TileServer() {
     }
   }, [isLogged])
 
-  useEffect(() => {
-    if (!isLogged) {
-      navigate('/login')
-      setShowFlash(true)
-    }
-  }, [])
+  // useEffect(() => {
+  //   if (!isLogged) {
+  //     navigate('/login')
+  //     setShowFlash(true)
+  //   }
+  // }, [])
 
   // const store = useStore();
 

@@ -16,7 +16,7 @@ export function Auth() {
       let response
 
       try {
-        // response = await fetch('https://imfe-pilot.ddns.net/user', {
+        // response = await fetch('https://imfe-pilot-api.noc.ac.uk/user', {
         //   method: 'POST',
         //   body: JSON.stringify({ code }),
         //   mode: 'cors',
@@ -25,7 +25,7 @@ export function Auth() {
         //   },
         // })
         response = await axios.post(
-          `https://imfe-pilot.ddns.net/user/?code=${code}`,
+          `https://imfe-pilot-api.noc.ac.uk/user/?code=${code}`,
         )
       } catch (error) {
         console.log(error)

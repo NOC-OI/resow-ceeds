@@ -16,11 +16,11 @@ import { FullPagePopup } from '../../components/FullPagePopup'
 import { LoginPopup } from '../../components/LoginPopup'
 import { FlashMessages } from '../../components/FlashMessages'
 import Cookies from 'js-cookie'
-// import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { GraphBox } from '../../components/GraphBox'
 
 export function TileServer() {
-  // const navigate = useNavigate()
+  const navigate = useNavigate()
 
   const [selectedSidebarOption, setSelectedSidebarOption] = useState<string>('')
 
@@ -76,12 +76,12 @@ export function TileServer() {
     }
   }, [isLogged])
 
-  // useEffect(() => {
-  //   if (!isLogged) {
-  //     navigate('/login')
-  //     setShowFlash(true)
-  //   }
-  // }, [])
+  useEffect(() => {
+    if (!isLogged) {
+      navigate('/login')
+      setShowFlash(true)
+    }
+  }, [])
 
   return (
     <TileServerContainer>

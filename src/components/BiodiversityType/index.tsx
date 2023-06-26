@@ -32,9 +32,8 @@ async function handleShowCalcValues(
   setCalculationValue(null)
   setIsActiveText(activeText)
 
-  const baseUrl = 'https://imfe-pilot-api.noc.ac.uk/'
-  // const baseUrl = 'http://localhost:8000'
-  let url = `${baseUrl}${params.url}`
+  const APIBaseUrl = import.meta.env.VITE_API_URL
+  let url = `${APIBaseUrl}${params.url}`
   if (selectedArea) {
     url = `${url}&bbox=${latLonLimits[2].lat},${latLonLimits[0].lng},${latLonLimits[0].lat},${latLonLimits[2].lng}`
   }

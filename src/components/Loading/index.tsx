@@ -1,9 +1,9 @@
-import styles from './Loading.module.css'
+import { LoadingContainer, LoadingSpinner } from './styles'
 
 export function Loading() {
   return (
-    <div className={styles.allcenter}>
-      <div className={styles.ldsspinner}>
+    <LoadingContainer>
+      <LoadingSpinner>
         <div></div>
         <div></div>
         <div></div>
@@ -16,7 +16,7 @@ export function Loading() {
         <div></div>
         <div></div>
         <div></div>
-      </div>
-    </div>
+      </LoadingSpinner>
+    </LoadingContainer>
   )
 }

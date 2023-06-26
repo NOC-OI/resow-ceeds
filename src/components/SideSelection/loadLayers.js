@@ -1,5 +1,5 @@
 /* eslint-disable no-multi-str */
-import { listLayers } from './listLayers'
+import { listLayers } from '../../data/listLayers'
 
 export class GetLayers {
   constructor() {
@@ -25,10 +25,11 @@ export class GetLayers {
   }
 
   async logJSONData(url) {
+    const APIBaseUrl = import.meta.env.VITE_API_URL
+
     await url.forEach(async (data) => {
       await fetch(
-        // `https://imfe-pilot-api.noc.ac.uk/api/csv?filenames=${data.files}&columns=active:False,local_data_type:Marker-COG,show:True`,
-        `https://imfe-pilot-api.noc.ac.uk/csv?filenames=${data.files}&columns=active:False,local_data_type:Marker-COG,show:True`,
+        `${APIBaseUrl}csv?filenames=${data.files}&columns=active:False,local_data_type:Marker-COG,show:True`,
       )
         .then((response) => response.json())
         .then((jsonData) => {

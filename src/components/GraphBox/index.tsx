@@ -2,9 +2,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { InfoButtonBoxContainer } from './styles'
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons'
 import { useEffect, useState } from 'react'
-import { VictoryChart, VictoryLine, VictoryTheme } from 'victory'
-import { Loading } from '../Loading'
+import { VictoryAxis, VictoryChart, VictoryLine, VictoryTheme } from 'victory'
 import { GetTitilerData } from './getTitilerData'
+import { Button } from '../AreaSelector/styles'
 
 interface GraphBoxProps {
   graphData: any
@@ -25,19 +25,20 @@ export function GraphBox({
 }: GraphBoxProps) {
   const [data, setData] = useState<any[]>([])
 
-  const [loading, setLoading] = useState<boolean>(true)
-
+  const [waitState, setWaitState] = useState(false)
   function handleClose() {
     setGetPolyline(false)
     setGraphData(null)
+  }
+
+  function changeStateToShowGraph() {
+    setWaitState(true)
   }
 
   useEffect(() => {
     const getTitilerData = new GetTitilerData(graphData, actualLayer[0])
     getTitilerData.fetchData().then(async function () {
       setData(getTitilerData.dataGraph)
-      setLoading(false)
-      console.log('xxxxxxxxxxxxxx')
     })
   }, [])
   return (
@@ -46,10 +47,55 @@ export function GraphBox({
         <FontAwesomeIcon icon={faCircleXmark} onClick={handleClose} />
       </div>
       <div className="font-bold text-center pb-3">Graph</div>
-      {data.length === 0 ? (
-        <Loading />
+
+      {!waitState ? (
+        <div>
+          <Button onClick={changeStateToShowGraph}>
+            <p>Click here to show graph</p>
+          </Button>
+        </div>
       ) : (
         <VictoryChart theme={VictoryTheme.material}>
+          <VictoryAxis
+            dependentAxis
+            style={{
+              axis: { stroke: 'gray', fill: 'gray' },
+              axisLabel: {
+                fontSize: 15,
+                padding: 30,
+              },
+              grid: {
+                stroke: ({ tick }: any) => (tick > 0.5 ? 'gray' : 'gray'),
+              },
+              ticks: { stroke: 'gray', size: 5 },
+              tickLabels: {
+                fontSize: 15,
+                padding: 5,
+                color: 'gray',
+                fill: 'gray',
+              },
+            }}
+          />
+          <VictoryAxis
+            label="Distance (km)"
+            style={{
+              axis: { stroke: 'gray', fill: 'gray' },
+              axisLabel: {
+                fontSize: 15,
+                padding: 30,
+              },
+              grid: {
+                stroke: ({ tick }: any) => (tick > 0.5 ? 'gray' : 'gray'),
+              },
+              ticks: { stroke: 'gray', size: 5 },
+              tickLabels: {
+                fontSize: 15,
+                padding: 5,
+                color: 'gray',
+                fill: 'gray',
+              },
+            }}
+          />
           <VictoryLine
             style={{
               data: { stroke: '#c43a31' },

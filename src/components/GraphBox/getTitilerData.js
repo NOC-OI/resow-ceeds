@@ -10,6 +10,8 @@ export class GetTitilerData {
   }
 
   async fetchData() {
+    const TILE_SERVER_URL = import.meta.env.VITE_TILE_SERVER_URL
+
     function linspace(start, stop, num, endpoint = true) {
       const div = endpoint ? num - 1 : num
       const step = (stop - start) / div
@@ -28,7 +30,8 @@ export class GetTitilerData {
         { latitude: latitudes[idx], longitude: longitudes[idx] },
         { unit: 'km' },
       )
-      const newUrl = `https://titiler.xyz/cog/point/${longitudes[idx]},${
+
+      const newUrl = `${TILE_SERVER_URL}cog/point/${longitudes[idx]},${
         latitudes[idx]
       }?url=${encodeURIComponent(this.url)}`
       await axios.get(newUrl).then(async (r) => {

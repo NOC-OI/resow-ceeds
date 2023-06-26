@@ -11,13 +11,13 @@
   background-size: contain;
   text-align: center;
   vertical-align: middle;
-  padding-top: 8px;
-  font-size: 11px;
+  padding-top: 0.5rem;
+  font-size: 0.75rem;
   font-weight: bold;
-  width: 33px !important;
-  height: 33px !important;
-  margin-left: -16px !important;
-  margin-top: -16px !important;
+  width: 2rem !important;
+  height: 2rem !important;
+  margin-left: -1rem !important;
+  margin-top: -1rem !important;
   position: relative;
 }
 

@@ -11,8 +11,10 @@ export class GetGeoblazeValue {
   }
 
   async getGeoblaze() {
+    const TILE_SERVER_URL = import.meta.env.VITE_TILE_SERVER_URL
+
     if (this.coords) {
-      const url = `https://titiler.xyz/cog/tiles/WebMercatorQuad/${this.coords.z}/${this.coords.x}/${this.coords.y}.tif?url=${this.layer.options.url}`
+      const url = `${TILE_SERVER_URL}cog/tiles/WebMercatorQuad/${this.coords.z}/${this.coords.x}/${this.coords.y}.tif?url=${this.layer.options.url}`
       const latlng3857 = proj4('EPSG:4326', 'EPSG:3857').forward([
         this.latlng.lng,
         this.latlng.lat,

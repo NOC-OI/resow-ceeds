@@ -38,6 +38,11 @@ export function FlashMessages({
     [styles.mediumWidth]: width === 'medium',
     [styles.largeWidth]: width === 'large',
   }
+
+  setTimeout(() => {
+    setActive(false)
+  }, duration)
+
   return (
     <CSSTransition
       in={active}

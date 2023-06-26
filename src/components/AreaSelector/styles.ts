@@ -23,7 +23,7 @@ export const LatLonLimitsContainer = styled.div`
     }
 
     input[type='number'] {
-      -moz-appearance: textfield;
+      appearance: textfield;
     }
     input:disabled {
       opacity: 0.3;
@@ -60,7 +60,7 @@ export const ActiveButton = styled.button`
   width: max-content;
   color: ${(props) => props.theme.black};
   background: ${(props) => props.theme['yellow-400']};
-  border-radius: 9px;
+  border-radius: 8px;
   padding: 0.375rem;
   padding-left: 1.5rem;
   padding-right: 1.5rem;

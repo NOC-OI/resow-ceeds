@@ -1,5 +1,5 @@
 /* eslint-disable no-multi-str */
-import { listHabitats } from './listHabitats'
+import { listHabitats } from '../../data/listHabitats'
 import {
   LayerSelectionContainer,
   LayerSelectionTitle,

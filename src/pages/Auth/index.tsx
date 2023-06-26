@@ -7,6 +7,8 @@ import { Loading } from '../../components/Loading'
 export function Auth() {
   const navigate = useNavigate()
 
+  const APIBaseUrl = import.meta.env.VITE_API_URL
+
   // const redirectTo = request.cookies.get('redirectTo')?.value
 
   useEffect(() => {
@@ -16,7 +18,7 @@ export function Auth() {
       let response
 
       try {
-        // response = await fetch('https://imfe-pilot-api.noc.ac.uk/user', {
+        // response = await fetch(`${APIBaseUrl}user`, {
         //   method: 'POST',
         //   body: JSON.stringify({ code }),
         //   mode: 'cors',
@@ -24,9 +26,7 @@ export function Auth() {
         //     'Content-Type': 'application/json',
         //   },
         // })
-        response = await axios.post(
-          `https://imfe-pilot-api.noc.ac.uk/user/?code=${code}`,
-        )
+        response = await axios.post(`${APIBaseUrl}user/?code=${code}`)
       } catch (error) {
         console.log(error)
         navigate('/login?message=not-allowed')

@@ -123,13 +123,15 @@ export class GetTileLayer {
   }
 
   async getTile() {
-    const TITILER_URL = import.meta.env.VITE_TITILER_URL
+    const TILE_SERVER_URL = import.meta.env.VITE_TILE_SERVER_URL
 
     const cogInfo = await axios
-      .get(`${TITILER_URL}/cog/info?url=${encodeURIComponent(this.url)}`)
+      .get(`${TILE_SERVER_URL}cog/info?url=${encodeURIComponent(this.url)}`)
       .then((r) => r.data)
     const cogStats = await axios
-      .get(`${TITILER_URL}/cog/statistics?url=${encodeURIComponent(this.url)}`)
+      .get(
+        `${TILE_SERVER_URL}cog/statistics?url=${encodeURIComponent(this.url)}`,
+      )
       .then((r) => r.data)
 
     console.log(cogInfo)
@@ -214,7 +216,7 @@ export class GetTileLayer {
       }
 
       this.tileJson = await axios
-        .get(`${TITILER_URL}/cog/WebMercatorQuad/tilejson.json`, {
+        .get(`${TILE_SERVER_URL}cog/WebMercatorQuad/tilejson.json`, {
           params: this.args,
           paramsSerializer: {
             encode: (params) => parse(params),

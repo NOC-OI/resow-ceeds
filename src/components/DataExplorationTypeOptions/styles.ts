@@ -10,7 +10,7 @@ export const LayerTypeOptionsContainer = styled.div`
     label {
       display: flex;
       align-items: center;
-      padding-right: 10px;
+      padding-right: 0.675rem;
       white-space: nowrap;
       padding: 0.375rem;
       cursor: pointer;

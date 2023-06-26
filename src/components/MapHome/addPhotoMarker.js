@@ -12,12 +12,6 @@ export class GetPhotoMarker {
   }
 
   async getMarker() {
-    // const icon = L.icon({
-    //   iconUrl: '/marker-icon.png',
-    //   // shadowUrl: '/marker-shadow.png',
-    //   iconSize: [20, 20],
-    // })
-
     const icon = L.divIcon({
       html: `<div class='all-icon'>
         <svg
@@ -168,9 +162,9 @@ export class GetPhotoMarker {
           : ''
       }
       `
-    // <a href="https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output/${
+    // <a href=`${JOSBaseUrl}haig-fras/output/${
     //   this.layerName.filename
-    // }.jpg" title='Show Image'
+    // }.jpg` title='Show Image'
     //     target="_blank"
     //     style="display: flex; justify-content: center;"
     //   >

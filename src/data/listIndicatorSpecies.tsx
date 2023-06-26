@@ -30,14 +30,17 @@
 interface keyable {
   [key: string]: any
 }
+
+const JOSBaseUrl = import.meta.env.VITE_JASMIN_OBJECT_STORE_URL
+
 const organisms: keyable = {
   pentapora_foliacea: [
     '*Pentapora foliacea*',
-    'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output/M58_10441297_12987746513824.jpg',
+    `${JOSBaseUrl}haig-fras/output/M58_10441297_12987746513824.jpg`,
   ],
   galeus: [
     'Cartilagenous fish',
-    'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output/M58_10441297_12987756293370.jpg',
+    `${JOSBaseUrl}haig-fras/output/M58_10441297_12987756293370.jpg`,
   ],
 }
 const listValues: any[] = [

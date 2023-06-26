@@ -50,9 +50,8 @@ export function IndicatorSpeciesTypeOptions({
   async function fetchDatatoUpdateCalculationBox(result: any) {
     setLoading(true)
     setCalculationValue(null)
-    // const baseUrl = 'http://localhost:8000'
-    const baseUrl = 'https://imfe-pilot-api.noc.ac.uk/'
-    const url = `${baseUrl}${subLayer.url}`
+    const APIBaseUrl = import.meta.env.VITE_API_URL
+    const url = `${APIBaseUrl}${subLayer.url}`
     async function getCalculationResults() {
       const response = await fetch(url, {
         method: 'GET',

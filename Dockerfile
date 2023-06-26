@@ -11,7 +11,7 @@
 # EXPOSE 80
 # CMD ["nginx","-g","daemon off;"]
 
-FROM node:16-alpine as build
+FROM node:20.3-alpine as build
 WORKDIR /app
 COPY . /app
 RUN npm install

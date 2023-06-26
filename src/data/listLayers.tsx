@@ -1,21 +1,24 @@
 /* eslint-disable no-multi-str */
+const JOSBaseUrl = import.meta.env.VITE_JASMIN_OBJECT_STORE_URL
+const MBTilesBaseUrl = import.meta.env.VITE_MBTILES_URL
+
 export const listLayers = {
   Bathymetry: {
     layerNames: {
       Emodnet: {
-        url: 'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output/cog_rep_EMODNet_2020.tif',
+        url: `${JOSBaseUrl}haig-fras/output/cog_rep_EMODNet_2020.tif`,
         data_type: 'COG',
         get_value: { depth: 'm' },
         content: 'This layer represents...',
       },
       Gebco: {
-        url: 'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output/cog_rep_gebco_2022.tif',
+        url: `${JOSBaseUrl}haig-fras/output/cog_rep_gebco_2022.tif`,
         data_type: 'COG',
         get_value: { depth: 'm' },
         content: 'This layer represents...',
       },
       '2018 Bathymetry Survey': {
-        url: 'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/bathymetry/test_auv_bathymetry.tif',
+        url: `${JOSBaseUrl}haig-fras/bathymetry/test_auv_bathymetry.tif`,
         data_type: 'COG',
         get_value: { depth: 'm' },
         content: 'This layer represents...',
@@ -28,7 +31,7 @@ export const listLayers = {
   Sidescan: {
     layerNames: {
       2012: {
-        url: 'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/bathymetry/sidescan_2012.tif',
+        url: `${JOSBaseUrl}haig-fras/bathymetry/sidescan_2012.tif`,
         data_type: 'COG',
         content: 'This layer represents...',
         protected: true,
@@ -71,7 +74,7 @@ export const listLayers = {
         A report on the methods used in the 2021 version of EUSeaMap (Vasquez et al., 2021) and reports on previous versions (v2016 and V2019) are linked in Online Resources. \n ',
       },
       'Habitat Map - MBTiles': {
-        url: 'https://imfe-pilot-mbtiles.noc.ac.uk/v1/tiles/mytiles@1.0.0/{z}/{x}/{y}.mvt',
+        url: `${MBTilesBaseUrl}v1/tiles/mytiles@1.0.0/{z}/{x}/{y}.mvt`,
         data_type: 'MBTiles',
         content: 'This layer represents...',
       },
@@ -178,7 +181,7 @@ export const listLayers = {
       },
     },
   },
-  /*Biology: {
+  /* Biology: {
     layerNames: {
       'Presence/Absence Benthos': {
         url: 'https://ows.emodnet.eu/geoserver/biology/ows?',
@@ -271,7 +274,7 @@ export const listLayers = {
         content: 'This layer represents...',
       },
     },
-  },*/
+  }, */
   'Administrative Areas': {
     layerNames: {
       'UK Territorial Sea Limit': {
@@ -344,7 +347,7 @@ export const listLayers = {
       },
     },
   },
-/*  Chemistry: {
+  /*  Chemistry: {
     layerNames: {
       'Chlorophyll-a': {
         url: 'https://ec.oceanbrowser.net/emodnet/Python/web/wms?',
@@ -458,5 +461,5 @@ export const listLayers = {
         content: 'This layer represents...',
       },
     },
-  },*/
+  }, */
 }

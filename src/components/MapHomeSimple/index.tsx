@@ -2,7 +2,6 @@ import {
   MapContainer,
   TileLayer,
   WMSTileLayer,
-  GeoJSON,
   LayersControl,
   Pane,
 } from 'react-leaflet'
@@ -16,7 +15,6 @@ import { Loading } from '../Loading'
 import { GetGeoblazeValue } from '../MapHome/getGeoblazeValue'
 // import { listPhotos } from '../PhotoSelection/listPhotos';
 import { useNavigate } from 'react-router-dom'
-import {} from 'leaflet.vectorgrid'
 import axios from 'axios'
 
 interface DisplayPositionProps {
@@ -54,8 +52,10 @@ function MapHome1({
   // const MAPBOX_USERID = 'mapbox/satellite-v9';
   // const MAPBOX_ATTRIBUTION = "Map data &copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors, Imagery © <a href='https://www.mapbox.com/'>Mapbox</a>"
 
-  const BASIC_BUCKET_URL =
-    'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output'
+  const JOSBaseUrl = import.meta.env.VITE_JASMIN_OBJECT_STORE_URL
+  const APIBaseUrl = import.meta.env.VITE_API_URL
+
+  const BASIC_BUCKET_URL = `${JOSBaseUrl}haig-fras/output`
 
   // eslint-disable-next-line no-unused-vars
   const [errorMessage, setErrorMessage] = useState(false)
@@ -109,7 +109,7 @@ function MapHome1({
     const photoValues = getPhotoInfo()
     await axios
       .get(
-        'https://imfe-pilot-api.noc.ac.uk/csv?filenames=HF2012_other_data,HF2012_annotation_summary&columns=active:False,local_data_type:Marker-COG,show:True',
+        `${APIBaseUrl}csv?filenames=HF2012_other_data,HF2012_annotation_summary&columns=active:False,local_data_type:Marker-COG,show:True`,
       )
       .then((photos) => {
         photos.data.every((photo: any) => {
@@ -175,8 +175,7 @@ function MapHome1({
       })
       if (!layerExist) {
         setLoading(true)
-        const url =
-          'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/asc/bathymetry.tif'
+        const url = `${JOSBaseUrl}haig-fras/asc/bathymetry.tif`
 
         fetchData(url, actualLayer)
         generateSelectedLayer(true)

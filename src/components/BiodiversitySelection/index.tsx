@@ -1,5 +1,6 @@
 /* eslint-disable no-multi-str */
-import { listBiodiversities } from './listBiodiversities'
+
+import { listBiodiversities } from '../../data/listBiodiversities'
 // import { useState } from 'react'
 import {
   LayerSelectionContainer,

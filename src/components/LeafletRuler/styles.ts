@@ -16,27 +16,27 @@ export const LoadingContainer = styled.div`
   left: 0;
   margin: auto;
   z-index: 9999;
-  width: 100px;
-  height: 100px;
+  width: 6.25rem;
+  height: 6.25rem;
 `
 
 export const LoadingSpinner = styled.div`
   color: official;
   display: inline-block;
   position: relative;
-  width: 80px;
-  height: 80px;
+  width: 5rem;
+  height: 5rem;
   div {
-    transform-origin: 40px 40px;
+    transform-origin: 2.5rem 2.5rem;
     animation-name: ${breatheAnimation} 1.2s linear infinite;
     &:after {
       content: ' ';
       display: block;
       position: absolute;
-      top: 3px;
-      left: 37px;
-      width: 6px;
-      height: 18px;
+      top: 0.1875rem;
+      left: 2.3125rem;
+      width: 0.375rem;
+      height: 1.125rem;
       border-radius: 20%;
       background: #d49511;
     }

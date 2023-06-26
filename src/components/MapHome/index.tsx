@@ -2,7 +2,6 @@ import {
   MapContainer,
   TileLayer,
   WMSTileLayer,
-  GeoJSON,
   LayersControl,
   Pane,
   ScaleControl,
@@ -64,6 +63,8 @@ interface MapProps {
   getPolyline: any
   setGetPolyline: any
   setGraphData: any
+  setShowFlash: any
+  setFlashMessage: any
 }
 
 function MapHome1({
@@ -83,11 +84,11 @@ function MapHome1({
   getPolyline,
   setGetPolyline,
   setGraphData,
+  setShowFlash,
+  setFlashMessage,
 }: MapProps) {
-  // const MAPBOX_API_KEY = import.meta.env.VITE_MAPBOX_API_KEY
-  // const MAPBOX_USERID = 'mapbox/satellite-v9'
-  // const MAPBOX_ATTRIBUTION =
-  //   "Map data &copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors, Imagery © <a href='https://www.mapbox.com/'>Mapbox</a>"
+  const JOSBaseUrl = import.meta.env.VITE_JASMIN_OBJECT_STORE_URL
+
   const [map, setMap] = useState<any>(null)
 
   const [depth, setDepth] = useState({})
@@ -233,7 +234,7 @@ function MapHome1({
         }
       } else if (layerName.data_type === 'Photo') {
         // bounds = defaultWMSBounds
-        const markers: any = [] // L.layerGroup().addTo(map)
+        const markers: any = []
         const color = colorScale[Math.floor(Math.random() * 30)]
         const color1 = colorScale[Math.floor(Math.random() * 30)]
         await layerName.photos.map(async (photo: any) => {
@@ -257,7 +258,6 @@ function MapHome1({
               })
               if (layerName.show.includes(getPhotoMarker.fileName)) {
                 getPhotoMarker.layer.setOpacity(1)
-                // getPhotoMarker.layer.setIcon(inactiveIcon)
                 getPhotoMarker.layer.setZIndexOffset(9999)
               } else {
                 getPhotoMarker.layer.setOpacity(0)
@@ -289,7 +289,7 @@ function MapHome1({
           }
         }
       } else if (layerName.data_type === 'Photo-Limits') {
-        const markers: any = [] // L.layerGroup().addTo(map)
+        const markers: any = []
         layerName.photos.map(async (photo: any) => {
           markers.push(
             turf.point([photo.longitude + 0.003, photo.latitude + 0.003]),
@@ -313,7 +313,6 @@ function MapHome1({
             style: myStyle,
           })
         }
-        // console.log(layer)
       } else if (layerName.data_type === 'MBTiles') {
         // bounds = defaultWMSBounds
         const getMBTilesLayer = new GetMBTiles(layerName, actual)
@@ -340,7 +339,6 @@ function MapHome1({
       if (layerName.data_type !== 'Photo') {
         layer.options.attribution = actual
         map.addLayer(layer, true)
-        // console.log(map._layers)
 
         if (layerName.data_type === 'COG' && layerName.get_value) {
           map.on('mousemove', function (evt: { originalEvent: any }) {
@@ -382,7 +380,6 @@ function MapHome1({
                 }
               })
             }
-            // x.split('_')[1]
           })
         }
 
@@ -437,8 +434,8 @@ function MapHome1({
       })
       if (!layerExist) {
         setLoading(true)
-        const url =
-          'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/asc/bathymetry.tif'
+
+        const url = `${JOSBaseUrl}haig-fras/asc/bathymetry.tif`
 
         const fetchData = async () => {
           const getTifLayer = new GetTifLayer(url, [actualLayer])
@@ -640,6 +637,12 @@ function MapHome1({
     }
   }, [selectedLayers])
 
+  const icon = L.icon({
+    iconUrl: '/marker-icon_old.png',
+    // shadowUrl: '/marker-shadow.png',
+    iconSize: [27, 45],
+  })
+
   function handleSetLatlng(e: any) {
     let counter = 0
     const lineLayer: any[] = []
@@ -669,9 +672,11 @@ function MapHome1({
     } else if (counter === 1) {
       const markerLayer = L.marker(e.latlng, {
         attribution: 'draw-polyline2',
+        icon,
       })
         .addTo(map)
         .bindPopup('Point <br/>' + e.latlng)
+
       if (lineLayer.length === 1) {
         lineLayer.push(markerLayer.getLatLng())
       }
@@ -701,7 +706,11 @@ function MapHome1({
   useEffect(() => {
     if (map) {
       if (getPolyline) {
-        window.alert('Select two points in the map to make a graph')
+        setFlashMessage({
+          messageType: 'warning',
+          content: 'Select two points in the map to make a graph',
+        })
+        setShowFlash(true)
         map.dragging.disable()
         map.touchZoom.disable()
         map.doubleClickZoom.disable()
@@ -993,7 +1002,7 @@ export const MapHome = React.memo(MapHome1, mapPropsAreEqual)
 // }
 
 // async function getGeojson() {
-//   await axios.get('https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/asc/bathymetry.geojson').then(r => {
+//   await axios.get(`${JOSBaseUrl}haig-fras/asc/bathymetry.geojson`).then(r => {
 //     return (
 //       r.data.json
 //     )

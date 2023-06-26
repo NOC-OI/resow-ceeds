@@ -26,9 +26,9 @@ interface CalculationValueProps {
   setActualLayer: any
   setShowPhotos: any
 }
+const JOSBaseUrl = import.meta.env.VITE_JASMIN_OBJECT_STORE_URL
 
-const BASIC_BUCKET_URL =
-  'https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/output'
+const BASIC_BUCKET_URL = `${JOSBaseUrl}haig-fras/output`
 
 export function CalculationValue({
   calculationValue,

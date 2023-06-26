@@ -1,5 +1,4 @@
 import 'leaflet/dist/leaflet'
-import {} from 'leaflet.vectorgrid/dist/Leaflet.VectorGrid.bundled.js'
 // import PropTypes from 'prop-types';
 // import { childrenType, GridLayer } from 'react-leaflet';
 import { protobuf } from '../MapHome/addVectorGridL'

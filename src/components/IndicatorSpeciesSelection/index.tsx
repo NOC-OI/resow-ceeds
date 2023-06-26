@@ -6,7 +6,7 @@ import {
 } from '../DataExplorationSelection/styles'
 import { Info } from 'phosphor-react'
 import { IndicatorSpeciesType } from '../IndicatorSpeciesType'
-import { listIndicatorSpecies } from './listIndicatorSpecies'
+import { listIndicatorSpecies } from '../../data/listIndicatorSpecies'
 
 interface IndicatorSpeciesSelectionProps {
   setCalculationValue: any

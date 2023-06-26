@@ -27,7 +27,7 @@ const listValues = [
     calcNames: [
       {
         name: 'Morphotypes',
-        url: 'data?filename=output:HF2012_alltile_counts&calc=biodiversity1&crs=epsg%3A4326&extension=csv',
+        url: 'v1/calc?filenames=output:HF2012_alltile_counts&calc=biodiversity2&crs=epsg%3A4326&extension=csv',
         layers: { 'Seabed Images': ['2012 AUV Image Survey'] },
         noButton: true,
         decimalPlaces: 0,
@@ -46,28 +46,27 @@ const listValues = [
     calcNames: [
       {
         name: 'Density of benthic megafauna',
-        url: 'data?filename=output:HF2012_SU&crs=epsg%3A4326&extension=csv&calc=biodiversity&column=substratum',
+        url: 'v1/calc?filenames=output:HF2012_SU&crs=epsg%3A4326&extension=csv&calc=biodiversity1&calc_columns=substratum',
         layers: { 'Seabed Images': ['2012 AUV Image Survey'] },
         decimalPlaces: 3,
         noButton: true,
       },
       {
         name: 'Number of morphotypes',
-        url: 'data?filename=output:HF2012_SU&crs=epsg%3A4326&extension=csv&calc=biodiversity2&column=substratum',
-        layers: { 'Seabed Images': ['2012 AUV Image Survey'] },
+        url: 'v1/calc?filenames=output:HF2012_SU&crs=epsg%3A4326&extension=csv&calc=biodiversity3&calc_columns=substratum',
         decimalPlaces: 3,
         noButton: true,
       },
       {
         name: "Shannon index (expH')",
-        url: 'data?filename=output:HF2012_SU&crs=epsg%3A4326&extension=csv&calc=biodiversity3&column=substratum',
+        url: 'v1/calc?filenames=output:HF2012_SU&crs=epsg%3A4326&extension=csv&calc=biodiversity4&calc_columns=substratum',
         layers: { 'Seabed Images': ['2012 AUV Image Survey'] },
         decimalPlaces: 2,
         noButton: true,
       },
       {
         name: "Inverse Simpson's index",
-        url: 'data?filename=output:HF2012_SU&crs=epsg%3A4326&extension=csv&calc=biodiversity4&column=substratum',
+        url: 'v1/calc?filenames=output:HF2012_SU&crs=epsg%3A4326&extension=csv&calc=biodiversity5&calc_columns=substratum',
         layers: { 'Seabed Images': ['2012 AUV Image Survey'] },
         decimalPlaces: 2,
         noButton: true,

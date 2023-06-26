@@ -29,7 +29,7 @@ export class GetLayers {
 
     await url.forEach(async (data) => {
       await fetch(
-        `${APIBaseUrl}csv?filenames=${data.files}&columns=active:False,local_data_type:Marker-COG,show:True`,
+        `${APIBaseUrl}v1/data/csv?filenames=${data.files}&columns=active:False,local_data_type:Marker-COG,show:True`,
       )
         .then((response) => response.json())
         .then((jsonData) => {

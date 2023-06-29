@@ -26,7 +26,7 @@ export function Auth() {
         //     'Content-Type': 'application/json',
         //   },
         // })
-        response = await axios.post(`${APIBaseUrl}user/?code=${code}`)
+        response = await axios.post(`${APIBaseUrl}v1/user/?code=${code}`)
       } catch (error) {
         console.log(error)
         navigate('/login?message=not-allowed')

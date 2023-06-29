@@ -665,6 +665,7 @@ function MapHome1({
     if (counter === 0) {
       const markerLayer = L.marker(e.latlng, {
         attribution: 'draw-polyline1',
+        icon,
       })
         .addTo(map)
         .bindPopup('Point <br/>' + e.latlng)

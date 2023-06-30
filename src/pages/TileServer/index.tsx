@@ -76,10 +76,14 @@ export function TileServer() {
     }
   }, [isLogged])
 
+  const dealWithLogin = import.meta.env.VITE_LOGIN
+
   useEffect(() => {
-    if (!isLogged) {
-      navigate('/login')
-      setShowFlash(true)
+    if (dealWithLogin !== '0') {
+      if (!isLogged) {
+        navigate('/login')
+        setShowFlash(true)
+      }
     }
   }, [])
 

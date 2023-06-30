@@ -200,6 +200,45 @@ function MapHome1({
       }
     })
   }
+
+  function reorderPhotos(photos: any) {
+    const shuffled = photos.sort(() => 0.5 - Math.random())
+    const n = shuffled.length > 700 ? 700 : shuffled.length
+    const newList: any = []
+    let count: number = 0
+    let count2: number = 0
+    if (activePhoto) {
+      count++
+      newList.push(activePhoto)
+    }
+    const lat = [mapBounds._southWest.lat, mapBounds._northEast.lat]
+    const lng = [mapBounds._southWest.lng, mapBounds._northEast.lng]
+    shuffled.every((el: any) => {
+      if (count >= n) {
+        return false // "break"
+      }
+      if (el.filename !== activePhoto.filename) {
+        if (el.show) {
+          count2++
+          if (
+            el.latitude > lat[0] &&
+            el.latitude < lat[1] &&
+            el.longitude > lng[0] &&
+            el.longitude < lng[1]
+          ) {
+            newList.push(el.filename)
+            count++
+          }
+        }
+      }
+      return true
+    })
+    if (count2 === 0) {
+      return []
+    }
+    return newList
+  }
+
   async function generateSelectedLayer() {
     actualLayer.forEach(async (actual) => {
       const layerName = selectedLayers[actual]
@@ -237,6 +276,8 @@ function MapHome1({
         const markers: any = []
         const color = colorScale[Math.floor(Math.random() * 30)]
         const color1 = colorScale[Math.floor(Math.random() * 30)]
+
+        const shuffledPhotos = reorderPhotos(layerName.photos)
         await layerName.photos.map(async (photo: any) => {
           markers.push(
             turf.point([photo.longitude + 0.003, photo.latitude + 0.003]),
@@ -244,28 +285,30 @@ function MapHome1({
           markers.push(
             turf.point([photo.longitude - 0.003, photo.latitude - 0.003]),
           )
-          const getPhotoMarker = new GetPhotoMarker(photo, actual, color)
-          await getPhotoMarker.getMarker().then(async function () {
-            map.addLayer(getPhotoMarker.layer)
-            if (getPhotoMarker.layer) {
-              getPhotoMarker.layer.on('click', async function (e) {
-                L.popup()
-                  .setLatLng(e.latlng)
-                  .setContent(getPhotoMarker.popupText)
-                  .openOn(map)
-                photo.notCenter = true
-                setActivePhoto(photo)
-              })
-              if (layerName.show.includes(getPhotoMarker.fileName)) {
-                getPhotoMarker.layer.setOpacity(1)
-                getPhotoMarker.layer.setZIndexOffset(9999)
-              } else {
-                getPhotoMarker.layer.setOpacity(0)
-                getPhotoMarker.layer.setIcon(smallIcon)
-                getPhotoMarker.layer.setZIndexOffset(-9999)
+          if (shuffledPhotos.includes(photo.filename)) {
+            const getPhotoMarker = new GetPhotoMarker(photo, actual, color)
+            await getPhotoMarker.getMarker().then(async function () {
+              map.addLayer(getPhotoMarker.layer)
+              if (getPhotoMarker.layer) {
+                getPhotoMarker.layer.on('click', async function (e) {
+                  L.popup()
+                    .setLatLng(e.latlng)
+                    .setContent(getPhotoMarker.popupText)
+                    .openOn(map)
+                  photo.notCenter = true
+                  setActivePhoto(photo)
+                })
+                if (layerName.show.includes(getPhotoMarker.fileName)) {
+                  getPhotoMarker.layer.setOpacity(1)
+                  getPhotoMarker.layer.setZIndexOffset(9999)
+                } else {
+                  getPhotoMarker.layer.setOpacity(0)
+                  getPhotoMarker.layer.setIcon(smallIcon)
+                  getPhotoMarker.layer.setZIndexOffset(-9999)
+                }
               }
-            }
-          })
+            })
+          }
         })
         const turfConvex = turf.convex(turf.featureCollection(markers))
         const turfBbox = turf.bbox(turfConvex)

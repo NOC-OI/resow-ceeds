@@ -25,6 +25,9 @@ export const listLayers = {
       },
     },
   },
+  'Observations of Marine Species': {
+    layerNames: {},
+  },
   'Seabed Images': {
     layerNames: {},
   },

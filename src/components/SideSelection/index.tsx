@@ -16,7 +16,7 @@ import {
 import { Icon } from '@iconify/react'
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import { GetLayers } from './loadLayers'
+import { GetLayers } from '../../data/loadLayers'
 import { Loading } from '../Loading'
 // import { ReactSVG } from 'react-svg'
 

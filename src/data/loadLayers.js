@@ -1,5 +1,5 @@
 /* eslint-disable no-multi-str */
-import { listLayers } from '../../data/listLayers'
+import { listLayers } from './listLayers'
 
 export class GetLayers {
   constructor() {
@@ -29,11 +29,11 @@ export class GetLayers {
 
     await url.forEach(async (data) => {
       await fetch(
-        `${APIBaseUrl}v1/data/csv?filenames=${data.files}&columns=active:False,local_data_type:Marker-COG,show:True`,
+        `${APIBaseUrl}v1/data/csv?filenames=${data.files}&columns=active:False,local_data_type:${data.layerType},show:True`,
       )
         .then((response) => response.json())
         .then((jsonData) => {
-          this.data['Seabed Images'].layerNames[data.name] = {
+          this.data[data.layerClass].layerNames[data.name] = {
             data_type: 'Photo',
             photos: jsonData,
             content: data.content,
@@ -45,6 +45,8 @@ export class GetLayers {
   async loadCSV() {
     await this.logJSONData([
       {
+        layerClass: 'Seabed Images',
+        layerType: 'Marker-COG',
         name: '2012 AUV Image Survey',
         files: 'output:HF2012_alltile_otherdata,output:HF2012_alltile_counts',
         content:
@@ -83,9 +85,18 @@ export class GetLayers {
           [CEDA Link](https://www.ceda.ac.uk/)',
       },
       {
+        layerClass: 'Seabed Images',
+        layerType: 'Marker-COG',
         name: 'JNCC CEND1012 Survey',
         files: 'jncc:JNCC_CEND1012_otherdata',
         content: 'JNCC Offshore Survey Benthic Images CEND1012',
+      },
+      {
+        layerClass: 'Observations of Marine Species',
+        layerType: 'Marker',
+        name: 'NBN',
+        files: 'nbn:results_2',
+        content: 'NBN data',
       },
     ])
   }

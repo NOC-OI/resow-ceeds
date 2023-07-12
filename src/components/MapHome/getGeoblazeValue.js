@@ -11,7 +11,7 @@ export class GetGeoblazeValue {
   }
 
   async getGeoblaze() {
-    const TILE_SERVER_URL = import.meta.env.VITE_TILE_SERVER_URL
+    const TILE_SERVER_URL = process.env.VITE_TILE_SERVER_URL
 
     if (this.coords) {
       const url = `${TILE_SERVER_URL}cog/tiles/WebMercatorQuad/${this.coords.z}/${this.coords.x}/${this.coords.y}.tif?url=${this.layer.options.url}`

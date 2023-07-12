@@ -21,11 +21,6 @@ import * as turf from '@turf/turf'
 import chroma from 'chroma-js'
 import LeafletRuler from '../LeafletRuler'
 
-const colorScale = chroma
-  .scale(['#f00', '#0f0', '#00f', 'gray'])
-  .mode('hsl')
-  .colors(30)
-
 interface DisplayPositionProps {
   map: any
   depth: any
@@ -87,7 +82,11 @@ function MapHome1({
   setShowFlash,
   setFlashMessage,
 }: MapProps) {
-  const JOSBaseUrl = import.meta.env.VITE_JASMIN_OBJECT_STORE_URL
+  const colorScale = chroma
+    .scale(['#f00', '#0f0', '#00f', 'gray'])
+    .mode('hsl')
+    .colors(30)
+  const JOSBaseUrl = process.env.VITE_JASMIN_OBJECT_STORE_URL
 
   const [map, setMap] = useState<any>(null)
 
@@ -263,6 +262,14 @@ function MapHome1({
         } else {
           const getCOGLayer = new GetTileLayer(layerName, actual, true)
           await getCOGLayer.getTile().then(function () {
+            if (getCOGLayer.error) {
+              setFlashMessage({
+                messageType: 'error',
+                content: getCOGLayer.error,
+              })
+              setShowFlash(true)
+              return
+            }
             layer = getCOGLayer.layer
             // bounds = [
             //   [getCOGLayer.bounds[3], getCOGLayer.bounds[0]],

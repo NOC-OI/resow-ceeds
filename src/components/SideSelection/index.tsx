@@ -110,7 +110,7 @@ export function SideSelection({
     }
   }
   const fetchData = async () => {
-    const getLayers = new GetLayers()
+    const getLayers = new GetLayers(isLogged)
     await getLayers.loadCSV().then(async function () {
       setListLayers((listLayers: any) =>
         listLayers.lenght > 0 ? listLayers : getLayers.data,
@@ -163,7 +163,6 @@ export function SideSelection({
   function handleToogleLoginPopup() {
     setShowLogin((showLogin: any) => !showLogin)
   }
-
   return (
     <div>
       <SideSelectionContainer>

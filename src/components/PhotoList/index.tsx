@@ -26,7 +26,7 @@ export function PhotoList({
   mapBounds,
   infoButtonBox,
 }: PhotoListProps) {
-  const JOSBaseUrl = import.meta.env.VITE_JASMIN_OBJECT_STORE_URL
+  const JOSBaseUrl = process.env.VITE_JASMIN_OBJECT_STORE_URL
 
   const BASIC_BUCKET_URL = `${JOSBaseUrl}haig-fras/output`
 

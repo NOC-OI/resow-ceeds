@@ -15,7 +15,6 @@ export function LoginPage() {
 
   useEffect(() => {
     const searchParams = new URLSearchParams(document.location.search)
-    console.log(searchParams)
     const message = searchParams.get('message')
     if (message) {
       setFlashMessage({

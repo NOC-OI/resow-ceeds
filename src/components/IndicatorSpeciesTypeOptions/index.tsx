@@ -50,7 +50,7 @@ export function IndicatorSpeciesTypeOptions({
   async function fetchDatatoUpdateCalculationBox(result: any) {
     setLoading(true)
     setCalculationValue(null)
-    const APIBaseUrl = import.meta.env.VITE_API_URL
+    const APIBaseUrl = process.env.VITE_API_URL
     const url = `${APIBaseUrl}${subLayer.url}`
     async function getCalculationResults() {
       const response = await fetch(url, {

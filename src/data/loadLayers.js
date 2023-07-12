@@ -2,9 +2,10 @@
 import { listLayers } from './listLayers'
 
 export class GetLayers {
-  constructor() {
+  constructor(isLogged) {
     this.data = listLayers
     this.sortedData = null
+    this.token = isLogged
   }
 
   sortListLayers() {
@@ -24,8 +25,23 @@ export class GetLayers {
     return newSortedList
   }
 
+  async logSignedUrl() {
+    const APIBaseUrl = process.env.VITE_API_URL
+
+    await fetch(`${APIBaseUrl}v1/user/aws?token=${this.token}`)
+      .then(async (response) => await response.json())
+      .then(async (jsonData) => {
+        Object.keys(jsonData).forEach((layerClass) => {
+          Object.keys(jsonData[layerClass]).forEach((layerType) => {
+            this.data[layerClass].layerNames[layerType].signed_url =
+              jsonData[layerClass][layerType].signed_url
+          })
+        })
+      })
+  }
+
   async logJSONData(url) {
-    const APIBaseUrl = import.meta.env.VITE_API_URL
+    const APIBaseUrl = process.env.VITE_API_URL
 
     await url.forEach(async (data) => {
       await fetch(
@@ -40,6 +56,9 @@ export class GetLayers {
           }
         })
     })
+    if (this.token) {
+      await this.logSignedUrl()
+    }
   }
 
   async loadCSV() {

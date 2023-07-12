@@ -12,7 +12,7 @@ export class GetPhotoMarker {
   }
 
   async getMarker() {
-    const JOSBaseUrl = import.meta.env.VITE_JASMIN_OBJECT_STORE_URL
+    const JOSBaseUrl = process.env.VITE_JASMIN_OBJECT_STORE_URL
 
     const icon = L.divIcon({
       html: `<div class='all-icon'>

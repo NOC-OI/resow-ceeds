@@ -10,7 +10,7 @@ export class GetTitilerData {
   }
 
   async fetchData() {
-    const TILE_SERVER_URL = import.meta.env.VITE_TILE_SERVER_URL
+    const TILE_SERVER_URL = process.env.VITE_TILE_SERVER_URL
 
     function linspace(start, stop, num, endpoint = true) {
       const div = endpoint ? num - 1 : num

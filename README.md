@@ -4,7 +4,6 @@ This is an app built using react and leaflet library to display COGs, geojson, g
 
 The app was deployed on a free heroku server and can be accessed via the link [http://imfe-pilot.herokuapp.com/](http://imfe-pilot.herokuapp.com/)
 
-
 ## Features
 
 The product is in the development phase and the following features have already been implemented:
@@ -54,3 +53,10 @@ It correctly bundles React in production mode and optimizes the build for the be
 
 The build is minified and the filenames include the hashes.\
 Your app is ready to be deployed!
+
+## Run script in production
+
+```bash
+docker build --progress=plain -t frontend .
+docker run -p 8080:80 -d frontend
+```

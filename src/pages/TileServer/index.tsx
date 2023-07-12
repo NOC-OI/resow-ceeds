@@ -62,7 +62,7 @@ export function TileServer() {
   const [showPopup, setShowPopup] = useState(true)
 
   const [showLogin, setShowLogin] = useState(false)
-  const [isLogged, setIsLogged] = useState(!!Cookies.get('token'))
+  const [isLogged, setIsLogged] = useState(Cookies.get('token'))
 
   const [showFlash, setShowFlash] = useState(false)
   const [flashMessage, setFlashMessage] = useState({
@@ -76,7 +76,7 @@ export function TileServer() {
     }
   }, [isLogged])
 
-  const dealWithLogin = import.meta.env.VITE_LOGIN
+  const dealWithLogin = process.env.VITE_LOGIN
 
   useEffect(() => {
     if (dealWithLogin !== '0') {

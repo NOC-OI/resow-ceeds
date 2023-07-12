@@ -7,7 +7,7 @@ import { Loading } from '../../components/Loading'
 export function Auth() {
   const navigate = useNavigate()
 
-  const APIBaseUrl = import.meta.env.VITE_API_URL
+  const APIBaseUrl = process.env.VITE_API_URL
 
   // const redirectTo = request.cookies.get('redirectTo')?.value
 
@@ -28,7 +28,6 @@ export function Auth() {
         // })
         response = await axios.post(`${APIBaseUrl}v1/user/?code=${code}`)
       } catch (error) {
-        console.log(error)
         navigate('/login?message=not-allowed')
         return
       }
@@ -36,7 +35,7 @@ export function Auth() {
       const user = response.data
       // const redirectURL = redirectTo ?? new URL('/', request.url)
 
-      const cookieExpiresInSeconds = 60 * 60 * 24 * 30
+      const cookieExpiresInSeconds = 60 * 60 * 24 * 6
 
       Cookies.set('token', user, {
         path: '/',

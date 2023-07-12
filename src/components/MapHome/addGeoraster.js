@@ -120,22 +120,39 @@ export class GetTileLayer {
     this.tileJson = null
     this.tileUrl = null
     this.contrast = contrast
+    this.error = null
   }
 
   async getTile() {
-    const TILE_SERVER_URL = import.meta.env.VITE_TILE_SERVER_URL
+    const TILE_SERVER_URL = process.env.VITE_TILE_SERVER_URL
+    const newUrl = this.layerName.signed_url
+      ? this.layerName.signed_url
+      : this.url
+    const isUrlEncoded = !!this.layerName.signed_url
 
+    console.log(`${TILE_SERVER_URL}cog/info?url=${encodeURIComponent(newUrl)}`)
     const cogInfo = await axios
-      .get(`${TILE_SERVER_URL}cog/info?url=${encodeURIComponent(this.url)}`)
-      .then((r) => r.data)
-    const cogStats = await axios
       .get(
-        `${TILE_SERVER_URL}cog/statistics?url=${encodeURIComponent(this.url)}`,
+        `${TILE_SERVER_URL}cog/info?url=${encodeURIComponent(
+          newUrl,
+        )}&encoded=${isUrlEncoded}`,
       )
       .then((r) => r.data)
+      .catch((error) => {
+        return error.response.status
+      })
 
-    console.log(cogInfo)
-    console.log(cogStats)
+    if (cogInfo === 500) {
+      this.error = 'You do not have authorization to access this file'
+      return
+    }
+    const cogStats = await axios
+      .get(
+        `${TILE_SERVER_URL}cog/statistics?url=${encodeURIComponent(
+          newUrl,
+        )}&encoded=${isUrlEncoded}`,
+      )
+      .then((r) => r.data)
 
     this.bounds = cogInfo.bounds
     if (this.dataType === 'marker') {
@@ -208,11 +225,12 @@ export class GetTileLayer {
       // }
       // console.log(cogStats)
 
-      const url = this.url
+      const url = newUrl
       this.args = {
         bidx: bidx.length === 1 ? bidx[0] : bidx,
         rescale: this.rescale.length === 1 ? this.rescale[0] : this.rescale,
         url,
+        encoded: isUrlEncoded,
       }
 
       this.tileJson = await axios

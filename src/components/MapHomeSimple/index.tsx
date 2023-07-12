@@ -48,12 +48,12 @@ function MapHome1({
   actualLayer,
   setActualLayer,
 }: MapProps) {
-  // const MAPBOX_API_KEY = import.meta.env.VITE_MAPBOX_API_KEY;
+  // const MAPBOX_API_KEY = process.env.VITE_MAPBOX_API_KEY;
   // const MAPBOX_USERID = 'mapbox/satellite-v9';
   // const MAPBOX_ATTRIBUTION = "Map data &copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors, Imagery © <a href='https://www.mapbox.com/'>Mapbox</a>"
 
-  const JOSBaseUrl = import.meta.env.VITE_JASMIN_OBJECT_STORE_URL
-  const APIBaseUrl = import.meta.env.VITE_API_URL
+  const JOSBaseUrl = process.env.VITE_JASMIN_OBJECT_STORE_URL
+  const APIBaseUrl = process.env.VITE_API_URL
 
   const BASIC_BUCKET_URL = `${JOSBaseUrl}haig-fras/output`
 

@@ -1,6 +1,6 @@
 /* eslint-disable no-multi-str */
-const JOSBaseUrl = import.meta.env.VITE_JASMIN_OBJECT_STORE_URL
-const MBTilesBaseUrl = import.meta.env.VITE_MBTILES_URL
+const JOSBaseUrl = process.env.VITE_JASMIN_OBJECT_STORE_URL
+const MBTilesBaseUrl = process.env.VITE_MBTILES_URL
 
 export const listLayers = {
   Bathymetry: {
@@ -18,10 +18,11 @@ export const listLayers = {
         content: 'This layer represents...',
       },
       '2018 Bathymetry Survey': {
-        url: `${JOSBaseUrl}haig-fras/bathymetry/test_auv_bathymetry.tif`,
+        url: `${JOSBaseUrl}haig-fras-private/bathymetry/test_auv_bathymetry.tif`,
         data_type: 'COG',
         get_value: { depth: 'm' },
         content: 'This layer represents...',
+        protected: true,
       },
     },
   },
@@ -34,7 +35,7 @@ export const listLayers = {
   Sidescan: {
     layerNames: {
       2012: {
-        url: `${JOSBaseUrl}haig-fras/bathymetry/sidescan_2012.tif`,
+        url: `${JOSBaseUrl}haig-fras-private/bathymetry/sidescan_2012.tif`,
         data_type: 'COG',
         content: 'This layer represents...',
         protected: true,

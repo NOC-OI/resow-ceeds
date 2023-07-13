@@ -18,6 +18,7 @@ import { FlashMessages } from '../../components/FlashMessages'
 import Cookies from 'js-cookie'
 import { useNavigate } from 'react-router-dom'
 import { GraphBox } from '../../components/GraphBox'
+import { DynamicGraphBox } from '../../components/DynamicGraphBox'
 
 export function TileServer() {
   const navigate = useNavigate()
@@ -33,7 +34,11 @@ export function TileServer() {
     new L.LatLng(50.07, -8.21),
   ])
 
+  const [surveyDesignCircleValues, setSurveyDesignCircleValues] = useState([])
+
   const [graphData, setGraphData] = useState(null)
+
+  const [dynamicGraphData, setDynamicGraphData] = useState(null)
 
   const [selectedLayers, setSelectedLayers] = useState<Object>({})
 
@@ -173,13 +178,10 @@ export function TileServer() {
         )}
         {selectedSidebarOption === 'Survey Design' && (
           <SurveyDesignSelection
-            setCalculationValue={setCalculationValue}
-            selectedArea={selectedArea}
-            setSelectedArea={setSelectedArea}
-            latLonLimits={latLonLimits}
-            setLatLonLimits={setLatLonLimits}
             setInfoButtonBox={setInfoButtonBox}
-          />
+            dynamicGraphData={dynamicGraphData}
+            setDynamicGraphData={setDynamicGraphData}
+            />
         )}
         {graphData ? (
           <GraphBox
@@ -187,6 +189,14 @@ export function TileServer() {
             setGraphData={setGraphData}
             actualLayer={actualLayer}
             setGetPolyline={setGetPolyline}
+          />
+        ) : null}
+        {dynamicGraphData ? (
+          <DynamicGraphBox
+            dynamicGraphData={dynamicGraphData}
+            setDynamicGraphData={setDynamicGraphData}
+            surveyDesignCircleValues={surveyDesignCircleValues}
+            setSurveyDesignCircleValues={setSurveyDesignCircleValues}
           />
         ) : null}
         {layerLegend ? (
@@ -253,6 +263,8 @@ export function TileServer() {
         setGraphData={setGraphData}
         setShowFlash={setShowFlash}
         setFlashMessage={setFlashMessage}
+        surveyDesignCircleValues={surveyDesignCircleValues}
+        setSurveyDesignCircleValues={setSurveyDesignCircleValues}
       />
       {showPopup && <FullPagePopup setShowPopup={setShowPopup} />}
       {showLogin && (

@@ -60,6 +60,8 @@ interface MapProps {
   setGraphData: any
   setShowFlash: any
   setFlashMessage: any
+  surveyDesignCircleValues: any
+  setSurveyDesignCircleValues: any
 }
 
 function MapHome1({
@@ -81,6 +83,8 @@ function MapHome1({
   setGraphData,
   setShowFlash,
   setFlashMessage,
+  surveyDesignCircleValues,
+  setSurveyDesignCircleValues
 }: MapProps) {
   const colorScale = chroma
     .scale(['#f00', '#0f0', '#00f', 'gray'])
@@ -93,6 +97,7 @@ function MapHome1({
   const [depth, setDepth] = useState({})
 
   const defaultView = [50.3, -8.1421]
+  const [mapCenter, setMapCenter] = useState(new L.LatLng(defaultView[0], defaultView[1]))
 
   const defaultWMSBounds = [
     [50.020174, -8.58279],
@@ -152,6 +157,7 @@ function MapHome1({
     if (map) {
       map.on('moveend', function () {
         setMapBounds(map.getBounds())
+        setMapCenter(map.getCenter())
       })
     }
   }, [map])
@@ -568,6 +574,55 @@ function MapHome1({
     }
   }, [selectedArea])
 
+  function removeNormalLayerFromMap(attribution: string) {
+    map.eachLayer(function (layer: any) {
+      if (layer.options.attribution === attribution) {
+        map.removeLayer(layer)
+      }
+    })
+  }
+  function addCircleLayerIntoMap() {
+    const circle1 = L.circle([mapCenter.lat, (mapCenter.lng + mapBounds._northEast.lng)/2],
+      surveyDesignCircleValues[1]*1000,  {
+        attribution: 'circle',
+        color: '#ffd3c9',
+        weight: 2,
+        opacity: 0.7,
+      }
+    )
+    circle1.addTo(map)
+    const circle2 = L.circle([mapCenter.lat, (mapCenter.lng + mapBounds._northEast.lng)/2],
+      surveyDesignCircleValues[0]*1000,  {
+        attribution: 'circle',
+        color: '#ff96bc',
+        weight: 2,
+        opacity: 0.7,
+      }
+    )
+    circle2.addTo(map)
+  }
+  
+  useEffect(() => {
+    if (surveyDesignCircleValues.length > 0) {
+      removeNormalLayerFromMap('circle')
+      addCircleLayerIntoMap()
+    } else {
+      if (map) {
+        removeNormalLayerFromMap('circle')
+      }
+    }
+  }, [surveyDesignCircleValues])
+
+  useEffect(() => {
+    if (map){
+      if (surveyDesignCircleValues.length > 0) {
+        removeNormalLayerFromMap('circle')
+        addCircleLayerIntoMap()
+      }
+    }
+  }, [mapCenter])
+
+  
   async function changeMapZoom() {
     map.eachLayer(function (layer: any) {
       if (actualLayer.includes(layer.options.attribution)) {
@@ -896,7 +951,8 @@ function mapPropsAreEqual(prevMap: any, nextMap: any) {
     prevMap.latLonLimits === nextMap.latLonLimits &&
     prevMap.showPhotos === nextMap.showPhotos &&
     prevMap.activePhoto === nextMap.activePhoto &&
-    prevMap.getPolyline === nextMap.getPolyline
+    prevMap.getPolyline === nextMap.getPolyline &&
+    prevMap.surveyDesignCircleValues === nextMap.surveyDesignCircleValues
   )
 }
 

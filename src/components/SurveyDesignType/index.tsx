@@ -8,33 +8,25 @@ import { faCircleInfo } from '@fortawesome/free-solid-svg-icons'
 interface keyable {
   [key: string]: any
 }
-
 interface SurveyDesignTypeProps {
   title: string
   content: string
   childs: any
-  setCalculationValue: any
-  latLonLimits: any
-  selectedArea: any
   setInfoButtonBox?: any
+  dynamicGraphData: any
+  setDynamicGraphData: any
 }
 
-async function handleShowCalcValues(
+async function handleShowGraphValues(
   params: keyable,
-  setCalculationValue: any,
+  setDynamicGraphData: any,
   setLoading: any,
-  latLonLimits: any,
-  selectedArea: any,
 ) {
   setLoading(true)
-  setCalculationValue(null)
+  setDynamicGraphData(null)
 
   const APIBaseUrl = process.env.VITE_API_URL
   let url = `${APIBaseUrl}${params.url}`
-  if (selectedArea) {
-    url = `${url}&bbox=${latLonLimits[2].lat},${latLonLimits[0].lng},${latLonLimits[0].lat},${latLonLimits[2].lng}`
-  }
-
   async function getCalculationResults() {
     const response = await fetch(url, {
       method: 'GET',
@@ -45,9 +37,7 @@ async function handleShowCalcValues(
       },
     })
     const data = await response.json()
-    const newCalculationValue: Object = {}
-    newCalculationValue[params.name as keyof Object] = data
-    setCalculationValue(newCalculationValue)
+    setDynamicGraphData(data)
     setLoading(false)
   }
   await getCalculationResults()
@@ -57,10 +47,9 @@ export function SurveyDesignType({
   title,
   content,
   childs,
-  setCalculationValue,
-  latLonLimits,
-  selectedArea,
   setInfoButtonBox,
+  dynamicGraphData,
+  setDynamicGraphData,
 }: SurveyDesignTypeProps) {
   const [subCalcs, setSubCalcs] = useState([])
 
@@ -112,12 +101,10 @@ export function SurveyDesignType({
                 {/* <p>{subCalcs[subCalc]['name']}</p> */}
                 <p
                   onClick={async () => {
-                    await handleShowCalcValues(
+                    await handleShowGraphValues(
                       subCalc,
-                      setCalculationValue,
+                      setDynamicGraphData,
                       setLoading,
-                      latLonLimits,
-                      selectedArea,
                     )
                   }}
                 >

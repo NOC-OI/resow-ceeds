@@ -1,4 +1,3 @@
-import { listSurveyDesign } from './listSurveyDesign'
 import {
   LayerSelectionContainer,
   LayerSelectionTitle,
@@ -8,23 +7,18 @@ import {
 import { Info } from 'phosphor-react'
 import { SurveyDesignType } from '../SurveyDesignType'
 import { AreaSelector } from '../AreaSelector'
+import { listSurveyDesign } from '../../data/listSurveyDesign'
 
 interface SurveyDesignSelectionProps {
-  setCalculationValue: any
-  selectedArea: boolean
-  setSelectedArea: any
-  latLonLimits: any
-  setLatLonLimits: any
   setInfoButtonBox?: any
+  dynamicGraphData: any
+  setDynamicGraphData: any
 }
 
 export function SurveyDesignSelection({
-  setCalculationValue,
-  selectedArea,
-  setSelectedArea,
-  latLonLimits,
-  setLatLonLimits,
   setInfoButtonBox,
+  dynamicGraphData,
+  setDynamicGraphData,
 }: SurveyDesignSelectionProps) {
   // const [calcClasses, setCalcClasses] = useState(listHabitats)
 
@@ -51,14 +45,6 @@ export function SurveyDesignSelection({
         </div>
       </LayerSelectionTitle>
       <LayerTypes>
-        <AreaSelector
-          setCalculationValue={setCalculationValue}
-          selectedArea={selectedArea}
-          setSelectedArea={setSelectedArea}
-          latLonLimits={latLonLimits}
-          setLatLonLimits={setLatLonLimits}
-          setInfoButtonBox={setInfoButtonBox}
-        />
         {calcClasses.map((calcClass) => {
           return (
             <SurveyDesignType
@@ -66,10 +52,9 @@ export function SurveyDesignSelection({
               title={calcClass.calcClass}
               content={calcClass.content}
               childs={calcClass.calcNames}
-              setCalculationValue={setCalculationValue}
-              latLonLimits={latLonLimits}
-              selectedArea={selectedArea}
               setInfoButtonBox={setInfoButtonBox}
+              dynamicGraphData={dynamicGraphData}
+              setDynamicGraphData={setDynamicGraphData}
             />
           )
         })}

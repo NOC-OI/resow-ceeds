@@ -1,6 +1,5 @@
 import {
   faCashRegister,
-  faCircleXmark,
   faCode,
   faVideo,
 } from '@fortawesome/free-solid-svg-icons'

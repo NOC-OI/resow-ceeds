@@ -583,7 +583,7 @@ function MapHome1({
   }
   function addCircleLayerIntoMap() {
     const circle1 = L.circle([mapCenter.lat, (mapCenter.lng + mapBounds._northEast.lng)/2],
-      surveyDesignCircleValues[1]*1000,  {
+      surveyDesignCircleValues[1],  {
         attribution: 'circle',
         color: '#ffd3c9',
         weight: 2,
@@ -592,7 +592,7 @@ function MapHome1({
     )
     circle1.addTo(map)
     const circle2 = L.circle([mapCenter.lat, (mapCenter.lng + mapBounds._northEast.lng)/2],
-      surveyDesignCircleValues[0]*1000,  {
+      surveyDesignCircleValues[0],  {
         attribution: 'circle',
         color: '#ff96bc',
         weight: 2,

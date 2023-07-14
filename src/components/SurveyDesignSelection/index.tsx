@@ -24,10 +24,11 @@ export function SurveyDesignSelection({
 
   const calcClasses = listSurveyDesign
 
-  function handleClickLayerInfo(title: String, content: string) {
+  function handleClickLayerInfo(title: String, content: string, link: any) {
     setInfoButtonBox({
       title,
       content,
+      link,
     })
   }
 
@@ -39,7 +40,11 @@ export function SurveyDesignSelection({
           <Info
             size={20}
             onClick={() =>
-              handleClickLayerInfo('Survey Design', 'Some information about...')
+              handleClickLayerInfo(
+                'Survey Design', 
+                'Some information about...',
+                { layers: ['Seabed Images_2012 AUV Image Survey'] },
+              )
             }
           />
         </div>

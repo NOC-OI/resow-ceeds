@@ -18,7 +18,8 @@ export const listLayers = {
         content: 'This layer represents...',
       },
       '2018 Bathymetry Survey': {
-        url: `${JOSBaseUrl}haig-fras-private/bathymetry/test_auv_bathymetry.tif`,
+        url: `${JOSBaseUrl}haig-fras/bathymetry/test_auv_bathymetry.tif`,
+        // url: `${JOSBaseUrl}haig-fras-private/bathymetry/test_auv_bathymetry.tif`,
         data_type: 'COG',
         get_value: { depth: 'm' },
         content: 'This layer represents...',
@@ -35,7 +36,8 @@ export const listLayers = {
   Sidescan: {
     layerNames: {
       2012: {
-        url: `${JOSBaseUrl}haig-fras-private/bathymetry/sidescan_2012.tif`,
+        // url: `${JOSBaseUrl}haig-fras-private/bathymetry/sidescan_2012.tif`,
+        url: `${JOSBaseUrl}haig-fras/bathymetry/sidescan_2012.tif`,
         data_type: 'COG',
         content: 'This layer represents...',
         protected: true,

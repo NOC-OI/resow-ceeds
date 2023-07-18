@@ -20,11 +20,6 @@ export const InfoButtonBoxContainer = styled.div`
     text-align: center;
     padding-bottom: 0.375rem;
   }
-  div:first-child {
-    display: flex;
-    justify-content: flex-end;
-    padding-bottom: 0.375rem;
-  }
   svg {
     cursor: pointer;
     &:hover {
@@ -43,4 +38,21 @@ export const InfoButtonBoxContent = styled.div`
     text-align: justify;
     padding-bottom: 0.5rem;
   }
+`
+
+export const RangeValue = styled.div`
+  p {
+    text-align: center;
+    /* box-shadow: 10px 10px 10px rgba(0, 0, 0, 1); */
+    width: max-content;
+    padding: 0.5rem;
+    border-radius: 8px;
+  }
+`
+
+export const RangeArea = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0;
 `

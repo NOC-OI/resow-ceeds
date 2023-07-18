@@ -1,5 +1,5 @@
 import { ArrowCircleDown, ArrowCircleUp } from 'phosphor-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { CalcTypeContainer, CalcTypeOptionsContainer } from './styles'
 import { Loading } from '../Loading'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -15,18 +15,21 @@ interface SurveyDesignTypeProps {
   setInfoButtonBox?: any
   dynamicGraphData: any
   setDynamicGraphData: any
+  fileSurveyDesign: any
+  setFileSurveyDesign: any
 }
 
 async function handleShowGraphValues(
   params: keyable,
   setDynamicGraphData: any,
   setLoading: any,
+  fileSurveyDesign: any,
 ) {
   setLoading(true)
   setDynamicGraphData(null)
 
   const APIBaseUrl = process.env.VITE_API_URL
-  let url = `${APIBaseUrl}${params.url}`
+  const url = `${APIBaseUrl}${params.url}&filenames=output:cum_hill_values_${fileSurveyDesign}`
   async function getCalculationResults() {
     const response = await fetch(url, {
       method: 'GET',
@@ -36,7 +39,9 @@ async function handleShowGraphValues(
         'Access-Control-Allow-Origin': '*',
       },
     })
-    const data = await response.json()
+    const data = { name: {}, data: null }
+    data.name = params
+    data.data = await response.json()
     setDynamicGraphData(data)
     setLoading(false)
   }
@@ -50,6 +55,7 @@ export function SurveyDesignType({
   setInfoButtonBox,
   dynamicGraphData,
   setDynamicGraphData,
+  fileSurveyDesign,
 }: SurveyDesignTypeProps) {
   const [subCalcs, setSubCalcs] = useState([])
 
@@ -61,6 +67,19 @@ export function SurveyDesignType({
     setIsActive((isActive) => !isActive)
     setSubCalcs((subCalcs) => (subCalcs.length === 0 ? childs : []))
   }
+
+  useEffect(() => {
+    if (dynamicGraphData) {
+      const copyDynamicGraphData = { ...dynamicGraphData }
+      setDynamicGraphData(null)
+      handleShowGraphValues(
+        copyDynamicGraphData.name,
+        setDynamicGraphData,
+        setLoading,
+        fileSurveyDesign,
+      )
+    }
+  }, [fileSurveyDesign])
 
   function handleClickLayerInfo(title: string, content: String) {
     setInfoButtonBox({
@@ -105,6 +124,7 @@ export function SurveyDesignType({
                       subCalc,
                       setDynamicGraphData,
                       setLoading,
+                      fileSurveyDesign,
                     )
                   }}
                 >

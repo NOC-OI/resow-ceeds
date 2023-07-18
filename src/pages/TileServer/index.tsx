@@ -55,6 +55,8 @@ export function TileServer() {
 
   const [activePhoto, setActivePhoto] = useState('')
 
+  const [fileSurveyDesign, setFileSurveyDesign] = useState('coarse')
+
   const [mapBounds, setMapBounds] = useState({
     _northEast: { lat: -89, lng: 179 },
     _southWest: { lat: -89, lng: 179 },
@@ -181,7 +183,9 @@ export function TileServer() {
             setInfoButtonBox={setInfoButtonBox}
             dynamicGraphData={dynamicGraphData}
             setDynamicGraphData={setDynamicGraphData}
-            />
+            fileSurveyDesign={fileSurveyDesign}
+            setFileSurveyDesign={setFileSurveyDesign}
+          />
         )}
         {graphData ? (
           <GraphBox
@@ -197,6 +201,8 @@ export function TileServer() {
             setDynamicGraphData={setDynamicGraphData}
             surveyDesignCircleValues={surveyDesignCircleValues}
             setSurveyDesignCircleValues={setSurveyDesignCircleValues}
+            fileSurveyDesign={fileSurveyDesign}
+            setFileSurveyDesign={setFileSurveyDesign}
           />
         ) : null}
         {layerLegend ? (

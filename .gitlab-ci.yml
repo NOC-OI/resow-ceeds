@@ -1,0 +1,6 @@
+build-job:
+  stage: build
+  tags: 
+    - shell
+  script:
+    - docker build -t frontend:test .

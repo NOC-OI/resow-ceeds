@@ -3,4 +3,13 @@ build-job:
   tags: 
     - shell
   script:
-    - docker build -t frontend:test .
+    - docker build -t docker-repo.bodc.me/colsau/imfe-pilot/frontend:latest .
+
+deploy-job:
+  stage: deploy
+  tags:
+      - shell
+  script:
+    - docker login
+    - docker push docker-repo.bodc.me/colsau/imfe-pilot/frontend:latest
+    - ssh web 'docker pull docker-repo.bodc.me/colsau/imfe-pilot/frontend:latest ; docker stop frontend ; docker run -d -p 8080:80 --name frontend docker-repo.bodc.me/colsau/imfe-pilot/frontend:latest'

@@ -14,5 +14,5 @@ deploy-job:
 #    - ssh web 'docker pull docker-repo.bodc.me/colsau/imfe-pilot/frontend:latest
      - docker save docker-repo.bodc.me/colsau/imfe-pilot/frontend | gzip -c - > frontend.tar.gz
      - scp frontend.tar.gz web:/home/gitlab-runner/
-     - ssh web "gunzip -c frontend.tar.gz | docker load docker-repo.bodc.me/colsau/imfe-pilot/frontend:latest"
+     - ssh web "gunzip -c frontend.tar.gz | docker load"
      - ssh web 'docker stop frontend && docker container rm frontend && docker run -d -p 8080:80 --name frontend docker-repo.bodc.me/colsau/imfe-pilot/frontend:latest'

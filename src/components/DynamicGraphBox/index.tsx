@@ -17,7 +17,7 @@ interface DynamicGraphBoxProps {
 //   [key: string]: any
 // }
 
-function DynamicGraphBox1({
+export function DynamicGraphBox({
   dynamicGraphData,
   setDynamicGraphData,
   surveyDesignCircleValues,
@@ -160,7 +160,7 @@ function DynamicGraphBox1({
             autorange: true,
             fixedrange: false,
             hoverformat: '.0f',
-            type: column === 'Density' ? '-' : 'log',
+            type: ['Density', 'Hill1', 'Hill2'].includes(column) ? '-' : 'log',
             title: {
               text:
                 column === 'Density'
@@ -168,7 +168,7 @@ function DynamicGraphBox1({
                   : `${Object.keys(dynamicGraphData.name.biodiversity).find(
                       (key) =>
                         dynamicGraphData.name.biodiversity[key] === column,
-                    )} (Log)`,
+                    )}`,
               // font: {
               //   family: 'Courier New, monospace',
               //   size: 18,
@@ -239,14 +239,18 @@ function DynamicGraphBox1({
           </select>
         </div>
       ) : null}
-      <div className="flex justify-center p-4">
-        <RangeValue className="text-center text-sm">
-          <p className="bg-blue-500">
-            Seabed Area: {hoverValue[0]} m2 / Value: {hoverValue[1]} +-
-            {hoverValue[2]}
-          </p>
-        </RangeValue>
-      </div>
+      {hoverValue[0] !== '--' ? (
+        <div className="flex justify-center p-4">
+          <RangeValue className="text-center text-sm">
+            <p className="bg-blue-500">
+              Seabed Area: {hoverValue[0]} m2 / Value: {hoverValue[1]} +-
+              {hoverValue[2]}
+            </p>
+          </RangeValue>
+        </div>
+      ) : (
+        <div className="flex justify-center p-8"></div>
+      )}
       {displayGraph}
       <RangeArea>
         <div className="text-center text-sm pl-10">
@@ -285,12 +289,12 @@ function DynamicGraphBox1({
   )
 }
 
-function mapPropsAreEqual(prevMap: any, nextMap: any) {
-  return (
-    prevMap.column === nextMap.column &&
-    prevMap.surveyDesignCircleValues === nextMap.surveyDesignCircleValues &&
-    prevMap.hoverValue === nextMap.hoverValue
-  )
-}
+// function mapPropsAreEqual(prevMap: any, nextMap: any) {
+//   return (
+//     prevMap.column === nextMap.column &&
+//     prevMap.surveyDesignCircleValues === nextMap.surveyDesignCircleValues &&
+//     prevMap.hoverValue === nextMap.hoverValue
+//   )
+// }
 
-export const DynamicGraphBox = React.memo(DynamicGraphBox1, mapPropsAreEqual)
+// export const DynamicGraphBox = React.memo(DynamicGraphBox1, mapPropsAreEqual)

@@ -41,6 +41,10 @@ export const InfoButtonBoxContent = styled.div`
 `
 
 export const RangeValue = styled.div`
+  div {
+    border-radius: 8px;
+    text-align: center;
+  }
   p {
     text-align: center;
     /* box-shadow: 10px 10px 10px rgba(0, 0, 0, 1); */

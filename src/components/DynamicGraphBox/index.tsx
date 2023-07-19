@@ -17,7 +17,7 @@ interface DynamicGraphBoxProps {
 //   [key: string]: any
 // }
 
-function DynamicGraphBox1({
+export function DynamicGraphBox({
   dynamicGraphData,
   setDynamicGraphData,
   surveyDesignCircleValues,
@@ -269,48 +269,77 @@ function DynamicGraphBox1({
       )}
       {displayGraph}
       <RangeArea>
-        <div className="text-center text-sm pl-10">
+        {/* <div className="text-center text-sm pl-10">
           <p className="">|</p>
           <p className="">
             {Math.min(...dynamicGraphData.data['cum.Area_m2.mean']).toFixed(0)}
           </p>
-        </div>
+        </div> */}
         <RangeValue className="text-center text-sm pl-10">
-          <p className="bg-blue-500">
-            {(
-              surveyDesignCircleValues[0] *
-              surveyDesignCircleValues[0] *
-              Math.PI
-            ).toFixed(0)}
-          </p>
+          <div className=" text-center bg-blue-500">
+            <p>
+              {(
+                surveyDesignCircleValues[0] *
+                surveyDesignCircleValues[0] *
+                Math.PI
+              ).toFixed(0)}{' '}
+              m2
+            </p>
+            <p className="bg-blue-500">
+              {(
+                (surveyDesignCircleValues[0] *
+                  surveyDesignCircleValues[0] *
+                  Math.PI) /
+                7.2898
+              ).toFixed(1)}{' '}
+              images
+            </p>
+          </div>
         </RangeValue>
-        <RangeValue className="text-center text-sm pr-5">
-          <p className="bg-red-500">
-            {(
-              surveyDesignCircleValues[1] *
-              surveyDesignCircleValues[1] *
-              Math.PI
-            ).toFixed(0)}
-          </p>{' '}
+        <RangeValue className="text-center text-sm pr-5 ">
+          <div className="text-center bg-red-500">
+            <p>
+              {(
+                surveyDesignCircleValues[1] *
+                surveyDesignCircleValues[1] *
+                Math.PI
+              ).toFixed(0)}{' '}
+              m2
+            </p>
+            <p className="bg-red-500">
+              {(
+                (surveyDesignCircleValues[1] *
+                  surveyDesignCircleValues[1] *
+                  Math.PI) /
+                7.2898
+              ).toFixed(1)}{' '}
+              images
+            </p>
+          </div>
         </RangeValue>
-        <div className="text-center text-sm pr-5">
+        {/* <div className="text-center text-sm pr-5">
           <p className="">|</p>
           <p className="">
             {Math.max(...dynamicGraphData.data['cum.Area_m2.mean']).toFixed(0)}
           </p>
-        </div>
+        </div> */}
       </RangeArea>
-      <p className="text-center p-4">Seabed area (m2)</p>
+      <div className="pt-4 text-center">
+        <p className="text-center p-4">Seabed area (m2)</p>
+      </div>
+      <div className="pt-4 text-center">
+        <p className="text-center p-4">Average number of pictures in the low</p>
+      </div>
     </InfoButtonBoxContainer>
   )
 }
 
-function mapPropsAreEqual(prevMap: any, nextMap: any) {
-  return (
-    prevMap.column === nextMap.column &&
-    prevMap.surveyDesignCircleValues === nextMap.surveyDesignCircleValues &&
-    prevMap.hoverValue === nextMap.hoverValue
-  )
-}
+// function mapPropsAreEqual(prevMap: any, nextMap: any) {
+//   return (
+//     prevMap.column === nextMap.column &&
+//     prevMap.surveyDesignCircleValues === nextMap.surveyDesignCircleValues &&
+//     prevMap.hoverValue === nextMap.hoverValue
+//   )
+// }
 
-export const DynamicGraphBox = React.memo(DynamicGraphBox1, mapPropsAreEqual)
+// export const DynamicGraphBox = React.memo(DynamicGraphBox1, mapPropsAreEqual)

@@ -6,7 +6,7 @@ export const InfoButtonBoxContainer = styled.div`
   width: 20rem;
   background-color: ${(props) => props.theme.white};
   z-index: 9999;
-  max-height: 80vh;
+  max-height: 90vh;
   height: max-content;
   margin-left: 1rem;
   padding: 0.5rem;

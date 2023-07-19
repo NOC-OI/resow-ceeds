@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { InfoButtonBoxContainer, RangeArea, RangeValue } from './styles'
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons'
-import { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import Plot from 'react-plotly.js'
 
 interface DynamicGraphBoxProps {
@@ -17,7 +17,7 @@ interface DynamicGraphBoxProps {
 //   [key: string]: any
 // }
 
-export function DynamicGraphBox({
+function DynamicGraphBox1({
   dynamicGraphData,
   setDynamicGraphData,
   surveyDesignCircleValues,
@@ -33,6 +33,12 @@ export function DynamicGraphBox({
       : 'Density',
   )
 
+  // const [dumbState, setDumbState] = useState(false)
+
+  // useEffect(() => {
+  //   setTimeout(() => setDumbState((dumbState: any) => !dumbState), 1000)
+  // }, [dumbState])
+
   const [hoverValue, setHoverValue] = useState(['--', '--'])
   function handleChangeFile(e: any) {
     setFileSurveyDesign(e.target.value)
@@ -42,8 +48,8 @@ export function DynamicGraphBox({
   }
 
   function handleClose() {
-    setDynamicGraphData(null)
     setSurveyDesignCircleValues([])
+    setDynamicGraphData(null)
   }
 
   function getCircleLimits(areas: any) {
@@ -147,6 +153,16 @@ export function DynamicGraphBox({
           xaxis: {
             rangeslider: {},
             hoverformat: '.0f',
+            range: [
+              Math.min(...dynamicGraphData.data['cum.Area_m2.mean']),
+              column === 'Density'
+                ? Math.max(...dynamicGraphData.data[`cum.Area_m2.mean`])
+                : dynamicGraphData.data['cum.Area_m2.mean'][
+                    dynamicGraphData.data[`cum.${column}.mean`].indexOf(
+                      Math.max(...dynamicGraphData.data[`cum.${column}.mean`]),
+                    )
+                  ],
+            ],
             title: {
               // text: 'Seabed area (m2)',
               // font: {
@@ -182,7 +198,7 @@ export function DynamicGraphBox({
         config={{ responsive: true, displayModeBar: false }}
       />
     ),
-    [column],
+    [column, dynamicGraphData],
   )
 
   return (
@@ -289,12 +305,12 @@ export function DynamicGraphBox({
   )
 }
 
-// function mapPropsAreEqual(prevMap: any, nextMap: any) {
-//   return (
-//     prevMap.column === nextMap.column &&
-//     prevMap.surveyDesignCircleValues === nextMap.surveyDesignCircleValues &&
-//     prevMap.hoverValue === nextMap.hoverValue
-//   )
-// }
+function mapPropsAreEqual(prevMap: any, nextMap: any) {
+  return (
+    prevMap.column === nextMap.column &&
+    prevMap.surveyDesignCircleValues === nextMap.surveyDesignCircleValues &&
+    prevMap.hoverValue === nextMap.hoverValue
+  )
+}
 
-// export const DynamicGraphBox = React.memo(DynamicGraphBox1, mapPropsAreEqual)
+export const DynamicGraphBox = React.memo(DynamicGraphBox1, mapPropsAreEqual)

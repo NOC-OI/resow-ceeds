@@ -84,7 +84,6 @@ function MapHome1({
   setShowFlash,
   setFlashMessage,
   surveyDesignCircleValues,
-  setSurveyDesignCircleValues
 }: MapProps) {
   const colorScale = chroma
     .scale(['#f00', '#0f0', '#00f', 'gray'])
@@ -97,7 +96,9 @@ function MapHome1({
   const [depth, setDepth] = useState({})
 
   const defaultView = [50.3, -8.1421]
-  const [mapCenter, setMapCenter] = useState(new L.LatLng(defaultView[0], defaultView[1]))
+  const [mapCenter, setMapCenter] = useState(
+    new L.LatLng(defaultView[0], defaultView[1]),
+  )
 
   const defaultWMSBounds = [
     [50.020174, -8.58279],
@@ -582,26 +583,30 @@ function MapHome1({
     })
   }
   function addCircleLayerIntoMap() {
-    const circle1 = L.circle([mapCenter.lat, (mapCenter.lng + mapBounds._northEast.lng)/2],
-      surveyDesignCircleValues[1],  {
+    const circle1 = L.circle(
+      [mapCenter.lat, (mapCenter.lng + mapBounds._northEast.lng) / 2],
+      surveyDesignCircleValues[1],
+      {
         attribution: 'circle',
         color: '#ffd3c9',
         weight: 2,
         opacity: 0.7,
-      }
+      },
     )
     circle1.addTo(map)
-    const circle2 = L.circle([mapCenter.lat, (mapCenter.lng + mapBounds._northEast.lng)/2],
-      surveyDesignCircleValues[0],  {
+    const circle2 = L.circle(
+      [mapCenter.lat, (mapCenter.lng + mapBounds._northEast.lng) / 2],
+      surveyDesignCircleValues[0],
+      {
         attribution: 'circle',
         color: '#ff96bc',
         weight: 2,
         opacity: 0.7,
-      }
+      },
     )
     circle2.addTo(map)
   }
-  
+
   useEffect(() => {
     if (surveyDesignCircleValues.length > 0) {
       removeNormalLayerFromMap('circle')
@@ -614,7 +619,7 @@ function MapHome1({
   }, [surveyDesignCircleValues])
 
   useEffect(() => {
-    if (map){
+    if (map) {
       if (surveyDesignCircleValues.length > 0) {
         removeNormalLayerFromMap('circle')
         addCircleLayerIntoMap()
@@ -622,7 +627,6 @@ function MapHome1({
     }
   }, [mapCenter])
 
-  
   async function changeMapZoom() {
     map.eachLayer(function (layer: any) {
       if (actualLayer.includes(layer.options.attribution)) {

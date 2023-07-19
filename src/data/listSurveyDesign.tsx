@@ -4,8 +4,19 @@ const listValues = [
     content: 'This calculation uses XXXXX...',
     calcNames: [
       {
-        name: 'Types',
-        url: 'v1/data/csv?filenames=output:cum_hill_values&orient=list',
+        name: 'Density',
+        url: 'v1/data/csv?orient=list&skip_lines=7',
+        habitat: ['coarse', 'sand', 'intermediate', 'hard'],
+      },
+      {
+        name: 'Biodiversity',
+        url: 'v1/data/csv?orient=list&skip_lines=7',
+        habitat: ['coarse', 'sand', 'intermediate', 'hard'],
+        biodiversity: {
+          'Species richness': 'Hill0',
+          "Shannon index (expH')": 'Hill1',
+          "Simpson's index": 'Hill2',
+        },
       },
     ],
   },

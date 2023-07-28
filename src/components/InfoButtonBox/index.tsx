@@ -8,6 +8,7 @@ import rehypeKatex from 'rehype-katex'
 import remarkBreaks from 'remark-breaks'
 import 'katex/dist/katex.min.css' // `rehype-katex` does not import the CSS for you
 import { Button } from '../AreaSelector/styles'
+// import parse from 'html-react-parser'
 
 interface InfoButtonBoxProps {
   infoButtonBox: any

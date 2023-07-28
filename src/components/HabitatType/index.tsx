@@ -41,7 +41,6 @@ async function handleShowCalcValues(
     url = `${url}&bbox=${latLonLimits[2].lat},${latLonLimits[0].lng},${latLonLimits[0].lat},${latLonLimits[2].lng}`
   }
   async function getCalculationResults() {
-    console.log(url)
     const response = await fetch(url, {
       method: 'GET',
       mode: 'cors',

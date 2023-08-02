@@ -139,6 +139,7 @@ export function IndicatorSpeciesTypeOptions({
     <CalcTypeOptionsContainer>
       <div>
         <label
+          id="type-option"
           key={`${subLayer.name}_${subLayer}`}
           htmlFor={subLayer.name}
           onClick={async () => {

@@ -6,7 +6,6 @@ import {
 } from '../DataExplorationSelection/styles'
 import { Info } from 'phosphor-react'
 import { IndicatorSpeciesType } from '../IndicatorSpeciesType'
-import { listIndicatorSpecies } from '../../data/listIndicatorSpecies'
 
 interface IndicatorSpeciesSelectionProps {
   setCalculationValue: any
@@ -23,6 +22,7 @@ interface IndicatorSpeciesSelectionProps {
   setActualLayer: any
   listLayers: any
   setShowPhotos: any
+  dataFields: any
 }
 
 export function IndicatorSpeciesSelection({
@@ -40,10 +40,11 @@ export function IndicatorSpeciesSelection({
   setActualLayer,
   listLayers,
   setShowPhotos,
+  dataFields,
 }: IndicatorSpeciesSelectionProps) {
   // const [calcClasses, setCalcClasses] = useState(listBiodiversities)
 
-  const calcClasses = listIndicatorSpecies
+  const calcClasses = dataFields.indicatorSpecies
 
   function handleClickLayerInfo(title: String, content: string) {
     setInfoButtonBox({
@@ -58,6 +59,7 @@ export function IndicatorSpeciesSelection({
         <div>
           <h1>Species of Interest</h1>
           <Info
+            id="info-section-button"
             size={20}
             onClick={() =>
               handleClickLayerInfo(
@@ -85,7 +87,7 @@ export function IndicatorSpeciesSelection({
           setLatLonLimits={setLatLonLimits}
           setInfoButtonBox={setInfoButtonBox}
         /> */}
-        {calcClasses.map((calcClass) => {
+        {calcClasses.map((calcClass: any) => {
           return (
             <IndicatorSpeciesType
               key={calcClass.calcClass}

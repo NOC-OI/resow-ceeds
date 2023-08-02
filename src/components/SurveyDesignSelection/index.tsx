@@ -7,7 +7,6 @@ import {
 import { Info } from 'phosphor-react'
 import { SurveyDesignType } from '../SurveyDesignType'
 // import { AreaSelector } from '../AreaSelector'
-import { listSurveyDesign } from '../../data/listSurveyDesign'
 
 interface SurveyDesignSelectionProps {
   setInfoButtonBox?: any
@@ -15,6 +14,7 @@ interface SurveyDesignSelectionProps {
   setDynamicGraphData: any
   fileSurveyDesign: any
   setFileSurveyDesign: any
+  dataFields: any
 }
 
 export function SurveyDesignSelection({
@@ -23,10 +23,9 @@ export function SurveyDesignSelection({
   setDynamicGraphData,
   fileSurveyDesign,
   setFileSurveyDesign,
+  dataFields,
 }: SurveyDesignSelectionProps) {
-  // const [calcClasses, setCalcClasses] = useState(listHabitats)
-
-  const calcClasses = listSurveyDesign
+  const calcClasses = dataFields.surveyDesign
 
   function handleClickLayerInfo(title: String, content: string, link: any) {
     setInfoButtonBox({
@@ -42,6 +41,7 @@ export function SurveyDesignSelection({
         <div>
           <h1>Survey Design</h1>
           <Info
+            id="info-section-button"
             size={20}
             onClick={() =>
               handleClickLayerInfo(
@@ -54,7 +54,7 @@ export function SurveyDesignSelection({
         </div>
       </LayerSelectionTitle>
       <LayerTypes>
-        {calcClasses.map((calcClass) => {
+        {calcClasses.map((calcClass: any) => {
           return (
             <SurveyDesignType
               key={calcClass.calcClass}

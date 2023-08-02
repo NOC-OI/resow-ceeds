@@ -129,7 +129,7 @@ export function CalculationValue({
     }
   }, [selectedLayers])
   return (
-    <CalculationValueContainer>
+    <CalculationValueContainer id="calculate-value">
       <div className="flex justify-end">
         <FontAwesomeIcon icon={faCircleXmark} onClick={handleClose} />
       </div>
@@ -196,7 +196,7 @@ export function CalculationValue({
                                     >
                                       {calculationValue.sampleImage ? (
                                         <img
-                                          src={calculationValue.sampleImage}
+                                          src={`${JOSBaseUrl}${calculationValue.sampleImage}`}
                                         />
                                       ) : (
                                         <img
@@ -212,7 +212,7 @@ export function CalculationValue({
                                     >
                                       {calculationValue.sampleImage ? (
                                         <img
-                                          src={calculationValue.sampleImage}
+                                          src={`${JOSBaseUrl}${calculationValue.sampleImage}`}
                                         />
                                       ) : (
                                         <img

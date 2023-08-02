@@ -4,7 +4,7 @@ import { faCircleXmark } from '@fortawesome/free-solid-svg-icons'
 import { useEffect, useState } from 'react'
 import { VictoryAxis, VictoryChart, VictoryLine, VictoryTheme } from 'victory'
 import { GetTitilerData } from './getTitilerData'
-import { Button } from '../AreaSelector/styles'
+import { Loading } from '../Loading'
 
 interface GraphBoxProps {
   graphData: any
@@ -31,9 +31,11 @@ export function GraphBox({
     setGraphData(null)
   }
 
-  function changeStateToShowGraph() {
-    setWaitState(true)
-  }
+  useEffect(() => {
+    setTimeout(() => {
+      setWaitState(true)
+    }, 5000)
+  }, [])
 
   useEffect(() => {
     const getTitilerData = new GetTitilerData(graphData, actualLayer[0])
@@ -42,7 +44,7 @@ export function GraphBox({
     })
   }, [])
   return (
-    <InfoButtonBoxContainer>
+    <InfoButtonBoxContainer id="graph-box">
       <div>
         <FontAwesomeIcon icon={faCircleXmark} onClick={handleClose} />
       </div>
@@ -50,9 +52,8 @@ export function GraphBox({
 
       {!waitState ? (
         <div>
-          <Button onClick={changeStateToShowGraph}>
-            <p>Click here to show graph</p>
-          </Button>
+          <p>Generating graph...</p>
+          <Loading />
         </div>
       ) : (
         <VictoryChart theme={VictoryTheme.material}>

@@ -1,5 +1,4 @@
 /* eslint-disable no-multi-str */
-import { listHabitats } from '../../data/listHabitats'
 import {
   LayerSelectionContainer,
   LayerSelectionTitle,
@@ -16,6 +15,7 @@ interface HabitatSelectionProps {
   latLonLimits: any
   setLatLonLimits: any
   setInfoButtonBox?: any
+  dataFields: any
 }
 
 export function HabitatSelection({
@@ -25,10 +25,9 @@ export function HabitatSelection({
   latLonLimits,
   setLatLonLimits,
   setInfoButtonBox,
+  dataFields,
 }: HabitatSelectionProps) {
-  // const [calcClasses, setCalcClasses] = useState(listHabitats)
-
-  const calcClasses = listHabitats
+  const calcClasses = dataFields.habitats
 
   function handleClickLayerInfo(title: String, content: string) {
     setInfoButtonBox({
@@ -43,10 +42,11 @@ export function HabitatSelection({
         <div>
           <h1>Seabed Types</h1>
           <Info
+            id="info-section-button"
             size={20}
             onClick={() =>
               handleClickLayerInfo(
-                'Habitats',
+                'Seabed Types',
                 'Habitats and seabed types are presented as defined by two publications: \
                 Benoist, N.M.A., Morris, K.J., Bett, B.J., Durden, J.M., Huvenne, V.A.I., \
                 Le Bas, T.P., Wynn, R.B., Ware, S.J., Ruhl, H.A., 2019. Monitoring mosaic \
@@ -83,7 +83,7 @@ export function HabitatSelection({
           setLatLonLimits={setLatLonLimits}
           setInfoButtonBox={setInfoButtonBox}
         /> */}
-        {calcClasses.map((calcClass) => {
+        {calcClasses.map((calcClass: any) => {
           return (
             <HabitatType
               key={calcClass.calcClass}

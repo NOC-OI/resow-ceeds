@@ -53,6 +53,7 @@ export function DataExplorationSelection({
         <div>
           <h1>Data Exploration</h1>
           <Info
+            id="info-section-button"
             size={20}
             onClick={() =>
               handleClickLayerInfo(

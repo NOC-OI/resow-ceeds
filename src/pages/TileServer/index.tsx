@@ -19,6 +19,7 @@ import Cookies from 'js-cookie'
 import { useNavigate } from 'react-router-dom'
 import { GraphBox } from '../../components/GraphBox'
 import { DynamicGraphBox } from '../../components/DynamicGraphBox'
+import { GetJsonWeb } from '../../data/loadJsonWeb'
 
 export function TileServer() {
   const navigate = useNavigate()
@@ -71,11 +72,23 @@ export function TileServer() {
   const [showLogin, setShowLogin] = useState(false)
   const [isLogged, setIsLogged] = useState(Cookies.get('token'))
 
+  const [calClasses, setCalcClasses] = useState({})
   const [showFlash, setShowFlash] = useState(false)
   const [flashMessage, setFlashMessage] = useState({
     messageType: '',
     content: '',
   })
+
+  const fetchData = async () => {
+    const getLayers = new GetJsonWeb()
+    await getLayers.loadJson().then(async function () {
+      setCalcClasses(getLayers.data)
+    })
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [])
 
   useEffect(() => {
     if (flashMessage.messageType) {
@@ -133,7 +146,7 @@ export function TileServer() {
             setGetPolyline={setGetPolyline}
           />
         )}
-        {selectedSidebarOption === 'Habitats' && (
+        {selectedSidebarOption === 'Seabed Types' && (
           <HabitatSelection
             setCalculationValue={setCalculationValue}
             selectedArea={selectedArea}
@@ -141,6 +154,7 @@ export function TileServer() {
             latLonLimits={latLonLimits}
             setLatLonLimits={setLatLonLimits}
             setInfoButtonBox={setInfoButtonBox}
+            dataFields={calClasses}
           />
         )}
         {selectedSidebarOption === 'Species of Interest' && (
@@ -159,6 +173,7 @@ export function TileServer() {
             setActualLayer={setActualLayer}
             listLayers={listLayers}
             setShowPhotos={setShowPhotos}
+            dataFields={calClasses}
           />
         )}
         {selectedSidebarOption === 'Biodiversity' && (
@@ -176,6 +191,7 @@ export function TileServer() {
             actualLayer={actualLayer}
             setActualLayer={setActualLayer}
             listLayers={listLayers}
+            dataFields={calClasses}
           />
         )}
         {selectedSidebarOption === 'Survey Design' && (
@@ -185,6 +201,7 @@ export function TileServer() {
             setDynamicGraphData={setDynamicGraphData}
             fileSurveyDesign={fileSurveyDesign}
             setFileSurveyDesign={setFileSurveyDesign}
+            dataFields={calClasses}
           />
         )}
         {graphData ? (

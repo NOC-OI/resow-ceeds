@@ -16,7 +16,7 @@ export function DataExplorationLegend({
   }
 
   return (
-    <LayerLegendContainer>
+    <LayerLegendContainer id="legend-box">
       <div>
         <FontAwesomeIcon
           contentStyleType={'regular'}

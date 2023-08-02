@@ -19,11 +19,7 @@ export function FullPagePopup({ setShowPopup }: FullPagePopupProps) {
   return (
     <FullPagePopupContainer onClick={handleClose}>
       <div className="w-[40rem] align-middle text-center">
-        <FontAwesomeIcon
-          icon={faCircleXmark}
-          onClick={handleClose}
-          title="Close"
-        />
+        <FontAwesomeIcon icon={faCircleXmark} onClick={handleClose} />
         <h2 className="text-center font-bold pb-3 capitalize text-3xl">
           Haig Fras Digital Twin - Pilot Study
         </h2>

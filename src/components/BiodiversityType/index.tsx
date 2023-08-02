@@ -97,16 +97,17 @@ export function BiodiversityType({
   return (
     <CalcTypeContainer>
       <div>
-        <header>
+        <header id="general-types">
           <p onClick={handleShowCalcOptions}>{title}</p>
           <div>
             <span>
               <FontAwesomeIcon
                 icon={faCircleInfo}
+                id="info-subsection-button"
                 onClick={() => handleClickLayerInfo(title, content)}
               />
             </span>
-            <span onClick={handleShowCalcOptions}>
+            <span title="expand" onClick={handleShowCalcOptions}>
               {isActive ? (
                 <ArrowCircleUp size={24} />
               ) : (
@@ -125,6 +126,7 @@ export function BiodiversityType({
               <label>
                 {/* <p>{subCalcs[subCalc]['name']}</p> */}
                 <p
+                  id="type-option"
                   className={
                     isActiveText === `${title}_${subCalc.name}_${subCalc.url}`
                       ? 'active-text'

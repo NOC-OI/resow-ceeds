@@ -202,14 +202,17 @@ export function DynamicGraphBox({
   )
 
   return (
-    <InfoButtonBoxContainer>
+    <InfoButtonBoxContainer id="dynamic-graph">
       <div className="flex justify-end pb-3">
         <FontAwesomeIcon icon={faCircleXmark} onClick={handleClose} />
       </div>
-      <div className="font-bold text-center pb-3">
+      <p className="font-bold text-center pb-3 text-lg">
         {dynamicGraphData.name.name}
-      </div>
-      <div className="flex justify-around w-full pb-2 gap-2">
+      </p>
+      <div
+        className="flex justify-around w-full pb-2 gap-2"
+        id="select-habitat"
+      >
         <label className="w-70 text-sm" htmlFor={`select_habitat`}>
           Habitat type:
         </label>
@@ -230,7 +233,10 @@ export function DynamicGraphBox({
         </select>
       </div>
       {dynamicGraphData.name.biodiversity ? (
-        <div className="flex justify-around w-full pt-2 gap-2">
+        <div
+          className="flex justify-around w-full pt-2 gap-2"
+          id="select-biodiversity"
+        >
           <label className="w-35 text-sm" htmlFor={`select_biodiversity`}>
             Biodiversity Calculation:
           </label>
@@ -257,7 +263,7 @@ export function DynamicGraphBox({
       ) : null}
       {hoverValue[0] !== '--' ? (
         <div className="flex justify-center p-4">
-          <RangeValue className="text-center text-sm">
+          <RangeValue id="hover-value" className="text-center text-sm">
             <p className="bg-blue-500">
               Seabed Area: {hoverValue[0]} m2 / Value: {hoverValue[1]} +-
               {hoverValue[2]}
@@ -276,7 +282,7 @@ export function DynamicGraphBox({
           </p>
         </div> */}
         <RangeValue className="text-center text-sm pl-10">
-          <div className=" text-center bg-blue-500">
+          <div id="range-value" className=" text-center bg-blue-500">
             <p>
               {(
                 surveyDesignCircleValues[0] *
@@ -285,19 +291,19 @@ export function DynamicGraphBox({
               ).toFixed(0)}{' '}
               m2
             </p>
-            <p className="bg-blue-500">
-              {(
+            <p>
+              {Math.round(
                 (surveyDesignCircleValues[0] *
                   surveyDesignCircleValues[0] *
                   Math.PI) /
-                7.2898
-              ).toFixed(1)}{' '}
+                  7.2898,
+              )}{' '}
               images
             </p>
           </div>
         </RangeValue>
         <RangeValue className="text-center text-sm pr-5 ">
-          <div className="text-center bg-red-500">
+          <div id="range-value" className="text-center bg-red-500">
             <p>
               {(
                 surveyDesignCircleValues[1] *
@@ -306,13 +312,13 @@ export function DynamicGraphBox({
               ).toFixed(0)}{' '}
               m2
             </p>
-            <p className="bg-red-500">
-              {(
+            <p>
+              {Math.round(
                 (surveyDesignCircleValues[1] *
                   surveyDesignCircleValues[1] *
                   Math.PI) /
-                7.2898
-              ).toFixed(1)}{' '}
+                  7.2898,
+              )}{' '}
               images
             </p>
           </div>
@@ -326,9 +332,6 @@ export function DynamicGraphBox({
       </RangeArea>
       <div className="pt-4 text-center">
         <p className="text-center p-4">Seabed area (m2)</p>
-      </div>
-      <div className="pt-4 text-center">
-        <p className="text-center p-4">Average number of pictures in the low</p>
       </div>
     </InfoButtonBoxContainer>
   )

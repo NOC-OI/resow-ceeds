@@ -51,7 +51,10 @@ export function FlashMessages({
       unmountOnExit
       onExit={() => setActive((state: any) => !state)}
     >
-      <div className={classnames(styles.toast, ToastClassNames)}>
+      <div
+        id="flash-message"
+        className={classnames(styles.toast, ToastClassNames)}
+      >
         <div className={styles.toastMessage}>{message}</div>
         <button
           className={styles.toastDismiss}

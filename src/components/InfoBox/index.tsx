@@ -48,7 +48,7 @@ export function InfoBox({ position = null, depth = {} }: InfoBoxProps) {
     lng = `${lngDegrees}°${lngMinutes}'${lngSeconds}${lngSignal}`
   }
   return (
-    <InfoBoxContainer>
+    <InfoBoxContainer id="infobox-container">
       <h1>Haig Fras</h1>
       <div>
         <p>Lat:</p>

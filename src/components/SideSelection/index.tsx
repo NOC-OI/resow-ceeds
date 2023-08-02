@@ -118,6 +118,7 @@ export function SideSelection({
       setLoading(false)
     })
   }
+
   useEffect(() => {
     if (!photoId && window.location.pathname !== '/3d') {
       setLoading(true)
@@ -165,12 +166,12 @@ export function SideSelection({
   }
   return (
     <div>
-      <SideSelectionContainer>
+      <SideSelectionContainer className={loading ? 'pointer-events-none' : ''}>
         <SideSelectionLink
-          title={'Habitats'}
+          title={'Seabed Types'}
           onClick={handleShowSelection}
-          id={'Habitats'}
-          className={selectedSidebarOption === 'Habitats' ? 'active' : ''}
+          id={'Seabed Types'}
+          className={selectedSidebarOption === 'Seabed Types' ? 'active' : ''}
         >
           <Species />
         </SideSelectionLink>

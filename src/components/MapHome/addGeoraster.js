@@ -125,6 +125,10 @@ export class GetTileLayer {
 
   async getTile() {
     const TILE_SERVER_URL = process.env.VITE_TILE_SERVER_URL
+    const JOSBaseUrl = process.env.VITE_JASMIN_OBJECT_STORE_URL
+
+    this.url = `${JOSBaseUrl}${this.url}`
+
     const newUrl = this.layerName.signed_url
       ? this.layerName.signed_url
       : this.url
@@ -190,7 +194,7 @@ export class GetTileLayer {
         <em>XXXXX</em><br>
       `
       this.layer.options.attribution = this.actualLayer
-      this.layer.options.url = this.layerName.url
+      this.layer.options.url = this.url
       this.layer.options.dataType = this.dataType
     } else {
       const bands = []
@@ -249,7 +253,7 @@ export class GetTileLayer {
       }
 
       this.layer = L.tileLayer(this.tileUrl, {
-        opacity: 1.0,
+        opacity: 0.7,
         maxZoom: 30,
         attribution: this.actualLayer,
         url: this.url,

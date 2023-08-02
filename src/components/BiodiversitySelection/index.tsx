@@ -1,7 +1,5 @@
 /* eslint-disable no-multi-str */
 
-import { listBiodiversities } from '../../data/listBiodiversities'
-// import { useState } from 'react'
 import {
   LayerSelectionContainer,
   LayerSelectionTitle,
@@ -24,6 +22,7 @@ interface BiodiversitySelectionProps {
   actualLayer?: any
   setActualLayer?: any
   listLayers?: any
+  dataFields: any
 }
 
 export function BiodiversitySelection({
@@ -40,10 +39,9 @@ export function BiodiversitySelection({
   actualLayer,
   setActualLayer,
   listLayers,
+  dataFields,
 }: BiodiversitySelectionProps) {
-  // const [calcClasses, setCalcClasses] = useState(listBiodiversities)
-
-  const calcClasses = listBiodiversities
+  const calcClasses = dataFields.biodiversity
 
   function handleClickLayerInfo(title: String, content: string, link: any) {
     setInfoButtonBox({
@@ -59,6 +57,7 @@ export function BiodiversitySelection({
         <div>
           <h1>Biodiversity</h1>
           <Info
+            id="info-section-button"
             size={20}
             onClick={() =>
               handleClickLayerInfo(
@@ -93,7 +92,7 @@ export function BiodiversitySelection({
           setLatLonLimits={setLatLonLimits}
           setInfoButtonBox={setInfoButtonBox}
         /> */}
-        {calcClasses.map((calcClass) => {
+        {calcClasses.map((calcClass: any) => {
           return (
             <BiodiversityType
               key={calcClass.calcClass}

@@ -30,16 +30,6 @@ export function LoginPopup({
     setShowLogin(false)
   }
 
-  // async function handleLogout(event: any) {
-  //   Cookies.remove('imfe_logged')
-  //   setFlashMessage({
-  //     messageType: 'success',
-  //     content: 'You have successfully logged out',
-  //   })
-  //   setShowLogin(false)
-  //   setIsLogged(false)
-  // }
-
   let user: any | null = null
   if (isLogged) {
     user = getUser()

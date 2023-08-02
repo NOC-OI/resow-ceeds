@@ -93,7 +93,7 @@ export function HabitatType({
   return (
     <CalcTypeContainer>
       <div>
-        <header>
+        <header id="general-types">
           <div onClick={handleShowCalcOptions}>
             <ReactMarkdown
               children={title}
@@ -106,10 +106,11 @@ export function HabitatType({
             <span>
               <FontAwesomeIcon
                 icon={faCircleInfo}
+                id="info-subsection-button"
                 onClick={() => handleClickLayerInfo(title, content)}
               />
             </span>
-            <span onClick={handleShowCalcOptions}>
+            <span title="expand" onClick={handleShowCalcOptions}>
               {isActive ? (
                 <ArrowCircleUp size={24} />
               ) : (
@@ -128,6 +129,7 @@ export function HabitatType({
               <label>
                 {/* <p>{subCalcs[subCalc]['name']}</p> */}
                 <p
+                  id="type-option"
                   onClick={async () => {
                     await handleShowCalcValues(
                       subCalc,

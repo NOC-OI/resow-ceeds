@@ -60,6 +60,7 @@ const BetterWMS = L.TileLayer.WMS.extend({
       layers: this.wmsParams.layers,
       query_layers: this.wmsParams.layers,
       info_format: 'text/html',
+      opacity: 0.7,
     }
 
     params[params.version === '1.3.0' ? 'i' : 'x'] = Math.round(point.x)

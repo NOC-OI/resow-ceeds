@@ -75,9 +75,9 @@ export function DataExplorationType({
   return (
     <CalcTypeContainer>
       <div>
-        <header onClick={handleShowLayers}>
+        <header id="general-types" onClick={handleShowLayers}>
           <p>{content}</p>
-          <span>
+          <span title="expand">
             {isActive ? (
               <ArrowCircleUp size={24} />
             ) : (

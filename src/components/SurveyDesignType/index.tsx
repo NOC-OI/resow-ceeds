@@ -91,16 +91,17 @@ export function SurveyDesignType({
   return (
     <CalcTypeContainer>
       <div>
-        <header>
+        <header id="general-types">
           <p onClick={handleShowCalcOptions}>{title}</p>
           <div>
             <span>
               <FontAwesomeIcon
+                id="info-subsection-button"
                 icon={faCircleInfo}
                 onClick={() => handleClickLayerInfo(title, content)}
               />
             </span>
-            <span onClick={handleShowCalcOptions}>
+            <span title="expand" onClick={handleShowCalcOptions}>
               {isActive ? (
                 <ArrowCircleUp size={24} />
               ) : (
@@ -119,6 +120,7 @@ export function SurveyDesignType({
               <label>
                 {/* <p>{subCalcs[subCalc]['name']}</p> */}
                 <p
+                  id="type-option"
                   onClick={async () => {
                     await handleShowGraphValues(
                       subCalc,

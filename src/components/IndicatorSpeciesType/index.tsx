@@ -61,14 +61,14 @@ export function IndicatorSpeciesType({
   return (
     <CalcTypeContainer>
       <div>
-        <header onClick={handleShowLayers}>
+        <header id="general-types" onClick={handleShowLayers}>
           <ReactMarkdown
             children={title}
             remarkPlugins={[remarkGfm, remarkMath, remarkBreaks]}
             rehypePlugins={[rehypeKatex]}
             linkTarget={'_blank'}
           />
-          <span>
+          <span title="expand">
             {isActive ? (
               <ArrowCircleUp size={24} />
             ) : (

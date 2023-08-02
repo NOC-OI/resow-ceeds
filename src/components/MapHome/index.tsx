@@ -5,6 +5,7 @@ import {
   LayersControl,
   Pane,
   ScaleControl,
+  ZoomControl,
 } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import React, { useEffect, useMemo, useState } from 'react'
@@ -252,6 +253,7 @@ function MapHome1({
       let bounds
       if (layerName.data_type === 'WMS') {
         layer = await getWMSLayer(layerName, actual)
+        layer.setOpacity(0.7)
         bounds = defaultWMSBounds
       } else if (layerName.data_type === 'COG') {
         if (window.location.pathname === '/notileserver') {
@@ -335,7 +337,8 @@ function MapHome1({
             color1,
             fillColor: color1,
             weight: 3,
-            opacity: 0.6,
+            opacity: 0.7,
+            fillOpacity: 0.7,
           }
           if (turfConvex) {
             const turflayer = L.geoJson(turfConvex, {
@@ -360,7 +363,7 @@ function MapHome1({
           color,
           fillColor: color,
           weight: 3,
-          opacity: 0.6,
+          opacity: 0.7,
         }
 
         const turfConvex = turf.convex(turf.featureCollection(markers))
@@ -372,6 +375,7 @@ function MapHome1({
         }
       } else if (layerName.data_type === 'MBTiles') {
         // bounds = defaultWMSBounds
+
         const getMBTilesLayer = new GetMBTiles(layerName, actual)
         await getMBTilesLayer.getLayer().then(async function () {
           layer = getMBTilesLayer.layer
@@ -591,6 +595,7 @@ function MapHome1({
         color: '#ffd3c9',
         weight: 2,
         opacity: 0.7,
+        fillOpacity: 0.7,
       },
     )
     circle1.addTo(map)
@@ -602,6 +607,7 @@ function MapHome1({
         color: '#ff96bc',
         weight: 2,
         opacity: 0.7,
+        fillOpacity: 0.7,
       },
     )
     circle2.addTo(map)
@@ -630,18 +636,19 @@ function MapHome1({
   async function changeMapZoom() {
     map.eachLayer(function (layer: any) {
       if (actualLayer.includes(layer.options.attribution)) {
-        if (selectedLayers[layer.options.attribution].data_type === 'COG') {
+        if (selectedLayers[layer.options.attribution].data_type !== 'Photo') {
           // const newBounds = [
           //   [layer.options.limits[3], layer.options.limits[0]],
           //   [layer.options.limits[1], layer.options.limits[2]],
           // ]
           map.fitBounds(defaultWMSBounds)
+          bringLayerToFront(layer)
           // map.fitBounds(newBounds)
         } else {
-          map.fitBounds(defaultWMSBounds)
-        }
-        if (selectedLayers[layer.options.attribution].data_type !== 'Photo') {
-          bringLayerToFront(layer)
+          if (!layer.options.dataType) {
+            bringLayerToFront(layer)
+            map.fitBounds(defaultWMSBounds)
+          }
         }
         setLayerAction('')
         return false
@@ -652,7 +659,17 @@ function MapHome1({
   function changeMapOpacity() {
     map.eachLayer(function (layer: any) {
       if (actualLayer.includes(layer.options.attribution)) {
-        layer.setOpacity(selectedLayers[layer.options.attribution].opacity)
+        if (!layer.options.dataType) {
+          if (layer.options.opacity) {
+            layer.setOpacity(selectedLayers[layer.options.attribution].opacity)
+          } else {
+            const newStyle = layer.options.style
+            newStyle.fillOpacity =
+              selectedLayers[layer.options.attribution].opacity
+            layer.setStyle(newStyle)
+          }
+          console.log(layer)
+        }
       }
     })
   }
@@ -705,7 +722,8 @@ function MapHome1({
           color1,
           fillColor: color1,
           weight: 3,
-          opacity: 0.6,
+          opacity: 0.7,
+          fillOpacity: 0.7,
         }
         if (turfConvex) {
           const turflayer = L.geoJson(turfConvex, {
@@ -726,6 +744,9 @@ function MapHome1({
   }
 
   useEffect(() => {
+    if (map) {
+      map.closePopup()
+    }
     if (layerAction === 'remove') {
       setLoading(true)
       removeLayerFromMap()
@@ -751,7 +772,6 @@ function MapHome1({
     // shadowUrl: '/marker-shadow.png',
     iconSize: [27, 45],
   })
-
   function handleSetLatlng(e: any) {
     let counter = 0
     const lineLayer: any[] = []
@@ -863,6 +883,7 @@ function MapHome1({
         zoomControl={false}
         ref={setMap}
       >
+        <ZoomControl position="topright" />
         <LayersControl>
           <LayersControl.BaseLayer checked name="OSM">
             <Pane name="OSM" style={{ zIndex: -1 }}>

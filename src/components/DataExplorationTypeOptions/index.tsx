@@ -219,7 +219,7 @@ export function DataExplorationTypeOptions({
 
   return (
     <LayerTypeOptionsContainer>
-      <div>
+      <div id="type-option">
         <label
           key={`${content}_${subLayer}`}
           htmlFor={`${content}_${subLayer}`}
@@ -258,8 +258,9 @@ export function DataExplorationTypeOptions({
           ) : null}
         </label>
         {verifyIfWasSelectedBefore(content, subLayer) ? (
-          <div>
+          <div id="layer-edit">
             <FontAwesomeIcon
+              id="info-subsection-button"
               icon={faCircleInfo}
               title={'Show Layer Info'}
               onClick={() => handleClickLayerInfo(content, subLayer)}
@@ -285,11 +286,13 @@ export function DataExplorationTypeOptions({
               title="Zoom to the layer"
               onClick={handleClickZoom}
             />
+            {/* {subLayers[subLayer].data_type !== 'Photo' ? ( */}
             <FontAwesomeIcon
               icon={faSliders}
               title="Change Opacity"
               onClick={handleClickSlider}
             />
+            {/* ) : null} */}
             {/* {subLayers[subLayer].data_type !== 'Photo' ? (
               <FontAwesomeIcon
                 icon={faSliders}

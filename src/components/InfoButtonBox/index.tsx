@@ -91,7 +91,7 @@ export function InfoButtonBox({
     // }
   }
   return (
-    <InfoButtonBoxContainer>
+    <InfoButtonBoxContainer id="info-subsection">
       <div>
         <FontAwesomeIcon icon={faCircleXmark} onClick={handleClose} />
       </div>

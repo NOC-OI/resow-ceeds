@@ -12,6 +12,7 @@ deploy-job:
   script:
     #we can't access the container repository from the build and web VMs, proxy via the gateway instead
      - ssh -D 3128 -f -N gateway
+     #note: we must have done a "docker login docker-repo.bodc.me" manually on the build and web VMs before this pipeline can run
      - docker push docker-repo.bodc.me/oceaninfo/imfe-pilot/frontend:latest
      - ssh web 'ssh -D 3128 -f -N gateway && docker pull docker-repo.bodc.me/oceaninfo/imfe-pilot/frontend:latest && pkill -f "ssh -D 3128 -f -N gateway"'
 # workaround for when we can't access the container registry

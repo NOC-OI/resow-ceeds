@@ -3,16 +3,21 @@ build-job:
   tags: 
     - shell
   script:
-    - docker build -t docker-repo.bodc.me/colsau/imfe-pilot/frontend:latest .
+    - docker build -t docker-repo.bodc.me/oceaninfo/imfe-pilot/frontend:latest .
 
 deploy-job:
   stage: deploy
   tags:
       - shell
   script:
-#    - docker push docker-repo.bodc.me/colsau/imfe-pilot/frontend:latest
-#    - ssh web 'docker pull docker-repo.bodc.me/colsau/imfe-pilot/frontend:latest
-     - docker save docker-repo.bodc.me/colsau/imfe-pilot/frontend | gzip -c - > frontend.tar.gz
-     - scp frontend.tar.gz web:/home/gitlab-runner/
-     - ssh web "gunzip -c frontend.tar.gz | docker load"
-     - ssh web 'docker stop frontend && docker container rm frontend && docker run -d -p 8080:80 --name frontend docker-repo.bodc.me/colsau/imfe-pilot/frontend:latest'
+    #we can't access the container repository from the build and web VMs, proxy via the gateway instead
+     - ssh -D 3128 -f -N gateway
+     - docker push docker-repo.bodc.me/oceaninfo/imfe-pilot/frontend:latest
+     - ssh web 'ssh -D 3128 -f -N gateway && docker pull docker-repo.bodc.me/oceaninfo/imfe-pilot/frontend:latest && pkill -f "ssh -D 3128 -f -N gateway"'
+# workaround for when we can't access the container registry
+#     - docker save docker-repo.bodc.me/colsau/imfe-pilot/frontend | gzip -c - > frontend.tar.gz
+#     - scp frontend.tar.gz web:/home/gitlab-runner/
+#     - ssh web "gunzip -c frontend.tar.gz | docker load"
+     - ssh web 'docker stop frontend && docker container rm frontend && docker run -d -p 8080:80 --name frontend docker-repo.bodc.me/oceaninfo/imfe-pilot/frontend:latest'
+     # kill the SSH proxy
+     - pkill -f "ssh -D 3128 -f -N gateway"

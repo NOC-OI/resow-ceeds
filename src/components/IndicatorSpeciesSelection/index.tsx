@@ -42,8 +42,6 @@ export function IndicatorSpeciesSelection({
   setShowPhotos,
   dataFields,
 }: IndicatorSpeciesSelectionProps) {
-  // const [calcClasses, setCalcClasses] = useState(listBiodiversities)
-
   const calcClasses = dataFields.indicatorSpecies
 
   function handleClickLayerInfo(title: String, content: string) {

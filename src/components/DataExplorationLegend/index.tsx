@@ -17,7 +17,7 @@ export function DataExplorationLegend({
 
   return (
     <LayerLegendContainer id="legend-box">
-      <div>
+      <div className="flex justify-end pb-1">
         <FontAwesomeIcon
           contentStyleType={'regular'}
           icon={faCircleXmark}
@@ -27,7 +27,21 @@ export function DataExplorationLegend({
       <div>
         <h1>{layerLegend.layerName}</h1>
         <div>
-          <img src={layerLegend.url} />
+          {layerLegend.url ? (
+            <img src={layerLegend.url} />
+          ) : (
+            layerLegend.legend[0].map((color: any, idx: any) => {
+              return (
+                <div className="flex p-1">
+                  <div
+                    style={{ backgroundColor: color }}
+                    className="rounded w-4"
+                  ></div>
+                  <p>{layerLegend.legend[1][idx]}</p>
+                </div>
+              )
+            })
+          )}
         </div>
       </div>
     </LayerLegendContainer>

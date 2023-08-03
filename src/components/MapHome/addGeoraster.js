@@ -13,6 +13,10 @@ export class GetCOGLayer {
   }
 
   async parseGeo() {
+    const JOSBaseUrl = process.env.VITE_JASMIN_OBJECT_STORE_URL
+
+    this.url = `${JOSBaseUrl}${this.url}`
+
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     // const scale = chroma.scale(['white', 'black']).domain([-11022, 0])
 

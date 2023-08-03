@@ -2,9 +2,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { InfoButtonBoxContainer } from './styles'
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons'
 import { useEffect, useState } from 'react'
-import { VictoryAxis, VictoryChart, VictoryLine, VictoryTheme } from 'victory'
 import { GetTitilerData } from './getTitilerData'
 import { Loading } from '../Loading'
+import Plot from 'react-plotly.js'
 
 interface GraphBoxProps {
   graphData: any
@@ -23,7 +23,7 @@ export function GraphBox({
   actualLayer,
   setGetPolyline,
 }: GraphBoxProps) {
-  const [data, setData] = useState<any[]>([])
+  const [data, setData] = useState<any>({ distance: [], value: [] })
 
   const [waitState, setWaitState] = useState(false)
   function handleClose() {
@@ -34,7 +34,7 @@ export function GraphBox({
   useEffect(() => {
     setTimeout(() => {
       setWaitState(true)
-    }, 5000)
+    }, 3000)
   }, [])
 
   useEffect(() => {
@@ -56,74 +56,52 @@ export function GraphBox({
           <Loading />
         </div>
       ) : (
-        <VictoryChart theme={VictoryTheme.material}>
-          <VictoryAxis
-            dependentAxis
-            style={{
-              axis: { stroke: 'gray', fill: 'gray' },
-              axisLabel: {
-                fontSize: 15,
-                padding: 30,
-              },
-              grid: {
-                stroke: ({ tick }: any) => (tick > 0.5 ? 'gray' : 'gray'),
-              },
-              ticks: { stroke: 'gray', size: 5 },
-              tickLabels: {
-                fontSize: 15,
-                padding: 5,
-                color: 'gray',
-                fill: 'gray',
-              },
-            }}
-          />
-          <VictoryAxis
-            label="Distance (km)"
-            style={{
-              axis: { stroke: 'gray', fill: 'gray' },
-              axisLabel: {
-                fontSize: 15,
-                padding: 30,
-              },
-              grid: {
-                stroke: ({ tick }: any) => (tick > 0.5 ? 'gray' : 'gray'),
-              },
-              ticks: { stroke: 'gray', size: 5 },
-              tickLabels: {
-                fontSize: 15,
-                padding: 5,
-                color: 'gray',
-                fill: 'gray',
-              },
-            }}
-          />
-          <VictoryLine
-            style={{
-              data: { stroke: '#c43a31' },
-              parent: { border: '1px solid #ccc' },
-            }}
-            data={data}
-          />
-        </VictoryChart>
-      )}
-    </InfoButtonBoxContainer>
-  )
-}
-
-/* <Plot
+        <Plot
           data={[
             {
               x: data.distance,
               y: data.value,
-              type: 'scatter',
-              mode: 'markers',
+              mode: 'lines',
               marker: { color: 'red' },
+              // hovertemplate: '<i>X</i>: %{x:.0f}' + '<br><b>Y</b>: %{y:.3f}<br>',
+              hoverinfo: 'x+y',
             },
           ]}
           layout={{
-            width: 320,
-            height: 300,
-            margin: { l: 20, r: 20, t: 20, b: 20 },
+            width: 300,
+            height: 400,
+            hovermode: 'closest',
+            showlegend: false,
+            // title: ,
+            margin: { l: 50, r: 20, t: 20, b: 0 },
+            xaxis: {
+              hoverformat: '.0f',
+              title: {
+                text: 'Distance (km)',
+                // font: {
+                //   family: 'Courier New, monospace',
+                //   size: 18,
+                //   color: '#7f7f7f'
+                // }
+              },
+            },
+            yaxis: {
+              autorange: true,
+              fixedrange: false,
+              hoverformat: '.0f',
+              title: {
+                text: '',
+                // font: {
+                //   family: 'Courier New, monospace',
+                //   size: 18,
+                //   color: '#7f7f7f'
+                // }
+              },
+            },
           }}
           config={{ responsive: true, displayModeBar: false }}
-        /> */
+        />
+      )}
+    </InfoButtonBoxContainer>
+  )
+}

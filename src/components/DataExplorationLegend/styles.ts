@@ -2,9 +2,10 @@ import styled from 'styled-components'
 
 export const LayerLegendContainer = styled.div`
   overflow-y: auto;
+  overflow-x: auto;
   right: 0.5rem;
   top: 5vh;
-  width: max-content;
+  max-width: 40rem;
   background-color: ${(props) => props.theme.white};
   z-index: 9999;
   max-height: 90vh;
@@ -26,11 +27,6 @@ export const LayerLegendContainer = styled.div`
     font-size: 0.75rem;
     line-height: 1.6;
     text-align: center;
-  }
-  div:first-child {
-    display: flex;
-    justify-content: flex-end;
-    padding-bottom: 0.375rem;
   }
   svg {
     text-align: right;

@@ -103,6 +103,13 @@ export function BiodiversitySelection({
               latLonLimits={latLonLimits}
               selectedArea={selectedArea}
               setInfoButtonBox={setInfoButtonBox}
+              selectedLayers={selectedLayers}
+              setSelectedLayers={setSelectedLayers}
+              layerAction={layerAction}
+              setLayerAction={setLayerAction}
+              actualLayer={actualLayer}
+              setActualLayer={setActualLayer}
+              listLayers={listLayers}
             />
           )
         })}

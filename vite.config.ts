@@ -23,6 +23,7 @@ export default defineConfig(({ command, mode }) => {
       'process.env.APP_USE_AVT': env.APP_USE_AVT,
     },
     build: {
+      chunkSizeWarningLimit: 3800,
       sourcemap: false,
       rollupOptions: {
         output: {

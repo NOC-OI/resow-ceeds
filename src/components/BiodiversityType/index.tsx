@@ -17,6 +17,13 @@ interface BiodiversityTypeProps {
   latLonLimits: any
   selectedArea: any
   setInfoButtonBox?: any
+  selectedLayers: any
+  setSelectedLayers: any
+  layerAction: any
+  setLayerAction: any
+  actualLayer: any
+  setActualLayer: any
+  listLayers: any
 }
 
 async function handleShowCalcValues(
@@ -74,6 +81,13 @@ export function BiodiversityType({
   latLonLimits,
   selectedArea,
   setInfoButtonBox,
+  selectedLayers,
+  setSelectedLayers,
+  layerAction,
+  setLayerAction,
+  actualLayer,
+  setActualLayer,
+  listLayers,
 }: BiodiversityTypeProps) {
   const [subCalcs, setSubCalcs] = useState([])
 
@@ -81,6 +95,10 @@ export function BiodiversityType({
   const [isActiveText, setIsActiveText] = useState('')
 
   const [loading, setLoading] = useState<boolean>(false)
+
+  function verifyIfWasSelectedBefore(subLayer: string) {
+    return !!selectedLayers[subLayer]
+  }
 
   function handleShowCalcOptions() {
     setIsActive((isActive) => !isActive)
@@ -92,6 +110,50 @@ export function BiodiversityType({
       title,
       content,
     })
+  }
+
+  function changeMapLayer(newSelectedLayers: any) {
+    setLayerAction('marker-changes')
+    setSelectedLayers((selectedLayers: any) => {
+      const copy = { ...selectedLayers }
+      newSelectedLayers.forEach((layerInfo: any) => {
+        delete copy[layerInfo.subLayer]
+        layerInfo.dataInfo.opacity = 1
+        layerInfo.dataInfo.zoom = true
+        layerInfo.dataInfo.plotLimits = true
+        copy[layerInfo.subLayer] = layerInfo.dataInfo
+      })
+      return copy
+    })
+  }
+  async function handleChangeMapLayer(subLayer: any) {
+    const newActualLayers: string[] = []
+    const newSelectedLayers: { subLayer: string; dataInfo: any }[] = []
+    Object.keys(subLayer.layers).forEach((newActualLayer) => {
+      subLayer.layers[newActualLayer].forEach((layerClass: any) => {
+        newActualLayers.push(`${newActualLayer}_${layerClass}`)
+        const layerInfo = {
+          subLayer: `${newActualLayer}_${layerClass}`,
+          dataInfo: listLayers[newActualLayer].layerNames[layerClass],
+        }
+        if (verifyIfWasSelectedBefore(`${newActualLayer}_${layerClass}`)) {
+          // eslint-disable-next-line dot-notation
+          layerInfo.dataInfo['selectedBefore'] = true
+        } else {
+          // eslint-disable-next-line dot-notation
+          layerInfo.dataInfo['selectedBefore'] = false
+        }
+        layerInfo.dataInfo.show = []
+        layerInfo.dataInfo.photos.forEach((photo: any) => {
+          if (photo[subLayer.tableName] > 0) {
+            layerInfo.dataInfo.show.push(photo.filename)
+          }
+        })
+        newSelectedLayers.push(layerInfo)
+      })
+    })
+    setActualLayer(newActualLayers)
+    changeMapLayer(newSelectedLayers)
   }
 
   return (
@@ -142,6 +204,7 @@ export function BiodiversityType({
                       setIsActiveText,
                       `${title}_${subCalc.name}_${subCalc.url}`,
                     )
+                    await handleChangeMapLayer(subCalc)
                   }}
                 >
                   {subCalc.name}

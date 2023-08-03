@@ -849,6 +849,14 @@ function MapHome1({
         map.keyboard.disable()
         map.on('click', handleSetLatlng)
       } else {
+        map.dragging.enable()
+        map.touchZoom.enable()
+        map.doubleClickZoom.enable()
+        map.scrollWheelZoom.enable()
+        map.boxZoom.enable()
+        map.keyboard.enable()
+        map.off('click', handleSetLatlng)
+        setGraphData(null)
         Object.keys(map._layers).forEach((layer) => {
           if (map._layers[layer].options) {
             if (map._layers[layer].options.attribution) {

@@ -10,6 +10,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Annotations } from '../Annotations'
+import { colors, eunis } from '../../data/mbTilesEmodnetLegend'
 
 const organisms = [
   'Bryozoa_01',
@@ -183,17 +184,22 @@ export function DataExplorationTypeOptions({
   }
 
   async function handleClickLegend() {
-    const newParams = subLayers[subLayer].params
-    newParams.request = 'GetLegendGraphic'
-    newParams.layer = newParams.layers
-    async function getURILegend(newParams: any) {
-      const response = await fetch(
-        subLayers[subLayer].url + new URLSearchParams(newParams),
-      )
-      const url = response.url
-      setLayerLegend({ layerName: subLayer, url })
+    console.log(subLayers[subLayer])
+    if (subLayers[subLayer].data_type === 'WMS') {
+      const newParams = subLayers[subLayer].params
+      newParams.request = 'GetLegendGraphic'
+      newParams.layer = newParams.layers
+      async function getURILegend(newParams: any) {
+        const response = await fetch(
+          subLayers[subLayer].url + new URLSearchParams(newParams),
+        )
+        const url = response.url
+        setLayerLegend({ layerName: subLayer, url })
+      }
+      await getURILegend(newParams)
+    } else if (subLayers[subLayer].data_type === 'MBTiles') {
+      setLayerLegend({ layerName: subLayer, legend: [colors, eunis] })
     }
-    await getURILegend(newParams)
   }
 
   function handleClickSlider() {

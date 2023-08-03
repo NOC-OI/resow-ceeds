@@ -275,12 +275,6 @@ export function DynamicGraphBox({
       )}
       {displayGraph}
       <RangeArea>
-        {/* <div className="text-center text-sm pl-10">
-          <p className="">|</p>
-          <p className="">
-            {Math.min(...dynamicGraphData.data['cum.Area_m2.mean']).toFixed(0)}
-          </p>
-        </div> */}
         <RangeValue className="text-center text-sm pl-10">
           <div id="range-value" className=" text-center bg-blue-500">
             <p>
@@ -323,12 +317,6 @@ export function DynamicGraphBox({
             </p>
           </div>
         </RangeValue>
-        {/* <div className="text-center text-sm pr-5">
-          <p className="">|</p>
-          <p className="">
-            {Math.max(...dynamicGraphData.data['cum.Area_m2.mean']).toFixed(0)}
-          </p>
-        </div> */}
       </RangeArea>
       <div className="pt-4 text-center">
         <p className="text-center p-4">Seabed area (m2)</p>
@@ -336,13 +324,3 @@ export function DynamicGraphBox({
     </InfoButtonBoxContainer>
   )
 }
-
-// function mapPropsAreEqual(prevMap: any, nextMap: any) {
-//   return (
-//     prevMap.column === nextMap.column &&
-//     prevMap.surveyDesignCircleValues === nextMap.surveyDesignCircleValues &&
-//     prevMap.hoverValue === nextMap.hoverValue
-//   )
-// }
-
-// export const DynamicGraphBox = React.memo(DynamicGraphBox1, mapPropsAreEqual)

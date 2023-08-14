@@ -28,10 +28,11 @@ export class GetLayers {
 
   async logSignedUrl() {
     const APIBaseUrl = process.env.VITE_API_URL
-
+    console.log(`${APIBaseUrl}v1/user/aws?token=${this.token}`)
     await fetch(`${APIBaseUrl}v1/user/aws?token=${this.token}`)
       .then(async (response) => await response.json())
       .then(async (jsonData) => {
+        console.log(jsonData)
         Object.keys(jsonData).forEach((layerClass) => {
           Object.keys(jsonData[layerClass]).forEach((layerType) => {
             this.data[layerClass].layerNames[layerType].signed_url =

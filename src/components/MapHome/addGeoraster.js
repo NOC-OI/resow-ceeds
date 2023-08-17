@@ -138,7 +138,6 @@ export class GetTileLayer {
       : this.url
     const isUrlEncoded = !!this.layerName.signed_url
 
-    console.log(`${TILE_SERVER_URL}cog/info?url=${encodeURIComponent(newUrl)}`)
     const cogInfo = await axios
       .get(
         `${TILE_SERVER_URL}cog/info?url=${encodeURIComponent(

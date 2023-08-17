@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { FlashMessages } from '../../components/FlashMessages'
 import { LoginPopup } from '../../components/LoginPopup'
-import Cookies from 'js-cookie'
 import { useNavigate } from 'react-router-dom'
+import Cookies from 'js-cookie'
 
 export function LoginPage() {
   const navigate = useNavigate()
@@ -25,7 +25,7 @@ export function LoginPage() {
     }
   }, [])
 
-  const [isLogged, setIsLogged] = useState(!!Cookies.get('token'))
+  const [isLogged, setIsLogged] = useState(Cookies.get('token'))
 
   if (isLogged) {
     navigate('/')

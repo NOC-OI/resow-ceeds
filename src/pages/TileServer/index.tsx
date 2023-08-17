@@ -15,11 +15,11 @@ import { SurveyDesignSelection } from '../../components/SurveyDesignSelection'
 import { FullPagePopup } from '../../components/FullPagePopup'
 import { LoginPopup } from '../../components/LoginPopup'
 import { FlashMessages } from '../../components/FlashMessages'
-import Cookies from 'js-cookie'
 import { useNavigate } from 'react-router-dom'
 import { GraphBox } from '../../components/GraphBox'
 import { DynamicGraphBox } from '../../components/DynamicGraphBox'
 import { GetJsonWeb } from '../../data/loadJsonWeb'
+import Cookies from 'js-cookie'
 
 export function TileServer() {
   const navigate = useNavigate()

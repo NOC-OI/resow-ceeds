@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { LayerTypeOptionsContainer } from './styles'
 import {
-  faChartSimple,
   faCircleInfo,
   faList,
   faLock,
@@ -16,7 +15,7 @@ import { organisms } from '../../data/organisms'
 
 const defaultOpacity = 0.7
 
-interface DataExplorationTypeOptionsProps {
+interface ThreeDDataExplorationTypeOptionsProps {
   content: any
   subLayer: any
   activeOpacity: any
@@ -31,11 +30,9 @@ interface DataExplorationTypeOptionsProps {
   setSelectedLayers: any
   setInfoButtonBox: any
   isLogged?: any
-  getPolyline: any
-  setGetPolyline: any
 }
 
-export function DataExplorationTypeOptions({
+export function ThreeDDataExplorationTypeOptions({
   content,
   subLayer,
   activeOpacity,
@@ -50,9 +47,7 @@ export function DataExplorationTypeOptions({
   setSelectedLayers,
   setInfoButtonBox,
   isLogged,
-  getPolyline,
-  setGetPolyline,
-}: DataExplorationTypeOptionsProps) {
+}: ThreeDDataExplorationTypeOptionsProps) {
   const [opacityIsClicked, setOpacityIsClicked] = useState(
     activeOpacity === `${content}_${subLayer}`,
   )
@@ -84,7 +79,6 @@ export function DataExplorationTypeOptions({
       return { [layerInfo.subLayer]: newSelectedLayer, ...copy }
     })
   }
-
   async function addMapLayer(layerInfo: any) {
     setLayerAction('add')
     const newSelectedLayer = layerInfo.dataInfo
@@ -163,6 +157,7 @@ export function DataExplorationTypeOptions({
   }
 
   async function handleClickLegend() {
+    console.log(subLayers[subLayer])
     if (subLayers[subLayer].data_type === 'WMS') {
       const newParams = subLayers[subLayer].params
       newParams.request = 'GetLegendGraphic'
@@ -194,11 +189,6 @@ export function DataExplorationTypeOptions({
     setActiveOpacity(layerInfo.subLayer)
     setActualLayer([layerInfo.subLayer])
     changeMapOpacity(layerInfo, e.target.value)
-  }
-
-  function handleGenerateGraph() {
-    setGetPolyline((getPolyline: any) => !getPolyline)
-    setActualLayer([subLayers[subLayer].url])
   }
 
   return (
@@ -265,14 +255,14 @@ export function DataExplorationTypeOptions({
                 onClick={handleClickLegend}
               />
             ) : null}
-            {subLayers[subLayer].data_type === 'COG' ? (
+            {/* {subLayers[subLayer].data_type === 'COG' ? (
               <FontAwesomeIcon
                 icon={faChartSimple}
                 title="Make a graph"
                 onClick={handleGenerateGraph}
                 className={getPolyline ? 'active' : ''}
               />
-            ) : null}
+            ) : null} */}
             <FontAwesomeIcon
               icon={faMagnifyingGlass}
               title="Zoom to the layer"

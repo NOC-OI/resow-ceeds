@@ -12,7 +12,6 @@ interface InfoBoxProps {
 export function InfoBox({ position = null, depth = {} }: InfoBoxProps) {
   let lat
   let lng
-
   if (position === null) {
     lat = '---'
     lng = '---'

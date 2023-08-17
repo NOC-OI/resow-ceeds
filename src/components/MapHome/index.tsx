@@ -21,6 +21,7 @@ import { GetPhotoMarker } from './addPhotoMarker'
 import * as turf from '@turf/turf'
 import chroma from 'chroma-js'
 import LeafletRuler from '../LeafletRuler'
+import { useCesium } from 'resium'
 
 interface DisplayPositionProps {
   map: any
@@ -91,7 +92,6 @@ function MapHome1({
     .mode('hsl')
     .colors(30)
   const JOSBaseUrl = process.env.VITE_JASMIN_OBJECT_STORE_URL
-
   const [map, setMap] = useState<any>(null)
 
   const [depth, setDepth] = useState({})
@@ -100,7 +100,6 @@ function MapHome1({
   const [mapCenter, setMapCenter] = useState(
     new L.LatLng(defaultView[0], defaultView[1]),
   )
-
   const defaultWMSBounds = [
     [50.020174, -8.58279],
     [50.578429, -7.70616],

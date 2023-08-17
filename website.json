@@ -1,0 +1,178 @@
+{
+  "surveyDesign": [
+    {
+      "calcClass": "Biodiversity representation",
+      "content": "This calculation uses XXXXX...",
+      "calcNames": [
+        {
+          "name": "Density",
+          "url": "v1/data/csv?orient=list&skip_lines=7",
+          "habitat": ["coarse", "sand", "intermediate", "hard"]
+        },
+        {
+          "name": "Biodiversity",
+          "url": "v1/data/csv?orient=list&skip_lines=7",
+          "habitat": ["coarse", "sand", "intermediate", "hard"],
+          "biodiversity": {
+            "Species richness": "Hill0",
+            "Shannon index (expH')": "Hill1",
+            "Simpson's index": "Hill2"
+          }
+        }
+      ]
+    },
+    {
+      "calcClass": "Temporal representation",
+      "content": "This calculation uses XXXXX...",
+      "calcNames": []
+    },
+    {
+      "calcClass": "Spatial representation",
+      "content": "This calculation uses XXXXX...",
+      "calcNames": []
+    },
+    {
+      "calcClass": "Habitat representation",
+      "content": "This calculation uses XXXXX...",
+      "calcNames": []
+    }
+  ],
+  "indicatorSpecies": [
+    {
+      "calcClass": "Sea pen",
+      "content": "JNCC lists sea pens as a Habitat Feature of Conservation Importance in the summary of the Greater Haig Fras MPA (https://jncc.gov.uk/our-work/greater-haig-fras-mpa/). Note that sea pens were not observed in seabed photographs captured during the autonomous underwater vehicle surveys",
+      "calcNames": []
+    },
+    {
+      "calcClass": "Species of conservation interest",
+      "content": "These are species of general interest for conservation in the area:  Pentapora foliacea, Cartilagenous fish.",
+      "calcNames": [
+        {
+          "name": "*Pentapora foliacea*",
+          "url": "v1/calc?filenames=output:HF2012_alltile_otherdata,output:HF2012_alltile_counts,jncc:JNCC_CEND1012_otherdata&calc=organism&crs=epsg%3A4326&extension=csv&exclude_index=True&calc_columns=pentapora_foliacea&agg_columns=first:filename,first:fileformat,sum:pentapora_foliacea,density:area_seabed_m2",
+          "layers": {
+            "Seabed Images": ["2012 AUV Image Survey"]
+          },
+          "tableName": "pentapora_foliacea",
+          "noButton": true,
+          "decimalPlaces": 1,
+          "sampleImage": "haig-fras/output/M58_10441297_12987746513824.jpg"
+        },
+        {
+          "name": "Cartilagenous fish",
+          "url": "v1/calc?filenames=output:HF2012_alltile_otherdata,output:HF2012_alltile_counts,jncc:JNCC_CEND1012_otherdata&calc=organism&crs=epsg%3A4326&extension=csv&exclude_index=True&calc_columns=galeus&agg_columns=first:filename,first:fileformat,sum:galeus,density:area_seabed_m2",
+          "layers": {
+            "Seabed Images": ["2012 AUV Image Survey"]
+          },
+          "tableName": "galeus",
+          "noButton": true,
+          "decimalPlaces": 1,
+          "sampleImage": "haig-fras/output/M58_10441297_12987746513824.jpg"
+        }
+      ]
+    }
+  ],
+  "habitats": [
+    {
+      "calcClass": "Habitats (Benoist *et al*. 2019)",
+      "content": "Habitats from Benoist *et al*. 2019",
+      "calcNames": [
+        {
+          "name": "Number",
+          "url": "v1/calc?filenames=output:HF2012_alltile_otherdata,output:HF2012_alltile_counts&calc=count&crs=epsg%3A4326&extension=csv&calc_columns=habitat",
+          "layers": { "Seabed Images": ["2012 AUV Image Survey"] }
+        },
+        {
+          "name": "Type",
+          "url": "v1/calc?filenames=output:HF2012_alltile_otherdata,output:HF2012_alltile_counts&calc=agg&crs=epsg%3A4326&extension=csv&agg_columns=first:habitatImage&calc_columns=habitat",
+          "layers": { "Seabed Images": ["2012 AUV Image Survey"] }
+        }
+      ]
+    },
+    {
+      "calcClass": "UK Marine Habitat Classification",
+      "content": "Habitats as defined by Marine Habitat Classification for Britain",
+      "calcNames": [
+        {
+          "name": "Number",
+          "url": "v1/calc?filenames=output:HF2012_alltile_otherdata,output:HF2012_alltile_counts,jncc/JNCC_CEND1012_otherdata&calc=count&crs=epsg%3A4326&extension=csv&calc_columns=UKMarineHabitat",
+          "layers": {
+            "Seabed Images": ["2012 AUV Image Survey", "JNCC CEND1012 Survey"]
+          }
+        },
+        {
+          "name": "Type",
+          "url": "v1/calc?filenames=output:HF2012_alltile_otherdata,output:HF2012_alltile_counts,jncc:JNCC_CEND1012_otherdata&calc=agg&crs=epsg%3A4326&extension=csv&agg_columns=first:UKMarineHabitatImage&calc_columns=UKMarineHabitat",
+          "layers": {
+            "Seabed Images": ["2012 AUV Image Survey", "JNCC CEND1012 Survey"]
+          }
+        }
+      ]
+    },
+    {
+      "calcClass": "Substrates (Benoist *et al*. 2019)",
+      "content": "Substrates from Benoist *et al*. 2019",
+      "calcNames": [
+        {
+          "name": "Number",
+          "url": "v1/calc?filenames=output:HF2012_alltile_otherdata,output:HF2012_alltile_counts&calc=count&crs=epsg%3A4326&extension=csv&calc_columns=substratum",
+          "layers": { "Seabed Images": ["2012 AUV Image Survey"] }
+        },
+        {
+          "name": "Type",
+          "url": "v1/calc?filenames=output:HF2012_alltile_otherdata,output:HF2012_alltile_counts&calc=agg&crs=epsg%3A4326&extension=csv&agg_columns=first:substratumImage&calc_columns=substratum",
+          "layers": { "Seabed Images": ["2012 AUV Image Survey"] }
+        }
+      ]
+    }
+  ],
+  "biodiversity": [
+    {
+      "calcClass": "Diversity across survey",
+      "content": "Number of morphotypes using all tiles from seabed images captured with the autonomous underwater vehicle in 2012 survey.",
+      "calcNames": [
+        {
+          "name": "Morphotypes",
+          "url": "v1/calc?filenames=output:HF2012_alltile_counts&calc=biodiversity2&crs=epsg%3A4326&extension=csv",
+          "layers": { "Seabed Images": ["2012 AUV Image Survey"] },
+          "noButton": true,
+          "decimalPlaces": 0
+        }
+      ]
+    },
+    {
+      "calcClass": "Diversity by Substrate",
+      "content": "Biodiversity metrics exponential Shannon index (expH') and the inverse form of Simpson's index (1/D) (Magurran 2004) are computed for each substrate type. Values are shown as mean +/- standard deviation across sample units. \n Reference: Magurran, A.E., 2004. Measuring Biological Diversity. Blackwell Publishing, Oxford, UK.",
+      "calcNames": [
+        {
+          "name": "Density of benthic megafauna",
+          "url": "v1/calc?filenames=output:HF2012_SU&crs=epsg%3A4326&extension=csv&calc=biodiversity1&calc_columns=substratum",
+          "layers": { "Seabed Images": ["2012 AUV Image Survey"] },
+          "decimalPlaces": 3,
+          "noButton": true
+        },
+        {
+          "name": "Number of morphotypes",
+          "url": "v1/calc?filenames=output:HF2012_SU&crs=epsg%3A4326&extension=csv&calc=biodiversity3&calc_columns=substratum",
+          "layers": { "Seabed Images": ["2012 AUV Image Survey"] },
+          "decimalPlaces": 3,
+          "noButton": true
+        },
+        {
+          "name": "Shannon index (expH')",
+          "url": "v1/calc?filenames=output:HF2012_SU&crs=epsg%3A4326&extension=csv&calc=biodiversity4&calc_columns=substratum",
+          "layers": { "Seabed Images": ["2012 AUV Image Survey"] },
+          "decimalPlaces": 2,
+          "noButton": true
+        },
+        {
+          "name": "Inverse Simpson's index",
+          "url": "v1/calc?filenames=output:HF2012_SU&crs=epsg%3A4326&extension=csv&calc=biodiversity5&calc_columns=substratum",
+          "layers": { "Seabed Images": ["2012 AUV Image Survey"] },
+          "decimalPlaces": 2,
+          "noButton": true
+        }
+      ]
+    }
+  ]
+}

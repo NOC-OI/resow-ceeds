@@ -110,7 +110,8 @@ export function SideSelection({
     }
   }
   const fetchData = async () => {
-    const getLayers = new GetLayers(isLogged)
+    const rout = window.location.pathname
+    const getLayers = new GetLayers(isLogged, rout)
     await getLayers.loadCSV().then(async function () {
       setListLayers((listLayers: any) =>
         listLayers.lenght > 0 ? listLayers : getLayers.data,
@@ -118,9 +119,8 @@ export function SideSelection({
       setLoading(false)
     })
   }
-
   useEffect(() => {
-    if (!photoId && window.location.pathname !== '/3d') {
+    if (!photoId) {
       setLoading(true)
       fetchData()
     }
@@ -154,6 +154,10 @@ export function SideSelection({
   function handleGoToBathymetry() {
     if (window.location.pathname !== '/3d') {
       navigate('/3d')
+    } else {
+      setSelectedSidebarOption((selectedSidebarOption: string) =>
+        selectedSidebarOption ? '' : '3D',
+      )
     }
   }
 
@@ -212,8 +216,10 @@ export function SideSelection({
           <FontAwesomeIcon icon={faLayerGroup} />
         </SideSelectionLink>
         <SideSelectionLink
-          title={'3D Visualization'}
+          title={'3D Data Exploration'}
           onClick={handleGoToBathymetry}
+          id={'3D Data Exploration'}
+          className={selectedSidebarOption === '3D' ? 'active' : ''}
         >
           <Icon icon="bi:badge-3d-fill" />
         </SideSelectionLink>

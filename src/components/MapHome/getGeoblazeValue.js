@@ -12,7 +12,6 @@ export class GetGeoblazeValue {
 
   async getGeoblaze() {
     const TILE_SERVER_URL = process.env.VITE_TILE_SERVER_URL
-
     if (this.coords) {
       const url = `${TILE_SERVER_URL}cog/tiles/WebMercatorQuad/${this.coords.z}/${this.coords.x}/${this.coords.y}.tif?url=${this.layer.options.url}`
       const latlng3857 = proj4('EPSG:4326', 'EPSG:3857').forward([
@@ -30,15 +29,6 @@ export class GetGeoblazeValue {
       } catch (err) {
         this.dep = null
       }
-      // geoblaze.identify(value, [latlng3857[0], latlng3857[1]]).then((t) => {
-      //   console.log(t)
-      // })
-      // geoblaze.max(value).then((t) => {
-      //   console.log(t)
-      // })
-      // console.log(
-      //   geoblaze.identify(value, [this.latlng.lng, this.latlng.lat]),
-      // )
     } else {
       this.dep = geoblaze.identify(this.layer, [
         this.latlng.lng,
@@ -49,13 +39,27 @@ export class GetGeoblazeValue {
     if (this.dep < 0) {
       this.dep = this.dep * -1
     }
-    // console.log(this.layer)
-    // if (this.layer.options) {
-    //   geoblaze.parse(this.layer.options.url).then((value) => {
-    //     console.log(
-    //       geoblaze.identify(value, [this.latlng.lng, this.latlng.lat]),
-    //     )
-    //   })
-    // }
+  }
+}
+
+export class GetGeoblazeValue3D {
+  constructor(url) {
+    this.url = url
+    this.dep = null
+    this.layer = null
+  }
+
+  async parseGeoraster() {
+    await geoblaze.load(this.url).then(async (georaster) => {
+      this.layer = georaster
+    })
+  }
+
+  async getGeoblaze(latlng) {
+    this.dep = geoblaze.identify(this.layer, [
+      latlng.lng.toFixed(4),
+      latlng.lat.toFixed(4),
+    ])
+    this.dep = this.dep[0]
   }
 }

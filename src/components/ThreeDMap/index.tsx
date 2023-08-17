@@ -420,13 +420,7 @@ function ThreeDMap1({
   }, [selectedLayers])
   const displayMap = useMemo(
     () => (
-      <Viewer
-        // full
-        animation={false}
-        timeline={false}
-        ref={ref}
-        infoBox={true}
-      >
+      <Viewer full animation={false} timeline={false} ref={ref} infoBox={true}>
         <ImageryLayer imageryProvider={jnccMCZ} />
         <ImageryLayer imageryProvider={jnccSpecial} />
         <CameraFlyTo destination={startCoordinates} duration={3} />

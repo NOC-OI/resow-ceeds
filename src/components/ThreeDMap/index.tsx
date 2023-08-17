@@ -225,6 +225,7 @@ function ThreeDMap1({
   const displayMap = useMemo(
     () => (
       <Viewer
+        full
         animation={false}
         timeline={false}
         ref={ref}

@@ -21,14 +21,8 @@ import { ResiumContainer } from './styles'
 import React, { useEffect, useRef, useMemo, useState } from 'react'
 import { InfoBox } from '../InfoBox'
 import * as Cesium from 'cesium'
-import {
-  GetGeoblazeValue,
-  GetGeoblazeValue3D,
-} from '../MapHome/getGeoblazeValue'
+import { GetGeoblazeValue3D } from '../MapHome/getGeoblazeValue'
 import { Loading } from '../Loading'
-import { bounds, map } from 'leaflet'
-import { GetCOGLayer, GetTileLayer } from '../MapHome/addGeoraster'
-import { GetMBTiles } from '../MapHome/addMBTiles'
 import { GetPhotoMarker } from '../MapHome/addPhotoMarker'
 
 Ion.defaultAccessToken = process.env.VITE_CESIUM_TOKEN
@@ -252,28 +246,6 @@ function ThreeDMap1({
         layer = getWMSLayer(layerName, actual)
         layer.attribution = actual
         layer.alpha = 0.7
-      } else if (layerName.data_type === 'COG') {
-        if (window.location.pathname === '/notileserver') {
-          const getCOGLayer = new GetCOGLayer(layerName, actual)
-          await getCOGLayer.parseGeo().then(function () {
-            layer = getCOGLayer.layer
-            bounds = defaultWMSBounds
-          })
-        } else {
-          const getCOGLayer = new GetTileLayer(layerName, actual, true)
-          await getCOGLayer.getTile().then(function () {
-            if (getCOGLayer.error) {
-              setFlashMessage({
-                messageType: 'error',
-                content: getCOGLayer.error,
-              })
-              setShowFlash(true)
-              return
-            }
-            layer = getCOGLayer.layer
-            bounds = defaultWMSBounds
-          })
-        }
       } else if (layerName.data_type === 'Photo') {
         layers = ref.current.cesiumElement.entities
         const markers: any = []
@@ -336,81 +308,12 @@ function ThreeDMap1({
         const turfConvex = turf.convex(turf.featureCollection(markers))
 
         if (turfConvex) {
-          const turflayer = Cesium.GeoJsonDataSource.load(turfConvex, myStyle)
-          turflayer.attribution = actual
-          ref.current.cesiumElement.dataSources.add(turflayer)
+          let turfLayer: any
+          // eslint-disable-next-line prefer-const
+          turfLayer = Cesium.GeoJsonDataSource.load(turfConvex, myStyle)
+          turfLayer.attribution = actual
+          ref.current.cesiumElement.dataSources.add(turfLayer)
         }
-      } else if (layerName.data_type === 'MBTiles') {
-        // bounds = defaultWMSBounds
-
-        const getMBTilesLayer = new GetMBTiles(layerName, actual)
-        await getMBTilesLayer.getLayer().then(async function () {
-          layer = getMBTilesLayer.layer
-          if (layer) {
-            layer.on('click', async function (e: any) {
-              const strContent: string[] = []
-              Object.keys(e.layer.properties).forEach((c) => {
-                strContent.push(
-                  `<p>${c}: ${
-                    e.layer.properties[c] === ' ' ? '--' : e.layer.properties[c]
-                  }<p>`,
-                )
-              })
-              L.popup({ maxWidth: 200 })
-                .setLatLng(e.latlng)
-                .setContent(strContent.join(''))
-                .openOn(map)
-            })
-          }
-        })
-      }
-      if (layerName.data_type !== 'Photo') {
-        layer.options.attribution = actual
-        map.addLayer(layer, true)
-
-        if (layerName.data_type === 'COG' && layerName.get_value) {
-          map.on('mousemove', function (evt: { originalEvent: any }) {
-            if (selectedLayers[actual]) {
-              const latlng = map.mouseEventToLatLng(evt.originalEvent)
-              const tileSize = { x: 256, y: 256 }
-              const pixelPoint = map
-                .project(latlng, Math.floor(map.getZoom()))
-                .floor()
-              const coords = pixelPoint.unscaleBy(tileSize).floor()
-              coords.z = Math.floor(map.getZoom()) // { x: 212, y: 387, z: 10 }
-
-              const getGeoblazeValue = new GetGeoblazeValue(
-                layer,
-                latlng,
-                coords,
-              )
-              getGeoblazeValue.getGeoblaze().then(function () {
-                const dep = getGeoblazeValue.dep
-                const depthName = actual.split('_')[1]
-                if (dep) {
-                  if (dep > 0.0) {
-                    setDepth((depth: any) => {
-                      const copy = { ...depth }
-                      copy[depthName] = dep.toFixed(2)
-                      return {
-                        ...copy,
-                      }
-                    })
-                  }
-                } else {
-                  setDepth((depth: any) => {
-                    const copy = { ...depth }
-                    delete copy[depthName]
-                    return {
-                      ...copy,
-                    }
-                  })
-                }
-              })
-            }
-          })
-        }
-        layer && bringLayerToFront(layer)
       }
     })
     setLoading(false)

@@ -74,6 +74,7 @@ export class GetPhotoMarker {
   }
 
   async getMarker() {
+    this.layer = {}
     const icon = L.divIcon({
       html: `<div class='all-icon'>
         <svg

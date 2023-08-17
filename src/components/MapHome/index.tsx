@@ -697,6 +697,7 @@ function MapHome1({
           if (getPhotoMarker.layer) {
             if (selectedLayers[actual].show.includes(getPhotoMarker.fileName)) {
               map.addLayer(getPhotoMarker.layer)
+              // @ts-ignore
               getPhotoMarker.layer.on('click', async function (e) {
                 L.popup()
                   .setLatLng(e.latlng)

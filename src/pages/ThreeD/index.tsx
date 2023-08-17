@@ -10,6 +10,7 @@ import { FlashMessages } from '../../components/FlashMessages'
 import { LoginPopup } from '../../components/LoginPopup'
 import { FullPagePopup } from '../../components/FullPagePopup'
 import { InfoButtonBox } from '../../components/InfoButtonBox'
+import { DataExplorationLegend } from '../../components/DataExplorationLegend'
 
 export function ThreeD() {
   const navigate = useNavigate()
@@ -29,6 +30,7 @@ export function ThreeD() {
   const [listLayers, setListLayers] = useState([])
 
   const [showPopup, setShowPopup] = useState(false)
+  const [activePhoto, setActivePhoto] = useState('')
 
   const [showLogin, setShowLogin] = useState(false)
   const [isLogged, setIsLogged] = useState(Cookies.get('token'))
@@ -90,25 +92,34 @@ export function ThreeD() {
             isLogged={isLogged}
           />
         )}
+        {layerLegend ? (
+          <DataExplorationLegend
+            layerLegend={layerLegend}
+            setLayerLegend={setLayerLegend}
+          />
+        ) : null}
+        {Object.keys(infoButtonBox).length !== 0 ? (
+          <InfoButtonBox
+            infoButtonBox={infoButtonBox}
+            setInfoButtonBox={setInfoButtonBox}
+            selectedLayers={selectedLayers}
+            setSelectedLayers={setSelectedLayers}
+            layerAction={layerAction}
+            setLayerAction={setLayerAction}
+            actualLayer={actualLayer}
+            setActualLayer={setActualLayer}
+            listLayers={listLayers}
+          />
+        ) : null}
       </SideBar>
-      {Object.keys(infoButtonBox).length !== 0 ? (
-        <InfoButtonBox
-          infoButtonBox={infoButtonBox}
-          setInfoButtonBox={setInfoButtonBox}
-          selectedLayers={selectedLayers}
-          setSelectedLayers={setSelectedLayers}
-          layerAction={layerAction}
-          setLayerAction={setLayerAction}
-          actualLayer={actualLayer}
-          setActualLayer={setActualLayer}
-          listLayers={listLayers}
-        />
-      ) : null}
       <ThreeDMap
         selectedLayers={selectedLayers}
         actualLayer={actualLayer}
         layerAction={layerAction}
         setLayerAction={setLayerAction}
+        activePhoto={activePhoto}
+        setActivePhoto={setActivePhoto}
+        listLayers={listLayers}
       />
       {showPopup && <FullPagePopup setShowPopup={setShowPopup} />}
 

@@ -72,7 +72,7 @@ export class GetLayers {
 
     await axios.get(url).then(async (resp) => {
       this.data = resp.data
-      if (this.rout !== '/3d') {
+      if (this.rout !== '/3d1') {
         await this.logJSONData([
           {
             layerClass: 'Seabed Images',

@@ -21,7 +21,6 @@ import { GetPhotoMarker } from './addPhotoMarker'
 import * as turf from '@turf/turf'
 import chroma from 'chroma-js'
 import LeafletRuler from '../LeafletRuler'
-import { useCesium } from 'resium'
 
 interface DisplayPositionProps {
   map: any
@@ -667,7 +666,6 @@ function MapHome1({
               selectedLayers[layer.options.attribution].opacity
             layer.setStyle(newStyle)
           }
-          console.log(layer)
         }
       }
     })

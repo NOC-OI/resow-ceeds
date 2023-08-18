@@ -202,6 +202,8 @@ function ThreeDMap1({
   }
 
   function getWMSLayer(layerName: any, actual: any) {
+    layerName.params.width = 128
+    layerName.params.height = 128
     const provider = new WebMapServiceImageryProvider({
       url: layerName.url,
       parameters: layerName.params,
@@ -211,12 +213,12 @@ function ThreeDMap1({
     return layer
   }
   // if (ref.current?.cesiumElement) {
-  //   console.log(
-  //     ref.current?.cesiumElement.entities._entities._array[0]?._attribution,
-  //   )
+  //   // console.log(
+  //   //   ref.current?.cesiumElement.entities._entities._array[0]?._attribution,
+  //   // )
   //   // console.log(ref.current.cesiumElement.dataSources)
-  //   // const layers = ref.current.cesiumElement.scene.imageryLayers
-  //   // console.log(layers._layers)
+  //   const layers = ref.current.cesiumElement.scene.imageryLayers
+  //   console.log(layers._layers)
   // }
   function createColor(colorScale: any, rgb: any, alpha: any = 1) {
     let color: any
@@ -236,6 +238,21 @@ function ThreeDMap1({
     }
     return color
   }
+
+  function correctBaseWMSOrder(layers: any) {
+    layers?._layers.forEach(function (imageryLayers: any) {
+      if (imageryLayers._imageryProvider._layers === 'mcz') {
+        layers.remove(imageryLayers)
+        const layer = new Cesium.ImageryLayer(jnccMCZ, {})
+        layers.add(layer)
+      } else if (imageryLayers._imageryProvider._layers === 'sac_mc_full') {
+        layers.remove(imageryLayers)
+        const layer = new Cesium.ImageryLayer(jnccSpecial, {})
+        layers.add(layer)
+      }
+    })
+  }
+
   async function generateSelectedLayer() {
     actualLayer.forEach(async (actual) => {
       const layerName = selectedLayers[actual]
@@ -246,6 +263,8 @@ function ThreeDMap1({
         layer = getWMSLayer(layerName, actual)
         layer.attribution = actual
         layer.alpha = 0.7
+        layers.add(layer)
+        correctBaseWMSOrder(layers)
       } else if (layerName.data_type === 'Photo') {
         layers = ref.current.cesiumElement.entities
         const markers: any = []
@@ -373,6 +392,7 @@ function ThreeDMap1({
             layer.attribution = actual
             layer.alpha = selectedLayers[layer.attribution].opacity
             layers.add(layer)
+            correctBaseWMSOrder(layers)
             setLayerAction('')
           }
         }
@@ -392,6 +412,7 @@ function ThreeDMap1({
           const layerNew = getWMSLayer(layerName, actualLayer[0])
           layerNew.alpha = layer.alpha
           layers.add(layerNew)
+          correctBaseWMSOrder(layers)
           ref.current.cesiumElement.camera.flyTo({
             destination: startCoordinates,
           })

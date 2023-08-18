@@ -3,6 +3,7 @@
 import axios from 'axios'
 import { parse, stringify } from 'qs'
 import 'leaflet/dist/leaflet'
+import * as Cesium from 'cesium'
 
 export class GetCOGLayer {
   constructor(layerName, actualLayer) {
@@ -127,7 +128,7 @@ export class GetTileLayer {
     this.error = null
   }
 
-  async getTile() {
+  async getTile(rout) {
     const TILE_SERVER_URL = process.env.VITE_TILE_SERVER_URL
     const JOSBaseUrl = process.env.VITE_JASMIN_OBJECT_STORE_URL
 
@@ -239,7 +240,7 @@ export class GetTileLayer {
         url,
         encoded: isUrlEncoded,
       }
-
+      console.log(this.args)
       this.tileJson = await axios
         .get(`${TILE_SERVER_URL}cog/WebMercatorQuad/tilejson.json`, {
           params: this.args,
@@ -249,19 +250,45 @@ export class GetTileLayer {
           },
         })
         .then((r) => r.data)
-
       this.tileUrl = this.tileJson.tiles[0]
+      this.tileUrl = this.tileUrl.replace('/{z}/{x}/{y}@1x', '')
+      console.log(this.tileUrl)
       if (bands.length === 1) {
         this.tileUrl += `&colormap_name=${this.colourScheme}`
       }
+      if (rout === '/3d') {
+        this.tileUrl += '&format=png'
+        const rectangle = new Cesium.Rectangle(
+          Cesium.Math.toRadians(this.bounds[0]),
+          Cesium.Math.toRadians(this.bounds[1]),
+          Cesium.Math.toRadians(this.bounds[2]),
+          Cesium.Math.toRadians(this.bounds[3]),
+        )
+        // console.log(this.tileUrl)
+        // this.layer = new Cesium.WebMapTileServiceImageryProvider({
+        //   url: this.tileUrl,
+        //   maximumLevel: 30,
+        //   rectangle,
+        // })
+        console.log(this.tileUrl)
 
-      this.layer = L.tileLayer(this.tileUrl, {
-        opacity: 0.7,
-        maxZoom: 30,
-        attribution: this.actualLayer,
-        url: this.url,
-        limits: this.bounds,
-      })
+        this.layer = await Cesium.TileMapServiceImageryProvider.fromUrl(
+          this.tileUrl,
+          {
+            fileExtension: 'png',
+            maximumLevel: 30,
+            rectangle,
+          },
+        )
+      } else {
+        this.layer = L.tileLayer(this.tileUrl, {
+          opacity: 0.7,
+          maxZoom: 30,
+          attribution: this.actualLayer,
+          url: this.url,
+          limits: this.bounds,
+        })
+      }
     }
   }
 }

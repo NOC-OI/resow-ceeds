@@ -24,6 +24,7 @@ import * as Cesium from 'cesium'
 import { GetGeoblazeValue3D } from '../MapHome/getGeoblazeValue'
 import { Loading } from '../Loading'
 import { GetPhotoMarker } from '../MapHome/addPhotoMarker'
+import { GetTileLayer } from '../MapHome/addGeoraster'
 
 Ion.defaultAccessToken = process.env.VITE_CESIUM_TOKEN
 
@@ -63,6 +64,7 @@ function ThreeDMap1({
     .colors(30)
 
   const JOSBaseUrl = process.env.VITE_JASMIN_OBJECT_STORE_URL
+  const rout = window.location.pathname
 
   const [position, setPosition] = useState(null)
   const [loading, setLoading] = useState<boolean>(false)
@@ -265,6 +267,16 @@ function ThreeDMap1({
         layer.alpha = 0.7
         layers.add(layer)
         correctBaseWMSOrder(layers)
+      } else if (layerName.data_type === 'COG') {
+        layers = ref.current.cesiumElement.scene.imageryLayers
+        const getCOGLayer = new GetTileLayer(layerName, actual, true)
+        await getCOGLayer.getTile(rout).then(function () {
+          layer = getCOGLayer.layer
+          layer.alpha = 0.7
+          // layers.add(layer)
+          layers.addImageryProvider(layer)
+          console.log('11111')
+        })
       } else if (layerName.data_type === 'Photo') {
         layers = ref.current.cesiumElement.entities
         const markers: any = []
@@ -441,7 +453,7 @@ function ThreeDMap1({
   }, [selectedLayers])
   const displayMap = useMemo(
     () => (
-      <Viewer full animation={false} timeline={false} ref={ref} infoBox={true}>
+      <Viewer animation={false} timeline={false} ref={ref} infoBox={true}>
         <ImageryLayer imageryProvider={jnccMCZ} />
         <ImageryLayer imageryProvider={jnccSpecial} />
         <CameraFlyTo destination={startCoordinates} duration={3} />

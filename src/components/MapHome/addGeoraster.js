@@ -240,7 +240,6 @@ export class GetTileLayer {
         url,
         encoded: isUrlEncoded,
       }
-      console.log(this.args)
       this.tileJson = await axios
         .get(`${TILE_SERVER_URL}cog/WebMercatorQuad/tilejson.json`, {
           params: this.args,
@@ -251,35 +250,64 @@ export class GetTileLayer {
         })
         .then((r) => r.data)
       this.tileUrl = this.tileJson.tiles[0]
-      this.tileUrl = this.tileUrl.replace('/{z}/{x}/{y}@1x', '')
-      console.log(this.tileUrl)
       if (bands.length === 1) {
         this.tileUrl += `&colormap_name=${this.colourScheme}`
       }
       if (rout === '/3d') {
-        this.tileUrl += '&format=png'
-        const rectangle = new Cesium.Rectangle(
-          Cesium.Math.toRadians(this.bounds[0]),
-          Cesium.Math.toRadians(this.bounds[1]),
-          Cesium.Math.toRadians(this.bounds[2]),
-          Cesium.Math.toRadians(this.bounds[3]),
-        )
+        // this.tileUrl = this.tileUrl.replace('/{z}/{x}/{y}@1x', '')
+        // this.tileUrl += '&format=png'
+        // const rectangle = new Cesium.Rectangle(
+        //   Cesium.Math.toRadians(this.bounds[0]),
+        //   Cesium.Math.toRadians(this.bounds[1]),
+        //   Cesium.Math.toRadians(this.bounds[2]),
+        //   Cesium.Math.toRadians(this.bounds[3]),
+        // )
         // console.log(this.tileUrl)
         // this.layer = new Cesium.WebMapTileServiceImageryProvider({
         //   url: this.tileUrl,
         //   maximumLevel: 30,
         //   rectangle,
         // })
-        console.log(this.tileUrl)
+        // const rectangleSouthwestInMeters = Cesium.Cartesian3.fromDegrees(
+        //   this.bounds[2],
+        //   this.bounds[1],
+        // )
+        // const rectangleNortheastInMeters = Cesium.Cartesian3.fromDegrees(
+        //   this.bounds[0],
+        //   this.bounds[3],
+        // )
+        // this.layer = await Cesium.TileMapServiceImageryProvider.fromUrl(
+        //   this.tileUrl,
+        //   {
+        //     fileExtension: 'png',
+        //     maximumLevel: 30,
+        //     rectangle,
+        //     url: this.url,
+        //     // tilingScheme: new Cesium.WebMercatorTilingScheme({
+        //     //   rectangleSouthwestInMeters: Cesium.Cartesian2.fromCartesian3(
+        //     //     rectangleSouthwestInMeters,
+        //     //   ),
+        //     //   rectangleNortheastInMeters: Cesium.Cartesian2.fromCartesian3(
+        //     //     rectangleNortheastInMeters,
+        //     //   ),
+        //     // }),
+        //   },
+        // )
+        // this.layer = new Cesium.Cesium3DTileset({
+        //   url: this.tileUrl,
+        // })
+        // this.layer = new Cesium.UrlTemplateImageryProvider({
+        //   url: this.tileUrl,
+        // })
 
-        this.layer = await Cesium.TileMapServiceImageryProvider.fromUrl(
-          this.tileUrl,
-          {
-            fileExtension: 'png',
-            maximumLevel: 30,
-            rectangle,
-          },
+        this.layer = new Cesium.ImageryLayer(
+          new Cesium.UrlTemplateImageryProvider({
+            url: this.tileUrl,
+          }),
+          {},
         )
+        this.layer.attribution = this.actualLayer
+        this.layer.dataType = this.dataType
       } else {
         this.layer = L.tileLayer(this.tileUrl, {
           opacity: 0.7,

@@ -5,6 +5,7 @@ import {
   CameraFlyTo,
   ScreenSpaceEvent,
   CesiumComponentRef,
+  Cesium3DTileset,
 } from 'resium'
 import chroma from 'chroma-js'
 import * as turf from '@turf/turf'
@@ -15,6 +16,7 @@ import {
   ScreenSpaceEventType,
   WebMapServiceImageryProvider,
   Viewer as CesiumViewer,
+  createWorldTerrainAsync,
 } from 'cesium'
 import './styles.css'
 import { ResiumContainer } from './styles'
@@ -72,6 +74,7 @@ function ThreeDMap1({
   // const [viewer, setViewer] = useState<any>(null)
   const ref = useRef<CesiumComponentRef<CesiumViewer>>(null)
 
+  const defaultOpacity = 0.7
   const defaultWMSBounds = [
     [50.020174, -8.58279],
     [50.578429, -7.70616],
@@ -114,6 +117,8 @@ function ThreeDMap1({
     },
     layers: 'mcz',
   })
+
+  const terrainProvider = createWorldTerrainAsync()
 
   function getGeorasterLayer() {
     const getGeoblazeValue = new GetGeoblazeValue3D(url)
@@ -160,47 +165,49 @@ function ThreeDMap1({
   }
 
   async function handleHoverUpdateInfoBox(e: any) {
-    const ellipsoid = ref.current.cesiumElement.scene.globe.ellipsoid
-    const cartesian = ref.current.cesiumElement.camera.pickEllipsoid(
-      new Cesium.Cartesian3(e.endPosition.x, e.endPosition.y),
-      ellipsoid,
-    )
-    const cartographic = ellipsoid.cartesianToCartographic(cartesian)
-    const latitudeDegrees = Cesium.Math.toDegrees(cartographic.latitude)
-    const longitudeDegrees = Cesium.Math.toDegrees(cartographic.longitude)
+    if (ref.current?.cesiumElement) {
+      const ellipsoid = ref.current.cesiumElement.scene.globe.ellipsoid
+      const cartesian = ref.current.cesiumElement.camera.pickEllipsoid(
+        new Cesium.Cartesian3(e.endPosition.x, e.endPosition.y),
+        ellipsoid,
+      )
+      const cartographic = ellipsoid.cartesianToCartographic(cartesian)
+      const latitudeDegrees = Cesium.Math.toDegrees(cartographic.latitude)
+      const longitudeDegrees = Cesium.Math.toDegrees(cartographic.longitude)
 
-    setPosition((position: any) => {
-      const newPosition = { ...position }
-      newPosition.lat = latitudeDegrees
-      newPosition.lng = longitudeDegrees
-      return newPosition
-    })
+      setPosition((position: any) => {
+        const newPosition = { ...position }
+        newPosition.lat = latitudeDegrees
+        newPosition.lng = longitudeDegrees
+        return newPosition
+      })
 
-    await batLayer
-      .getGeoblaze({
-        lat: latitudeDegrees,
-        lng: longitudeDegrees,
-      })
-      .then(async function () {
-        const dep = batLayer.dep
-        if (dep) {
-          setDepth((depth: any) => {
-            const copy = { ...depth }
-            copy.Depth = dep.toFixed(2)
-            return {
-              ...copy,
-            }
-          })
-        } else {
-          setDepth((depth: any) => {
-            const copy = { ...depth }
-            copy.Depth = null
-            return {
-              ...copy,
-            }
-          })
-        }
-      })
+      await batLayer
+        .getGeoblaze({
+          lat: latitudeDegrees,
+          lng: longitudeDegrees,
+        })
+        .then(async function () {
+          const dep = batLayer.dep
+          if (dep) {
+            setDepth((depth: any) => {
+              const copy = { ...depth }
+              copy.Depth = dep.toFixed(2)
+              return {
+                ...copy,
+              }
+            })
+          } else {
+            setDepth((depth: any) => {
+              const copy = { ...depth }
+              copy.Depth = null
+              return {
+                ...copy,
+              }
+            })
+          }
+        })
+    }
   }
 
   function getWMSLayer(layerName: any, actual: any) {
@@ -214,14 +221,22 @@ function ThreeDMap1({
     const layer = new Cesium.ImageryLayer(provider, {})
     return layer
   }
+
+  async function generateAddCOGLayer(layer, layers, layerName, actual, alpha) {
+    const getCOGLayer = new GetTileLayer(layerName, actual, true)
+    await getCOGLayer.getTile(rout).then(function () {
+      layer = getCOGLayer.layer
+      layer.alpha = alpha
+      layers.add(layer)
+      correctBaseWMSOrder(layers)
+    })
+  }
+
   // if (ref.current?.cesiumElement) {
-  //   // console.log(
-  //   //   ref.current?.cesiumElement.entities._entities._array[0]?._attribution,
-  //   // )
-  //   // console.log(ref.current.cesiumElement.dataSources)
   //   const layers = ref.current.cesiumElement.scene.imageryLayers
   //   console.log(layers._layers)
   // }
+
   function createColor(colorScale: any, rgb: any, alpha: any = 1) {
     let color: any
     if (rgb) {
@@ -241,7 +256,7 @@ function ThreeDMap1({
     return color
   }
 
-  function correctBaseWMSOrder(layers: any) {
+  async function correctBaseWMSOrder(layers: any) {
     layers?._layers.forEach(function (imageryLayers: any) {
       if (imageryLayers._imageryProvider._layers === 'mcz') {
         layers.remove(imageryLayers)
@@ -264,19 +279,18 @@ function ThreeDMap1({
         layers = ref.current.cesiumElement.scene.imageryLayers
         layer = getWMSLayer(layerName, actual)
         layer.attribution = actual
-        layer.alpha = 0.7
+        layer.alpha = defaultOpacity
         layers.add(layer)
         correctBaseWMSOrder(layers)
       } else if (layerName.data_type === 'COG') {
         layers = ref.current.cesiumElement.scene.imageryLayers
-        const getCOGLayer = new GetTileLayer(layerName, actual, true)
-        await getCOGLayer.getTile(rout).then(function () {
-          layer = getCOGLayer.layer
-          layer.alpha = 0.7
-          // layers.add(layer)
-          layers.addImageryProvider(layer)
-          console.log('11111')
-        })
+        await generateAddCOGLayer(
+          layer,
+          layers,
+          layerName,
+          actual,
+          defaultOpacity,
+        )
       } else if (layerName.data_type === 'Photo') {
         layers = ref.current.cesiumElement.entities
         const markers: any = []
@@ -355,11 +369,11 @@ function ThreeDMap1({
       const splitActual = actual.split('_')
       const layerName = listLayers[splitActual[0]].layerNames[splitActual[1]]
       let layers: any
-      if (layerName.data_type === 'WMS') {
+      if (layerName.data_type === 'WMS' || layerName.data_type === 'COG') {
         // eslint-disable-next-line prefer-const
         layers = ref.current.cesiumElement.scene.imageryLayers
         layers?._layers.forEach(function (layer: any) {
-          if (actualLayer.includes(layer.attribution)) {
+          if ([actual].includes(layer.attribution)) {
             layers.remove(layer)
             setLayerAction('')
           }
@@ -392,45 +406,67 @@ function ThreeDMap1({
 
   function changeMapOpacity() {
     let layers: any
-    // eslint-disable-next-line prefer-const
-    layers = ref.current.cesiumElement.scene.imageryLayers
     actualLayer.forEach(async (actual) => {
-      const layerName = selectedLayers[actual]
-      layers?._layers.forEach(function (layer: any) {
-        if (actualLayer.includes(layer.attribution)) {
-          if (!layer.dataType) {
+      const splitActual = actual.split('_')
+      const layerName = listLayers[splitActual[0]].layerNames[splitActual[1]]
+      if (layerName.data_type === 'WMS' || layerName.data_type === 'COG') {
+        layers = ref.current.cesiumElement.scene.imageryLayers
+        layers?._layers.forEach(function (layer: any) {
+          if ([actual].includes(layer.attribution)) {
             layers.remove(layer)
-            layer = getWMSLayer(layerName, actual)
-            layer.attribution = actual
-            layer.alpha = selectedLayers[layer.attribution].opacity
-            layers.add(layer)
-            correctBaseWMSOrder(layers)
-            setLayerAction('')
+            if (layerName.data_type === 'WMS') {
+              layer = getWMSLayer(layerName, actual)
+              layer.attribution = actual
+              layer.alpha = selectedLayers[layer.attribution].opacity
+              layers.add(layer)
+              correctBaseWMSOrder(layers)
+            } else {
+              generateAddCOGLayer(
+                layer,
+                layers,
+                layerName,
+                actual,
+                selectedLayers[layer.attribution].opacity,
+              )
+            }
           }
-        }
-      })
+        })
+      }
+      setLayerAction('')
     })
   }
 
   async function changeMapZoom() {
     let layers: any
-    // eslint-disable-next-line prefer-const
-    layers = ref.current.cesiumElement.scene.imageryLayers
     actualLayer.forEach(async (actual) => {
-      const layerName = selectedLayers[actual]
-      layers?._layers.forEach(function (layer: any) {
-        if (actualLayer.includes(layer.attribution)) {
-          layers.remove(layer)
-          const layerNew = getWMSLayer(layerName, actualLayer[0])
-          layerNew.alpha = layer.alpha
-          layers.add(layerNew)
-          correctBaseWMSOrder(layers)
-          ref.current.cesiumElement.camera.flyTo({
-            destination: startCoordinates,
-          })
-          setLayerAction('')
-        }
-      })
+      const splitActual = actual.split('_')
+      const layerName = listLayers[splitActual[0]].layerNames[splitActual[1]]
+      if (layerName.data_type === 'WMS' || layerName.data_type === 'COG') {
+        layers = ref.current.cesiumElement.scene.imageryLayers
+        layers?._layers.forEach(function (layer: any) {
+          if ([actual].includes(layer.attribution)) {
+            layers.remove(layer)
+            if (layerName.data_type === 'WMS') {
+              const layerNew = getWMSLayer(layerName, actualLayer[0])
+              layerNew.alpha = layer.alpha
+              layers.add(layerNew)
+              correctBaseWMSOrder(layers)
+            } else {
+              generateAddCOGLayer(
+                layer,
+                layers,
+                layerName,
+                actual,
+                selectedLayers[layer.attribution].opacity,
+              )
+            }
+            ref.current.cesiumElement.camera.flyTo({
+              destination: startCoordinates,
+            })
+            setLayerAction('')
+          }
+        })
+      }
     })
   }
 
@@ -453,7 +489,13 @@ function ThreeDMap1({
   }, [selectedLayers])
   const displayMap = useMemo(
     () => (
-      <Viewer animation={false} timeline={false} ref={ref} infoBox={true}>
+      <Viewer
+        animation={false}
+        timeline={false}
+        ref={ref}
+        infoBox={true}
+        terrainProvider={terrainProvider}
+      >
         <ImageryLayer imageryProvider={jnccMCZ} />
         <ImageryLayer imageryProvider={jnccSpecial} />
         <CameraFlyTo destination={startCoordinates} duration={3} />
@@ -489,11 +531,16 @@ function mapPropsAreEqual(prevMap: any, nextMap: any) {
 
 export const ThreeDMap = React.memo(ThreeDMap1, mapPropsAreEqual)
 
-//   <Cesium3DTileset
-//   url={Cesium.IonImageryProvider.fromAssetId(2158702)}
-//   // onReady={handleReady}
+// <Cesium3DTileset
+// url={Cesium.IonImageryProvider.fromAssetId(2158702)}
+// onReady={handleReady}
 // />
 
+// function handleReady(tileset) {
+//   if (ref.current?.cesiumElement) {
+//     ref.current?.cesiumElement.zoomTo(tileset)
+//   }
+// }
 // ref={(e) => {
 //   // setViewer(e && e.cesiumElement)
 //   // console.log(e)

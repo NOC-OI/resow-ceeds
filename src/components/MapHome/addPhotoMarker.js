@@ -132,7 +132,6 @@ export class GetPhotoMarker {
     const position = Cartesian3.fromDegrees(
       this.layerName.longitude,
       this.layerName.latitude,
-      100,
     )
     const pointGraphics = { pixelSize: 10, color: this.color }
     this.layer = new Entity({

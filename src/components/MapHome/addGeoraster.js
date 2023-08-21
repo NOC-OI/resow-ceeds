@@ -250,6 +250,10 @@ export class GetTileLayer {
         })
         .then((r) => r.data)
       this.tileUrl = this.tileJson.tiles[0]
+      if (rout === '/3d') {
+        this.colourScheme = 'ocean'
+      }
+
       if (bands.length === 1) {
         this.tileUrl += `&colormap_name=${this.colourScheme}`
       }

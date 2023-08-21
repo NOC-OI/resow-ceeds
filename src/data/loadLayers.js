@@ -65,7 +65,7 @@ export class GetLayers {
   async loadCSV() {
     let url
     if (this.rout === '/3d') {
-      url = process.env.VITE_LAYERS_JSON_URL
+      url = process.env.VITE_LAYERS3D_JSON_URL
     } else {
       url = process.env.VITE_LAYERS_JSON_URL
     }

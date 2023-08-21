@@ -5,7 +5,6 @@ import {
   CameraFlyTo,
   ScreenSpaceEvent,
   CesiumComponentRef,
-  Cesium3DTileset,
 } from 'resium'
 import chroma from 'chroma-js'
 import * as turf from '@turf/turf'
@@ -16,7 +15,6 @@ import {
   ScreenSpaceEventType,
   WebMapServiceImageryProvider,
   Viewer as CesiumViewer,
-  createWorldTerrainAsync,
 } from 'cesium'
 import './styles.css'
 import { ResiumContainer } from './styles'
@@ -118,7 +116,21 @@ function ThreeDMap1({
     layers: 'mcz',
   })
 
-  const terrainProvider = createWorldTerrainAsync()
+  // const terrainProvider = createWorldTerrainAsync()
+
+  // Etopo low res bathymetry
+  // const terrainProvider = Cesium.CesiumTerrainProvider.fromIonAssetId(2182075)
+  // Ship bathymetry
+  // const terrainProvider = Cesium.CesiumTerrainProvider.fromIonAssetId(2182171)
+
+  // Emodnet bathymetry
+  const terrainProvider = Cesium.CesiumTerrainProvider.fromIonAssetId(2182231)
+
+  // function handleReady(tileset) {
+  //   if (ref.current?.cesiumElement) {
+  //     ref.current?.cesiumElement.zoomTo(tileset)
+  //   }
+  // }
 
   function getGeorasterLayer() {
     const getGeoblazeValue = new GetGeoblazeValue3D(url)
@@ -490,12 +502,17 @@ function ThreeDMap1({
   const displayMap = useMemo(
     () => (
       <Viewer
+        full
         animation={false}
         timeline={false}
         ref={ref}
         infoBox={true}
         terrainProvider={terrainProvider}
       >
+        {/* <Cesium3DTileset
+          url={CesiumTerrainProvider.fromIonAssetId(2182075)}
+          onReady={handleReady}
+        /> */}
         <ImageryLayer imageryProvider={jnccMCZ} />
         <ImageryLayer imageryProvider={jnccSpecial} />
         <CameraFlyTo destination={startCoordinates} duration={3} />

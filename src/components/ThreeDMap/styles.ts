@@ -1,11 +1,11 @@
 import styled from 'styled-components'
 
 export const ResiumContainer = styled.div`
-  div:first-child {
+  /* div:first-child {
     div:first-child {
       height: 500px;
     }
-  }
+  } */
 `
 
 export const HeaderContainer = styled.header`

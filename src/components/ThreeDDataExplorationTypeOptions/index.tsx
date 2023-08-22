@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { LayerTypeOptionsContainer } from './styles'
 import {
   faCircleInfo,
+  faCube,
   faList,
   faLock,
   faMagnifyingGlass,
@@ -30,6 +31,8 @@ interface ThreeDDataExplorationTypeOptionsProps {
   setSelectedLayers: any
   setInfoButtonBox: any
   isLogged?: any
+  threeD: any
+  setThreeD: any
 }
 
 export function ThreeDDataExplorationTypeOptions({
@@ -47,6 +50,8 @@ export function ThreeDDataExplorationTypeOptions({
   setSelectedLayers,
   setInfoButtonBox,
   isLogged,
+  threeD,
+  setThreeD,
 }: ThreeDDataExplorationTypeOptionsProps) {
   const [opacityIsClicked, setOpacityIsClicked] = useState(
     activeOpacity === `${content}_${subLayer}`,
@@ -84,10 +89,29 @@ export function ThreeDDataExplorationTypeOptions({
     const newSelectedLayer = layerInfo.dataInfo
     newSelectedLayer.opacity = defaultOpacity
     newSelectedLayer.zoom = true
-    setSelectedLayers({
-      ...selectedLayers,
-      [layerInfo.subLayer]: newSelectedLayer,
-    })
+    if (layerInfo.dataInfo.data_type === '3D') {
+      setSelectedLayers({
+        ...selectedLayers,
+        [layerInfo.subLayer]: newSelectedLayer,
+      })
+      setSelectedLayers((selectedLayers: any) => {
+        const copy = { ...selectedLayers }
+        Object.keys(copy).forEach((layer) => {
+          if (copy[layer].data_type === '3D') {
+            delete copy[layer]
+          }
+        })
+        return {
+          [`${content}_${subLayer}`]: newSelectedLayer,
+          ...copy,
+        }
+      })
+    } else {
+      setSelectedLayers({
+        ...selectedLayers,
+        [layerInfo.subLayer]: newSelectedLayer,
+      })
+    }
   }
 
   function removeMapLayer(layerInfo: any) {
@@ -140,6 +164,30 @@ export function ThreeDDataExplorationTypeOptions({
     }
   }
 
+  async function handleAddTerrainLayer() {
+    const layerInfo = JSON.parse(
+      JSON.stringify({
+        subLayer: `${content}_${subLayer}`,
+        dataInfo: subLayers[subLayer],
+      }),
+    )
+    setThreeD((threeD) => {
+      return threeD?.subLayer === layerInfo.subLayer ? null : layerInfo
+    })
+  }
+
+  async function handleChangeMapLayerRadio(e: any) {
+    const layerInfo = JSON.parse(e.target.value)
+    setActualLayer([layerInfo.subLayer])
+    if (e.target.checked) {
+      setOpacityIsClicked(false)
+      setActiveOpacity(null)
+      removeMapLayer(layerInfo)
+    } else {
+      await addMapLayer(layerInfo)
+    }
+  }
+
   // function handleClickAnnotations() {
   //   setShowAnnotations((showAnnotations) => !showAnnotations)
   // }
@@ -157,7 +205,6 @@ export function ThreeDDataExplorationTypeOptions({
   }
 
   async function handleClickLegend() {
-    console.log(subLayers[subLayer])
     if (subLayers[subLayer].data_type === 'WMS') {
       const newParams = subLayers[subLayer].params
       newParams.request = 'GetLegendGraphic'
@@ -207,11 +254,16 @@ export function ThreeDDataExplorationTypeOptions({
         >
           <input
             onChange={handleChangeMapLayer}
+            onClick={
+              subLayers[subLayer].data_type === '3D'
+                ? handleChangeMapLayerRadio
+                : null
+            }
             value={JSON.stringify({
               subLayer: `${content}_${subLayer}`,
               dataInfo: subLayers[subLayer],
             })}
-            type="checkbox"
+            type={subLayers[subLayer].data_type === '3D' ? 'radio' : 'checkbox'}
             checked={verifyIfWasSelectedBefore(content, subLayer)}
             id={`${content}_${subLayer}`}
             disabled={user?.access ? false : !!subLayers[subLayer].protected}
@@ -247,8 +299,7 @@ export function ThreeDDataExplorationTypeOptions({
               title={'Show Layer Info'}
               onClick={() => handleClickLayerInfo(content, subLayer)}
             />
-            {subLayers[subLayer].data_type !== 'Photo' &&
-            subLayers[subLayer].data_type !== 'COG' ? (
+            {!['Photo', 'COG'].includes(subLayers[subLayer].data_type) ? (
               <FontAwesomeIcon
                 icon={faList}
                 title="Show Legend"
@@ -263,6 +314,18 @@ export function ThreeDDataExplorationTypeOptions({
                 className={getPolyline ? 'active' : ''}
               />
             ) : null} */}
+            {['COG'].includes(subLayers[subLayer].data_type) && (
+              <FontAwesomeIcon
+                icon={faCube}
+                title="Add 3D terrain to the Map"
+                onClick={handleAddTerrainLayer}
+                className={
+                  threeD?.subLayer === `${content}_${subLayer}`
+                    ? 'active'
+                    : 'aaa'
+                }
+              />
+            )}
             <FontAwesomeIcon
               icon={faMagnifyingGlass}
               title="Zoom to the layer"

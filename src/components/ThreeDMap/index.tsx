@@ -15,6 +15,7 @@ import {
   ScreenSpaceEventType,
   WebMapServiceImageryProvider,
   Viewer as CesiumViewer,
+  createWorldTerrainAsync,
 } from 'cesium'
 import './styles.css'
 import { ResiumContainer } from './styles'
@@ -48,6 +49,8 @@ interface ThreeDMapProps {
   activePhoto: any
   setActivePhoto: any
   listLayers: any
+  threeD: any
+  setThreeD: any
 }
 function ThreeDMap1({
   selectedLayers,
@@ -57,6 +60,8 @@ function ThreeDMap1({
   activePhoto,
   setActivePhoto,
   listLayers,
+  threeD,
+  setThreeD,
 }: ThreeDMapProps) {
   const colorScale = chroma
     .scale(['#f00', '#0f0', '#00f', 'gray'])
@@ -116,15 +121,7 @@ function ThreeDMap1({
     layers: 'mcz',
   })
 
-  // const terrainProvider = createWorldTerrainAsync()
-
-  // Etopo low res bathymetry
-  // const terrainProvider = Cesium.CesiumTerrainProvider.fromIonAssetId(2182075)
-  // Ship bathymetry
-  // const terrainProvider = Cesium.CesiumTerrainProvider.fromIonAssetId(2182171)
-
-  // Emodnet bathymetry
-  const terrainProvider = Cesium.CesiumTerrainProvider.fromIonAssetId(2182231)
+  const terrainProvider = createWorldTerrainAsync()
 
   // function handleReady(tileset) {
   //   if (ref.current?.cesiumElement) {
@@ -243,11 +240,12 @@ function ThreeDMap1({
       correctBaseWMSOrder(layers)
     })
   }
-
-  // if (ref.current?.cesiumElement) {
-  //   const layers = ref.current.cesiumElement.scene.imageryLayers
-  //   console.log(layers._layers)
-  // }
+  if (ref.current?.cesiumElement) {
+    // const layers = ref.current.cesiumElement.scene.imageryLayers
+    // console.log(layers._layers)
+    const layers = ref.current.cesiumElement.dataSources
+    console.log(layers)
+  }
 
   function createColor(colorScale: any, rgb: any, alpha: any = 1) {
     let color: any
@@ -287,6 +285,7 @@ function ThreeDMap1({
       const layerName = selectedLayers[actual]
       let layer: any
       let layers
+      let dataSource
       if (layerName.data_type === 'WMS') {
         layers = ref.current.cesiumElement.scene.imageryLayers
         layer = getWMSLayer(layerName, actual)
@@ -303,8 +302,16 @@ function ThreeDMap1({
           actual,
           defaultOpacity,
         )
+      } else if (layerName.data_type === '3D') {
+        const terrainUrl = await Cesium.CesiumTerrainProvider.fromIonAssetId(
+          parseInt(layerName.url),
+        )
+        ref.current.cesiumElement.terrainProvider = terrainUrl
       } else if (layerName.data_type === 'Photo') {
-        layers = ref.current.cesiumElement.entities
+        ref.current.cesiumElement.infoBox.frame.removeAttribute('sandbox')
+        ref.current.cesiumElement.infoBox.frame.src = 'about:blank'
+        dataSource = new Cesium.CustomDataSource(actual)
+        layers = ref.current.cesiumElement.dataSources
         const markers: any = []
         const color = createColor(colorScale, true)
 
@@ -322,10 +329,12 @@ function ThreeDMap1({
             const getPhotoMarker = new GetPhotoMarker(photo, actual, color)
 
             await getPhotoMarker.getMarker3D().then(async function () {
-              layers.add(getPhotoMarker.layer)
+              dataSource.entities.add(getPhotoMarker.layer)
             })
           }
         })
+        dataSource.attribution = actual
+        layers.add(dataSource)
         const turfConvex = turf.convex(turf.featureCollection(markers))
         // const turfBbox = turf.bbox(turfConvex)
         // bounds = [
@@ -343,7 +352,7 @@ function ThreeDMap1({
           if (turfConvex) {
             turfLayer = await Cesium.GeoJsonDataSource.load(turfConvex, myStyle)
             turfLayer.attribution = actual
-            ref.current.cesiumElement.dataSources.add(turfLayer)
+            layers.add(turfLayer)
           }
         }
       } else if (layerName.data_type === 'Photo-Limits') {
@@ -390,20 +399,20 @@ function ThreeDMap1({
             setLayerAction('')
           }
         })
+      } else if (layerName.data_type === '3D') {
+        layers = ref.current.cesiumElement
+        layers.terrainProvider = await terrainProvider
       } else if (layerName.data_type === 'Photo') {
-        layers = ref.current.cesiumElement.entities
-        layers._entities._array.forEach(function (layer: any) {
-          if (actualLayer.includes(layer.attribution)) {
-            layers.remove(layer)
-            setLayerAction('')
-          }
-        })
         layers = ref.current.cesiumElement.dataSources
-
         layers._dataSources.forEach(function (layer: any) {
           if (actualLayer.includes(layer.attribution)) {
             layers.remove(layer)
-            setLayerAction('')
+          }
+        })
+        setLayerAction('')
+        layers._dataSources.forEach(function (layer: any) {
+          if (actualLayer.includes(layer.attribution)) {
+            layers.remove(layer)
           }
         })
       }
@@ -415,6 +424,22 @@ function ThreeDMap1({
     await generateSelectedLayer()
     setLayerAction('')
   }
+
+  async function handleTerrainLayer() {
+    if (threeD) {
+      const terrainUrl = await Cesium.CesiumTerrainProvider.fromIonAssetId(
+        parseInt(threeD.dataInfo.assetId),
+      )
+      ref.current.cesiumElement.terrainProvider = terrainUrl
+    } else {
+      ref.current.cesiumElement.terrainProvider = await terrainProvider
+    }
+  }
+  useEffect(() => {
+    if (ref.current?.cesiumElement) {
+      handleTerrainLayer()
+    }
+  }, [threeD])
 
   function changeMapOpacity() {
     let layers: any
@@ -508,6 +533,8 @@ function ThreeDMap1({
         ref={ref}
         infoBox={true}
         terrainProvider={terrainProvider}
+        navigationHelpButton={false}
+        scene3DOnly={true}
       >
         {/* <Cesium3DTileset
           url={CesiumTerrainProvider.fromIonAssetId(2182075)}
@@ -540,6 +567,7 @@ function mapPropsAreEqual(prevMap: any, nextMap: any) {
   return (
     // prevMap.selectedLayers === nextMap.selectedLayers &&
     prevMap.selectedLayers === nextMap.selectedLayers &&
+    prevMap.threeD === nextMap.threeD &&
     // prevMap.viewer === nextMap.viewer &&
     prevMap.actualLayer === nextMap.actualLayer
     // prevMap.position === nextMap.position

@@ -3,6 +3,8 @@ import { useState } from 'react'
 // import { LayerTypeContainer } from './styles'
 import { CalcTypeContainer } from '../BiodiversityType/styles'
 import { ThreeDDataExplorationTypeOptions } from '../ThreeDDataExplorationTypeOptions'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCube } from '@fortawesome/free-solid-svg-icons'
 
 interface keyable {
   [key: string]: any
@@ -21,6 +23,8 @@ interface ThreeDDataExplorationTypeProps {
   setLayerLegend: any
   setInfoButtonBox?: any
   isLogged?: any
+  threeD: any
+  setThreeD: any
 }
 
 export function ThreeDDataExplorationType({
@@ -36,6 +40,8 @@ export function ThreeDDataExplorationType({
   setLayerLegend,
   setInfoButtonBox,
   isLogged,
+  threeD,
+  setThreeD,
 }: ThreeDDataExplorationTypeProps) {
   const [subLayers, setSubLayers] = useState<keyable>({})
 
@@ -54,7 +60,16 @@ export function ThreeDDataExplorationType({
     <CalcTypeContainer>
       <div>
         <header id="general-types" onClick={handleShowLayers}>
-          <p>{content}</p>
+          <div className="flex">
+            <p>{content}</p>
+            {content === 'Bathymetry' && (
+              <FontAwesomeIcon
+                className="pl-3"
+                icon={faCube}
+                title="Terrain layer available"
+              />
+            )}
+          </div>
           <span title="expand">
             {isActive ? (
               <ArrowCircleUp size={24} />
@@ -83,6 +98,8 @@ export function ThreeDDataExplorationType({
               setSelectedLayers={setSelectedLayers}
               setInfoButtonBox={setInfoButtonBox}
               isLogged={isLogged}
+              threeD={threeD}
+              setThreeD={setThreeD}
             />
           )
         })}

@@ -17,6 +17,7 @@ export function ThreeD() {
 
   const [selectedSidebarOption, setSelectedSidebarOption] =
     useState<string>('3D')
+  const [threeD, setThreeD] = useState(null)
 
   const [selectedLayers, setSelectedLayers] = useState<Object>({})
 
@@ -90,6 +91,8 @@ export function ThreeD() {
             setInfoButtonBox={setInfoButtonBox}
             listLayers={listLayers}
             isLogged={isLogged}
+            threeD={threeD}
+            setThreeD={setThreeD}
           />
         )}
         {layerLegend ? (
@@ -120,6 +123,8 @@ export function ThreeD() {
         activePhoto={activePhoto}
         setActivePhoto={setActivePhoto}
         listLayers={listLayers}
+        threeD={threeD}
+        setThreeD={setThreeD}
       />
       {showPopup && <FullPagePopup setShowPopup={setShowPopup} />}
 

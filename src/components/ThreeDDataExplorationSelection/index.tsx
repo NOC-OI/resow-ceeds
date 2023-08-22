@@ -19,6 +19,8 @@ interface ThreeDDataExplorationSelectionProps {
   setInfoButtonBox?: any
   listLayers?: any
   isLogged?: any
+  threeD: any
+  setThreeD: any
 }
 
 export function ThreeDDataExplorationSelection({
@@ -33,6 +35,8 @@ export function ThreeDDataExplorationSelection({
   setInfoButtonBox,
   listLayers,
   isLogged,
+  threeD,
+  setThreeD,
 }: ThreeDDataExplorationSelectionProps) {
   function handleClickLayerInfo(title: String, content: string) {
     setInfoButtonBox({
@@ -78,6 +82,8 @@ export function ThreeDDataExplorationSelection({
               setLayerLegend={setLayerLegend}
               setInfoButtonBox={setInfoButtonBox}
               isLogged={isLogged}
+              threeD={threeD}
+              setThreeD={setThreeD}
             />
           )
         })}

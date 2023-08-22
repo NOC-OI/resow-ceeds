@@ -1,43 +1,32 @@
 {
-  "Bathymetry 3D": {
-    "layerNames": {
-      "Emodnet": {
-        "url": "haig-fras/output/cog_rep_EMODNet_2020.tif",
-        "data_type": "COG",
-        "get_value": { "depth": "m" },
-        "content": "This layer represents..."
-      },
-      "2018 Bathymetry Survey": {
-        "url": "haig-fras-private/bathymetry/test_auv_bathymetry.tif",
-        "data_type": "COG",
-        "get_value": { "depth": "m" },
-        "content": "This layer represents...",
-        "protected": true
-      }
-    }
-  },
   "Bathymetry": {
     "layerNames": {
       "Emodnet": {
         "url": "haig-fras/output/cog_rep_EMODNet_2020.tif",
         "data_type": "COG",
+        "assetId": "2182231",        
         "get_value": { "depth": "m" },
-        "content": "This layer represents..."
+        "content": "This layer represents...",
+        "threeD": false
       },
       "Gebco": {
         "url": "haig-fras/output/cog_rep_gebco_2022.tif",
         "data_type": "COG",
+        "assetId": "2182075",
         "get_value": {
           "depth": "m"
         },
-        "content": "This layer represents..."
+        "content": "This layer represents...",
+        "threeD": false
       },
       "2018 Bathymetry Survey": {
         "url": "haig-fras-private/bathymetry/test_auv_bathymetry.tif",
         "data_type": "COG",
         "get_value": { "depth": "m" },
+        "assetId": "2182171",
+        "protected": true,
         "content": "This layer represents...",
-        "protected": true
+        "threeD": false
       }
     }
   },

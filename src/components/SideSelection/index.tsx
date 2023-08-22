@@ -119,6 +119,7 @@ export function SideSelection({
       setLoading(false)
     })
   }
+
   useEffect(() => {
     if (!photoId) {
       setLoading(true)

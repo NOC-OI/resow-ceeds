@@ -189,27 +189,27 @@ function ThreeDMap1({
         newPosition.lng = longitudeDegrees
         return newPosition
       })
-      if (cogLayer) {
-        const layer = listLayers.Bathymetry.layerNames[cogLayer]
-        const getOneValueTitiler = new GetTitilerDataOneValue(
-          latitudeDegrees,
-          longitudeDegrees,
-          layer.url,
-        )
-        getOneValueTitiler.fetchData().then(async function () {
-          const dep = getOneValueTitiler.dep
-          console.log(dep)
-          if (dep) {
-            setDepth((depth: any) => {
-              const copy = { ...depth }
-              copy[cogLayer] = dep.toFixed(2)
-              return {
-                ...copy,
-              }
-            })
-          }
-        })
-      }
+      // if (cogLayer) {
+      //   const layer = listLayers.Bathymetry.layerNames[cogLayer]
+      //   const getOneValueTitiler = new GetTitilerDataOneValue(
+      //     latitudeDegrees,
+      //     longitudeDegrees,
+      //     layer.url,
+      //   )
+      //   getOneValueTitiler.fetchData().then(async function () {
+      //     const dep = getOneValueTitiler.dep
+      //     console.log(dep)
+      //     if (dep) {
+      //       setDepth((depth: any) => {
+      //         const copy = { ...depth }
+      //         copy[cogLayer] = dep.toFixed(2)
+      //         return {
+      //           ...copy,
+      //         }
+      //       })
+      //     }
+      //   })
+      // }
       await batLayer
         .getGeoblaze({
           lat: latitudeDegrees,
@@ -599,7 +599,8 @@ function ThreeDMap1({
         </ScreenSpaceEventHandler>
       </Viewer>
     ),
-    [cogLayer],
+    // [cogLayer],
+    [],
   )
 
   return (

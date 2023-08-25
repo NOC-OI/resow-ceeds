@@ -26,7 +26,7 @@ import { GetGeoblazeValue3D } from '../MapHome/getGeoblazeValue'
 import { Loading } from '../Loading'
 import { GetPhotoMarker } from '../MapHome/addPhotoMarker'
 import { GetTileLayer } from '../MapHome/addGeoraster'
-import { GetTitilerDataOneValue } from '../GraphBox/getTitilerData'
+// import { GetTitilerDataOneValue } from '../GraphBox/getTitilerData'
 
 Ion.defaultAccessToken = process.env.VITE_CESIUM_TOKEN
 

@@ -116,7 +116,7 @@ export class GetTileLayer {
     this.url = layerName.url
     this.dataType = dataType
     this.layer = null
-    this.colourScheme = 'gray'
+    this.colourScheme = 'ocean_r'
     this.bounds = null
     this.popupText = ''
     this.position = null
@@ -126,6 +126,36 @@ export class GetTileLayer {
     this.tileUrl = null
     this.contrast = contrast
     this.error = null
+    this.stats = null
+  }
+
+  async getStats() {
+    const TILE_SERVER_URL = process.env.VITE_TILE_SERVER_URL
+    const JOSBaseUrl = process.env.VITE_JASMIN_OBJECT_STORE_URL
+
+    this.url = `${JOSBaseUrl}${this.url}`
+
+    const newUrl = this.layerName.signed_url
+      ? this.layerName.signed_url
+      : this.url
+    const isUrlEncoded = !!this.layerName.signed_url
+
+    const cogStats = await axios
+      .get(
+        `${TILE_SERVER_URL}cog/statistics?url=${encodeURIComponent(
+          newUrl,
+        )}&encoded=${isUrlEncoded}`,
+      )
+      .then((r) => r.data)
+      .catch((error) => {
+        return error.response.status
+      })
+
+    if (cogStats === 500) {
+      this.error = 'You do not have authorization to access this file'
+      return
+    }
+    this.stats = cogStats
   }
 
   async getTile(rout) {
@@ -162,7 +192,9 @@ export class GetTileLayer {
       )
       .then((r) => r.data)
 
+    this.stats = cogStats
     this.bounds = cogInfo.bounds
+
     if (this.dataType === 'marker') {
       this.icon = L.icon({
         iconUrl: '/marker-icon.png',
@@ -216,6 +248,7 @@ export class GetTileLayer {
       // })
       for (let i = 0; i < bands.length; i++) {
         const stats = cogStats[bands[i]]
+        console.log(stats)
         if (this.contrast) {
           stats
             ? this.rescale.push(`${stats.percentile_2},${stats.percentile_98}`)
@@ -225,13 +258,6 @@ export class GetTileLayer {
           this.rescale.push('0,255')
         }
       }
-
-      // const rescale = []
-      // for (let i = 0; i < bands.length; i++) {
-      //   const stats = cogStats[bands[i]]
-      //   stats? rescale.push('0,255'): rescale.push('0,255')
-      // }
-      // console.log(cogStats)
 
       const url = newUrl
       this.args = {
@@ -251,59 +277,13 @@ export class GetTileLayer {
         .then((r) => r.data)
       this.tileUrl = this.tileJson.tiles[0]
       if (rout === '/3d') {
-        this.colourScheme = 'ocean'
+        this.colourScheme = 'ocean_r'
       }
 
       if (bands.length === 1) {
         this.tileUrl += `&colormap_name=${this.colourScheme}`
       }
       if (rout === '/3d') {
-        // this.tileUrl = this.tileUrl.replace('/{z}/{x}/{y}@1x', '')
-        // this.tileUrl += '&format=png'
-        // const rectangle = new Cesium.Rectangle(
-        //   Cesium.Math.toRadians(this.bounds[0]),
-        //   Cesium.Math.toRadians(this.bounds[1]),
-        //   Cesium.Math.toRadians(this.bounds[2]),
-        //   Cesium.Math.toRadians(this.bounds[3]),
-        // )
-        // console.log(this.tileUrl)
-        // this.layer = new Cesium.WebMapTileServiceImageryProvider({
-        //   url: this.tileUrl,
-        //   maximumLevel: 30,
-        //   rectangle,
-        // })
-        // const rectangleSouthwestInMeters = Cesium.Cartesian3.fromDegrees(
-        //   this.bounds[2],
-        //   this.bounds[1],
-        // )
-        // const rectangleNortheastInMeters = Cesium.Cartesian3.fromDegrees(
-        //   this.bounds[0],
-        //   this.bounds[3],
-        // )
-        // this.layer = await Cesium.TileMapServiceImageryProvider.fromUrl(
-        //   this.tileUrl,
-        //   {
-        //     fileExtension: 'png',
-        //     maximumLevel: 30,
-        //     rectangle,
-        //     url: this.url,
-        //     // tilingScheme: new Cesium.WebMercatorTilingScheme({
-        //     //   rectangleSouthwestInMeters: Cesium.Cartesian2.fromCartesian3(
-        //     //     rectangleSouthwestInMeters,
-        //     //   ),
-        //     //   rectangleNortheastInMeters: Cesium.Cartesian2.fromCartesian3(
-        //     //     rectangleNortheastInMeters,
-        //     //   ),
-        //     // }),
-        //   },
-        // )
-        // this.layer = new Cesium.Cesium3DTileset({
-        //   url: this.tileUrl,
-        // })
-        // this.layer = new Cesium.UrlTemplateImageryProvider({
-        //   url: this.tileUrl,
-        // })
-
         this.layer = new Cesium.ImageryLayer(
           new Cesium.UrlTemplateImageryProvider({
             url: this.tileUrl,
@@ -312,11 +292,13 @@ export class GetTileLayer {
         )
         this.layer.attribution = this.actualLayer
         this.layer.dataType = this.dataType
+        this.layer.stats = this.stats
       } else {
         this.layer = L.tileLayer(this.tileUrl, {
           opacity: 0.7,
           maxZoom: 30,
           attribution: this.actualLayer,
+          stats: this.stats,
           url: this.url,
           limits: this.bounds,
         })

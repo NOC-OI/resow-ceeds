@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { LayerLegendContainer } from './styles'
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons'
+import { ColorBar } from '../ColorBar'
 
 interface LayerLegendProps {
   layerLegend: any
@@ -29,6 +30,8 @@ export function DataExplorationLegend({
         <div>
           {layerLegend.url ? (
             <img src={layerLegend.url} />
+          ) : layerLegend.dataType ? (
+            <ColorBar layerLegend={layerLegend} />
           ) : (
             layerLegend.legend[0].map((color: any, idx: any) => {
               return (

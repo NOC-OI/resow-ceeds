@@ -9,8 +9,8 @@ export default defineConfig(({ command, mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
 
   return {
-    plugins: [react(), mkcert(), EnvironmentPlugin('all'), cesium()],
-    // plugins: [react(), EnvironmentPlugin('all'), cesium()],
+    // plugins: [react(), mkcert(), EnvironmentPlugin('all'), cesium()],
+    plugins: [react(), EnvironmentPlugin('all'), cesium()],
     server: {
       host: true,
       // https: true,

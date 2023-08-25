@@ -13,6 +13,8 @@ import { Annotations } from '../Annotations'
 import { colors, eunis } from '../../data/mbTilesEmodnetLegend'
 import { getUser } from '../../lib/auth'
 import { organisms } from '../../data/organisms'
+import { GetTileLayer } from '../MapHome/addGeoraster'
+import { oceanR } from '../MapHome/jsColormaps'
 
 const defaultOpacity = 0.7
 
@@ -177,6 +179,26 @@ export function DataExplorationTypeOptions({
       await getURILegend(newParams)
     } else if (subLayers[subLayer].data_type === 'MBTiles') {
       setLayerLegend({ layerName: subLayer, legend: [colors, eunis] })
+    } else if (subLayers[subLayer].data_type === 'COG') {
+      const getCOGLayer = new GetTileLayer(subLayers[subLayer], subLayer, true)
+      await getCOGLayer.getStats().then(function () {
+        const minValue = getCOGLayer.stats.b1.percentile_2
+        const maxValue = getCOGLayer.stats.b1.percentile_98
+        const difValues = maxValue - minValue
+        const times = 30
+        const cogColors = []
+        const cogColorsValues = []
+        for (let i = 0; i < times; i++) {
+          cogColors.push(oceanR((1 / (times - 1)) * i))
+          cogColorsValues.push(minValue + (difValues / (times - 1)) * i)
+        }
+        setLayerLegend({
+          layerName: subLayer,
+          dataDescription: ['Depth', '(m)'],
+          legend: [cogColors, cogColorsValues],
+          dataType: subLayers[subLayer].data_type,
+        })
+      })
     }
   }
 
@@ -257,8 +279,7 @@ export function DataExplorationTypeOptions({
               title={'Show Layer Info'}
               onClick={() => handleClickLayerInfo(content, subLayer)}
             />
-            {subLayers[subLayer].data_type !== 'Photo' &&
-            subLayers[subLayer].data_type !== 'COG' ? (
+            {subLayers[subLayer].data_type !== 'Photo' ? (
               <FontAwesomeIcon
                 icon={faList}
                 title="Show Legend"

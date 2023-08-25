@@ -26,6 +26,7 @@ import { GetGeoblazeValue3D } from '../MapHome/getGeoblazeValue'
 import { Loading } from '../Loading'
 import { GetPhotoMarker } from '../MapHome/addPhotoMarker'
 import { GetTileLayer } from '../MapHome/addGeoraster'
+import { GetTitilerDataOneValue } from '../GraphBox/getTitilerData'
 
 Ion.defaultAccessToken = process.env.VITE_CESIUM_TOKEN
 
@@ -82,6 +83,9 @@ function ThreeDMap1({
     [50.020174, -8.58279],
     [50.578429, -7.70616],
   ]
+  const batOrder = ['2018 Bathymetry Survey', 'Emodnet', 'Gebco']
+
+  const [cogLayer, setCogLayer] = useState('')
 
   const url = `${JOSBaseUrl}haig-fras/asc/bathymetry.tif`
 
@@ -93,6 +97,8 @@ function ThreeDMap1({
     defaultWMSBounds[1][1],
     defaultWMSBounds[1][0],
   )
+
+  Cesium.Camera.DEFAULT_VIEW_RECTANGLE = startCoordinates
 
   const jnccSpecial = new WebMapServiceImageryProvider({
     url: 'https://mpa-ows.jncc.gov.uk/mpa_mapper/wms?',
@@ -122,12 +128,6 @@ function ThreeDMap1({
   })
 
   const terrainProvider = createWorldTerrainAsync()
-
-  // function handleReady(tileset) {
-  //   if (ref.current?.cesiumElement) {
-  //     ref.current?.cesiumElement.zoomTo(tileset)
-  //   }
-  // }
 
   function getGeorasterLayer() {
     const getGeoblazeValue = new GetGeoblazeValue3D(url)
@@ -172,7 +172,6 @@ function ThreeDMap1({
     }
     return newList
   }
-
   async function handleHoverUpdateInfoBox(e: any) {
     if (ref.current?.cesiumElement) {
       const ellipsoid = ref.current.cesiumElement.scene.globe.ellipsoid
@@ -190,7 +189,27 @@ function ThreeDMap1({
         newPosition.lng = longitudeDegrees
         return newPosition
       })
-
+      if (cogLayer) {
+        const layer = listLayers.Bathymetry.layerNames[cogLayer]
+        const getOneValueTitiler = new GetTitilerDataOneValue(
+          latitudeDegrees,
+          longitudeDegrees,
+          layer.url,
+        )
+        getOneValueTitiler.fetchData().then(async function () {
+          const dep = getOneValueTitiler.dep
+          console.log(dep)
+          if (dep) {
+            setDepth((depth: any) => {
+              const copy = { ...depth }
+              copy[cogLayer] = dep.toFixed(2)
+              return {
+                ...copy,
+              }
+            })
+          }
+        })
+      }
       await batLayer
         .getGeoblaze({
           lat: latitudeDegrees,
@@ -239,13 +258,24 @@ function ThreeDMap1({
       layers.add(layer)
       correctBaseWMSOrder(layers)
     })
+    if (actual.split('_')[0] === 'Bathymetry') {
+      if (cogLayer) {
+        if (
+          batOrder.indexOf(actual.split('_')[1]) < batOrder.indexOf(cogLayer)
+        ) {
+          setCogLayer(actual.split('_')[1])
+        }
+      } else {
+        setCogLayer(actual.split('_')[1])
+      }
+    }
   }
-  if (ref.current?.cesiumElement) {
-    // const layers = ref.current.cesiumElement.scene.imageryLayers
-    // console.log(layers._layers)
-    const layers = ref.current.cesiumElement.dataSources
-    console.log(layers)
-  }
+  // if (ref.current?.cesiumElement) {
+  //   // const layers = ref.current.cesiumElement.scene.imageryLayers
+  //   // console.log(layers._layers)
+  //   const layers = ref.current.cesiumElement.dataSources
+  //   console.log(layers)
+  // }
 
   function createColor(colorScale: any, rgb: any, alpha: any = 1) {
     let color: any
@@ -336,11 +366,6 @@ function ThreeDMap1({
         dataSource.attribution = actual
         layers.add(dataSource)
         const turfConvex = turf.convex(turf.featureCollection(markers))
-        // const turfBbox = turf.bbox(turfConvex)
-        // bounds = [
-        //   [turfBbox[1] - 0.05, turfBbox[0] - 0.35],
-        //   [turfBbox[3] + 0.05, turfBbox[2] + 0.15],
-        // ]
         if (layerName.plotLimits) {
           const color1 = createColor(colorScale, true, 0.3)
           const myStyle = {
@@ -352,33 +377,10 @@ function ThreeDMap1({
           if (turfConvex) {
             turfLayer = await Cesium.GeoJsonDataSource.load(turfConvex, myStyle)
             turfLayer.attribution = actual
+            turfLayer.originalColor = color1
+            turfLayer.name = 'limits'
             layers.add(turfLayer)
           }
-        }
-      } else if (layerName.data_type === 'Photo-Limits') {
-        const markers: any = []
-        layerName.photos.map(async (photo: any) => {
-          markers.push(
-            turf.point([photo.longitude + 0.003, photo.latitude + 0.003]),
-          )
-          markers.push(
-            turf.point([photo.longitude - 0.003, photo.latitude - 0.003]),
-          )
-        })
-        const color = createColor(colorScale, false)
-        const myStyle = {
-          stroke: color,
-          fill: color,
-          strokeWidth: 3,
-        }
-        const turfConvex = turf.convex(turf.featureCollection(markers))
-
-        if (turfConvex) {
-          let turfLayer: any
-          // eslint-disable-next-line prefer-const
-          turfLayer = Cesium.GeoJsonDataSource.load(turfConvex, myStyle)
-          turfLayer.attribution = actual
-          ref.current.cesiumElement.dataSources.add(turfLayer)
         }
       }
     })
@@ -399,6 +401,26 @@ function ThreeDMap1({
             setLayerAction('')
           }
         })
+        if (splitActual[0] === cogLayer) {
+          let newCogLayer = ''
+          Object.keys(selectedLayers).forEach((layer) => {
+            if (layer.split('_')[0] === 'Bathymetry') {
+              if (newCogLayer) {
+                if (
+                  batOrder.indexOf(newCogLayer) <
+                  batOrder.indexOf(layer.split('_')[1])
+                ) {
+                  newCogLayer = layer.split('_')[1]
+                }
+              } else {
+                newCogLayer = layer.split('_')[1]
+              }
+            }
+          })
+          if (newCogLayer) {
+            setCogLayer(newCogLayer)
+          }
+        }
       } else if (layerName.data_type === '3D') {
         layers = ref.current.cesiumElement
         layers.terrainProvider = await terrainProvider
@@ -430,11 +452,22 @@ function ThreeDMap1({
       const terrainUrl = await Cesium.CesiumTerrainProvider.fromIonAssetId(
         parseInt(threeD.dataInfo.assetId),
       )
+
+      const threeDCoordinates = Rectangle.fromDegrees(-8.1, 49.27, -7.9, 49.3)
+
       ref.current.cesiumElement.terrainProvider = terrainUrl
+      ref.current.cesiumElement.camera.flyTo({
+        destination: threeDCoordinates,
+        orientation: {
+          pitch: Cesium.Math.toRadians(-10.0),
+          roll: Cesium.Math.toRadians(0.0),
+        },
+      })
     } else {
       ref.current.cesiumElement.terrainProvider = await terrainProvider
     }
   }
+
   useEffect(() => {
     if (ref.current?.cesiumElement) {
       handleTerrainLayer()
@@ -444,7 +477,7 @@ function ThreeDMap1({
   function changeMapOpacity() {
     let layers: any
     actualLayer.forEach(async (actual) => {
-      const splitActual = actual.split('_')
+      const splitActual = actual.split('_')[1]
       const layerName = listLayers[splitActual[0]].layerNames[splitActual[1]]
       if (layerName.data_type === 'WMS' || layerName.data_type === 'COG') {
         layers = ref.current.cesiumElement.scene.imageryLayers
@@ -468,7 +501,22 @@ function ThreeDMap1({
             }
           }
         })
+      } else if (layerName.data_type === 'Photo') {
+        layers = ref.current.cesiumElement.dataSources
+        layers._dataSources.forEach(function (layer: any) {
+          if (actualLayer.includes(layer.attribution)) {
+            if (layer._name === 'limits') {
+              const color = layer.originalColor
+              color.alpha = selectedLayers[layer.attribution].opacity
+              if (color.alpha > 0.99) {
+                color.alpha = 0.99
+              }
+              layer.entities._entities._array[0]._polygon.material = color
+            }
+          }
+        })
       }
+
       setLayerAction('')
     })
   }
@@ -476,7 +524,7 @@ function ThreeDMap1({
   async function changeMapZoom() {
     let layers: any
     actualLayer.forEach(async (actual) => {
-      const splitActual = actual.split('_')
+      const splitActual = actual.split('_')[1]
       const layerName = listLayers[splitActual[0]].layerNames[splitActual[1]]
       if (layerName.data_type === 'WMS' || layerName.data_type === 'COG') {
         layers = ref.current.cesiumElement.scene.imageryLayers
@@ -551,7 +599,7 @@ function ThreeDMap1({
         </ScreenSpaceEventHandler>
       </Viewer>
     ),
-    [],
+    [cogLayer],
   )
 
   return (
@@ -568,7 +616,7 @@ function mapPropsAreEqual(prevMap: any, nextMap: any) {
     // prevMap.selectedLayers === nextMap.selectedLayers &&
     prevMap.selectedLayers === nextMap.selectedLayers &&
     prevMap.threeD === nextMap.threeD &&
-    // prevMap.viewer === nextMap.viewer &&
+    prevMap.cogLayer === nextMap.cogLayer &&
     prevMap.actualLayer === nextMap.actualLayer
     // prevMap.position === nextMap.position
   )
@@ -588,7 +636,6 @@ export const ThreeDMap = React.memo(ThreeDMap1, mapPropsAreEqual)
 // }
 // ref={(e) => {
 //   // setViewer(e && e.cesiumElement)
-//   // console.log(e)
 //   viewer = e && e.cesiumElement
 // }}
 

@@ -13,6 +13,8 @@ import { Annotations } from '../Annotations'
 import { colors, eunis } from '../../data/mbTilesEmodnetLegend'
 import { getUser } from '../../lib/auth'
 import { organisms } from '../../data/organisms'
+import { GetTileLayer } from '../MapHome/addGeoraster'
+import { oceanR } from '../MapHome/jsColormaps'
 
 const defaultOpacity = 0.7
 
@@ -87,7 +89,11 @@ export function ThreeDDataExplorationTypeOptions({
   async function addMapLayer(layerInfo: any) {
     setLayerAction('add')
     const newSelectedLayer = layerInfo.dataInfo
-    newSelectedLayer.opacity = defaultOpacity
+    if (newSelectedLayer.data_type === 'Photo') {
+      newSelectedLayer.opacity = 0.3
+    } else {
+      newSelectedLayer.opacity = defaultOpacity
+    }
     newSelectedLayer.zoom = true
     if (layerInfo.dataInfo.data_type === '3D') {
       setSelectedLayers({
@@ -116,6 +122,9 @@ export function ThreeDDataExplorationTypeOptions({
 
   function removeMapLayer(layerInfo: any) {
     setLayerAction('remove')
+    setThreeD((threeD: any) => {
+      return threeD?.subLayer === layerInfo.subLayer ? null : threeD
+    })
     setSelectedLayers((selectedLayers: any) => {
       const copy = { ...selectedLayers }
       delete copy[layerInfo.subLayer]
@@ -219,6 +228,26 @@ export function ThreeDDataExplorationTypeOptions({
       await getURILegend(newParams)
     } else if (subLayers[subLayer].data_type === 'MBTiles') {
       setLayerLegend({ layerName: subLayer, legend: [colors, eunis] })
+    } else if (subLayers[subLayer].data_type === 'COG') {
+      const getCOGLayer = new GetTileLayer(subLayers[subLayer], subLayer, true)
+      await getCOGLayer.getStats().then(function () {
+        const minValue = getCOGLayer.stats.b1.percentile_2
+        const maxValue = getCOGLayer.stats.b1.percentile_98
+        const difValues = maxValue - minValue
+        const times = 30
+        const cogColors = []
+        const cogColorsValues = []
+        for (let i = 0; i < times; i++) {
+          cogColors.push(oceanR((1 / (times - 1)) * i))
+          cogColorsValues.push(minValue + (difValues / (times - 1)) * i)
+        }
+        setLayerLegend({
+          layerName: subLayer,
+          dataDescription: ['Depth', '(m)'],
+          legend: [cogColors, cogColorsValues],
+          dataType: subLayers[subLayer].data_type,
+        })
+      })
     }
   }
 
@@ -299,7 +328,7 @@ export function ThreeDDataExplorationTypeOptions({
               title={'Show Layer Info'}
               onClick={() => handleClickLayerInfo(content, subLayer)}
             />
-            {!['Photo', 'COG'].includes(subLayers[subLayer].data_type) ? (
+            {!['Photo'].includes(subLayers[subLayer].data_type) ? (
               <FontAwesomeIcon
                 icon={faList}
                 title="Show Legend"

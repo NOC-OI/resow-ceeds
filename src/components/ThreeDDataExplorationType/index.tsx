@@ -62,13 +62,21 @@ export function ThreeDDataExplorationType({
         <header id="general-types" onClick={handleShowLayers}>
           <div className="flex">
             <p>{content}</p>
-            {content === 'Bathymetry' && (
-              <FontAwesomeIcon
-                className="pl-3"
-                icon={faCube}
-                title="Terrain layer available"
-              />
-            )}
+            {content === 'Bathymetry' ? (
+              threeD ? (
+                <FontAwesomeIcon
+                  className="pl-3 active"
+                  icon={faCube}
+                  title="Terrain layer active"
+                />
+              ) : (
+                <FontAwesomeIcon
+                  className="pl-3"
+                  icon={faCube}
+                  title="Terrain layer available"
+                />
+              )
+            ) : null}
           </div>
           <span title="expand">
             {isActive ? (

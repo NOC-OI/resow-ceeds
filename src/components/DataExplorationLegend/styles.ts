@@ -5,6 +5,7 @@ export const LayerLegendContainer = styled.div`
   overflow-x: auto;
   right: 0.5rem;
   top: 5vh;
+  height: max-content;
   max-width: 40rem;
   background-color: ${(props) => props.theme.white};
   z-index: 9999;

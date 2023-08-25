@@ -23,7 +23,7 @@ export class GetPhotoMarker {
       imageUrl = `${JOSBaseUrl}haig-fras/output/${this.layerName.filename}.jpg`
     }
 
-    this.popupText = `
+    return `
     <b>${this.actualLayer}</b><br>
     ${
       this.layerName.imageUrl
@@ -133,6 +133,8 @@ export class GetPhotoMarker {
       this.layerName.longitude,
       this.layerName.latitude,
     )
+    this.popupText = this.createPopup()
+
     const pointGraphics = { pixelSize: 10, color: this.color }
     this.layer = new Entity({
       position,

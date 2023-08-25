@@ -53,3 +53,30 @@ export class GetTitilerData {
     })
   }
 }
+
+export class GetTitilerDataOneValue {
+  constructor(lat, lon, url) {
+    this.url = url
+    this.lat = lat
+    this.lon = lon
+    this.dep = null
+  }
+
+  async fetchData() {
+    const TILE_SERVER_URL = process.env.VITE_TILE_SERVER_URL
+    const JOSBaseUrl = process.env.VITE_JASMIN_OBJECT_STORE_URL
+
+    this.url = `${JOSBaseUrl}${this.url}`
+
+    const newUrl = `${TILE_SERVER_URL}cog/point/${this.lat},${
+      this.lon
+    }?url=${encodeURIComponent(this.url)}`
+    await axios.get(newUrl).then(async (r) => {
+      this.dep = r.data.values[0]
+      // this.dataGraph.push({
+      //   x: distance,
+      //   y: r.data.values[0],
+      // })
+    })
+  }
+}

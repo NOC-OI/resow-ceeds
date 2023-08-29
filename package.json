@@ -52,6 +52,7 @@
     "isomorphic-fetch": "^3.0.0",
     "jquery": "^3.6.4",
     "js-cookie": "^3.0.5",
+    "jstat": "^1.9.6",
     "jwt-decode": "^3.1.2",
     "leaflet": "^1.9.3",
     "leaflet.wms": "^0.2.0",

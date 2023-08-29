@@ -7,6 +7,11 @@
   transform: translateX(-50%);
 }
 
+.table-yaxis{
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  text-orientation: mixed;
+}
 .all-icon{
   background-size: contain;
   text-align: center;

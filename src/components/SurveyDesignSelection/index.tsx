@@ -15,6 +15,8 @@ interface SurveyDesignSelectionProps {
   fileSurveyDesign: any
   setFileSurveyDesign: any
   dataFields: any
+  dynamicTableData: any
+  setDynamicTableData: any
 }
 
 export function SurveyDesignSelection({
@@ -24,6 +26,8 @@ export function SurveyDesignSelection({
   fileSurveyDesign,
   setFileSurveyDesign,
   dataFields,
+  dynamicTableData,
+  setDynamicTableData,
 }: SurveyDesignSelectionProps) {
   const calcClasses = dataFields.surveyDesign
 
@@ -66,6 +70,8 @@ export function SurveyDesignSelection({
               setDynamicGraphData={setDynamicGraphData}
               fileSurveyDesign={fileSurveyDesign}
               setFileSurveyDesign={setFileSurveyDesign}
+              dynamicTableData={dynamicTableData}
+              setDynamicTableData={setDynamicTableData}
             />
           )
         })}

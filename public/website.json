@@ -22,9 +22,15 @@
       ]
     },
     {
-      "calcClass": "Temporal representation",
+      "calcClass": "Sample units definition",
       "content": "This calculation uses XXXXX...",
-      "calcNames": []
+      "calcNames": [
+        {
+          "name": "Sample Units",
+          "url": "",
+          "habitat": ["coarse", "sand", "intermediate", "hard"]
+        }
+      ]
     },
     {
       "calcClass": "Spatial representation",
@@ -32,7 +38,7 @@
       "calcNames": []
     },
     {
-      "calcClass": "Habitat representation",
+      "calcClass": "Temporal representation",
       "content": "This calculation uses XXXXX...",
       "calcNames": []
     }

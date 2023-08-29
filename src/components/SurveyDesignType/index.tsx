@@ -17,6 +17,8 @@ interface SurveyDesignTypeProps {
   setDynamicGraphData: any
   fileSurveyDesign: any
   setFileSurveyDesign: any
+  dynamicTableData: any
+  setDynamicTableData: any
 }
 
 async function handleShowGraphValues(
@@ -56,6 +58,8 @@ export function SurveyDesignType({
   dynamicGraphData,
   setDynamicGraphData,
   fileSurveyDesign,
+  dynamicTableData,
+  setDynamicTableData,
 }: SurveyDesignTypeProps) {
   const [subCalcs, setSubCalcs] = useState([])
 
@@ -86,6 +90,10 @@ export function SurveyDesignType({
       title,
       content,
     })
+  }
+
+  async function handleShowTableValues(subCalc: keyable) {
+    setDynamicTableData(subCalc)
   }
 
   return (
@@ -122,12 +130,14 @@ export function SurveyDesignType({
                 <p
                   id="type-option"
                   onClick={async () => {
-                    await handleShowGraphValues(
-                      subCalc,
-                      setDynamicGraphData,
-                      setLoading,
-                      fileSurveyDesign,
-                    )
+                    title === 'Biodiversity representation'
+                      ? await handleShowGraphValues(
+                          subCalc,
+                          setDynamicGraphData,
+                          setLoading,
+                          fileSurveyDesign,
+                        )
+                      : await handleShowTableValues(subCalc)
                   }}
                 >
                   {subCalc.name}

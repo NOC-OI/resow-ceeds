@@ -20,6 +20,7 @@ import { GraphBox } from '../../components/GraphBox'
 import { DynamicGraphBox } from '../../components/DynamicGraphBox'
 import { GetJsonWeb } from '../../data/loadJsonWeb'
 import Cookies from 'js-cookie'
+import { DynamicTableBox } from '../../components/DynamicTableBox'
 
 export function TileServer() {
   const navigate = useNavigate()
@@ -40,6 +41,8 @@ export function TileServer() {
   const [graphData, setGraphData] = useState(null)
 
   const [dynamicGraphData, setDynamicGraphData] = useState(null)
+
+  const [dynamicTableData, setDynamicTableData] = useState(null)
 
   const [selectedLayers, setSelectedLayers] = useState<Object>({})
 
@@ -202,6 +205,8 @@ export function TileServer() {
             fileSurveyDesign={fileSurveyDesign}
             setFileSurveyDesign={setFileSurveyDesign}
             dataFields={calClasses}
+            dynamicTableData={dynamicTableData}
+            setDynamicTableData={setDynamicTableData}
           />
         )}
         {graphData ? (
@@ -220,6 +225,12 @@ export function TileServer() {
             setSurveyDesignCircleValues={setSurveyDesignCircleValues}
             fileSurveyDesign={fileSurveyDesign}
             setFileSurveyDesign={setFileSurveyDesign}
+          />
+        ) : null}
+        {dynamicTableData ? (
+          <DynamicTableBox
+            dynamicTableData={dynamicTableData}
+            setDynamicTableData={setDynamicTableData}
           />
         ) : null}
         {layerLegend ? (

@@ -2,7 +2,7 @@
   "Bathymetry": {
     "layerNames": {
       "Emodnet": {
-        "url": "haig-fras/output/cog_rep_EMODNet_2020.tif",
+        "url": "haig-fras/layers/bathymetry/emodnet_2020.tif",
         "data_type": "COG",
         "assetId": "2182231",        
         "get_value": { "depth": "m" },
@@ -10,7 +10,7 @@
         "threeD": false
       },
       "Gebco": {
-        "url": "haig-fras/output/cog_rep_gebco_2022.tif",
+        "url": "haig-fras/layers/bathymetry/gebco/gebco_2022.tif",
         "data_type": "COG",
         "assetId": "2182075",
         "get_value": {
@@ -20,7 +20,7 @@
         "threeD": false
       },
       "2018 Bathymetry Survey": {
-        "url": "haig-fras-private/bathymetry/test_auv_bathymetry.tif",
+        "url": "haig-fras-private/layers/bathymetry/shipborne_2018/shipborne_2018.tif",
         "data_type": "COG",
         "get_value": { "depth": "m" },
         "assetId": "2182171",
@@ -39,7 +39,7 @@
   "Sidescan": {
     "layerNames": {
       "2012": {
-        "url": "haig-fras-private/bathymetry/sidescan_2012.tif",
+        "url": "haig-fras-private/layers/sidescan/sidescan_2012/sidescan_2012.tif",
         "data_type": "COG",
         "content": "This layer represents...",
         "protected": true

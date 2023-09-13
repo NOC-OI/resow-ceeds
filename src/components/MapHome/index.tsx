@@ -494,7 +494,7 @@ function MapHome1({
       if (!layerExist) {
         setLoading(true)
 
-        const url = `${JOSBaseUrl}haig-fras/asc/bathymetry.tif`
+        const url = `${JOSBaseUrl}haig-fras/frontend/images/bathymetry.tif`
 
         const fetchData = async () => {
           const getTifLayer = new GetTifLayer(url, [actualLayer])
@@ -1140,7 +1140,7 @@ export const MapHome = React.memo(MapHome1, mapPropsAreEqual)
 // }
 
 // async function getGeojson() {
-//   await axios.get(`${JOSBaseUrl}haig-fras/asc/bathymetry.geojson`).then(r => {
+//   await axios.get(`${JOSBaseUrl}haig-fras/frontend/bathymetry.geojson`).then(r => {
 //     return (
 //       r.data.json
 //     )

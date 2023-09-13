@@ -175,7 +175,7 @@ function MapHome1({
       })
       if (!layerExist) {
         setLoading(true)
-        const url = `${JOSBaseUrl}haig-fras/asc/bathymetry.tif`
+        const url = `${JOSBaseUrl}haig-fras/frontend/bathymetry.tif`
 
         fetchData(url, actualLayer)
         generateSelectedLayer(true)

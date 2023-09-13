@@ -31,7 +31,7 @@ async function handleShowGraphValues(
   setDynamicGraphData(null)
 
   const APIBaseUrl = process.env.VITE_API_URL
-  const url = `${APIBaseUrl}${params.url}&filenames=output:cum_hill_values_${fileSurveyDesign}`
+  const url = `${APIBaseUrl}${params.url}&filenames=layers:seabed_images:hf2012:HF2012_cum_hill_values_${fileSurveyDesign}`
   async function getCalculationResults() {
     const response = await fetch(url, {
       method: 'GET',

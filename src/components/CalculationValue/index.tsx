@@ -28,7 +28,7 @@ interface CalculationValueProps {
 }
 const JOSBaseUrl = process.env.VITE_JASMIN_OBJECT_STORE_URL
 
-const BASIC_BUCKET_URL = `${JOSBaseUrl}haig-fras/output`
+const BASIC_BUCKET_URL = `${JOSBaseUrl}haig-fras`
 
 export function CalculationValue({
   calculationValue,
@@ -128,6 +128,7 @@ export function CalculationValue({
       // setShowPhotos(photoList)
     }
   }, [selectedLayers])
+  console.log(calculationValue)
   return (
     <CalculationValueContainer id="calculate-value">
       <div className="flex justify-end">

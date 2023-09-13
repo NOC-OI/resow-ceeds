@@ -87,7 +87,7 @@ function ThreeDMap1({
 
   const [cogLayer, setCogLayer] = useState('')
 
-  const url = `${JOSBaseUrl}haig-fras/asc/bathymetry.tif`
+  const url = `${JOSBaseUrl}haig-fras/frontend/bathymetry.tif`
 
   const batLayer = useMemo(() => getGeorasterLayer(), [url])
 

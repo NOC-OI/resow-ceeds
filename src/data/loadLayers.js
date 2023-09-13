@@ -79,7 +79,7 @@ export class GetLayers {
             layerType: 'Marker-COG',
             name: '2012 AUV Image Survey',
             files:
-              'output:HF2012_alltile_otherdata,output:HF2012_alltile_counts',
+              'layers:seabed_images:hf2012:HF2012_alltile_otherdata,layers:seabed_images:hf2012:HF2012_alltile_counts',
             content:
               'Haig Fras 2012 autonomous underwater vehicle image survey - mosaicked tiles used for \
               quantifying benthic community. \n \
@@ -119,14 +119,14 @@ export class GetLayers {
             layerClass: 'Seabed Images',
             layerType: 'Marker-COG',
             name: 'JNCC CEND1012 Survey',
-            files: 'jncc:JNCC_CEND1012_otherdata',
+            files: 'layers:seabed_images:jncc:JNCC_CEND1012_otherdata',
             content: 'JNCC Offshore Survey Benthic Images CEND1012',
           },
           {
             layerClass: 'Observations of Marine Species',
             layerType: 'Marker',
             name: 'NBN',
-            files: 'nbn:results_2',
+            files: 'layers:seabed_images:nbn:nbn',
             content: 'NBN data',
           },
         ])

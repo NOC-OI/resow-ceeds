@@ -300,7 +300,14 @@ function MapHome1({
             turf.point([photo.longitude - 0.003, photo.latitude - 0.003]),
           )
           if (shuffledPhotos.includes(photo.filename)) {
-            const getPhotoMarker = new GetPhotoMarker(photo, actual, color)
+            console.log(layerName.imageExtension)
+            const getPhotoMarker = new GetPhotoMarker(
+              photo,
+              actual,
+              color,
+              layerName.files,
+              layerName.imageExtension,
+            )
             await getPhotoMarker.getMarker().then(async function () {
               map.addLayer(getPhotoMarker.layer)
               if (getPhotoMarker.layer) {
@@ -692,7 +699,13 @@ function MapHome1({
         markers.push(
           turf.point([photo.longitude - 0.003, photo.latitude - 0.003]),
         )
-        const getPhotoMarker = new GetPhotoMarker(photo, actual, color)
+        const getPhotoMarker = new GetPhotoMarker(
+          photo,
+          actual,
+          color,
+          selectedLayers[actual].files,
+          selectedLayers[actual].imageExtension,
+        )
         await getPhotoMarker.getMarker().then(async function () {
           if (getPhotoMarker.layer) {
             if (selectedLayers[actual].show.includes(getPhotoMarker.fileName)) {

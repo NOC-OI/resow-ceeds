@@ -2,7 +2,7 @@
   "Bathymetry": {
     "layerNames": {
       "Emodnet": {
-        "url": "haig-fras/layers/bathymetry/emodnet_2020.tif",
+        "url": "haig-fras/layers/bathymetry/emodnet/emodnet_2020.tif",
         "data_type": "COG",
         "assetId": "2182231",        
         "get_value": { "depth": "m" },

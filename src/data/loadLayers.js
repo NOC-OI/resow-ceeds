@@ -54,6 +54,8 @@ export class GetLayers {
             data_type: 'Photo',
             photos: jsonData,
             content: data.content,
+            files: data.files,
+            imageExtension: data.imageExtension,
           }
         })
     })
@@ -78,6 +80,7 @@ export class GetLayers {
             layerClass: 'Seabed Images',
             layerType: 'Marker-COG',
             name: '2012 AUV Image Survey',
+            imageExtension: 'jpg',
             files:
               'layers:seabed_images:hf2012:HF2012_alltile_otherdata,layers:seabed_images:hf2012:HF2012_alltile_counts',
             content:
@@ -121,13 +124,15 @@ export class GetLayers {
             name: 'JNCC CEND1012 Survey',
             files: 'layers:seabed_images:jncc:JNCC_CEND1012_otherdata',
             content: 'JNCC Offshore Survey Benthic Images CEND1012',
+            imageExtension: 'JPG',
           },
           {
-            layerClass: 'Observations of Marine Species',
+            layerClass: 'Seabed Images',
             layerType: 'Marker',
             name: 'NBN',
             files: 'layers:seabed_images:nbn:nbn',
             content: 'NBN data',
+            imageExtension: '',
           },
         ])
       }

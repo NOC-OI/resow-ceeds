@@ -356,8 +356,13 @@ function ThreeDMap1({
             turf.point([photo.longitude - 0.003, photo.latitude - 0.003]),
           )
           if (shuffledPhotos.includes(photo.filename)) {
-            const getPhotoMarker = new GetPhotoMarker(photo, actual, color)
-
+            const getPhotoMarker = new GetPhotoMarker(
+              photo,
+              actual,
+              color,
+              layerName.files,
+              layerName.imageExtension,
+            )
             await getPhotoMarker.getMarker3D().then(async function () {
               dataSource.entities.add(getPhotoMarker.layer)
             })

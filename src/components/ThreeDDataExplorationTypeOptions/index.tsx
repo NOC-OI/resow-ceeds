@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { LayerTypeOptionsContainer } from './styles'
+import { LayerTypeOptionsContainer } from '../DataExplorationTypeOptions/styles'
 import {
   faCircleInfo,
   faCube,

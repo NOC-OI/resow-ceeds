@@ -7,6 +7,7 @@ import {
 } from '../DataExplorationSelection/styles'
 import { Info } from 'phosphor-react'
 import { BiodiversityType } from '../BiodiversityType'
+import { YearSelection } from '../YearSelection'
 
 interface BiodiversitySelectionProps {
   setCalculationValue: any
@@ -23,6 +24,8 @@ interface BiodiversitySelectionProps {
   setActualLayer?: any
   listLayers?: any
   dataFields: any
+  yearSelected: any
+  setYearSelected: any
 }
 
 export function BiodiversitySelection({
@@ -40,6 +43,8 @@ export function BiodiversitySelection({
   setActualLayer,
   listLayers,
   dataFields,
+  yearSelected,
+  setYearSelected,
 }: BiodiversitySelectionProps) {
   const calcClasses = dataFields.biodiversity
 
@@ -83,6 +88,10 @@ export function BiodiversitySelection({
           />
         </div>
       </LayerSelectionTitle>
+      <YearSelection
+        yearSelected={yearSelected}
+        setYearSelected={setYearSelected}
+      />
       <LayerTypes>
         {/* <AreaSelector
           setCalculationValue={setCalculationValue}
@@ -110,6 +119,8 @@ export function BiodiversitySelection({
               actualLayer={actualLayer}
               setActualLayer={setActualLayer}
               listLayers={listLayers}
+              yearSelected={yearSelected}
+              setYearSelected={setYearSelected}
             />
           )
         })}

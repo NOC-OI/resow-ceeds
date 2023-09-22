@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { InfoButtonBoxContainer } from './styles'
+import { InfoButtonBoxContainer } from '../InfoButtonBox/styles'
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons'
 import { useEffect, useState } from 'react'
 import { GetTitilerData } from './getTitilerData'

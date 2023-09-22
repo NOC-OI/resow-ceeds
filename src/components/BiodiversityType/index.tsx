@@ -4,7 +4,7 @@ import { CalcTypeContainer, CalcTypeOptionsContainer } from './styles'
 import { Loading } from '../Loading'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons'
-
+import { allYears } from '../../data/allYears'
 interface keyable {
   [key: string]: any
 }
@@ -24,6 +24,8 @@ interface BiodiversityTypeProps {
   actualLayer: any
   setActualLayer: any
   listLayers: any
+  yearSelected: any
+  setYearSelected: any
 }
 
 async function handleShowCalcValues(
@@ -33,6 +35,7 @@ async function handleShowCalcValues(
   latLonLimits: any,
   selectedArea: any,
   setIsActiveText: any,
+  selectedYear: any,
   activeText: any,
 ) {
   setLoading(true)
@@ -41,6 +44,12 @@ async function handleShowCalcValues(
 
   const APIBaseUrl = process.env.VITE_API_URL
   let url = `${APIBaseUrl}${params.url}`
+  if (!url.includes(selectedYear.toString())) {
+    allYears.forEach((year: number) => {
+      url = url.replaceAll(year.toString(), selectedYear.toString())
+    })
+  }
+
   if (selectedArea) {
     url = `${url}&bbox=${latLonLimits[2].lat},${latLonLimits[0].lng},${latLonLimits[0].lat},${latLonLimits[2].lng}`
   }
@@ -88,6 +97,8 @@ export function BiodiversityType({
   actualLayer,
   setActualLayer,
   listLayers,
+  yearSelected,
+  setYearSelected,
 }: BiodiversityTypeProps) {
   const [subCalcs, setSubCalcs] = useState([])
 
@@ -202,6 +213,7 @@ export function BiodiversityType({
                       latLonLimits,
                       selectedArea,
                       setIsActiveText,
+                      yearSelected,
                       `${title}_${subCalc.name}_${subCalc.url}`,
                     )
                     await handleChangeMapLayer(subCalc)

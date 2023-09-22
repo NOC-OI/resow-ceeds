@@ -6,6 +6,7 @@ import {
 // import { AreaSelector } from '../AreaSelector'
 import { Info } from 'phosphor-react'
 import { SurveyDesignType } from '../SurveyDesignType'
+import { YearSelection } from '../YearSelection'
 // import { AreaSelector } from '../AreaSelector'
 
 interface SurveyDesignSelectionProps {
@@ -17,6 +18,8 @@ interface SurveyDesignSelectionProps {
   dataFields: any
   dynamicTableData: any
   setDynamicTableData: any
+  yearSelected: any
+  setYearSelected: any
 }
 
 export function SurveyDesignSelection({
@@ -28,6 +31,8 @@ export function SurveyDesignSelection({
   dataFields,
   dynamicTableData,
   setDynamicTableData,
+  yearSelected,
+  setYearSelected,
 }: SurveyDesignSelectionProps) {
   const calcClasses = dataFields.surveyDesign
 
@@ -57,6 +62,10 @@ export function SurveyDesignSelection({
           />
         </div>
       </LayerSelectionTitle>
+      <YearSelection
+        yearSelected={yearSelected}
+        setYearSelected={setYearSelected}
+      />
       <LayerTypes>
         {calcClasses.map((calcClass: any) => {
           return (
@@ -72,6 +81,8 @@ export function SurveyDesignSelection({
               setFileSurveyDesign={setFileSurveyDesign}
               dynamicTableData={dynamicTableData}
               setDynamicTableData={setDynamicTableData}
+              yearSelected={yearSelected}
+              setYearSelected={setYearSelected}
             />
           )
         })}

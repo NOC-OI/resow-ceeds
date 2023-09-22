@@ -1,6 +1,9 @@
 import { ArrowCircleDown, ArrowCircleUp } from 'phosphor-react'
 import { useState } from 'react'
-import { CalcTypeContainer, CalcTypeOptionsContainer } from './styles'
+import {
+  CalcTypeContainer,
+  CalcTypeOptionsContainer,
+} from '../BiodiversityType/styles'
 import { Loading } from '../Loading'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons'
@@ -22,6 +25,8 @@ interface HabitatTypeProps {
   latLonLimits: any
   selectedArea: any
   setInfoButtonBox?: any
+  yearSelected: any
+  setYearSelected: any
 }
 
 async function handleShowCalcValues(
@@ -71,6 +76,8 @@ export function HabitatType({
   latLonLimits,
   selectedArea,
   setInfoButtonBox,
+  yearSelected,
+  setYearSelected,
 }: HabitatTypeProps) {
   const [subCalcs, setSubCalcs] = useState([])
 

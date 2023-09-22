@@ -1,7 +1,8 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { InfoButtonBoxContainer, RangeArea, RangeValue } from './styles'
+import { RangeArea, RangeValue } from './styles'
+import { InfoButtonBoxContainer } from '../InfoButtonBox/styles'
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons'
-import React, { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Plot from 'react-plotly.js'
 
 interface DynamicGraphBoxProps {

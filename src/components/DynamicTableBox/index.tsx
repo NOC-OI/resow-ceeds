@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons'
 import { useEffect, useState } from 'react'
-import { InfoButtonBoxContainer } from '../DynamicGraphBox/styles'
+import { InfoButtonBoxContainer } from '../InfoButtonBox/styles'
 import { TableContainer } from './styles'
 import { CalculateStatT } from './calculateStatT'
 

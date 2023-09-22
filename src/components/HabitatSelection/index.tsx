@@ -7,6 +7,7 @@ import {
 // import { AreaSelector } from '../AreaSelector'
 import { HabitatType } from '../HabitatType'
 import { Info } from 'phosphor-react'
+import { YearSelection } from '../YearSelection'
 
 interface HabitatSelectionProps {
   setCalculationValue: any
@@ -16,6 +17,8 @@ interface HabitatSelectionProps {
   setLatLonLimits: any
   setInfoButtonBox?: any
   dataFields: any
+  yearSelected: any
+  setYearSelected: any
 }
 
 export function HabitatSelection({
@@ -26,6 +29,8 @@ export function HabitatSelection({
   setLatLonLimits,
   setInfoButtonBox,
   dataFields,
+  yearSelected,
+  setYearSelected,
 }: HabitatSelectionProps) {
   const calcClasses = dataFields.habitats
 
@@ -74,6 +79,10 @@ export function HabitatSelection({
           />
         </div>
       </LayerSelectionTitle>
+      <YearSelection
+        yearSelected={yearSelected}
+        setYearSelected={setYearSelected}
+      />
       <LayerTypes>
         {/* <AreaSelector
           setCalculationValue={setCalculationValue}
@@ -94,6 +103,8 @@ export function HabitatSelection({
               latLonLimits={latLonLimits}
               selectedArea={selectedArea}
               setInfoButtonBox={setInfoButtonBox}
+              yearSelected={yearSelected}
+              setYearSelected={setYearSelected}
             />
           )
         })}

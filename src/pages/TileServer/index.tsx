@@ -50,6 +50,8 @@ export function TileServer() {
 
   const [layerAction, setLayerAction] = useState('')
 
+  const [yearSelected, setYearSelected] = useState(2012)
+
   const [calculationValue, setCalculationValue] = useState('')
 
   const [showPhotos, setShowPhotos] = useState<object[]>([])
@@ -158,6 +160,8 @@ export function TileServer() {
             setLatLonLimits={setLatLonLimits}
             setInfoButtonBox={setInfoButtonBox}
             dataFields={calClasses}
+            yearSelected={yearSelected}
+            setYearSelected={setYearSelected}
           />
         )}
         {selectedSidebarOption === 'Species of Interest' && (
@@ -195,6 +199,8 @@ export function TileServer() {
             setActualLayer={setActualLayer}
             listLayers={listLayers}
             dataFields={calClasses}
+            yearSelected={yearSelected}
+            setYearSelected={setYearSelected}
           />
         )}
         {selectedSidebarOption === 'Survey Design' && (
@@ -207,6 +213,8 @@ export function TileServer() {
             dataFields={calClasses}
             dynamicTableData={dynamicTableData}
             setDynamicTableData={setDynamicTableData}
+            yearSelected={yearSelected}
+            setYearSelected={setYearSelected}
           />
         )}
         {graphData ? (

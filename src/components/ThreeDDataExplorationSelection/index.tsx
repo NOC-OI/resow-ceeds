@@ -3,7 +3,7 @@ import {
   LayerSelectionContainer,
   LayerSelectionTitle,
   LayerTypes,
-} from './styles'
+} from '../DataExplorationSelection/styles'
 import { Info } from 'phosphor-react'
 import { ThreeDDataExplorationType } from '../ThreeDDataExplorationType'
 

@@ -1,6 +1,9 @@
 import { ArrowCircleDown, ArrowCircleUp } from 'phosphor-react'
 import { useEffect, useState } from 'react'
-import { CalcTypeContainer, CalcTypeOptionsContainer } from './styles'
+import {
+  CalcTypeContainer,
+  CalcTypeOptionsContainer,
+} from '../BiodiversityType/styles'
 import { Loading } from '../Loading'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons'
@@ -19,6 +22,8 @@ interface SurveyDesignTypeProps {
   setFileSurveyDesign: any
   dynamicTableData: any
   setDynamicTableData: any
+  yearSelected: any
+  setYearSelected: any
 }
 
 async function handleShowGraphValues(
@@ -60,6 +65,8 @@ export function SurveyDesignType({
   fileSurveyDesign,
   dynamicTableData,
   setDynamicTableData,
+  yearSelected,
+  setYearSelected,
 }: SurveyDesignTypeProps) {
   const [subCalcs, setSubCalcs] = useState([])
 

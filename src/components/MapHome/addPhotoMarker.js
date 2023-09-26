@@ -23,47 +23,120 @@ export class GetPhotoMarker {
     let imageUrl = ''
     if (this.layerName.imageUrl) {
       imageUrl = this.layerName.imageUrl
+      if (imageUrl.slice(-12) !== 'no_image.png') {
+        this.imageExtension = 'completeLink'
+      }
     } else {
       imageUrl = `${JOSBaseUrl}haig-fras/${this.files}/images/${this.layerName.filename}.${this.imageExtension}`
     }
 
     return `
-    <b>${this.actualLayer}</b><br>
+    <b style="font-size: 1rem;">${this.actualLayer}</b><br><br>
+    ${
+      this.layerName.filename
+        ? `<b>NBN atlas record ID</b>: <em>${this.layerName.filename}</em><br>`
+        : ''
+    }
     ${
       this.layerName.imageUrl
-        ? `SCIENTIFIC NAME: <em>${this.layerName['Scientific name']}</em><br>`
-        : `IMAGE NAME: <em>${this.layerName.filename}</em><br>`
+        ? `<b>SCIENTIFIC NAME</b>: <em>${this.layerName['Scientific name']}</em><br>`
+        : `IMAGE NAME</b>: <em>${this.layerName.filename}</em><br>`
     }
     ${
       this.layerName.Area_seabed_m2
-        ? `AREA OF SURVEY: <em>${this.layerName.Area_seabed_m2.toFixed(
+        ? `<b>AREA OF SURVEY</b>: <em>${this.layerName.Area_seabed_m2.toFixed(
             2,
           )}m²</em><br>`
         : ''
     }
     ${
       this.layerName.Habitat
-        ? `HABITAT: <em>${this.layerName.Habitat}</em><br>`
+        ? `<b>HABITAT</b>: <em>${this.layerName.Habitat}</em><br>`
         : ''
     }
     ${
       this.layerName['EUNIS.Habitat']
-        ? `HABITAT: <em>${this.layerName['EUNIS.Habitat']}</em><br>`
+        ? `<b>HABITAT</b>: <em>${this.layerName['EUNIS.Habitat']}</em><br>`
         : ''
     }
     ${
       this.layerName.UKMarineHabitat
-        ? `UK Marine HABITAT: <em>${this.layerName.UKMarineHabitat}</em><br>`
+        ? `<b>UK Marine HABITAT</b>: <em>${this.layerName.UKMarineHabitat}</em><br>`
         : ''
     }
     ${
       this.layerName.Substratum
-        ? `Substratum: <em>${this.layerName.Substratum}</em><br>`
+        ? `<b>Substratum</b>: <em>${this.layerName.Substratum}</em><br>`
         : ''
     }
     ${
       this.layerName.Caption
-        ? `Caption: <em>${this.layerName.Caption}</em><br>`
+        ? `<b>Caption</b>: <em>${this.layerName.Caption}</em><br>`
+        : ''
+    }
+    ${
+      this.layerName.latitude
+        ? `<b>Lat</b>: <em>${this.layerName.latitude}</em><br>`
+        : ''
+    }
+    ${
+      this.layerName.longitude
+        ? `<b>Long</b>: <em>${this.layerName.longitude}</em><br>`
+        : ''
+    }
+    ${
+      this.layerName['Start date']
+        ? `<b>Ocurrence Day</b>: <em>${this.layerName['Start date']}</em><br>`
+        : ''
+    }
+    ${
+      this.layerName.Kingdom
+        ? `<b>Kingdom</b>: <em>${this.layerName.Kingdom}</em><br>`
+        : ''
+    }
+    ${
+      this.layerName.Phylum
+        ? `<b>Phylum</b>: <em>${this.layerName.Phylum}</em><br>`
+        : ''
+    }
+    ${
+      this.layerName.Class
+        ? `<b>Class</b>: <em>${this.layerName.Class}</em><br>`
+        : ''
+    }
+    ${
+      this.layerName.Order
+        ? `<b>Order</b>: <em>${this.layerName.Order}</em><br>`
+        : ''
+    }
+    ${
+      this.layerName.Family
+        ? `<b>Family</b>: <em>${this.layerName.Family}</em><br>`
+        : ''
+    }
+    ${
+      this.layerName.Genus
+        ? `<b>Genus</b>: <em>${this.layerName.Genus}</em><br>`
+        : ''
+    }
+    ${
+      this.layerName['Taxon author']
+        ? `<b>Taxon author</b>: <em>${this.layerName['Taxon author']}</em><br>`
+        : ''
+    }
+    ${
+      this.layerName.Rightshoulder
+        ? `<b>Right shoulder</b>: <em>${this.layerName.Rightshoulder}</em><br>`
+        : ''
+    }
+    ${
+      this.layerName['Basis of record']
+        ? `<b>Basis of record</b>: <em>${this.layerName['Basis of record']}</em><br>`
+        : ''
+    }
+    ${
+      this.layerName['Dataset name']
+        ? `<b>Dataset name</b>: <em>${this.layerName['Dataset name']}</em><br>`
         : ''
     }
     ${
@@ -128,7 +201,7 @@ export class GetPhotoMarker {
 
     this.popupText = this.createPopup()
 
-    //   ANNOTATION: <em>${organismList.join(', ')}</em><br>
+    //   ANNOTATION</b>: <em>${organismList.join(', ')}</em><br>
 
     this.layer.options.attribution = this.actualLayer
     this.layer.options.organismList = organismList

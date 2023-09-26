@@ -248,7 +248,6 @@ export class GetTileLayer {
       // })
       for (let i = 0; i < bands.length; i++) {
         const stats = cogStats[bands[i]]
-        console.log(stats)
         if (this.contrast) {
           stats
             ? this.rescale.push(`${stats.percentile_2},${stats.percentile_98}`)

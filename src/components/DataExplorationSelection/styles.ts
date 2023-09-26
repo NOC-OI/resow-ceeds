@@ -50,12 +50,12 @@ export const LayerSelectionTitle = styled.div`
 `
 
 export const LayerTypes = styled.div`
-  max-height: calc(90vh - 2.5rem + 0.75rem);
+  height: calc(90vh - 2.5rem + 0.75rem);
   overflow-y: auto;
 `
 
 export const WithAreaLayerTypes = styled.div`
-  max-height: calc(
+  height: calc(
     90vh - 2.5rem - 0.75rem - 1rem - 2rem - 0.75rem - 1.375rem - 0.5rem - 2rem -
       3.55rem
   );

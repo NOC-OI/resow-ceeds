@@ -12,6 +12,7 @@ import rehypeKatex from 'rehype-katex'
 import remarkBreaks from 'remark-breaks'
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
+import { allYears } from '../../data/allYears'
 
 interface keyable {
   [key: string]: any
@@ -35,6 +36,7 @@ async function handleShowCalcValues(
   setLoading: any,
   latLonLimits: any,
   selectedArea: any,
+  yearSelected: any,
 ) {
   setLoading(true)
   setCalculationValue(null)
@@ -42,9 +44,32 @@ async function handleShowCalcValues(
   const APIBaseUrl = process.env.VITE_API_URL
 
   let url = `${APIBaseUrl}${params.url}`
+  let fileNames = ''
+  let layers = {}
+  if (yearSelected === allYears.length - 1) {
+    Object.keys(params.years).forEach((year: string) => {
+      fileNames += `${params.years[year].file_names},`
+      Object.keys(params.years[year].layers).forEach((layer: any) => {
+        if (Object.keys(layers).includes(layer)) {
+          params.years[year].layers[layer].forEach((subLayer: string) => {
+            layers[layer].push(subLayer)
+          })
+        } else {
+          layers[layer] = params.years[year].layers[layer]
+        }
+      })
+    })
+    fileNames = fileNames.slice(0, -1)
+  } else {
+    fileNames = params.years[allYears[yearSelected]].file_names
+    layers = params.years[allYears[yearSelected]].layers
+  }
+  url = url.replaceAll('file_names', fileNames)
+
   if (selectedArea) {
     url = `${url}&bbox=${latLonLimits[2].lat},${latLonLimits[0].lng},${latLonLimits[0].lat},${latLonLimits[2].lng}`
   }
+
   async function getCalculationResults() {
     const response = await fetch(url, {
       method: 'GET',
@@ -59,6 +84,7 @@ async function handleShowCalcValues(
     // data[`${deleteKey} ${params.name.toLowerCase()}`] = data[deleteKey]
     // delete data[deleteKey]
     params.result = data
+    params.layers = layers
     params.button = true
     // const newCalculationValue = dat: Object = {}
     // newCalculationValue[params.name as keyof Object] = data
@@ -135,20 +161,32 @@ export function HabitatType({
             >
               <label>
                 {/* <p>{subCalcs[subCalc]['name']}</p> */}
-                <p
-                  id="type-option"
-                  onClick={async () => {
-                    await handleShowCalcValues(
-                      subCalc,
-                      setCalculationValue,
-                      setLoading,
-                      latLonLimits,
-                      selectedArea,
-                    )
-                  }}
-                >
-                  {subCalc.name}
-                </p>
+                {Object.keys(subCalc.years).includes(allYears[yearSelected]) ||
+                yearSelected === allYears.length - 1 ? (
+                  <p
+                    id="type-option"
+                    className="cursor-pointer"
+                    onClick={async () => {
+                      await handleShowCalcValues(
+                        subCalc,
+                        setCalculationValue,
+                        setLoading,
+                        latLonLimits,
+                        selectedArea,
+                        yearSelected,
+                      )
+                    }}
+                  >
+                    {subCalc.name}
+                  </p>
+                ) : (
+                  <p
+                    id="type-option"
+                    className={'opacity-40 cursor-not-allowed'}
+                  >
+                    {subCalc.name}
+                  </p>
+                )}
               </label>
             </CalcTypeOptionsContainer>
           )

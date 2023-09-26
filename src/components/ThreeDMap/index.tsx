@@ -18,7 +18,7 @@ import {
   createWorldTerrainAsync,
 } from 'cesium'
 import './styles.css'
-import { ResiumContainer } from './styles'
+import { ResiumContainer, ZoomButton, ZoomGroup } from './styles'
 import React, { useEffect, useRef, useMemo, useState } from 'react'
 import { InfoBox } from '../InfoBox'
 import * as Cesium from 'cesium'
@@ -577,6 +577,30 @@ function ThreeDMap1({
       setLayerAction('')
     }
   }, [selectedLayers])
+
+  function CesiumZoomControl() {
+    function zoomCamera(amount: number) {
+      if (amount > 0) {
+        ref.current.cesiumElement.camera.zoomIn(60)
+      } else {
+        ref.current.cesiumElement.camera.zoomOut(60)
+      }
+    }
+
+    return (
+      <div className="leaflet-top leaflet-right top-10">
+        <ZoomGroup className="leaflet-control-zoom leaflet-bar leaflet-control">
+          <ZoomButton title="Zoom in" onClick={() => zoomCamera(1)}>
+            +
+          </ZoomButton>
+          <ZoomButton title="Zoom out" onClick={() => zoomCamera(-1)}>
+            -
+          </ZoomButton>
+        </ZoomGroup>
+      </div>
+    )
+  }
+
   const displayMap = useMemo(
     () => (
       <Viewer
@@ -589,6 +613,7 @@ function ThreeDMap1({
         navigationHelpButton={false}
         scene3DOnly={true}
       >
+        <CesiumZoomControl />
         {/* <Cesium3DTileset
           url={CesiumTerrainProvider.fromIonAssetId(2182075)}
           onReady={handleReady}

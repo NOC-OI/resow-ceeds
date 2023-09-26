@@ -6,17 +6,35 @@
       "calcNames": [
         {
           "name": "Density",
-          "url": "v1/data/csv?orient=list&skip_lines=7",
-          "habitat": ["coarse", "sand", "intermediate", "hard"]
+          "url": "v1/data/csv?orient=list&skip_lines=7&filenames=file_names",
+          "years":{
+            "2012":{
+              "file_names": "layers:seabed_images:hf2012:HF2012_cum_hill_values_",
+              "habitat": ["coarse", "sand", "intermediate", "hard"]
+            },
+            "2015":{
+              "file_names": "layers:seabed_images:hf2015:HF2015_cum_hill_values_",
+              "habitat": ["coarse"]
+            }
+          }
         },
         {
           "name": "Biodiversity",
-          "url": "v1/data/csv?orient=list&skip_lines=7",
-          "habitat": ["coarse", "sand", "intermediate", "hard"],
+          "url": "v1/data/csv?orient=list&skip_lines=7&filenames=file_names",
           "biodiversity": {
             "Species richness": "Hill0",
             "Shannon index (expH')": "Hill1",
             "Simpson's index": "Hill2"
+          },
+          "years":{
+            "2012":{
+              "file_names": "layers:seabed_images:hf2012:HF2012_cum_hill_values_",
+              "habitat": ["coarse", "sand", "intermediate", "hard"]
+            },
+            "2015":{
+              "file_names": "layers:seabed_images:hf2015:HF2015_cum_hill_values_",
+              "habitat": ["coarse"]
+            }
           }
         }
       ]
@@ -26,6 +44,7 @@
       "content": "This calculation uses XXXXX...",
       "calcNames": [
         {
+          "years": {"2012": "ok", "2014": "ok", "2015": "ok"},
           "name": "Sample Units",
           "url": "",
           "habitat": ["coarse", "sand", "intermediate", "hard"]
@@ -76,6 +95,44 @@
           "sampleImage": "haig-fras/layers/seabed_images/hf2012/images/M58_10441297_12987756293370.jpg"
         }
       ]
+    },
+    {
+      "calcClass": "Other Species",
+      "content": "Filter other species",
+      "calcNames": [
+        {
+          "name": "*Filter by Order*",
+          "type": "selector",
+          "tableName": "Order",
+          "layers": {
+            "Seabed Images": ["NBN"]
+          }
+        },
+        {
+          "name": "*Filter by Genus*",
+          "type": "selector",
+          "tableName": "Genus",
+          "layers": {
+            "Seabed Images": ["NBN"]
+          }
+        },
+        {
+          "name": "*Filter by Species*",
+          "type": "selector",
+          "tableName": "Scientific name",
+          "layers": {
+            "Seabed Images": ["NBN"]
+          }
+        },
+        {
+          "name": "*Filter by Date*",
+          "type": "selector",
+          "tableName": "Start date",
+          "layers": {
+            "Seabed Images": ["NBN"]
+          }
+        }
+      ]
     }
   ],
   "habitats": [
@@ -85,13 +142,23 @@
       "calcNames": [
         {
           "name": "Number",
-          "url": "v1/calc?filenames=layers:seabed_images:hf2012:HF2012_alltile_otherdata,layers:seabed_images:hf2012:HF2012_alltile_counts&calc=count&crs=epsg%3A4326&extension=csv&calc_columns=habitat",
-          "layers": { "Seabed Images": ["2012 AUV Image Survey"] }
+          "url": "v1/calc?filenames=file_names&calc=count&crs=epsg%3A4326&extension=csv&calc_columns=habitat",
+          "years":{
+            "2012":{
+              "file_names": "layers:seabed_images:hf2012:HF2012_alltile_otherdata,layers:seabed_images:hf2012:HF2012_alltile_counts",
+              "layers": { "Seabed Images": ["2012 AUV Image Survey"] }
+            }
+          }
         },
         {
           "name": "Type",
-          "url": "v1/calc?filenames=layers:seabed_images:hf2012:HF2012_alltile_otherdata,layers:seabed_images:hf2012:HF2012_alltile_counts&calc=agg&crs=epsg%3A4326&extension=csv&agg_columns=first:habitatImage&calc_columns=habitat",
-          "layers": { "Seabed Images": ["2012 AUV Image Survey"] }
+          "url": "v1/calc?filenames=file_names&calc=agg&crs=epsg%3A4326&extension=csv&agg_columns=first:habitatImage&calc_columns=habitat",
+          "years":{
+            "2012":{
+              "file_names": "layers:seabed_images:hf2012:HF2012_alltile_otherdata,layers:seabed_images:hf2012:HF2012_alltile_counts",
+              "layers": { "Seabed Images": ["2012 AUV Image Survey"] }
+            }
+          }
         }
       ]
     },
@@ -101,16 +168,38 @@
       "calcNames": [
         {
           "name": "Number",
-          "url": "v1/calc?filenames=layers:seabed_images:hf2012:HF2012_alltile_otherdata,layers:seabed_images:hf2012:HF2012_alltile_counts,layers:seabed_images:jncc:JNCC_CEND1012_otherdata&calc=count&crs=epsg%3A4326&extension=csv&calc_columns=UKMarineHabitat",
-          "layers": {
-            "Seabed Images": ["2012 AUV Image Survey", "JNCC CEND1012 Survey"]
+          "url": "v1/calc?filenames=file_names&calc=count&crs=epsg%3A4326&extension=csv&calc_columns=UKMarineHabitat",
+          "years":{
+            "2012":{
+              "file_names": "layers:seabed_images:hf2012:HF2012_alltile_otherdata,layers:seabed_images:hf2012:HF2012_alltile_counts",
+              "layers": {
+                "Seabed Images": ["2012 AUV Image Survey"]
+              }
+            },
+            "2014":{
+              "file_names": "layers:seabed_images:jncc:JNCC_CEND1012_otherdata",
+              "layers": {
+                "Seabed Images": ["JNCC CEND1012 Survey"]
+              }
+            }
           }
         },
         {
           "name": "Type",
-          "url": "v1/calc?filenames=layers:seabed_images:hf2012:HF2012_alltile_otherdata,layers:seabed_images:hf2012:HF2012_alltile_counts,layers:seabed_images:jncc:JNCC_CEND1012_otherdata&calc=agg&crs=epsg%3A4326&extension=csv&agg_columns=first:UKMarineHabitatImage&calc_columns=UKMarineHabitat",
-          "layers": {
-            "Seabed Images": ["2012 AUV Image Survey", "JNCC CEND1012 Survey"]
+          "url": "v1/calc?filenames=file_names&calc=agg&crs=epsg%3A4326&extension=csv&agg_columns=first:UKMarineHabitatImage&calc_columns=UKMarineHabitat",
+          "years":{
+            "2012":{
+              "file_names": "layers:seabed_images:hf2012:HF2012_alltile_otherdata,layers:seabed_images:hf2012:HF2012_alltile_counts",
+              "layers": {
+                "Seabed Images": ["2012 AUV Image Survey"]
+              }
+            },
+            "2014":{
+              "file_names": "layers:seabed_images:jncc:JNCC_CEND1012_otherdata",
+              "layers": {
+                "Seabed Images": ["JNCC CEND1012 Survey"]
+              }
+            }
           }
         }
       ]
@@ -121,13 +210,31 @@
       "calcNames": [
         {
           "name": "Number",
-          "url": "v1/calc?filenames=layers:seabed_images:hf2012:HF2012_alltile_otherdata,layers:seabed_images:hf2012:HF2012_alltile_counts&calc=count&crs=epsg%3A4326&extension=csv&calc_columns=substratum",
-          "layers": { "Seabed Images": ["2012 AUV Image Survey"] }
+          "url": "v1/calc?filenames=file_names&calc=count&crs=epsg%3A4326&extension=csv&calc_columns=substratum",
+          "years":{
+            "2012":{
+              "file_names": "layers:seabed_images:hf2012:HF2012_alltile_otherdata,layers:seabed_images:hf2012:HF2012_alltile_counts",
+              "layers": { "Seabed Images": ["2012 AUV Image Survey"] }
+            },
+            "2015":{
+              "file_names": "layers:seabed_images:hf2015:HF2015_alltile_otherdata,layers:seabed_images:hf2015:HF2015_alltile_counts",
+              "layers": { "Seabed Images": ["2015 AUV Image Survey"] }
+            }
+          }
         },
         {
           "name": "Type",
-          "url": "v1/calc?filenames=layers:seabed_images:hf2012:HF2012_alltile_otherdata,layers:seabed_images:hf2012:HF2012_alltile_counts&calc=agg&crs=epsg%3A4326&extension=csv&agg_columns=first:substratumImage&calc_columns=substratum",
-          "layers": { "Seabed Images": ["2012 AUV Image Survey"] }
+          "url": "v1/calc?filenames=file_names&calc=agg&crs=epsg%3A4326&extension=csv&agg_columns=first:substratumImage&calc_columns=substratum",
+          "years": {
+            "2012":{
+              "file_names": "layers:seabed_images:hf2012:HF2012_alltile_otherdata,layers:seabed_images:hf2012:HF2012_alltile_counts",
+              "layers": { "Seabed Images": ["2012 AUV Image Survey"] }
+            },
+            "2015":{
+              "file_names": "layers:seabed_images:hf2015:HF2015_alltile_otherdata,layers:seabed_images:hf2015:HF2015_alltile_counts",
+              "layers": { "Seabed Images": ["2015 AUV Image Survey"] }
+            }
+          }
         }
       ]
     }
@@ -139,10 +246,19 @@
       "calcNames": [
         {
           "name": "Morphotypes",
-          "url": "v1/calc?filenames=layers:seabed_images:hf2012:HF2012_alltile_counts&calc=biodiversity2&crs=epsg%3A4326&extension=csv",
-          "layers": { "Seabed Images": ["2012 AUV Image Survey"] },
+          "url": "v1/calc?filenames=file_names&calc=biodiversity2&crs=epsg%3A4326&extension=csv",
           "noButton": true,
-          "decimalPlaces": 0
+          "decimalPlaces": 0,
+          "years":{
+            "2012": {
+              "file_names": "layers:seabed_images:hf2012:HF2012_alltile_counts",
+              "layers": { "Seabed Images": ["2012 AUV Image Survey"] }
+            },
+            "2015": {
+              "file_names": "layers:seabed_images:hf2015:HF2015_alltile_counts",
+              "layers": { "Seabed Images": ["2015 AUV Image Survey"] }
+            }
+          }
         }
       ]
     },
@@ -152,31 +268,68 @@
       "calcNames": [
         {
           "name": "Density of benthic megafauna",
-          "url": "v1/calc?filenames=layers:seabed_images:hf2012:HF2012_SU&crs=epsg%3A4326&extension=csv&calc=biodiversity1&calc_columns=substratum",
-          "layers": { "Seabed Images": ["2012 AUV Image Survey"] },
+          "url": "v1/calc?filenames=file_names&crs=epsg%3A4326&extension=csv&calc=biodiversity1&calc_columns=substratum",
           "decimalPlaces": 3,
-          "noButton": true
+          "noButton": true,
+          "years":{
+            "2012": {
+              "file_names": "layers:seabed_images:hf2012:HF2012_SU",
+              "layers": { "Seabed Images": ["2012 AUV Image Survey"] }
+            },
+            "2015": {
+              "file_names": "layers:seabed_images:hf2015:HF2015_SU",
+              "layers": { "Seabed Images": ["2015 AUV Image Survey"] }
+            }
+          }
         },
         {
           "name": "Number of morphotypes",
-          "url": "v1/calc?filenames=layers:seabed_images:hf2012:HF2012_SU&crs=epsg%3A4326&extension=csv&calc=biodiversity3&calc_columns=substratum",
-          "layers": { "Seabed Images": ["2012 AUV Image Survey"] },
+          "url": "v1/calc?filenames=file_names&crs=epsg%3A4326&extension=csv&calc=biodiversity3&calc_columns=substratum",
           "decimalPlaces": 3,
-          "noButton": true
+          "noButton": true,
+          "years":{
+            "2012": {
+              "file_names": "layers:seabed_images:hf2012:HF2012_SU",
+              "layers": { "Seabed Images": ["2012 AUV Image Survey"] }
+            },
+            "2015": {
+              "file_names": "layers:seabed_images:hf2015:HF2015_SU",
+              "layers": { "Seabed Images": ["2015 AUV Image Survey"] }
+            }
+          }
         },
         {
           "name": "Shannon index (expH')",
-          "url": "v1/calc?filenames=layers:seabed_images:hf2012:HF2012_SU&crs=epsg%3A4326&extension=csv&calc=biodiversity4&calc_columns=substratum",
-          "layers": { "Seabed Images": ["2012 AUV Image Survey"] },
+          "url": "v1/calc?filenames=file_names&crs=epsg%3A4326&extension=csv&calc=biodiversity4&calc_columns=substratum",
           "decimalPlaces": 2,
-          "noButton": true
+          "noButton": true,
+          "years":{
+            "2012": {
+              "file_names": "layers:seabed_images:hf2012:HF2012_SU",
+              "layers": { "Seabed Images": ["2012 AUV Image Survey"] }
+            },
+            "2015": {
+              "file_names": "layers:seabed_images:hf2015:HF2015_SU",
+              "layers": { "Seabed Images": ["2015 AUV Image Survey"] }
+            }
+          }
         },
         {
           "name": "Inverse Simpson's index",
-          "url": "v1/calc?filenames=layers:seabed_images:hf2012:HF2012_SU&crs=epsg%3A4326&extension=csv&calc=biodiversity5&calc_columns=substratum",
+          "url": "v1/calc?filenames=file_names&crs=epsg%3A4326&extension=csv&calc=biodiversity5&calc_columns=substratum",
           "layers": { "Seabed Images": ["2012 AUV Image Survey"] },
           "decimalPlaces": 2,
-          "noButton": true
+          "noButton": true,
+          "years":{
+            "2012": {
+              "file_names": "layers:seabed_images:hf2012:HF2012_SU",
+              "layers": { "Seabed Images": ["2012 AUV Image Survey"] }
+            },
+            "2015": {
+              "file_names": "layers:seabed_images:hf2015:HF2015_SU",
+              "layers": { "Seabed Images": ["2015 AUV Image Survey"] }
+            }
+          }
         }
       ]
     }

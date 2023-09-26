@@ -7,6 +7,7 @@ import {
 import { Loading } from '../Loading'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons'
+import { allYears } from '../../data/allYears'
 
 interface keyable {
   [key: string]: any
@@ -31,12 +32,24 @@ async function handleShowGraphValues(
   setDynamicGraphData: any,
   setLoading: any,
   fileSurveyDesign: any,
+  yearSelected: any,
 ) {
   setLoading(true)
   setDynamicGraphData(null)
 
   const APIBaseUrl = process.env.VITE_API_URL
-  const url = `${APIBaseUrl}${params.url}&filenames=layers:seabed_images:hf2012:HF2012_cum_hill_values_${fileSurveyDesign}`
+  let url = `${APIBaseUrl}${params.url}${fileSurveyDesign}`
+  let fileNames = ''
+  if (yearSelected === allYears.length - 1) {
+    Object.keys(params.years).forEach((year: string) => {
+      fileNames += `${params.years[year].file_names},`
+    })
+    fileNames = fileNames.slice(0, -1)
+  } else {
+    fileNames = params.years[allYears[yearSelected]].file_names
+  }
+  url = url.replaceAll('file_names', fileNames)
+
   async function getCalculationResults() {
     const response = await fetch(url, {
       method: 'GET',
@@ -47,6 +60,7 @@ async function handleShowGraphValues(
       },
     })
     const data = { name: {}, data: null }
+    params.habitat = params.years[allYears[yearSelected]].habitat
     data.name = params
     data.data = await response.json()
     setDynamicGraphData(data)
@@ -88,6 +102,7 @@ export function SurveyDesignType({
         setDynamicGraphData,
         setLoading,
         fileSurveyDesign,
+        yearSelected,
       )
     }
   }, [fileSurveyDesign])
@@ -133,22 +148,32 @@ export function SurveyDesignType({
               key={`${title}_${subCalc.name}_${subCalc.url}`}
             >
               <label>
-                {/* <p>{subCalcs[subCalc]['name']}</p> */}
-                <p
-                  id="type-option"
-                  onClick={async () => {
-                    title === 'Biodiversity representation'
-                      ? await handleShowGraphValues(
-                          subCalc,
-                          setDynamicGraphData,
-                          setLoading,
-                          fileSurveyDesign,
-                        )
-                      : await handleShowTableValues(subCalc)
-                  }}
-                >
-                  {subCalc.name}
-                </p>
+                {Object.keys(subCalc.years).includes(allYears[yearSelected]) ||
+                yearSelected === allYears.length - 1 ? (
+                  <p
+                    id="type-option"
+                    onClick={async () => {
+                      title === 'Biodiversity representation'
+                        ? await handleShowGraphValues(
+                            subCalc,
+                            setDynamicGraphData,
+                            setLoading,
+                            fileSurveyDesign,
+                            yearSelected,
+                          )
+                        : await handleShowTableValues(subCalc)
+                    }}
+                  >
+                    {subCalc.name}
+                  </p>
+                ) : (
+                  <p
+                    id="type-option"
+                    className={'opacity-40 cursor-not-allowed'}
+                  >
+                    {subCalc.name}
+                  </p>
+                )}
               </label>
             </CalcTypeOptionsContainer>
           )

@@ -128,7 +128,7 @@ export function CalculationValue({
       // setShowPhotos(photoList)
     }
   }, [selectedLayers])
-  console.log(calculationValue)
+
   return (
     <CalculationValueContainer id="calculate-value">
       <div className="flex justify-end">

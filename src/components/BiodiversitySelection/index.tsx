@@ -88,11 +88,12 @@ export function BiodiversitySelection({
           />
         </div>
       </LayerSelectionTitle>
-      <YearSelection
-        yearSelected={yearSelected}
-        setYearSelected={setYearSelected}
-      />
       <LayerTypes>
+        <YearSelection
+          yearSelected={yearSelected}
+          setYearSelected={setYearSelected}
+          allYearToogle={false}
+        />
         {/* <AreaSelector
           setCalculationValue={setCalculationValue}
           selectedArea={selectedArea}

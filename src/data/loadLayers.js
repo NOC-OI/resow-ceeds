@@ -173,7 +173,11 @@ export class GetLayers {
             layerType: 'Marker',
             name: 'NBN',
             files: 'layers:seabed_images:nbn:nbn',
-            content: 'NBN data',
+            content:
+              'NBN Atlas occurrence download at NBN Atlas accessed on Tue Jun 27 09:31:05 UTC 2023. \
+              Then filtered using WoRMS (marinespecies.org) to ensure only marine species were included, \
+              plankton and non-plant/non-faunal organisms were removed, finally only \
+              invertebrates were selected.',
             imageExtension: '',
           },
         ])

@@ -6,6 +6,7 @@ import {
 } from '../DataExplorationSelection/styles'
 import { Info } from 'phosphor-react'
 import { IndicatorSpeciesType } from '../IndicatorSpeciesType'
+import { useEffect, useState } from 'react'
 
 interface IndicatorSpeciesSelectionProps {
   setCalculationValue: any
@@ -23,6 +24,8 @@ interface IndicatorSpeciesSelectionProps {
   listLayers: any
   setShowPhotos: any
   dataFields: any
+  NBNSpecies: any
+  setNBNSpecies: any
 }
 
 export function IndicatorSpeciesSelection({
@@ -41,8 +44,11 @@ export function IndicatorSpeciesSelection({
   listLayers,
   setShowPhotos,
   dataFields,
+  NBNSpecies,
+  setNBNSpecies,
 }: IndicatorSpeciesSelectionProps) {
   const calcClasses = dataFields.indicatorSpecies
+  const [loading, setLoading] = useState<boolean>(false)
 
   function handleClickLayerInfo(title: String, content: string) {
     setInfoButtonBox({
@@ -51,6 +57,31 @@ export function IndicatorSpeciesSelection({
     })
   }
 
+  async function getNBNSpecies() {
+    setLoading(true)
+    const APIBaseUrl = process.env.VITE_API_URL
+    const url = `${APIBaseUrl}v1/calc/?filenames=layers%3Aseabed_images%3Anbn%3Anbn&extension=csv&calc=unique&calc_columns=Scientific%20name&drop_columns=Unnamed%3A%200%2Cfilename%2CRightsholder%2CTaxon%20author%2CBasis%20of%20record%2CDataset%20name%2Clatitude%2Clongitude%2CimageUrl%2CClass%2CPhylum%2CKingdom&lat_lon_columns=latitude%2Clongitude&exclude_index=false&all_columns=true`
+    async function getCalculationResults() {
+      const response = await fetch(url, {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+        },
+      })
+      const data = await response.json()
+      setNBNSpecies(data)
+      setLoading(false)
+    }
+    await getCalculationResults()
+  }
+
+  useEffect(() => {
+    if (!NBNSpecies) {
+      getNBNSpecies()
+    }
+  }, [NBNSpecies])
   return (
     <LayerSelectionContainer>
       <LayerSelectionTitle>
@@ -104,6 +135,9 @@ export function IndicatorSpeciesSelection({
               setActualLayer={setActualLayer}
               listLayers={listLayers}
               setShowPhotos={setShowPhotos}
+              NBNSpecies={NBNSpecies}
+              loading={loading}
+              setLoading={setLoading}
             />
           )
         })}

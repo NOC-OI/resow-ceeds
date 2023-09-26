@@ -55,12 +55,11 @@ export function DynamicTableBox({
     )
 
     setCalculationResults(calculateStatT.calculateStat())
-    console.log(calculateStatT.results)
   }, [pValue, aValue])
 
   // console.log(calculationResults)
   return (
-    <InfoButtonBoxContainer id="dynamic-graph">
+    <InfoButtonBoxContainer id="dynamic-graph" className="w-120">
       <div className="flex justify-end pb-3">
         <FontAwesomeIcon icon={faCircleXmark} onClick={handleClose} />
       </div>
@@ -68,22 +67,8 @@ export function DynamicTableBox({
         {dynamicTableData.name}
       </p>
       <div className="w-full pb-2 gap-2" id="select-survey-values">
-        {/* <label className="flex w-full" htmlFor={'N'}>
-          <p className="pr-4 w-20">N</p>
-          <input
-            type="range"
-            className="flex-grow"
-            step={1}
-            min={0}
-            max={nValues.length - 1}
-            name={'N'}
-            value={nValue}
-            onChange={(e) => setNValue(parseInt(e.currentTarget.value))}
-          />
-          <p className="pl-4 w-10">{nValues[nValue]}</p>
-        </label> */}
-        <label className="p-4 w-full" htmlFor={'NUMBER OF STRATA'}>
-          <p className="text-center w-full pb-2">
+        <label className="p-3 w-full" htmlFor={'NUMBER OF STRATA'}>
+          <p className="text-center w-full pb-1">
             <strong>Number of Strata:</strong> {aValues[aValue]}
           </p>
           <input
@@ -97,8 +82,8 @@ export function DynamicTableBox({
             onChange={(e) => setAValue(parseInt(e.currentTarget.value))}
           />
         </label>
-        <label className="p-4 w-full" htmlFor={'P'}>
-          <p className="text-center w-full pb-2">
+        <label className="p-3 w-full" htmlFor={'P'}>
+          <p className="text-center w-full pb-1">
             <strong>Power of the Test:</strong> {pValues[pValue]}
           </p>
           <input
@@ -112,8 +97,8 @@ export function DynamicTableBox({
             onChange={(e) => setPValue(parseInt(e.currentTarget.value))}
           />
         </label>
-        <label className="w-full p-4" htmlFor={'DELTA'}>
-          <p className="text-center w-full pb-2">
+        <label className="w-full p-3" htmlFor={'DELTA'}>
+          <p className="text-center w-full pb-1">
             <strong>Smallest True Difference to Detect:</strong>{' '}
             {deltaValues[deltaValue]}
           </p>
@@ -130,8 +115,8 @@ export function DynamicTableBox({
             }}
           />
         </label>
-        <label className="p-4 w-full" htmlFor={'COEF VAR'}>
-          <p className="text-center w-full pb-2">
+        <label className="p-3 w-full" htmlFor={'COEF VAR'}>
+          <p className="text-center w-full pb-1">
             <strong>Coeficient of Variation:</strong>{' '}
             {coefVarValues[coefVarValue]}
           </p>
@@ -192,7 +177,7 @@ export function DynamicTableBox({
                 </tbody>
               </TableContainer>
             </div>
-            <p className="text-center text-2xl pt-5 pb-3 font-bold">
+            <p className="text-center text-lg pt-5 pb-3 font-bold">
               Number of samples required:{' '}
               {calculationResults[coefVarValue][deltaValue]}
             </p>

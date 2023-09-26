@@ -26,6 +26,9 @@ interface IndicatorSpeciesTypeProps {
   setActualLayer: any
   listLayers: any
   setShowPhotos: any
+  NBNSpecies: any
+  loading: any
+  setLoading: any
 }
 
 export function IndicatorSpeciesType({
@@ -44,6 +47,9 @@ export function IndicatorSpeciesType({
   setActualLayer,
   listLayers,
   setShowPhotos,
+  NBNSpecies,
+  loading,
+  setLoading,
 }: IndicatorSpeciesTypeProps) {
   const [subLayers, setSubLayers] = useState([])
 
@@ -51,17 +57,22 @@ export function IndicatorSpeciesType({
 
   const [isClicked, setIsClicked] = useState('')
 
-  const [loading, setLoading] = useState<boolean>(false)
   function handleShowLayers() {
-    setIsActive((isActive) => !isActive)
-    setSubLayers((subLayers) =>
-      Object.keys(subLayers).length === 0 ? childs : [],
-    )
+    if (!loading) {
+      setIsActive((isActive) => !isActive)
+      setSubLayers((subLayers) =>
+        Object.keys(subLayers).length === 0 ? childs : [],
+      )
+    }
   }
   return (
     <CalcTypeContainer>
       <div>
-        <header id="general-types" onClick={handleShowLayers}>
+        <header
+          id="general-types"
+          className={loading ? 'opacity-40 cursor-not-allowed' : ''}
+          onClick={handleShowLayers}
+        >
           <ReactMarkdown
             children={title}
             remarkPlugins={[remarkGfm, remarkMath, remarkBreaks]}
@@ -98,6 +109,7 @@ export function IndicatorSpeciesType({
               setShowPhotos={setShowPhotos}
               setLoading={setLoading}
               setCalculationValue={setCalculationValue}
+              NBNSpecies={NBNSpecies}
             />
           )
         })}

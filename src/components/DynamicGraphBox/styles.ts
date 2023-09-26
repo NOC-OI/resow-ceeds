@@ -41,7 +41,9 @@ export const InfoButtonBoxContent = styled.div`
 `
 
 export const RangeValue = styled.div`
+  text-align: center;
   div {
+    display: block !important;
     border-radius: 8px;
     text-align: center;
   }
@@ -49,7 +51,8 @@ export const RangeValue = styled.div`
     text-align: center;
     /* box-shadow: 10px 10px 10px rgba(0, 0, 0, 1); */
     width: max-content;
-    padding: 0.5rem;
+    font-size: 0.875rem;
+    padding: 0.25rem;
     border-radius: 8px;
   }
 `

@@ -143,12 +143,16 @@ function MapHome1({
 
   useEffect(() => {
     if (map) {
-      if (selectedSidebarOption !== 'Data Exploration') {
-        map.setView(new L.LatLng(defaultView[0], defaultView[1]), 10.5)
-        map.options.minZoom = 10
-      } else {
+      if (
+        ['Data Exploration', 'Species of Interest'].includes(
+          selectedSidebarOption,
+        )
+      ) {
         // map.setView(new L.LatLng(50.3, -7.712108868853798), 10.5)
         map.options.minZoom = 3
+      } else {
+        map.setView(new L.LatLng(defaultView[0], defaultView[1]), 10.5)
+        map.options.minZoom = 10
       }
     }
   }, [selectedSidebarOption])
@@ -300,7 +304,6 @@ function MapHome1({
             turf.point([photo.longitude - 0.003, photo.latitude - 0.003]),
           )
           if (shuffledPhotos.includes(photo.filename)) {
-            console.log(layerName.imageExtension)
             const getPhotoMarker = new GetPhotoMarker(
               photo,
               actual,

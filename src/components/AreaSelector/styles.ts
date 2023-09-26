@@ -35,10 +35,15 @@ export const LatLonLimitsContainer = styled.div`
 export const AreaSelectorContainer = styled.div`
   padding: 0.375rem;
   padding-top: 0.5rem;
+  margin: 0.5rem;
   margin-left: 3rem;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
   align-items: center;
   text-align: center;
   padding-right: 2rem;
+  border-radius: 16px;
+  font-weight: bold;
   h1 {
     padding-bottom: 0.375rem;
     font-size: 1rem;

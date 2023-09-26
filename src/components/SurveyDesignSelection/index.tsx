@@ -62,11 +62,12 @@ export function SurveyDesignSelection({
           />
         </div>
       </LayerSelectionTitle>
-      <YearSelection
-        yearSelected={yearSelected}
-        setYearSelected={setYearSelected}
-      />
       <LayerTypes>
+        <YearSelection
+          yearSelected={yearSelected}
+          setYearSelected={setYearSelected}
+          allYearToogle={false}
+        />
         {calcClasses.map((calcClass: any) => {
           return (
             <SurveyDesignType

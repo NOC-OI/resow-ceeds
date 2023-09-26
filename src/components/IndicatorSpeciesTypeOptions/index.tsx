@@ -1,10 +1,15 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { CalcTypeOptionsContainer } from '../BiodiversityType/styles'
 import ReactMarkdown from 'react-markdown'
 import rehypeKatex from 'rehype-katex'
 import remarkBreaks from 'remark-breaks'
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
+import Select from 'react-select'
+import makeAnimated from 'react-select/animated'
+import { CheckCircle } from 'phosphor-react'
+import { DatePicker } from 'antd'
+import dayjs from 'dayjs'
 
 interface IndicatorSpeciesTypeOptionsProps {
   title: any
@@ -23,6 +28,7 @@ interface IndicatorSpeciesTypeOptionsProps {
   setShowPhotos: any
   setLoading: any
   setCalculationValue: any
+  NBNSpecies: any
 }
 
 export function IndicatorSpeciesTypeOptions({
@@ -42,10 +48,13 @@ export function IndicatorSpeciesTypeOptions({
   setShowPhotos,
   setLoading,
   setCalculationValue,
+  NBNSpecies,
 }: IndicatorSpeciesTypeOptionsProps) {
   function verifyIfWasSelectedBefore(subLayer: string) {
     return !!selectedLayers[subLayer]
   }
+
+  const animatedComponents = makeAnimated()
 
   async function fetchDatatoUpdateCalculationBox(result: any) {
     setLoading(true)
@@ -86,7 +95,26 @@ export function IndicatorSpeciesTypeOptions({
       return copy
     })
   }
-  async function handleChangeMapLayer(subLayer: any) {
+  function reorderPhotos(photos: any) {
+    const shuffled = photos.sort(() => 0.5 - Math.random())
+    const n = shuffled.length > 700 ? 700 : shuffled.length
+    const newList: any = []
+    let count: number = 0
+    shuffled.every((el: any) => {
+      if (count >= n) {
+        return false // "break"
+      }
+      newList.push(el)
+      count++
+      return true
+    })
+    return newList
+  }
+  async function handleChangeMapLayer(
+    subLayer: any,
+    updateCalculationBox: any,
+    condition: string,
+  ) {
     const newActualLayers: string[] = []
     const newSelectedLayers: { subLayer: string; dataInfo: any }[] = []
     Object.keys(subLayer.layers).forEach((newActualLayer) => {
@@ -105,18 +133,35 @@ export function IndicatorSpeciesTypeOptions({
         }
         layerInfo.dataInfo.show = []
         layerInfo.dataInfo.photos.forEach((photo: any) => {
-          if (photo[subLayer.tableName] > 0) {
-            layerInfo.dataInfo.show.push(photo.filename)
+          if (condition === 'notZero') {
+            if (photo[subLayer.tableName] > 0) {
+              layerInfo.dataInfo.show.push(photo.filename)
+            }
+          } else if (condition === 'equal') {
+            if (subLayer.tableName === 'Start date') {
+              const newDate = dayjs(photo[subLayer.tableName], 'DD/MM/YYYY')
+              if (newDate > selectedOption[0] && newDate < selectedOption[1]) {
+                layerInfo.dataInfo.show.push(photo.filename)
+              }
+            } else {
+              if (selectedOption.includes(photo[subLayer.tableName])) {
+                layerInfo.dataInfo.show.push(photo.filename)
+              }
+            }
           }
         })
+        if (layerInfo.dataInfo.show.length > 700) {
+          layerInfo.dataInfo.show = reorderPhotos(layerInfo.dataInfo.show)
+        }
         newSelectedLayers.push(layerInfo)
       })
     })
     setActualLayer(newActualLayers)
     // if (verifyIfWasSelectedBefore(layerInfo.subLayer)) {
     changeMapLayer(newSelectedLayers)
-
-    await fetchDatatoUpdateCalculationBox(subLayer)
+    if (updateCalculationBox) {
+      await fetchDatatoUpdateCalculationBox(subLayer)
+    }
   }
 
   useEffect(() => {
@@ -131,39 +176,94 @@ export function IndicatorSpeciesTypeOptions({
         }
       })
       setShowPhotos([])
-      // setShowPhotos(photoList)
     }
   }, [selectedLayers])
 
+  const [selectedOption, setSelectedOption] = useState([])
+
+  const handleChange = (option: any) => {
+    const options = []
+    option.forEach((op: any) => {
+      options.push(op.value)
+    })
+    setSelectedOption(options)
+  }
+  const handleChangeDate = (option: any) => {
+    const options = []
+    options.push(option[0].$d)
+    options.push(option[1].$d)
+    setSelectedOption(options)
+  }
+  const { RangePicker } = DatePicker
+
   return (
     <CalcTypeOptionsContainer>
-      <div>
-        <label
-          id="type-option"
-          key={`${subLayer.name}_${subLayer}`}
-          htmlFor={subLayer.name}
-          onClick={async () => {
-            await handleChangeMapLayer(subLayer)
-          }}
-        >
-          {/* <p>{subCalcs[subCalc]['name']}</p> */}
-          <ReactMarkdown
-            children={subLayer.name}
-            remarkPlugins={[remarkGfm, remarkMath, remarkBreaks]}
-            rehypePlugins={[rehypeKatex]}
-            linkTarget={'_blank'}
-          />
-        </label>
-        {/* {verifyIfWasSelectedBefore(content, subLayer) ? (
-          <div>
-            <FontAwesomeIcon
-              icon={faCircleInfo}
-              title={'Show Layer Info'}
-              // onClick={() => handleClickLayerInfo(content, subLayer)}
+      {subLayer.type === 'selector' ? (
+        <div className="pt-1 flex w-11/12 justify-center">
+          {subLayer.tableName === 'Start date' ? (
+            <>
+              <div className="flex w-full">
+                <RangePicker
+                  placeholder={[
+                    NBNSpecies['Start date'][0].slice(0, 10),
+                    NBNSpecies['Start date'][1].slice(0, 10),
+                  ]}
+                  format={'DD/MM/YYYY'}
+                  onChange={handleChangeDate}
+                />
+              </div>
+            </>
+          ) : (
+            <Select
+              className="w-full p-1"
+              closeMenuOnSelect={false}
+              components={animatedComponents}
+              isMulti
+              placeholder={subLayer.name}
+              options={NBNSpecies[subLayer.tableName]}
+              onChange={handleChange}
+              maxMenuHeight={100}
             />
-          </div>
-        ) : null} */}
-      </div>
+          )}
+          {selectedOption.length > 0 ? (
+            <div title={subLayer.name}>
+              <CheckCircle
+                size={30}
+                className="pl-1 pt-2 cursor-pointer"
+                onClick={async () => {
+                  await handleChangeMapLayer(subLayer, false, 'equal')
+                }}
+              />
+            </div>
+          ) : (
+            <div title={'You need to select an option.'}>
+              <CheckCircle
+                size={30}
+                className="pl-1 pt-2 opacity-40 cursor-not-allowed"
+              />
+            </div>
+          )}
+        </div>
+      ) : (
+        <div>
+          <label
+            id="type-option"
+            key={`${subLayer.name}_${subLayer}`}
+            htmlFor={subLayer.name}
+            onClick={async () => {
+              await handleChangeMapLayer(subLayer, true, 'notZero')
+            }}
+          >
+            {/* <p>{subCalcs[subCalc]['name']}</p> */}
+            <ReactMarkdown
+              children={subLayer.name}
+              remarkPlugins={[remarkGfm, remarkMath, remarkBreaks]}
+              rehypePlugins={[rehypeKatex]}
+              linkTarget={'_blank'}
+            />
+          </label>
+        </div>
+      )}
     </CalcTypeOptionsContainer>
   )
 }

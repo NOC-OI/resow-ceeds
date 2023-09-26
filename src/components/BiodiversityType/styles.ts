@@ -41,6 +41,11 @@ export const CalcTypeOptionsContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   font-weight: normal;
+  svg {
+    &:hover {
+      color: ${(props) => props.theme['yellow-700']};
+    }
+  }
   label {
     display: flex;
     align-items: center;
@@ -62,7 +67,6 @@ export const CalcTypeOptionsContainer = styled.div`
     p {
       vertical-align: middle;
       padding-left: 0.25rem;
-      cursor: pointer;
       &:hover {
         color: ${(props) => props.theme['yellow-700']};
       }

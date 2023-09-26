@@ -7,6 +7,33 @@ export const ResiumContainer = styled.div`
     }
   } */
 `
+export const ZoomGroup = styled.div`
+  background: #303336;
+  border: 1px solid #444;
+  color: #edffff;
+  fill: #edffff;
+  border-radius: 4px;
+  margin: 2px 3px;
+  &:hover {
+    box-shadow: 0 0 8px #fff;
+  }
+`
+export const ZoomButton = styled.div`
+  padding: 0.25rem 0.675rem;
+  font-size: 1.5rem;
+  display: flex;
+  justify-content: center;
+  font-weight: bold;
+  cursor: pointer;
+  &:hover {
+    color: #ffffff;
+    fill: #ffffff;
+    background-color: #48b;
+    border-color: #aaeeff;
+    border-radius: 4px;
+    box-shadow: 0 0 0 1px #aaeeff;
+  }
+`
 
 export const HeaderContainer = styled.header`
   display: flex;

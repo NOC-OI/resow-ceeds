@@ -50,7 +50,7 @@ export function TileServer() {
 
   const [layerAction, setLayerAction] = useState('')
 
-  const [yearSelected, setYearSelected] = useState(2012)
+  const [yearSelected, setYearSelected] = useState(0)
 
   const [calculationValue, setCalculationValue] = useState('')
 
@@ -76,6 +76,8 @@ export function TileServer() {
 
   const [showLogin, setShowLogin] = useState(false)
   const [isLogged, setIsLogged] = useState(Cookies.get('token'))
+
+  const [NBNSpecies, setNBNSpecies] = useState(null)
 
   const [calClasses, setCalcClasses] = useState({})
   const [showFlash, setShowFlash] = useState(false)
@@ -181,6 +183,8 @@ export function TileServer() {
             listLayers={listLayers}
             setShowPhotos={setShowPhotos}
             dataFields={calClasses}
+            NBNSpecies={NBNSpecies}
+            setNBNSpecies={setNBNSpecies}
           />
         )}
         {selectedSidebarOption === 'Biodiversity' && (

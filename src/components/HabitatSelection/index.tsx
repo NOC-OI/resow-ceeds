@@ -79,11 +79,12 @@ export function HabitatSelection({
           />
         </div>
       </LayerSelectionTitle>
-      <YearSelection
-        yearSelected={yearSelected}
-        setYearSelected={setYearSelected}
-      />
       <LayerTypes>
+        <YearSelection
+          yearSelected={yearSelected}
+          setYearSelected={setYearSelected}
+          allYearToogle={true}
+        />
         {/* <AreaSelector
           setCalculationValue={setCalculationValue}
           selectedArea={selectedArea}

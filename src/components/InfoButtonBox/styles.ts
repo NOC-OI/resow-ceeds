@@ -3,10 +3,9 @@ import styled from 'styled-components'
 export const InfoButtonBoxContainer = styled.div`
   right: 0.5rem;
   top: 5vh;
-  width: 20rem;
   background-color: ${(props) => props.theme.white};
   z-index: 9999;
-  max-height: 80vh;
+  max-height: 90vh;
   height: max-content;
   margin-left: 1rem;
   padding: 0.5rem;
@@ -14,6 +13,8 @@ export const InfoButtonBoxContainer = styled.div`
   box-shadow: 0px 4px 4px ${(props) => props.theme.black};
   z-index: 9999;
   white-space: pre-line;
+  overflow-y: auto;
+  overflow-x: hidden;
   h1 {
     font-size: 0.85rem;
     line-height: 1;

@@ -21,6 +21,8 @@ import { DynamicGraphBox } from '../../components/DynamicGraphBox'
 import { GetJsonWeb } from '../../data/loadJsonWeb'
 import Cookies from 'js-cookie'
 import { DynamicTableBox } from '../../components/DynamicTableBox'
+import { GetLayers } from '../../data/loadLayers'
+import { Loading } from '../../components/Loading'
 
 export function TileServer() {
   const navigate = useNavigate()
@@ -73,6 +75,7 @@ export function TileServer() {
   const [listLayers, setListLayers] = useState([])
 
   const [showPopup, setShowPopup] = useState(true)
+  const [loading, setLoading] = useState(true)
 
   const [showLogin, setShowLogin] = useState(false)
   const [isLogged, setIsLogged] = useState(Cookies.get('token'))
@@ -85,11 +88,18 @@ export function TileServer() {
     messageType: '',
     content: '',
   })
-
   const fetchData = async () => {
-    const getLayers = new GetJsonWeb()
-    await getLayers.loadJson().then(async function () {
-      setCalcClasses(getLayers.data)
+    const getWeb = new GetJsonWeb()
+    await getWeb.loadJson().then(async function () {
+      setCalcClasses(getWeb.data)
+    })
+    const rout = window.location.pathname
+    const getLayers = new GetLayers(isLogged, rout)
+    await getLayers.loadJsonLayers().then(async function () {
+      setListLayers((listLayers: any) =>
+        listLayers.lenght > 0 ? listLayers : getLayers.data,
+      )
+      setLoading(false)
     })
   }
 
@@ -113,6 +123,7 @@ export function TileServer() {
       }
     }
   }, [])
+  console.log(listLayers)
 
   return (
     <TileServerContainer>
@@ -134,6 +145,7 @@ export function TileServer() {
           showLogin={showLogin}
           setShowLogin={setShowLogin}
           isLogged={isLogged}
+          loading={loading}
         />
         {selectedSidebarOption === 'Data Exploration' && (
           <DataExplorationSelection
@@ -333,6 +345,7 @@ export function TileServer() {
           width={'medium'}
         />
       )}
+      {loading ? <Loading /> : null}
     </TileServerContainer>
   )
 }

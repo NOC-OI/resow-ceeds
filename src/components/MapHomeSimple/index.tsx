@@ -236,7 +236,7 @@ function MapHome1({
               attribution="Special Areas of Conservation"
               url="https://mpa-ows.jncc.gov.uk/mpa_mapper/wms?"
               params={{
-                service: 'WMS',
+                service: 'wms',
                 request: 'GetMap',
                 version: '1.3.0',
                 layers: 'sac_mc_full',
@@ -254,7 +254,7 @@ function MapHome1({
               attribution="Marine Conservation Zones"
               url="https://mpa-ows.jncc.gov.uk/mpa_mapper/wms?"
               params={{
-                service: 'WMS',
+                service: 'wms',
                 request: 'GetMap',
                 version: '1.3.0',
                 layers: 'mcz',

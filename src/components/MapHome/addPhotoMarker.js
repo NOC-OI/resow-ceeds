@@ -4,43 +4,37 @@ import { organisms } from '../../data/organisms'
 import { Entity, Cartesian3 } from 'cesium'
 
 export class GetPhotoMarker {
-  constructor(layerName, actualLayer, color, files, imageExtension) {
+  constructor(layerName, actualLayer, color, files) {
     this.layerName = layerName
     this.actualLayer = actualLayer
     this.layer = null
     this.popupText = ''
     this.fileName = null
     this.color = color
-    this.files = files
-    this.imageExtension = imageExtension
   }
 
   createPopup() {
-    const JOSBaseUrl = process.env.VITE_JASMIN_OBJECT_STORE_URL
-    this.files = this.files.split(',')[0].split(':')
-    this.files.pop()
-    this.files = this.files.join('/')
     let imageUrl = ''
     if (this.layerName.imageUrl) {
       imageUrl = this.layerName.imageUrl
       if (imageUrl.slice(-12) !== 'no_image.png') {
         this.imageExtension = 'completeLink'
       }
-    } else {
-      imageUrl = `${JOSBaseUrl}haig-fras/${this.files}/images/${this.layerName.filename}.${this.imageExtension}`
+    } else if (this.layerName.assets?.thumbnail) {
+      imageUrl = this.layerName.assets.thumbnail.href
     }
 
     return `
     <b style="font-size: 1rem;">${this.actualLayer}</b><br><br>
     ${
       this.layerName.filename
-        ? `<b>NBN atlas record ID</b>: <em>${this.layerName.filename}</em><br>`
+        ? `<b>ID</b>: <em>${this.layerName.filename}</em><br>`
         : ''
     }
     ${
-      this.layerName.imageUrl
+      this.layerName['Scientific name']
         ? `<b>SCIENTIFIC NAME</b>: <em>${this.layerName['Scientific name']}</em><br>`
-        : `IMAGE NAME</b>: <em>${this.layerName.filename}</em><br>`
+        : ''
     }
     ${
       this.layerName.Area_seabed_m2
@@ -75,13 +69,8 @@ export class GetPhotoMarker {
         : ''
     }
     ${
-      this.layerName.latitude
-        ? `<b>Lat</b>: <em>${this.layerName.latitude}</em><br>`
-        : ''
-    }
-    ${
-      this.layerName.longitude
-        ? `<b>Long</b>: <em>${this.layerName.longitude}</em><br>`
+      this.layerName.coordinates
+        ? `<b>Lat</b>: <em>${this.layerName.coordinates[1]}</em><br><b>Long</b>: <em>${this.layerName.coordinates[0]}</em><br>`
         : ''
     }
     ${
@@ -140,7 +129,7 @@ export class GetPhotoMarker {
         : ''
     }
     ${
-      this.imageExtension &&
+      imageUrl &&
       `<a
           href="${imageUrl}"
           title="Show Image"
@@ -186,11 +175,14 @@ export class GetPhotoMarker {
       iconSize: [0, 0],
       iconAnchor: [0, 0],
     })
-    this.layer = L.marker([this.layerName.latitude, this.layerName.longitude], {
-      riseOnHover: true,
-      autoPanOnFocus: false,
-      icon,
-    })
+    this.layer = L.marker(
+      [this.layerName.coordinates[1], this.layerName.coordinates[0]],
+      {
+        riseOnHover: true,
+        autoPanOnFocus: false,
+        icon,
+      },
+    )
 
     const organismList = []
     organisms.forEach((organism) => {
@@ -221,8 +213,8 @@ export class GetPhotoMarker {
     //   parseInt(aRgbHex[2], 16),
     // ]
     const position = Cartesian3.fromDegrees(
-      this.layerName.longitude,
-      this.layerName.latitude,
+      this.layerName.coordinates[0],
+      this.layerName.coordinates[1],
     )
     this.popupText = this.createPopup()
 

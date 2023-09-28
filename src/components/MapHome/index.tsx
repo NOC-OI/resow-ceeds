@@ -167,8 +167,21 @@ function MapHome1({
   }, [map])
 
   async function getWMSLayer(layerName: any, actual: any) {
-    layerName.params.attribution = actual
-    const layer = callBetterWMS(layerName.url, layerName.params)
+    const params: keyable = {
+      service: 'wms',
+      request: 'GetMap',
+      version: '1.3.0',
+      layers: layerName.params.layers,
+      format: 'image/png',
+      transparent: true,
+      width: 20,
+      height: 20,
+      attribution: actual,
+    }
+    if (layerName.params.style) {
+      params.style = layerName.params.style
+    }
+    const layer = callBetterWMS(layerName.url, params)
     return layer
   }
 
@@ -223,6 +236,7 @@ function MapHome1({
     const lat = [mapBounds._southWest.lat, mapBounds._northEast.lat]
     const lng = [mapBounds._southWest.lng, mapBounds._northEast.lng]
     shuffled.every((el: any) => {
+      console.log(el)
       if (count >= n) {
         return false // "break"
       }
@@ -230,10 +244,10 @@ function MapHome1({
         if (el.show) {
           count2++
           if (
-            el.latitude > lat[0] &&
-            el.latitude < lat[1] &&
-            el.longitude > lng[0] &&
-            el.longitude < lng[1]
+            el.coordinates[1] > lat[0] &&
+            el.coordinates[1] < lat[1] &&
+            el.coordinates[0] > lng[0] &&
+            el.coordinates[0] < lng[1]
           ) {
             newList.push(el.filename)
             count++
@@ -253,7 +267,7 @@ function MapHome1({
       const layerName = selectedLayers[actual]
       let layer: any
       let bounds
-      if (layerName.data_type === 'WMS') {
+      if (layerName.data_type === 'wms') {
         layer = await getWMSLayer(layerName, actual)
         layer.setOpacity(0.7)
         bounds = defaultWMSBounds
@@ -298,19 +312,20 @@ function MapHome1({
         const shuffledPhotos = reorderPhotos(layerName.photos)
         await layerName.photos.map(async (photo: any) => {
           markers.push(
-            turf.point([photo.longitude + 0.003, photo.latitude + 0.003]),
+            turf.point([
+              photo.coordinates[0] + 0.003,
+              photo.coordinates[1] + 0.003,
+            ]),
           )
           markers.push(
-            turf.point([photo.longitude - 0.003, photo.latitude - 0.003]),
+            turf.point([
+              photo.coordinates[0] - 0.003,
+              photo.coordinates[1] - 0.003,
+            ]),
           )
+          console.log(photo)
           if (shuffledPhotos.includes(photo.filename)) {
-            const getPhotoMarker = new GetPhotoMarker(
-              photo,
-              actual,
-              color,
-              layerName.files,
-              layerName.imageExtension,
-            )
+            const getPhotoMarker = new GetPhotoMarker(photo, actual, color)
             await getPhotoMarker.getMarker().then(async function () {
               map.addLayer(getPhotoMarker.layer)
               if (getPhotoMarker.layer) {
@@ -360,10 +375,16 @@ function MapHome1({
         const markers: any = []
         layerName.photos.map(async (photo: any) => {
           markers.push(
-            turf.point([photo.longitude + 0.003, photo.latitude + 0.003]),
+            turf.point([
+              photo.coordinates[0] + 0.003,
+              photo.coordinates[1] + 0.003,
+            ]),
           )
           markers.push(
-            turf.point([photo.longitude - 0.003, photo.latitude - 0.003]),
+            turf.point([
+              photo.coordinates[0] - 0.003,
+              photo.coordinates[1] - 0.003,
+            ]),
           )
         })
         const color = colorScale[Math.floor(Math.random() * 30)]
@@ -408,7 +429,6 @@ function MapHome1({
       if (layerName.data_type !== 'Photo') {
         layer.options.attribution = actual
         map.addLayer(layer, true)
-
         if (layerName.data_type === 'COG' && layerName.get_value) {
           map.on('mousemove', function (evt: { originalEvent: any }) {
             if (selectedLayers[actual]) {
@@ -419,7 +439,6 @@ function MapHome1({
                 .floor()
               const coords = pixelPoint.unscaleBy(tileSize).floor()
               coords.z = Math.floor(map.getZoom()) // { x: 212, y: 387, z: 10 }
-
               const getGeoblazeValue = new GetGeoblazeValue(
                 layer,
                 latlng,
@@ -695,20 +714,22 @@ function MapHome1({
       const color = colorScale[Math.floor(Math.random() * 30)]
       const markers: any = []
       await selectedLayers[actual].photos.map(async (photo: any) => {
-        markersAll.push(turf.point([photo.longitude, photo.latitude]))
-        markers.push(
-          turf.point([photo.longitude + 0.003, photo.latitude + 0.003]),
+        markersAll.push(
+          turf.point([photo.coordinates[0], photo.coordinates[1]]),
         )
         markers.push(
-          turf.point([photo.longitude - 0.003, photo.latitude - 0.003]),
+          turf.point([
+            photo.coordinates[0] + 0.003,
+            photo.coordinates[1] + 0.003,
+          ]),
         )
-        const getPhotoMarker = new GetPhotoMarker(
-          photo,
-          actual,
-          color,
-          selectedLayers[actual].files,
-          selectedLayers[actual].imageExtension,
+        markers.push(
+          turf.point([
+            photo.coordinates[0] - 0.003,
+            photo.coordinates[1] - 0.003,
+          ]),
         )
+        const getPhotoMarker = new GetPhotoMarker(photo, actual, color)
         await getPhotoMarker.getMarker().then(async function () {
           if (getPhotoMarker.layer) {
             if (selectedLayers[actual].show.includes(getPhotoMarker.fileName)) {
@@ -929,7 +950,7 @@ function MapHome1({
               attribution="Special Areas of Conservation"
               url="https://mpa-ows.jncc.gov.uk/mpa_mapper/wms?"
               params={{
-                service: 'WMS',
+                service: 'wms',
                 request: 'GetMap',
                 version: '1.3.0',
                 layers: 'sac_mc_full',
@@ -947,7 +968,7 @@ function MapHome1({
               attribution="Marine Conservation Zones"
               url="https://mpa-ows.jncc.gov.uk/mpa_mapper/wms?"
               params={{
-                service: 'WMS',
+                service: 'wms',
                 request: 'GetMap',
                 version: '1.3.0',
                 layers: 'mcz',
@@ -1036,7 +1057,7 @@ export const MapHome = React.memo(MapHome1, mapPropsAreEqual)
 //   // layerName.params['atribution'] = actualLayer
 //   // const layer = L.tileLayer.wms( layerName.url, layerName.params)
 //   const featureOptions = {
-//     service: 'WMS',
+//     service: 'wms',
 //     request: 'GetFeatureInfo',
 //     version: '1.3.0',
 //     QUERY_LAYERS: 'eusm2021_eunis2019_group',
@@ -1062,7 +1083,7 @@ export const MapHome = React.memo(MapHome1, mapPropsAreEqual)
 //   // layerName.params['atribution'] = actualLayer
 //   // const layer = L.tileLayer.wms( layerName.url, layerName.params)
 //   const WMSOptions = {
-//     service: 'WMS',
+//     service: 'wms',
 //     attribution: actualLayer[0],
 //     request: 'GetMap',
 //     version: '1.3.0',
@@ -1088,7 +1109,7 @@ export const MapHome = React.memo(MapHome1, mapPropsAreEqual)
 
 // async function getWMSLayer2() {
 //   const params = {
-//     service: 'WMS',
+//     service: 'wms',
 //     attribution: actualLayer[0],
 //     version: '1.3.0',
 //     format: 'image/png',

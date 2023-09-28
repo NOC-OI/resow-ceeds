@@ -15,12 +15,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { Icon } from '@iconify/react'
 import { useNavigate } from 'react-router-dom'
-import { useEffect, useState } from 'react'
-import { GetLayers } from '../../data/loadLayers'
-import { Loading } from '../Loading'
-// import { ReactSVG } from 'react-svg'
-
-// import { SpeciesInterest } from '../../assets/species-interest'
+import { useEffect } from 'react'
 import { Biodiversity } from '../../assets/biodiversity'
 import { Species } from '../../assets/species'
 
@@ -45,6 +40,7 @@ interface SideSelectionProps {
   showLogin?: any
   setShowLogin?: any
   isLogged?: any
+  loading?: any
 }
 
 // interface ContrastSelectorProps {
@@ -89,10 +85,10 @@ export function SideSelection({
   showLogin,
   setShowLogin,
   isLogged,
+  loading,
 }: SideSelectionProps) {
   const navigate = useNavigate()
 
-  const [loading, setLoading] = useState(false)
   async function handleShowSelection(e: any) {
     if (
       window.location.pathname === '/3d' ||
@@ -109,23 +105,6 @@ export function SideSelection({
       }
     }
   }
-  const fetchData = async () => {
-    const rout = window.location.pathname
-    const getLayers = new GetLayers(isLogged, rout)
-    await getLayers.loadCSV().then(async function () {
-      setListLayers((listLayers: any) =>
-        listLayers.lenght > 0 ? listLayers : getLayers.data,
-      )
-      setLoading(false)
-    })
-  }
-
-  useEffect(() => {
-    if (!photoId) {
-      setLoading(true)
-      fetchData()
-    }
-  }, [])
 
   useEffect(() => {
     if (window.location.pathname !== '/3d') {
@@ -265,7 +244,6 @@ export function SideSelection({
             <ContrastSelector contrast={contrast} setContrast={setContrast} />
           ) : null} */}
       </SideSelectionContainer>
-      {loading ? <Loading /> : null}
     </div>
   )
 }

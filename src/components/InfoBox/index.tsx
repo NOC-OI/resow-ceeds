@@ -59,8 +59,8 @@ export function InfoBox({ position = null, depth = {} }: InfoBoxProps) {
       </div>
       <div>
         <p>Depth:</p>
-        {depth['2018 Bathymetry Survey'] ? (
-          <span>{`${depth['2018 Bathymetry Survey']} m`}</span>
+        {depth.Shipborne ? (
+          <span>{`${depth.Shipborne} m`}</span>
         ) : depth.Emodnet ? (
           <span>{`${depth.Emodnet} m`}</span>
         ) : depth.Gebco ? (

@@ -34,7 +34,9 @@ export class GetGeoblazeValue {
         this.latlng.lng,
         this.latlng.lat,
       ])
-      this.dep = this.dep[0]
+      if (this.dep) {
+        this.dep = this.dep[0]
+      }
     }
     if (this.dep < 0) {
       this.dep = this.dep * -1
@@ -50,6 +52,7 @@ export class GetGeoblazeValue3D {
   }
 
   async parseGeoraster() {
+    console.log(this.url)
     await geoblaze.load(this.url).then(async (georaster) => {
       this.layer = georaster
     })

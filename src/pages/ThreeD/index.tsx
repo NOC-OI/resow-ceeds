@@ -11,6 +11,8 @@ import { LoginPopup } from '../../components/LoginPopup'
 import { FullPagePopup } from '../../components/FullPagePopup'
 import { InfoButtonBox } from '../../components/InfoButtonBox'
 import { DataExplorationLegend } from '../../components/DataExplorationLegend'
+import { GetLayers } from '../../data/loadLayers'
+import { Loading } from '../../components/Loading'
 
 export function ThreeD() {
   const navigate = useNavigate()
@@ -24,6 +26,7 @@ export function ThreeD() {
   const [actualLayer, setActualLayer] = useState<string[]>([''])
 
   const [layerAction, setLayerAction] = useState('')
+  const [loading, setLoading] = useState(true)
 
   const [layerLegend, setLayerLegend] = useState('')
   const [infoButtonBox, setInfoButtonBox] = useState({})
@@ -59,6 +62,21 @@ export function ThreeD() {
     }
   }, [])
 
+  const fetchData = async () => {
+    const rout = window.location.pathname
+    const getLayers = new GetLayers(isLogged, rout)
+    await getLayers.loadJsonLayers().then(async function () {
+      setListLayers((listLayers: any) =>
+        listLayers.lenght > 0 ? listLayers : getLayers.data,
+      )
+      setLoading(false)
+    })
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [])
+
   return (
     <ThreeDContainer>
       <SideBar>
@@ -77,6 +95,7 @@ export function ThreeD() {
           showLogin={showLogin}
           setShowLogin={setShowLogin}
           isLogged={isLogged}
+          loading={loading}
         />
         {selectedSidebarOption === '3D' && (
           <ThreeDDataExplorationSelection
@@ -148,6 +167,7 @@ export function ThreeD() {
           width={'medium'}
         />
       )}
+      {loading ? <Loading /> : null}
     </ThreeDContainer>
   )
 }

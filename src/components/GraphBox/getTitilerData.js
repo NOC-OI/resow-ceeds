@@ -15,9 +15,8 @@ export class GetTitilerData {
 
   async fetchData() {
     const TILE_SERVER_URL = process.env.VITE_TILE_SERVER_URL
-    const JOSBaseUrl = process.env.VITE_JASMIN_OBJECT_STORE_URL
 
-    this.url = `${JOSBaseUrl}${this.url}`
+    this.url = `${this.url}`
     function linspace(start, stop, num, endpoint = true) {
       const div = endpoint ? num - 1 : num
       const step = (stop - start) / div
@@ -66,7 +65,7 @@ export class GetTitilerDataOneValue {
     const TILE_SERVER_URL = process.env.VITE_TILE_SERVER_URL
     const JOSBaseUrl = process.env.VITE_JASMIN_OBJECT_STORE_URL
 
-    this.url = `${JOSBaseUrl}${this.url}`
+    this.url = `${this.url}`
 
     const newUrl = `${TILE_SERVER_URL}cog/point/${this.lat},${
       this.lon

@@ -214,14 +214,21 @@ export function ThreeDDataExplorationTypeOptions({
   }
 
   async function handleClickLegend() {
-    if (subLayers[subLayer].data_type === 'WMS') {
-      const newParams = subLayers[subLayer].params
-      newParams.request = 'GetLegendGraphic'
-      newParams.layer = newParams.layers
+    if (subLayers[subLayer].data_type === 'wms') {
+      const newParams = {
+        service: 'wms',
+        request: 'GetLegendGraphic',
+        version: '1.3.0',
+        format: 'image/png',
+        transparent: true,
+        width: 20,
+        height: 20,
+        layer: subLayers[subLayer].params.layers,
+      }
+      console.log(newParams)
       async function getURILegend(newParams: any) {
-        const response = await fetch(
-          subLayers[subLayer].url + new URLSearchParams(newParams),
-        )
+        const layerUrl = `${subLayers[subLayer].url}?`
+        const response = await fetch(layerUrl + new URLSearchParams(newParams))
         const url = response.url
         setLayerLegend({ layerName: subLayer, url })
       }

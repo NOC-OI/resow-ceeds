@@ -2,7 +2,7 @@ import { LoadingContainer, LoadingSpinner } from './styles'
 
 export function Loading() {
   return (
-    <LoadingContainer>
+    <LoadingContainer id="loading">
       <LoadingSpinner>
         <div></div>
         <div></div>

@@ -14,9 +14,7 @@ export class GetCOGLayer {
   }
 
   async parseGeo() {
-    const JOSBaseUrl = process.env.VITE_JASMIN_OBJECT_STORE_URL
-
-    this.url = `${JOSBaseUrl}${this.url}`
+    this.url = `${this.url}`
 
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     // const scale = chroma.scale(['white', 'black']).domain([-11022, 0])
@@ -131,9 +129,8 @@ export class GetTileLayer {
 
   async getStats() {
     const TILE_SERVER_URL = process.env.VITE_TILE_SERVER_URL
-    const JOSBaseUrl = process.env.VITE_JASMIN_OBJECT_STORE_URL
 
-    this.url = `${JOSBaseUrl}${this.url}`
+    this.url = `${this.url}`
 
     const newUrl = this.layerName.signed_url
       ? this.layerName.signed_url
@@ -160,9 +157,8 @@ export class GetTileLayer {
 
   async getTile(rout) {
     const TILE_SERVER_URL = process.env.VITE_TILE_SERVER_URL
-    const JOSBaseUrl = process.env.VITE_JASMIN_OBJECT_STORE_URL
 
-    this.url = `${JOSBaseUrl}${this.url}`
+    this.url = `${this.url}`
 
     const newUrl = this.layerName.signed_url
       ? this.layerName.signed_url

@@ -15,9 +15,6 @@ export class GetMBTiles {
   }
 
   async getLayer() {
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const MBTilesBaseUrl = process.env.VITE_MBTILES_URL
-
     const vectorTileOptions = {
       interactive: true,
       vectorTileLayerStyles: {
@@ -41,7 +38,7 @@ export class GetMBTiles {
         },
       },
     }
-    this.layer = protobuf(`${MBTilesBaseUrl}${this.url}`, vectorTileOptions)
+    this.layer = protobuf(`${this.url}`, vectorTileOptions)
     this.layer.setOpacity(0.7)
   }
 }

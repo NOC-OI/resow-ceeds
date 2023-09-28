@@ -47,7 +47,7 @@ const BetterWMS = L.TileLayer.WMS.extend({
 
     const params = {
       request: 'GetFeatureInfo',
-      service: 'WMS',
+      service: 'wms',
       crs: 'EPSG:3857',
       styles: this.wmsParams.styles,
       transparent: this.wmsParams.transparent,

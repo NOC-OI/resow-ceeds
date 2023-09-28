@@ -15,7 +15,7 @@ export const LoadingContainer = styled.div`
   bottom: 0;
   left: 0;
   margin: auto;
-  z-index: 9999;
+  z-index: 9998;
   width: 6.25rem;
   height: 6.25rem;
 `

@@ -83,11 +83,11 @@ function ThreeDMap1({
     [50.020174, -8.58279],
     [50.578429, -7.70616],
   ]
-  const batOrder = ['2018 Bathymetry Survey', 'Emodnet', 'Gebco']
+  const batOrder = ['Shipborne', 'Emodnet', 'Gebco']
 
   const [cogLayer, setCogLayer] = useState('')
 
-  const url = `${JOSBaseUrl}haig-fras/frontend/bathymetry.tif`
+  const url = `${JOSBaseUrl}haig-fras/frontend/images/bathymetry.tif`
 
   const batLayer = useMemo(() => getGeorasterLayer(), [url])
 
@@ -103,7 +103,7 @@ function ThreeDMap1({
   const jnccSpecial = new WebMapServiceImageryProvider({
     url: 'https://mpa-ows.jncc.gov.uk/mpa_mapper/wms?',
     parameters: {
-      service: 'WMS',
+      service: 'wms',
       request: 'GetMap',
       version: '1.3.0',
       format: 'image/png',
@@ -116,7 +116,7 @@ function ThreeDMap1({
   const jnccMCZ = new WebMapServiceImageryProvider({
     url: 'https://mpa-ows.jncc.gov.uk/mpa_mapper/wms?',
     parameters: {
-      service: 'WMS',
+      service: 'wms',
       request: 'GetMap',
       version: '1.3.0',
       format: 'image/png',
@@ -239,12 +239,26 @@ function ThreeDMap1({
   }
 
   function getWMSLayer(layerName: any, actual: any) {
-    layerName.params.width = 128
-    layerName.params.height = 128
+    const params: keyable = {
+      service: 'wms',
+      request: 'GetMap',
+      version: '1.3.0',
+      format: 'image/png',
+      transparent: true,
+      width: 128,
+      height: 128,
+      layers: layerName.params.layers,
+      attribution: actual,
+    }
+    if (layerName.params.style) {
+      params.style = layerName.params.style
+    }
+    console.log(layerName)
+    console.log(params)
     const provider = new WebMapServiceImageryProvider({
       url: layerName.url,
-      parameters: layerName.params,
-      layers: layerName.params.layers,
+      parameters: params,
+      layers: params.layers,
     })
     const layer = new Cesium.ImageryLayer(provider, {})
     return layer
@@ -316,7 +330,7 @@ function ThreeDMap1({
       let layer: any
       let layers
       let dataSource
-      if (layerName.data_type === 'WMS') {
+      if (layerName.data_type === 'wms') {
         layers = ref.current.cesiumElement.scene.imageryLayers
         layer = getWMSLayer(layerName, actual)
         layer.attribution = actual
@@ -350,19 +364,19 @@ function ThreeDMap1({
 
         await layerName.photos.map(async (photo: any) => {
           markers.push(
-            turf.point([photo.longitude + 0.003, photo.latitude + 0.003]),
+            turf.point([
+              photo.coordinates[0] + 0.003,
+              photo.coordinates[1] + 0.003,
+            ]),
           )
           markers.push(
-            turf.point([photo.longitude - 0.003, photo.latitude - 0.003]),
+            turf.point([
+              photo.coordinates[0] - 0.003,
+              photo.coordinates[1] - 0.003,
+            ]),
           )
           if (shuffledPhotos.includes(photo.filename)) {
-            const getPhotoMarker = new GetPhotoMarker(
-              photo,
-              actual,
-              color,
-              layerName.files,
-              layerName.imageExtension,
-            )
+            const getPhotoMarker = new GetPhotoMarker(photo, actual, color)
             await getPhotoMarker.getMarker3D().then(async function () {
               dataSource.entities.add(getPhotoMarker.layer)
             })
@@ -397,7 +411,7 @@ function ThreeDMap1({
       const splitActual = actual.split('_')
       const layerName = listLayers[splitActual[0]].layerNames[splitActual[1]]
       let layers: any
-      if (layerName.data_type === 'WMS' || layerName.data_type === 'COG') {
+      if (layerName.data_type === 'wms' || layerName.data_type === 'COG') {
         // eslint-disable-next-line prefer-const
         layers = ref.current.cesiumElement.scene.imageryLayers
         layers?._layers.forEach(function (layer: any) {
@@ -482,14 +496,16 @@ function ThreeDMap1({
   function changeMapOpacity() {
     let layers: any
     actualLayer.forEach(async (actual) => {
-      const splitActual = actual.split('_')[1]
+      const splitActual = actual.split('_')
+      console.log(listLayers)
+      console.log(actual)
       const layerName = listLayers[splitActual[0]].layerNames[splitActual[1]]
-      if (layerName.data_type === 'WMS' || layerName.data_type === 'COG') {
+      if (layerName.data_type === 'wms' || layerName.data_type === 'COG') {
         layers = ref.current.cesiumElement.scene.imageryLayers
         layers?._layers.forEach(function (layer: any) {
           if ([actual].includes(layer.attribution)) {
             layers.remove(layer)
-            if (layerName.data_type === 'WMS') {
+            if (layerName.data_type === 'wms') {
               layer = getWMSLayer(layerName, actual)
               layer.attribution = actual
               layer.alpha = selectedLayers[layer.attribution].opacity
@@ -531,12 +547,12 @@ function ThreeDMap1({
     actualLayer.forEach(async (actual) => {
       const splitActual = actual.split('_')[1]
       const layerName = listLayers[splitActual[0]].layerNames[splitActual[1]]
-      if (layerName.data_type === 'WMS' || layerName.data_type === 'COG') {
+      if (layerName.data_type === 'wms' || layerName.data_type === 'COG') {
         layers = ref.current.cesiumElement.scene.imageryLayers
         layers?._layers.forEach(function (layer: any) {
           if ([actual].includes(layer.attribution)) {
             layers.remove(layer)
-            if (layerName.data_type === 'WMS') {
+            if (layerName.data_type === 'wms') {
               const layerNew = getWMSLayer(layerName, actualLayer[0])
               layerNew.alpha = layer.alpha
               layers.add(layerNew)
@@ -604,7 +620,7 @@ function ThreeDMap1({
   const displayMap = useMemo(
     () => (
       <Viewer
-        full
+        // full
         animation={false}
         timeline={false}
         ref={ref}

@@ -89,27 +89,31 @@ export function ThreeDDataExplorationType({
       </div>
       <div>
         {Object.keys(subLayers).map((subLayer) => {
-          return (
-            <ThreeDDataExplorationTypeOptions
-              key={`${content}_${subLayer}`}
-              subLayer={subLayer}
-              content={content}
-              activeOpacity={activeOpacity}
-              setActiveOpacity={setActiveOpacity}
-              setActualLayer={setActualLayer}
-              subLayers={subLayers}
-              layerLegend={layerLegend}
-              setLayerLegend={setLayerLegend}
-              layerAction={layerAction}
-              setLayerAction={setLayerAction}
-              selectedLayers={selectedLayers}
-              setSelectedLayers={setSelectedLayers}
-              setInfoButtonBox={setInfoButtonBox}
-              isLogged={isLogged}
-              threeD={threeD}
-              setThreeD={setThreeD}
-            />
-          )
+          if (subLayers[subLayer].data_type !== 'MBTiles') {
+            return (
+              <ThreeDDataExplorationTypeOptions
+                key={`${content}_${subLayer}`}
+                subLayer={subLayer}
+                content={content}
+                activeOpacity={activeOpacity}
+                setActiveOpacity={setActiveOpacity}
+                setActualLayer={setActualLayer}
+                subLayers={subLayers}
+                layerLegend={layerLegend}
+                setLayerLegend={setLayerLegend}
+                layerAction={layerAction}
+                setLayerAction={setLayerAction}
+                selectedLayers={selectedLayers}
+                setSelectedLayers={setSelectedLayers}
+                setInfoButtonBox={setInfoButtonBox}
+                isLogged={isLogged}
+                threeD={threeD}
+                setThreeD={setThreeD}
+              />
+            )
+          } else {
+            return <></>
+          }
         })}
       </div>
     </CalcTypeContainer>

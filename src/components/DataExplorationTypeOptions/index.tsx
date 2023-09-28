@@ -165,14 +165,13 @@ export function DataExplorationTypeOptions({
   }
 
   async function handleClickLegend() {
-    if (subLayers[subLayer].data_type === 'WMS') {
+    if (subLayers[subLayer].data_type === 'wms') {
       const newParams = subLayers[subLayer].params
       newParams.request = 'GetLegendGraphic'
       newParams.layer = newParams.layers
       async function getURILegend(newParams: any) {
-        const response = await fetch(
-          subLayers[subLayer].url + new URLSearchParams(newParams),
-        )
+        const layerUrl = `${subLayers[subLayer].url}?`
+        const response = await fetch(layerUrl + new URLSearchParams(newParams))
         const url = response.url
         setLayerLegend({ layerName: subLayer, url })
       }

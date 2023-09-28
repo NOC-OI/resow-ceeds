@@ -24,7 +24,7 @@ export function FullPagePopup({ setShowPopup }: FullPagePopupProps) {
           Haig Fras Digital Twin - Pilot Study
         </h2>
         <div className="p-4">
-          <p className="text-center text-base font-bold text-xl">
+          <p className="text-center font-bold text-xl">
             This pilot digital twin aims to monitor changes to benthic
             communities in the Haig Fras Marine Protected Area based on marine
             imagery datasets.

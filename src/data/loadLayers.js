@@ -34,6 +34,7 @@ export class GetLayers {
       .then(async (jsonData) => {
         Object.keys(jsonData).forEach((layerClass) => {
           Object.keys(jsonData[layerClass]).forEach((layerType) => {
+            this.data[layerClass].layerNames[layerType].signed_url = {}
             this.data[layerClass].layerNames[layerType].signed_url =
               jsonData[layerClass][layerType].signed_url
           })

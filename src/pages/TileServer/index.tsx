@@ -123,7 +123,6 @@ export function TileServer() {
       }
     }
   }, [])
-  console.log(listLayers)
 
   return (
     <TileServerContainer>

@@ -52,7 +52,6 @@ export class GetGeoblazeValue3D {
   }
 
   async parseGeoraster() {
-    console.log(this.url)
     await geoblaze.load(this.url).then(async (georaster) => {
       this.layer = georaster
     })

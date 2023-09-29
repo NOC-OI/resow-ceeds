@@ -253,8 +253,6 @@ function ThreeDMap1({
     if (layerName.params.style) {
       params.style = layerName.params.style
     }
-    console.log(layerName)
-    console.log(params)
     const provider = new WebMapServiceImageryProvider({
       url: layerName.url,
       parameters: params,
@@ -497,8 +495,6 @@ function ThreeDMap1({
     let layers: any
     actualLayer.forEach(async (actual) => {
       const splitActual = actual.split('_')
-      console.log(listLayers)
-      console.log(actual)
       const layerName = listLayers[splitActual[0]].layerNames[splitActual[1]]
       if (layerName.data_type === 'wms' || layerName.data_type === 'COG') {
         layers = ref.current.cesiumElement.scene.imageryLayers
@@ -620,7 +616,7 @@ function ThreeDMap1({
   const displayMap = useMemo(
     () => (
       <Viewer
-        // full
+        full
         animation={false}
         timeline={false}
         ref={ref}

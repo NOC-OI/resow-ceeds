@@ -236,7 +236,6 @@ function MapHome1({
     const lat = [mapBounds._southWest.lat, mapBounds._northEast.lat]
     const lng = [mapBounds._southWest.lng, mapBounds._northEast.lng]
     shuffled.every((el: any) => {
-      console.log(el)
       if (count >= n) {
         return false // "break"
       }
@@ -323,7 +322,6 @@ function MapHome1({
               photo.coordinates[1] - 0.003,
             ]),
           )
-          console.log(photo)
           if (shuffledPhotos.includes(photo.filename)) {
             const getPhotoMarker = new GetPhotoMarker(photo, actual, color)
             await getPhotoMarker.getMarker().then(async function () {

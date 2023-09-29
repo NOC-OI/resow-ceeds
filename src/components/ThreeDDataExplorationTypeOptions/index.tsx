@@ -225,7 +225,6 @@ export function ThreeDDataExplorationTypeOptions({
         height: 20,
         layer: subLayers[subLayer].params.layers,
       }
-      console.log(newParams)
       async function getURILegend(newParams: any) {
         const layerUrl = `${subLayers[subLayer].url}?`
         const response = await fetch(layerUrl + new URLSearchParams(newParams))

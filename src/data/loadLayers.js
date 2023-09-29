@@ -51,9 +51,9 @@ export class GetLayers {
 
     await axios.get(url).then(async (resp) => {
       this.data = resp.data
-      if (this.token) {
-        await this.logSignedUrl()
-      }
+      // if (this.token) {
+      //   await this.logSignedUrl()
+      // }
     })
   }
 }

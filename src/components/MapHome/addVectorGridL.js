@@ -2090,8 +2090,6 @@ L.VectorGrid.Protobuf = L.VectorGrid.extend({
         }
 
         return response.blob().then(function (blob) {
-          // 				console.log(blob);
-
           const reader = new FileReader()
           return new Promise(function (resolve) {
             reader.addEventListener('loadend', function () {
@@ -2099,7 +2097,6 @@ L.VectorGrid.Protobuf = L.VectorGrid.extend({
 
               // blob.type === 'application/x-protobuf'
               const pbf = new index(reader.result)
-              // 						console.log(pbf);
               return resolve(new VectorTile(pbf))
             })
             reader.readAsArrayBuffer(blob)
@@ -2107,9 +2104,6 @@ L.VectorGrid.Protobuf = L.VectorGrid.extend({
         })
       })
       .then(function (json) {
-        // 			console.log('Vector tile:', json.layers);
-        // 			console.log('Vector tile water:', json.layers.water);	// Instance of VectorTileLayer
-
         // Normalize feature getters into actual instanced features
         for (const layerName in json.layers) {
           const feats = []

@@ -56,8 +56,6 @@ export function DynamicTableBox({
 
     setCalculationResults(calculateStatT.calculateStat())
   }, [pValue, aValue])
-
-  // console.log(calculationResults)
   return (
     <InfoButtonBoxContainer id="dynamic-graph" className="w-120">
       <div className="flex justify-end pb-3">

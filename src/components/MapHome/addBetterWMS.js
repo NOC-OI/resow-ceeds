@@ -35,7 +35,6 @@ const BetterWMS = L.TileLayer.WMS.extend({
 
   getFeatureInfoUrl: function (latlng) {
     // Construct a GetFeatureInfo request URL given a point
-    // console.log(this._map.project(this._map.getBounds()._northEast))
     // this._map.getBounds()
     const point = this._map.latLngToContainerPoint(latlng, this._map.getZoom())
     const size = this._map.getSize()

@@ -42,7 +42,6 @@ export class GetCOGLayer {
     await parseGeoraster(this.url).then(async (georaster) => {
       // const options = { left: 0, top: 0, right: 4000, bottom: 4000, width: 10, height: 10 };
       // georaster.getValues(options).then(values => {
-      //   console.log("clipped values are", values);
       // });
       this.layer = new GeoRasterLayer({
         georaster,
@@ -164,7 +163,6 @@ export class GetTileLayer {
       ? this.layerName.signed_url
       : this.url
     const isUrlEncoded = !!this.layerName.signed_url
-
     const cogInfo = await axios
       .get(
         `${TILE_SERVER_URL}cog/info?url=${encodeURIComponent(

@@ -1036,7 +1036,6 @@ export const MapHome = React.memo(MapHome1, mapPropsAreEqual)
 //       // mask: continent,
 //       // mask_strategy: "inside"
 //       // pixelValuesToColorFn: values => {
-//       //   console.log(values)
 //       //   return values[0] ? '#00000000' : values[0]
 //       // }
 //     });
@@ -1046,7 +1045,6 @@ export const MapHome = React.memo(MapHome1, mapPropsAreEqual)
 //     let sW = layer.getBounds().getSouthWest()
 
 //     const newBounds = [[nE.lat, nE.lng],[sW.lat, sW.lng]]
-//     console.log(newBounds)
 //     map.fitBounds(newBounds)
 //   });
 // };
@@ -1069,13 +1067,6 @@ export const MapHome = React.memo(MapHome1, mapPropsAreEqual)
 //     height: '256',
 //     viewParams: 'null;undefined',
 //   }
-
-//   await axios.get(
-//     'https://emodnet.ec.europa.eu/geoviewer/proxy//https://ows.emodnet-seabedhabitats.eu/geoserver/emodnet_view/wms?', {
-//       params: featureOptions,
-//     }
-//   ).then(r => console.log(r.data))
-// }
 
 // async function getWTMSLayer (layerName: Object) {
 //   // layerName.params['atribution'] = actualLayer
@@ -1101,7 +1092,6 @@ export const MapHome = React.memo(MapHome1, mapPropsAreEqual)
 //   // let sW = layer.getBounds().getSouthWest()
 
 //   // const newBounds = [[nE.lat, nE.lng],[sW.lat, sW.lng]]
-//   // console.log(newBounds)
 //   map.fitBounds([[46, -10],[52, 2]])
 // }
 
@@ -1158,7 +1148,6 @@ export const MapHome = React.memo(MapHome1, mapPropsAreEqual)
 //     // });
 
 //     const s = ScalarField.fromASCIIGrid(text)
-//     console.log(s)
 //     const layer = LayerScalarField(s)
 
 //     map.addLayer(layer)
@@ -1198,12 +1187,6 @@ export const MapHome = React.memo(MapHome1, mapPropsAreEqual)
 // function pointToLayer() {
 //   return null
 //   // return L.marker(latlng, { icon: {}}); // Change the icon to a custom icon
-// }
-
-// function onEachFeaturePoint(feature, layer) {
-//   layer.on('mousemove', function (event) {
-//     console.log(event);
-//   });
 // }
 
 // import { DrawPolygon } from './addLeafletDraw';

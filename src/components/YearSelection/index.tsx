@@ -36,14 +36,14 @@ export function YearSelection({
       <div
         className={
           yearSelected > allYears.length - 2
-            ? 'flex justify-center pt-2 pb-3 gap-2 cursor-not-allowed opacity-50'
-            : 'flex justify-center pt-2 pb-3 gap-2'
+            ? 'flex justify-center pt-1 pb-1 gap-2 cursor-not-allowed opacity-50 w-full'
+            : 'flex justify-center pt-1 pb-1 gap-2  w-full'
         }
       >
-        <p className="font-bold">Select Year:</p>
+        <p className="font-bold">Year:</p>
         <input
           type="range"
-          className="w-20"
+          className="w-30"
           disabled={yearSelected > allYears.length - 2}
           step={1}
           min={0}
@@ -54,7 +54,7 @@ export function YearSelection({
         <p className="font-bold pt-0">{allYears[yearSelected].toUpperCase()}</p>
       </div>
       {allYearToogle && (
-        <div className="flex justify-center pt-4 pb-0 gap-4">
+        <div className="flex justify-center pt-1 pb-0 gap-4">
           <p className="font-bold">All years:</p>
           <ToogleSwitch>
             <input

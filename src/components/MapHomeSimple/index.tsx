@@ -304,16 +304,13 @@ export const MapHomeSimple = React.memo(MapHome1, mapPropsAreEqual)
 
 // listPhotos.forEach((photos: any) => {
 //   if (photos.layerClass === photoValues[2]) {
-//     console.log(photos.layerNames[photoValues[1]].photos)
 //     // while (photos.layerNames[photoValues[1]].photos.length === 0){
 //     //   let x = 1
 //     // }
 //     photos.layerNames[photoValues[1]].photos.every((photo: any) => {
-//       console.log(photo)
 //       if (photo.id.toString() === photoValues[0]) {
 //         if (photo.local_data_type === 'Marker-COG'){
 //           photo.url = `${BASIC_BUCKET_URL}/${photo.filename}_1.tif`
-//           console.log(photo.url)
 //           const getCOGLayer = new GetTileLayer(photo, [photo.url], contrast)
 //           getCOGLayer.getTile().then( async function () {
 //             layer = getCOGLayer.layer
@@ -323,7 +320,6 @@ export const MapHomeSimple = React.memo(MapHome1, mapPropsAreEqual)
 //             ]
 //             map.addLayer(layer, true)
 //             layer? bringLayerToFront(layer): null
-//             console.log(layer)
 //             if(fitBounds){
 //               map.fitBounds(bounds)
 //             }

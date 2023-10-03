@@ -6,7 +6,6 @@ import {
 // import { AreaSelector } from '../AreaSelector'
 import { Info } from 'phosphor-react'
 import { SurveyDesignType } from '../SurveyDesignType'
-import { YearSelection } from '../YearSelection'
 // import { AreaSelector } from '../AreaSelector'
 
 interface SurveyDesignSelectionProps {
@@ -63,17 +62,13 @@ export function SurveyDesignSelection({
         </div>
       </LayerSelectionTitle>
       <LayerTypes>
-        <YearSelection
-          yearSelected={yearSelected}
-          setYearSelected={setYearSelected}
-          allYearToogle={false}
-        />
         {calcClasses.map((calcClass: any) => {
           return (
             <SurveyDesignType
               key={calcClass.calcClass}
               title={calcClass.calcClass}
               content={calcClass.content}
+              hideYears={calcClass.hideYears}
               childs={calcClass.calcNames}
               setInfoButtonBox={setInfoButtonBox}
               dynamicGraphData={dynamicGraphData}

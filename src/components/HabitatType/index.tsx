@@ -177,14 +177,24 @@ export function HabitatType({
                       )
                     }}
                   >
-                    {subCalc.name}
+                    <ReactMarkdown
+                      children={subCalc.name}
+                      remarkPlugins={[remarkGfm, remarkMath, remarkBreaks]}
+                      rehypePlugins={[rehypeKatex]}
+                      linkTarget={'_blank'}
+                    />
                   </p>
                 ) : (
                   <p
                     id="type-option"
                     className={'opacity-40 cursor-not-allowed'}
                   >
-                    {subCalc.name}
+                    <ReactMarkdown
+                      children={subCalc.name}
+                      remarkPlugins={[remarkGfm, remarkMath, remarkBreaks]}
+                      rehypePlugins={[rehypeKatex]}
+                      linkTarget={'_blank'}
+                    />
                   </p>
                 )}
               </label>

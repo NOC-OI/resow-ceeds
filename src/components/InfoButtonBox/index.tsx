@@ -7,7 +7,7 @@ import remarkMath from 'remark-math'
 import rehypeKatex from 'rehype-katex'
 import remarkBreaks from 'remark-breaks'
 import 'katex/dist/katex.min.css' // `rehype-katex` does not import the CSS for you
-import { Button } from '../AreaSelector/styles'
+// import { Button } from '../AreaSelector/styles'
 // import parse from 'html-react-parser'
 
 interface InfoButtonBoxProps {
@@ -37,9 +37,9 @@ export function InfoButtonBox({
     setInfoButtonBox({})
   }
 
-  function verifyIfWasSelectedBefore(subLayer: string) {
-    return !!selectedLayers[subLayer]
-  }
+  // function verifyIfWasSelectedBefore(subLayer: string) {
+  //   return !!selectedLayers[subLayer]
+  // }
 
   // function addMapLayer(layerInfo: any) {
   //   setLayerAction('add')
@@ -52,44 +52,38 @@ export function InfoButtonBox({
   //   })
   // }
 
-  function changeMapLayer(newSelectedLayers: any) {
-    setLayerAction('marker-changes')
-    setSelectedLayers((selectedLayers: any) => {
-      const copy = { ...selectedLayers }
-      newSelectedLayers.forEach((layerInfo: any) => {
-        delete copy[layerInfo.subLayer]
-        layerInfo.dataInfo.plotLimits = true
-        layerInfo.dataInfo.opacity = 1
-        layerInfo.dataInfo.zoom = true
-        copy[layerInfo.subLayer] = layerInfo.dataInfo
-      })
-      return copy
-    })
-  }
-  async function handleChangeMapLayer(e: any) {
-    const buttonValue = e.currentTarget.value
-    const [column, result] = buttonValue.split('_')
+  // function changeMapLayer(newSelectedLayers: any) {
+  //   setLayerAction('marker-changes')
+  //   setSelectedLayers((selectedLayers: any) => {
+  //     const copy = { ...selectedLayers }
+  //     newSelectedLayers.forEach((layerInfo: any) => {
+  //       delete copy[layerInfo.subLayer]
+  //       layerInfo.dataInfo.plotLimits = true
+  //       layerInfo.dataInfo.opacity = 1
+  //       layerInfo.dataInfo.zoom = true
+  //       copy[layerInfo.subLayer] = layerInfo.dataInfo
+  //     })
+  //     return copy
+  //   })
+  // }
+  // async function handleChangeMapLayer(e: any) {
+  //   const buttonValue = e.currentTarget.value
+  //   const [column, result] = buttonValue.split('_')
 
-    const layerInfo = {
-      subLayer: buttonValue,
-      dataInfo: listLayers[column].layerNames[result],
-    }
-    if (verifyIfWasSelectedBefore(buttonValue)) {
-      layerInfo.dataInfo.selectedBefore = true
-    } else {
-      layerInfo.dataInfo.selectedBefore = false
-    }
-    layerInfo.dataInfo.show = []
-    // layerInfo.dataInfo.photos.forEach((photo: any) => {
-    //   layerInfo.dataInfo.show.push(photo.filename)
-    // })
-    setActualLayer([buttonValue])
-    // if (verifyIfWasSelectedBefore(layerInfo.subLayer)) {
-    changeMapLayer([layerInfo])
-    // } else {
-    //   addMapLayer(layerInfo)
-    // }
-  }
+  //   const layerInfo = {
+  //     subLayer: buttonValue,
+  //     dataInfo: listLayers[column].layerNames[result],
+  //   }
+  //   if (verifyIfWasSelectedBefore(buttonValue)) {
+  //     layerInfo.dataInfo.selectedBefore = true
+  //   } else {
+  //     layerInfo.dataInfo.selectedBefore = false
+  //   }
+  //   layerInfo.dataInfo.show = []
+  //   setActualLayer([buttonValue])
+  //   changeMapLayer([layerInfo])
+  // }
+
   return (
     <InfoButtonBoxContainer id="info-subsection" className="w-80">
       <div>
@@ -110,7 +104,7 @@ export function InfoButtonBox({
           rehypePlugins={[rehypeKatex]}
           linkTarget={'_blank'}
         />
-        {infoButtonBox.link && (
+        {/* {infoButtonBox.link && (
           <Button
             value={infoButtonBox.link.layers}
             onClick={handleChangeMapLayer}
@@ -118,7 +112,7 @@ export function InfoButtonBox({
           >
             View Layer
           </Button>
-        )}
+        )} */}
       </InfoButtonBoxContent>
       {/* <p>{infoButtonBox.content}</p> */}
     </InfoButtonBoxContainer>

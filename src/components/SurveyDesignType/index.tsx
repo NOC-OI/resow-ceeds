@@ -8,6 +8,7 @@ import { Loading } from '../Loading'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons'
 import { allYears } from '../../data/allYears'
+import { YearSelection } from '../YearSelection'
 
 interface keyable {
   [key: string]: any
@@ -15,6 +16,7 @@ interface keyable {
 interface SurveyDesignTypeProps {
   title: string
   content: string
+  hideYears: string
   childs: any
   setInfoButtonBox?: any
   dynamicGraphData: any
@@ -72,6 +74,7 @@ async function handleShowGraphValues(
 export function SurveyDesignType({
   title,
   content,
+  hideYears,
   childs,
   setInfoButtonBox,
   dynamicGraphData,
@@ -117,7 +120,7 @@ export function SurveyDesignType({
   async function handleShowTableValues(subCalc: keyable) {
     setDynamicTableData(subCalc)
   }
-
+  console.log(subCalcs)
   return (
     <CalcTypeContainer>
       <div>
@@ -148,20 +151,17 @@ export function SurveyDesignType({
               key={`${title}_${subCalc.name}_${subCalc.url}`}
             >
               <label>
-                {Object.keys(subCalc.years).includes(allYears[yearSelected]) ||
-                yearSelected === allYears.length - 1 ? (
+                {subCalc?.years ? (
                   <p
                     id="type-option"
                     onClick={async () => {
-                      title === 'Biodiversity representation'
-                        ? await handleShowGraphValues(
-                            subCalc,
-                            setDynamicGraphData,
-                            setLoading,
-                            fileSurveyDesign,
-                            yearSelected,
-                          )
-                        : await handleShowTableValues(subCalc)
+                      await handleShowGraphValues(
+                        subCalc,
+                        setDynamicGraphData,
+                        setLoading,
+                        fileSurveyDesign,
+                        yearSelected,
+                      )
                     }}
                   >
                     {subCalc.name}
@@ -169,7 +169,9 @@ export function SurveyDesignType({
                 ) : (
                   <p
                     id="type-option"
-                    className={'opacity-40 cursor-not-allowed'}
+                    onClick={async () => {
+                      await handleShowTableValues(subCalc)
+                    }}
                   >
                     {subCalc.name}
                   </p>
@@ -179,7 +181,14 @@ export function SurveyDesignType({
           )
         })}
       </div>
-      {loading ? <Loading /> : null}
+      {isActive && !hideYears && (
+        <YearSelection
+          yearSelected={yearSelected}
+          setYearSelected={setYearSelected}
+          allYearToogle={false}
+        />
+      )}
+      {loading && <Loading />}
     </CalcTypeContainer>
   )
 }

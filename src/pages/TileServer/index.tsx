@@ -23,6 +23,7 @@ import Cookies from 'js-cookie'
 import { DynamicTableBox } from '../../components/DynamicTableBox'
 import { GetLayers } from '../../data/loadLayers'
 import { Loading } from '../../components/Loading'
+import { ComparisonGraphBox } from '../../components/ComparisonGraphBox'
 
 export function TileServer() {
   const navigate = useNavigate()
@@ -41,6 +42,8 @@ export function TileServer() {
   const [surveyDesignCircleValues, setSurveyDesignCircleValues] = useState([])
 
   const [graphData, setGraphData] = useState(null)
+
+  const [comparisonGraphData, setComparisonGraphData] = useState(null)
 
   const [dynamicGraphData, setDynamicGraphData] = useState(null)
 
@@ -216,6 +219,8 @@ export function TileServer() {
             dataFields={calClasses}
             yearSelected={yearSelected}
             setYearSelected={setYearSelected}
+            comparisonGraphData={comparisonGraphData}
+            setComparisonGraphData={setComparisonGraphData}
           />
         )}
         {selectedSidebarOption === 'Survey Design' && (
@@ -238,6 +243,12 @@ export function TileServer() {
             setGraphData={setGraphData}
             actualLayer={actualLayer}
             setGetPolyline={setGetPolyline}
+          />
+        ) : null}
+        {comparisonGraphData ? (
+          <ComparisonGraphBox
+            comparisonGraphData={comparisonGraphData}
+            setComparisonGraphData={setComparisonGraphData}
           />
         ) : null}
         {dynamicGraphData ? (

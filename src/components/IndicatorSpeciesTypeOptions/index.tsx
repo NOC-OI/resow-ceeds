@@ -140,8 +140,17 @@ export function IndicatorSpeciesTypeOptions({
           } else if (condition === 'equal') {
             if (subLayer.tableName === 'Start date') {
               const newDate = dayjs(photo[subLayer.tableName], 'DD/MM/YYYY')
-              if (newDate > selectedOption[0] && newDate < selectedOption[1]) {
-                layerInfo.dataInfo.show.push(photo.filename)
+              if (subLayer.name === '*Filter by Year*') {
+                if (
+                  newDate.year() >= selectedOption[0] &&
+                  newDate.year() <= selectedOption[1]
+                ) {
+                  layerInfo.dataInfo.show.push(photo.filename)
+                }
+              } else {
+                if (selectedOption.includes(newDate.month())) {
+                  layerInfo.dataInfo.show.push(photo.filename)
+                }
               }
             } else {
               if (selectedOption.includes(photo[subLayer.tableName])) {
@@ -157,7 +166,6 @@ export function IndicatorSpeciesTypeOptions({
       })
     })
     setActualLayer(newActualLayers)
-    // if (verifyIfWasSelectedBefore(layerInfo.subLayer)) {
     changeMapLayer(newSelectedLayers)
     if (updateCalculationBox) {
       await fetchDatatoUpdateCalculationBox(subLayer)
@@ -188,31 +196,62 @@ export function IndicatorSpeciesTypeOptions({
     })
     setSelectedOption(options)
   }
+
   const handleChangeDate = (option: any) => {
     const options = []
-    options.push(option[0].$d)
-    options.push(option[1].$d)
+    options.push(option[0].$y)
+    options.push(option[1].$y)
     setSelectedOption(options)
   }
   const { RangePicker } = DatePicker
+
+  const monthOptions = [
+    { label: 'Jan', value: 1 },
+    { label: 'Feb', value: 2 },
+    { label: 'Mar', value: 3 },
+    { label: 'Apr', value: 4 },
+    { label: 'May', value: 5 },
+    { label: 'Jun', value: 6 },
+    { label: 'Jul', value: 7 },
+    { label: 'Aug', value: 8 },
+    { label: 'Sep', value: 9 },
+    { label: 'Oct', value: 10 },
+    { label: 'Nov', value: 11 },
+    { label: 'Dec', value: 12 },
+  ]
 
   return (
     <CalcTypeOptionsContainer>
       {subLayer.type === 'selector' ? (
         <div className="pt-1 flex w-11/12 justify-center">
           {subLayer.tableName === 'Start date' ? (
-            <>
-              <div className="flex w-full">
+            subLayer.name === '*Filter by Year*' ? (
+              <div className="flex w-full p-1">
                 <RangePicker
                   placeholder={[
-                    NBNSpecies['Start date'][0].slice(0, 10),
-                    NBNSpecies['Start date'][1].slice(0, 10),
+                    NBNSpecies['Start date'][0].slice(0, 4),
+                    NBNSpecies['Start date'][1].slice(0, 4),
                   ]}
-                  format={'DD/MM/YYYY'}
+                  picker="year"
+                  format={'YYYY'}
                   onChange={handleChangeDate}
+                  onBlur={handleChangeDate}
                 />
               </div>
-            </>
+            ) : (
+              <div className="flex w-full">
+                <Select
+                  className="w-full p-1"
+                  closeMenuOnSelect={false}
+                  components={animatedComponents}
+                  isMulti
+                  placeholder={subLayer.name}
+                  options={monthOptions}
+                  onChange={handleChange}
+                  maxMenuHeight={100}
+                />
+              </div>
+            )
           ) : (
             <Select
               className="w-full p-1"

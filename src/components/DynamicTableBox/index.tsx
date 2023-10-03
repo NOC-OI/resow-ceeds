@@ -33,14 +33,19 @@ export function DynamicTableBox({
   const nValues = Array.from({ length: maxN }, (x, i) => i)
   const deltaValues = [10, 14, 20, 28, 40, 56, 79, 112, 158, 224]
   const pValues = [0.01, 0.05, 0.1]
-  const coefVarValues = Array.from({ length: 10 }, (x, i) => (i + 1) * 5)
-  const aValues = Array.from({ length: 10 }, (x, i) => i + 1)
+  const coefVarValues = [39, 43]
+  // const coefVarValues = Array.from({ length: 10 }, (x, i) => (i + 1) * 5)
+  const aValues = [1]
+  // const aValues = Array.from({ length: 10 }, (x, i) => i + 1)
 
   // const coefVarValues = [5]
   // const nValues = [4]
   // const pValues = [0.05]
   // const deltaValues = [14]
   // const aValues = [2]
+
+  // change this slider to two values based on the replicates of COARSE from 2015: 39
+  // (the CV% for number of morphotypes) and 43 (the CV% for density)
 
   useEffect(() => {
     const calculateStatT = new CalculateStatT(

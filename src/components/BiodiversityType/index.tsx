@@ -5,6 +5,11 @@ import { Loading } from '../Loading'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons'
 import { allYears } from '../../data/allYears'
+import remarkGfm from 'remark-gfm'
+import remarkMath from 'remark-math'
+import remarkBreaks from 'remark-breaks'
+import rehypeKatex from 'rehype-katex'
+import ReactMarkdown from 'react-markdown'
 interface keyable {
   [key: string]: any
 }
@@ -26,9 +31,12 @@ interface BiodiversityTypeProps {
   listLayers: any
   yearSelected: any
   setYearSelected: any
+  comparisonGraphData: any
+  setComparisonGraphData: any
 }
 
 async function handleShowCalcValues(
+  title: string,
   params: keyable,
   setCalculationValue: any,
   setLoading: any,
@@ -37,40 +45,15 @@ async function handleShowCalcValues(
   setIsActiveText: any,
   yearSelected: any,
   activeText: any,
+  setComparisonGraphData: any,
 ) {
   setLoading(true)
   setCalculationValue(null)
   setIsActiveText(activeText)
-
   const APIBaseUrl = process.env.VITE_API_URL
   let url = `${APIBaseUrl}${params.url}`
-  let fileNames = ''
-  let layers = {}
-  if (yearSelected === allYears.length - 1) {
-    Object.keys(params.years).forEach((year: string) => {
-      fileNames += `${params.years[year].file_names},`
-      Object.keys(params.years[year].layers).forEach((layer: any) => {
-        if (Object.keys(layers).includes(layer)) {
-          params.years[year].layers[layer].forEach((subLayer: string) => {
-            layers[layer].push(subLayer)
-          })
-        } else {
-          layers[layer] = params.years[year].layers[layer]
-        }
-      })
-    })
-    fileNames = fileNames.slice(0, -1)
-  } else {
-    fileNames = params.years[allYears[yearSelected]].file_names
-    layers = params.years[allYears[yearSelected]].layers
-  }
-  url = url.replaceAll('file_names', fileNames)
 
-  if (selectedArea) {
-    url = `${url}&bbox=${latLonLimits[2].lat},${latLonLimits[0].lng},${latLonLimits[0].lat},${latLonLimits[2].lng}`
-  }
-
-  async function getCalculationResults() {
+  async function getCalculationResults(url: string) {
     const response = await fetch(url, {
       method: 'GET',
       mode: 'cors',
@@ -81,7 +64,6 @@ async function handleShowCalcValues(
     })
     const data = await response.json()
     const deleteKey = Object.keys(data)[0]
-    // eslint-disable-next-line dot-notation
     data[params.name] = data[deleteKey]
     delete data[deleteKey]
     params.result = data
@@ -91,12 +73,53 @@ async function handleShowCalcValues(
       params.button = true
     }
     params.layers = layers
-    // const newCalculationValue = dat: Object = {}
-    // newCalculationValue[params.name as keyof Object] = data
-    setCalculationValue(params)
     setLoading(false)
+    return params
   }
-  await getCalculationResults()
+
+  let fileNames = ''
+  let layers = {}
+
+  if (title === 'Interannual Monitoring') {
+    setComparisonGraphData(null)
+
+    async function getYearsGraphData() {
+      const graphData = []
+      const promises = []
+      Object.keys(params.years).forEach(async (year: string) => {
+        fileNames = `${params.years[year].file_names}`
+        promises.push(
+          getCalculationResults(url.replaceAll('file_names', fileNames)).then(
+            (result) => {
+              graphData.push({ year, result: result.result })
+            },
+          ),
+        )
+        Object.keys(params.years[year].layers).forEach((layer: any) => {
+          if (Object.keys(layers).includes(layer)) {
+            params.years[year].layers[layer].forEach((subLayer: string) => {
+              layers[layer].push(subLayer)
+            })
+          } else {
+            layers[layer] = params.years[year].layers[layer]
+          }
+        })
+      })
+      await Promise.all(promises)
+
+      return graphData
+    }
+    const graphData = await getYearsGraphData()
+    setComparisonGraphData(graphData)
+  } else {
+    fileNames = params.years[allYears[yearSelected]].file_names
+    layers = params.years[allYears[yearSelected]].layers
+    url = url.replaceAll('file_names', fileNames)
+    setCalculationValue(await getCalculationResults(url))
+  }
+  // if (selectedArea) {
+  //   url = `${url}&bbox=${latLonLimits[2].lat},${latLonLimits[0].lng},${latLonLimits[0].lat},${latLonLimits[2].lng}`
+  // }
 }
 
 export function BiodiversityType({
@@ -116,6 +139,8 @@ export function BiodiversityType({
   listLayers,
   yearSelected,
   setYearSelected,
+  comparisonGraphData,
+  setComparisonGraphData,
 }: BiodiversityTypeProps) {
   const [subCalcs, setSubCalcs] = useState([])
 
@@ -226,6 +251,7 @@ export function BiodiversityType({
                     }
                     onClick={async () => {
                       await handleShowCalcValues(
+                        title,
                         subCalc,
                         setCalculationValue,
                         setLoading,
@@ -234,11 +260,17 @@ export function BiodiversityType({
                         setIsActiveText,
                         yearSelected,
                         `${title}_${subCalc.name}_${subCalc.url}`,
+                        setComparisonGraphData,
                       )
                       await handleChangeMapLayer(subCalc)
                     }}
                   >
-                    {subCalc.name}
+                    <ReactMarkdown
+                      children={subCalc.name}
+                      remarkPlugins={[remarkGfm, remarkMath, remarkBreaks]}
+                      rehypePlugins={[rehypeKatex]}
+                      linkTarget={'_blank'}
+                    />
                   </p>
                 ) : (
                   <p

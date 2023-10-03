@@ -198,7 +198,6 @@ function ThreeDMap1({
       //   )
       //   getOneValueTitiler.fetchData().then(async function () {
       //     const dep = getOneValueTitiler.dep
-      //     console.log(dep)
       //     if (dep) {
       //       setDepth((depth: any) => {
       //         const copy = { ...depth }
@@ -284,9 +283,7 @@ function ThreeDMap1({
   }
   // if (ref.current?.cesiumElement) {
   //   // const layers = ref.current.cesiumElement.scene.imageryLayers
-  //   // console.log(layers._layers)
   //   const layers = ref.current.cesiumElement.dataSources
-  //   console.log(layers)
   // }
 
   function createColor(colorScale: any, rgb: any, alpha: any = 1) {

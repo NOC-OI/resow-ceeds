@@ -26,6 +26,8 @@ interface BiodiversitySelectionProps {
   dataFields: any
   yearSelected: any
   setYearSelected: any
+  comparisonGraphData: any
+  setComparisonGraphData: any
 }
 
 export function BiodiversitySelection({
@@ -45,6 +47,8 @@ export function BiodiversitySelection({
   dataFields,
   yearSelected,
   setYearSelected,
+  comparisonGraphData,
+  setComparisonGraphData,
 }: BiodiversitySelectionProps) {
   const calcClasses = dataFields.biodiversity
 
@@ -80,7 +84,9 @@ export function BiodiversitySelection({
                 - coarse+hard: 29 \n \
                 - sand+hard: 6 \n \
                 - coarse: 33 \n \
-                - sand: 36 \
+                - sand: 36 \n \
+                **Number of sample units in 2015:** \n \
+                - coarse - 21\
                 ',
                 { layers: ['Seabed Images_2012 AUV Image Survey'] },
               )
@@ -122,6 +128,8 @@ export function BiodiversitySelection({
               listLayers={listLayers}
               yearSelected={yearSelected}
               setYearSelected={setYearSelected}
+              comparisonGraphData={comparisonGraphData}
+              setComparisonGraphData={setComparisonGraphData}
             />
           )
         })}

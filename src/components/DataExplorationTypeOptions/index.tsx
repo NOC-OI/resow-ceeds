@@ -259,7 +259,10 @@ export function DataExplorationTypeOptions({
                 : subLayers[subLayer].protected && 'cursor-not-allowed'
             }
           >
-            {subLayer}
+            {subLayer
+              .replace('Jncc', 'JNCC')
+              .replace('Nbn', 'NBN')
+              .replace('Auv', 'AUV')}
           </p>
           {user?.access ? null : subLayers[subLayer].protected ? (
             <FontAwesomeIcon

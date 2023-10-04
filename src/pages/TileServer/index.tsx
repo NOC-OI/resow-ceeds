@@ -105,7 +105,6 @@ export function TileServer() {
       setLoading(false)
     })
   }
-
   useEffect(() => {
     fetchData()
   }, [])

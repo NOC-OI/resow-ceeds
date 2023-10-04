@@ -27,9 +27,11 @@ export function LoginPage() {
 
   const [isLogged, setIsLogged] = useState(getUser())
 
-  if (isLogged) {
-    navigate('/')
-  }
+  useEffect(() => {
+    if (isLogged) {
+      navigate('/')
+    }
+  }, [isLogged])
 
   return (
     <>

@@ -4,7 +4,6 @@ import { SideSelection } from '../../components/SideSelection'
 import { SideBar } from '../TileServer/styles'
 import { ThreeDMap } from '../../components/ThreeDMap'
 import { ThreeDDataExplorationSelection } from '../../components/ThreeDDataExplorationSelection'
-import Cookies from 'js-cookie'
 import { useNavigate } from 'react-router-dom'
 import { FlashMessages } from '../../components/FlashMessages'
 import { LoginPopup } from '../../components/LoginPopup'
@@ -13,6 +12,7 @@ import { InfoButtonBox } from '../../components/InfoButtonBox'
 import { DataExplorationLegend } from '../../components/DataExplorationLegend'
 import { GetLayers } from '../../data/loadLayers'
 import { Loading } from '../../components/Loading'
+import { getUser } from '../../lib/auth'
 
 export function ThreeD() {
   const navigate = useNavigate()
@@ -37,7 +37,7 @@ export function ThreeD() {
   const [activePhoto, setActivePhoto] = useState('')
 
   const [showLogin, setShowLogin] = useState(false)
-  const [isLogged, setIsLogged] = useState(Cookies.get('token'))
+  const [isLogged, setIsLogged] = useState(getUser())
 
   const [showFlash, setShowFlash] = useState(false)
   const [flashMessage, setFlashMessage] = useState({

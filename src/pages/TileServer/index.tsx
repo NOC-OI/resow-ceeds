@@ -19,11 +19,11 @@ import { useNavigate } from 'react-router-dom'
 import { GraphBox } from '../../components/GraphBox'
 import { DynamicGraphBox } from '../../components/DynamicGraphBox'
 import { GetJsonWeb } from '../../data/loadJsonWeb'
-import Cookies from 'js-cookie'
 import { DynamicTableBox } from '../../components/DynamicTableBox'
 import { GetLayers } from '../../data/loadLayers'
 import { Loading } from '../../components/Loading'
 import { ComparisonGraphBox } from '../../components/ComparisonGraphBox'
+import { getUser } from '../../lib/auth'
 
 export function TileServer() {
   const navigate = useNavigate()
@@ -81,7 +81,7 @@ export function TileServer() {
   const [loading, setLoading] = useState(true)
 
   const [showLogin, setShowLogin] = useState(false)
-  const [isLogged, setIsLogged] = useState(Cookies.get('token'))
+  const [isLogged, setIsLogged] = useState(getUser())
 
   const [NBNSpecies, setNBNSpecies] = useState(null)
 

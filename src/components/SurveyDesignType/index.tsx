@@ -120,7 +120,6 @@ export function SurveyDesignType({
   async function handleShowTableValues(subCalc: keyable) {
     setDynamicTableData(subCalc)
   }
-  console.log(subCalcs)
   return (
     <CalcTypeContainer>
       <div>

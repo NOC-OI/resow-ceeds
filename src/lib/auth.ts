@@ -8,7 +8,17 @@ export function getUser() {
     return
   }
 
-  const user = decode(token)
+  const user: any = decode(token)
 
-  return user
+  if (user.exp) {
+    const expDate = new Date(user.exp)
+    const dateNow = new Date()
+    if (expDate < dateNow) {
+      Cookies.remove('token')
+    } else {
+      return user
+    }
+  } else {
+    Cookies.remove('token')
+  }
 }

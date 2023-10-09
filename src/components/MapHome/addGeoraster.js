@@ -129,8 +129,6 @@ export class GetTileLayer {
   async getStats() {
     const TILE_SERVER_URL = process.env.VITE_TILE_SERVER_URL
 
-    this.url = `${this.url}`
-
     const newUrl = this.layerName.signed_url
       ? this.layerName.signed_url
       : this.url

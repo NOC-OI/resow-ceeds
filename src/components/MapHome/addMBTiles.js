@@ -15,6 +15,8 @@ export class GetMBTiles {
   }
 
   async getLayer() {
+    const MBTILES_SERVER = process.env.VITE_MBTILES_URL
+
     const vectorTileOptions = {
       interactive: true,
       vectorTileLayerStyles: {
@@ -38,6 +40,11 @@ export class GetMBTiles {
         },
       },
     }
+
+    this.url = this.url.replace(
+      'https://imfe-pilot-mbtiles.noc.ac.uk/',
+      MBTILES_SERVER,
+    )
     this.layer = protobuf(`${this.url}`, vectorTileOptions)
     this.layer.setOpacity(0.7)
   }

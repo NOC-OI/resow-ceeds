@@ -10,6 +10,7 @@ import { FullPagePopupContainer } from '../FullPagePopup/styles'
 import { useNavigate } from 'react-router-dom'
 import { getOrcidUrl } from '../../utils/getOrcidUrl'
 import { getUser } from '../../lib/auth'
+import { get365Url } from '../../utils/get365Url'
 
 interface LoginPopupProps {
   isLogged?: any
@@ -53,7 +54,7 @@ export function LoginPopup({
         <FullPagePopupContainer>
           <div className="w-96 align-middle text-center">
             <p className="text-center font-bold pb-3 capitalize text-3xl">
-              {`Hi ${user.name.split(' ')[0]}!`}
+              {`Hi ${user.name.split(' ')[0].replace(',', '')}!`}
             </p>
             <p className="text-center font-bold pb-3 capitalize text-3xl">
               Are you sure you want do log out?
@@ -105,7 +106,7 @@ export function LoginPopup({
                 </a>
               </div>
             </div>
-            <div>
+            <div className="flex">
               <a
                 className="normal-button-big pt-4 pb-4 w-full flex justify-center align-middle text-center"
                 href={getOrcidUrl()}
@@ -119,6 +120,20 @@ export function LoginPopup({
                   alt=""
                 />
                 <p className="pt-3">Continue with ORCID</p>
+              </a>
+              <a
+                className="normal-button-big pt-4 pb-4 w-full flex justify-center align-middle text-center"
+                href={get365Url()}
+                role="button"
+              >
+                <img
+                  className="pr-4 h-10"
+                  src={
+                    'https://seeklogo.com/images/M/microsoft-office-logo-8B0EF31E09-seeklogo.com.png'
+                  }
+                  alt=""
+                />
+                <p className="pt-3">Continue with 365</p>
               </a>
             </div>
           </div>

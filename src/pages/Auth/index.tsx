@@ -15,8 +15,10 @@ export function Auth() {
     const fetchData = async () => {
       const searchParams = new URLSearchParams(document.location.search)
       const code = searchParams.get('code')
+      const state = searchParams.get('state')
+        ? searchParams.get('state')
+        : 'orcid'
       let response
-
       try {
         // response = await fetch(`${APIBaseUrl}user`, {
         //   method: 'POST',
@@ -26,7 +28,9 @@ export function Auth() {
         //     'Content-Type': 'application/json',
         //   },
         // })
-        response = await axios.post(`${APIBaseUrl}v1/user/?code=${code}`)
+        response = await axios.post(
+          `${APIBaseUrl}v1/user/?code=${code}&state=${state}`,
+        )
       } catch (error) {
         navigate('/login?message=not-allowed')
         return

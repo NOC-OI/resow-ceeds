@@ -35,8 +35,8 @@ export function DynamicTableBox({
   const pValues = [0.01, 0.05, 0.1]
   const coefVarValues = [39, 43]
   // const coefVarValues = Array.from({ length: 10 }, (x, i) => (i + 1) * 5)
-  const aValues = [1]
-  // const aValues = Array.from({ length: 10 }, (x, i) => i + 1)
+  // const aValues = [1, 2]
+  const aValues = Array.from({ length: 2 }, (x, i) => i + 1)
 
   // const coefVarValues = [5]
   // const nValues = [4]

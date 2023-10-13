@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: react-app-deployment
+spec:
+  replicas: 3  # Set the desired number of replicas
+  selector:
+    matchLabels:
+      app: react-app
+  template:
+    metadata:
+      labels:
+        app: react-app
+    spec:
+      containers:
+        - name: frontend
+          image: uk-london-1.ocir.io/lrl8vbuxj1ma/frontend:latest
+          ports:
+            - containerPort: 80  # Adjust the port as needed
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: react-app-service
+spec:
+  selector:
+    app: react-app
+  type: LoadBalancer
+  ports:
+    - name: frontend
+      port: 80
+      targetPort: 8080
+      protocol: TCP
+  type: LoadBalancer  # Use LoadBalancer for external access

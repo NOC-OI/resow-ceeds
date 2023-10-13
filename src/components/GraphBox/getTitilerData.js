@@ -63,14 +63,16 @@ export class GetTitilerDataOneValue {
 
   async fetchData() {
     const TILE_SERVER_URL = process.env.VITE_TILE_SERVER_URL
-    const JOSBaseUrl = process.env.VITE_JASMIN_OBJECT_STORE_URL
 
-    this.url = `${this.url}`
+    const newUrl = this.layerName.signed_url
+      ? this.layerName.signed_url
+      : this.url
+    const isUrlEncoded = !!this.layerName.signed_url
 
-    const newUrl = `${TILE_SERVER_URL}cog/point/${this.lat},${
+    const urlForFetch = `${TILE_SERVER_URL}cog/point/${this.lat},${
       this.lon
-    }?url=${encodeURIComponent(this.url)}`
-    await axios.get(newUrl).then(async (r) => {
+    }?url=${encodeURIComponent(newUrl)}&encoded=${isUrlEncoded}`
+    await axios.get(urlForFetch).then(async (r) => {
       this.dep = r.data.values[0]
       // this.dataGraph.push({
       //   x: distance,

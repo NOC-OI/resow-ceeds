@@ -149,15 +149,15 @@ export function DynamicTableBox({
                 <thead>
                   <tr>
                     <th></th>
-                    {deltaValues.map((valueDelta) => {
-                      return <th>{valueDelta}</th>
+                    {deltaValues.map((valueDelta, idx) => {
+                      return <th key={`${valueDelta}-${idx}`}>{valueDelta}</th>
                     })}
                   </tr>
                 </thead>
                 <tbody className="table-hover">
                   {coefVarValues.map((valueCoefVar, idxRow) => {
                     return (
-                      <tr>
+                      <tr key={`${valueCoefVar}-${idxRow}`}>
                         <td>{valueCoefVar}</td>
                         {calculationResults[idxRow].map((result, idxCol) => {
                           let backgroundColor =
@@ -171,7 +171,12 @@ export function DynamicTableBox({
                             color = '#ffffff'
                           }
                           return (
-                            <td style={{ backgroundColor, color }}>{result}</td>
+                            <td
+                              key={`${result}-${idxCol}`}
+                              style={{ backgroundColor, color }}
+                            >
+                              {result}
+                            </td>
                           )
                         })}
                       </tr>

@@ -31,9 +31,7 @@ export class GetLayers {
   async logSignedUrl(protectedAssets) {
     const APIBaseUrl = process.env.VITE_API_URL
     const objectString = encodeURIComponent(JSON.stringify(protectedAssets))
-    console.log(
-      `${APIBaseUrl}v1/user/aws?token=${this.token.token}&assets=${objectString}`,
-    )
+
     await fetch(
       `${APIBaseUrl}v1/user/aws?token=${this.token.token}&assets=${objectString}`,
     )

@@ -39,6 +39,7 @@ deploy-job-oracle:
      - docker push uk-london-1.ocir.io/lrl8vbuxj1ma/frontend:latest
      - ssh web 'docker pull uk-london-1.ocir.io/lrl8vbuxj1ma/frontend:latest'
      - ssh web "mkdir -p ~/frontend && cp .env.frontend-jasmin frontend/.env"
+     
 # workaround for when we can't access the container registry
 #     - docker save docker-repo.bodc.me/colsau/imfe-pilot/frontend | gzip -c - > frontend.tar.gz
 #     - scp frontend.tar.gz web:/home/gitlab-runner/

@@ -34,7 +34,6 @@ export const ZoomButton = styled.div`
     box-shadow: 0 0 0 1px #aaeeff;
   }
 `
-
 export const HeaderContainer = styled.header`
   display: flex;
   align-items: center;

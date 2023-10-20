@@ -441,6 +441,7 @@ function MapHome1({
                 layer,
                 latlng,
                 coords,
+                layerName,
               )
               getGeoblazeValue.getGeoblaze().then(function () {
                 const dep = getGeoblazeValue.dep

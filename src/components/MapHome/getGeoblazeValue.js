@@ -3,17 +3,28 @@ import 'leaflet/dist/leaflet'
 import proj4 from 'proj4'
 
 export class GetGeoblazeValue {
-  constructor(layer, latlng, coords) {
+  constructor(layer, latlng, coords, layerName) {
     this.layer = layer
     this.latlng = latlng
     this.dep = null
     this.coords = coords
+    this.layerName = layerName
+    this.url = null
   }
 
   async getGeoblaze() {
     const TILE_SERVER_URL = process.env.VITE_TILE_SERVER_URL
+
     if (this.coords) {
-      const url = `${TILE_SERVER_URL}cog/tiles/WebMercatorQuad/${this.coords.z}/${this.coords.x}/${this.coords.y}.tif?url=${this.layer.options.url}`
+      this.url = this.layer.options.url
+      let isUrlEncoded = false
+      if (this.layerName) {
+        this.url = this.layerName.signed_url
+          ? this.layerName.signed_url
+          : this.url
+        isUrlEncoded = !!this.layerName.signed_url
+      }
+      const url = `${TILE_SERVER_URL}cog/tiles/WebMercatorQuad/${this.coords.z}/${this.coords.x}/${this.coords.y}.tif?url=${this.url}&encoded=${isUrlEncoded}`
       const latlng3857 = proj4('EPSG:4326', 'EPSG:3857').forward([
         this.latlng.lng,
         this.latlng.lat,

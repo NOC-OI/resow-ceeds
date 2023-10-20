@@ -5,7 +5,6 @@ import { SideSelection } from '../../components/SideSelection'
 import { TileServerContainer, SideBar } from './styles'
 import { CalculationValue } from '../../components/CalculationValue'
 import { PhotoList } from '../../components/PhotoList'
-import * as L from 'leaflet'
 import { DataExplorationLegend } from '../../components/DataExplorationLegend'
 import { InfoButtonBox } from '../../components/InfoButtonBox'
 import { HabitatSelection } from '../../components/HabitatSelection'
@@ -30,14 +29,14 @@ export function TileServer() {
 
   const [selectedSidebarOption, setSelectedSidebarOption] = useState<string>('')
 
-  const [selectedArea, setSelectedArea] = useState(false)
+  // const [selectedArea, setSelectedArea] = useState(false)
 
-  const [latLonLimits, setLatLonLimits] = useState([
-    new L.LatLng(50.55, -8.21),
-    new L.LatLng(50.55, -7.35),
-    new L.LatLng(50.07, -7.35),
-    new L.LatLng(50.07, -8.21),
-  ])
+  // const [latLonLimits, setLatLonLimits] = useState([
+  //   new L.LatLng(50.55, -8.21),
+  //   new L.LatLng(50.55, -7.35),
+  //   new L.LatLng(50.07, -7.35),
+  //   new L.LatLng(50.07, -8.21),
+  // ])
 
   const [surveyDesignCircleValues, setSurveyDesignCircleValues] = useState([])
 
@@ -134,16 +133,10 @@ export function TileServer() {
           setSelectedSidebarOption={setSelectedSidebarOption}
           selectedLayers={selectedLayers}
           setSelectedLayers={setSelectedLayers}
-          actualLayer={actualLayer}
           setActualLayer={setActualLayer}
           setLayerAction={setLayerAction}
-          setSelectedArea={setSelectedArea}
           setShowPhotos={setShowPhotos}
-          listLayers={listLayers}
-          setListLayers={setListLayers}
-          showPopup={showPopup}
           setShowPopup={setShowPopup}
-          showLogin={showLogin}
           setShowLogin={setShowLogin}
           isLogged={isLogged}
           loading={loading}
@@ -156,7 +149,6 @@ export function TileServer() {
             setActualLayer={setActualLayer}
             layerAction={layerAction}
             setLayerAction={setLayerAction}
-            layerLegend={layerLegend}
             setLayerLegend={setLayerLegend}
             setInfoButtonBox={setInfoButtonBox}
             listLayers={listLayers}
@@ -169,10 +161,6 @@ export function TileServer() {
         {selectedSidebarOption === 'Seabed Types' && (
           <HabitatSelection
             setCalculationValue={setCalculationValue}
-            selectedArea={selectedArea}
-            setSelectedArea={setSelectedArea}
-            latLonLimits={latLonLimits}
-            setLatLonLimits={setLatLonLimits}
             setInfoButtonBox={setInfoButtonBox}
             dataFields={calClasses}
             yearSelected={yearSelected}
@@ -182,10 +170,6 @@ export function TileServer() {
         {selectedSidebarOption === 'Species of Interest' && (
           <IndicatorSpeciesSelection
             setCalculationValue={setCalculationValue}
-            selectedArea={selectedArea}
-            setSelectedArea={setSelectedArea}
-            latLonLimits={latLonLimits}
-            setLatLonLimits={setLatLonLimits}
             setInfoButtonBox={setInfoButtonBox}
             selectedLayers={selectedLayers}
             setSelectedLayers={setSelectedLayers}
@@ -203,22 +187,15 @@ export function TileServer() {
         {selectedSidebarOption === 'Biodiversity' && (
           <BiodiversitySelection
             setCalculationValue={setCalculationValue}
-            selectedArea={selectedArea}
-            setSelectedArea={setSelectedArea}
-            latLonLimits={latLonLimits}
-            setLatLonLimits={setLatLonLimits}
             setInfoButtonBox={setInfoButtonBox}
             selectedLayers={selectedLayers}
             setSelectedLayers={setSelectedLayers}
-            layerAction={layerAction}
             setLayerAction={setLayerAction}
-            actualLayer={actualLayer}
             setActualLayer={setActualLayer}
             listLayers={listLayers}
             dataFields={calClasses}
             yearSelected={yearSelected}
             setYearSelected={setYearSelected}
-            comparisonGraphData={comparisonGraphData}
             setComparisonGraphData={setComparisonGraphData}
           />
         )}
@@ -230,7 +207,6 @@ export function TileServer() {
             fileSurveyDesign={fileSurveyDesign}
             setFileSurveyDesign={setFileSurveyDesign}
             dataFields={calClasses}
-            dynamicTableData={dynamicTableData}
             setDynamicTableData={setDynamicTableData}
             yearSelected={yearSelected}
             setYearSelected={setYearSelected}
@@ -290,20 +266,12 @@ export function TileServer() {
           <InfoButtonBox
             infoButtonBox={infoButtonBox}
             setInfoButtonBox={setInfoButtonBox}
-            selectedLayers={selectedLayers}
-            setSelectedLayers={setSelectedLayers}
-            layerAction={layerAction}
-            setLayerAction={setLayerAction}
-            actualLayer={actualLayer}
-            setActualLayer={setActualLayer}
-            listLayers={listLayers}
           />
         ) : null}
         {showPhotos.length > 0 &&
           selectedSidebarOption === 'Data Exploration' && (
             <PhotoList
               showPhotos={showPhotos}
-              setShowPhotos={setShowPhotos}
               activePhoto={activePhoto}
               setActivePhoto={setActivePhoto}
               mapBounds={mapBounds}
@@ -316,8 +284,6 @@ export function TileServer() {
         actualLayer={actualLayer}
         layerAction={layerAction}
         setLayerAction={setLayerAction}
-        selectedArea={selectedArea}
-        latLonLimits={latLonLimits}
         showPhotos={showPhotos}
         setShowPhotos={setShowPhotos}
         activePhoto={activePhoto}
@@ -326,7 +292,6 @@ export function TileServer() {
         setMapBounds={setMapBounds}
         selectedSidebarOption={selectedSidebarOption}
         getPolyline={getPolyline}
-        setGetPolyline={setGetPolyline}
         setGraphData={setGraphData}
         setShowFlash={setShowFlash}
         setFlashMessage={setFlashMessage}
@@ -340,7 +305,6 @@ export function TileServer() {
           setIsLogged={setIsLogged}
           setShowLogin={setShowLogin}
           setFlashMessage={setFlashMessage}
-          setShowFlash={setShowFlash}
         />
       )}
       {showFlash && (

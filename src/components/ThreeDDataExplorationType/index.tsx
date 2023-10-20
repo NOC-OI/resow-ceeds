@@ -1,6 +1,5 @@
 import { ArrowCircleDown, ArrowCircleUp } from 'phosphor-react'
 import { useState } from 'react'
-// import { LayerTypeContainer } from './styles'
 import { CalcTypeContainer } from '../BiodiversityType/styles'
 import { ThreeDDataExplorationTypeOptions } from '../ThreeDDataExplorationTypeOptions'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -15,11 +14,9 @@ interface ThreeDDataExplorationTypeProps {
   childs: Object
   selectedLayers: keyable
   setSelectedLayers: any
-  actualLayer: string[]
   setActualLayer: any
   layerAction: String
   setLayerAction: any
-  layerLegend: any
   setLayerLegend: any
   setInfoButtonBox?: any
   isLogged?: any
@@ -32,11 +29,9 @@ export function ThreeDDataExplorationType({
   childs,
   selectedLayers,
   setSelectedLayers,
-  actualLayer,
   setActualLayer,
   layerAction,
   setLayerAction,
-  layerLegend,
   setLayerLegend,
   setInfoButtonBox,
   isLogged,
@@ -99,7 +94,6 @@ export function ThreeDDataExplorationType({
                 setActiveOpacity={setActiveOpacity}
                 setActualLayer={setActualLayer}
                 subLayers={subLayers}
-                layerLegend={layerLegend}
                 setLayerLegend={setLayerLegend}
                 layerAction={layerAction}
                 setLayerAction={setLayerAction}

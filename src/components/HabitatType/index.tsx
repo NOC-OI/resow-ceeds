@@ -23,19 +23,14 @@ interface HabitatTypeProps {
   content: string
   childs: any
   setCalculationValue: any
-  latLonLimits: any
-  selectedArea: any
   setInfoButtonBox?: any
   yearSelected: any
-  setYearSelected: any
 }
 
 async function handleShowCalcValues(
   params: keyable,
   setCalculationValue: any,
   setLoading: any,
-  latLonLimits: any,
-  selectedArea: any,
   yearSelected: any,
 ) {
   setLoading(true)
@@ -66,9 +61,9 @@ async function handleShowCalcValues(
   }
   url = url.replaceAll('file_names', fileNames)
 
-  if (selectedArea) {
-    url = `${url}&bbox=${latLonLimits[2].lat},${latLonLimits[0].lng},${latLonLimits[0].lat},${latLonLimits[2].lng}`
-  }
+  // if (selectedArea) {
+  //   url = `${url}&bbox=${latLonLimits[2].lat},${latLonLimits[0].lng},${latLonLimits[0].lat},${latLonLimits[2].lng}`
+  // }
 
   async function getCalculationResults() {
     const response = await fetch(url, {
@@ -80,14 +75,9 @@ async function handleShowCalcValues(
       },
     })
     const data = await response.json()
-    // const deleteKey = Object.keys(data)[0]
-    // data[`${deleteKey} ${params.name.toLowerCase()}`] = data[deleteKey]
-    // delete data[deleteKey]
     params.result = data
     params.layers = layers
     params.button = true
-    // const newCalculationValue = dat: Object = {}
-    // newCalculationValue[params.name as keyof Object] = data
     setCalculationValue(params)
     setLoading(false)
   }
@@ -99,11 +89,8 @@ export function HabitatType({
   content,
   childs,
   setCalculationValue,
-  latLonLimits,
-  selectedArea,
   setInfoButtonBox,
   yearSelected,
-  setYearSelected,
 }: HabitatTypeProps) {
   const [subCalcs, setSubCalcs] = useState([])
 
@@ -160,7 +147,6 @@ export function HabitatType({
               key={`${title}_${subCalc.name}_${subCalc.url}`}
             >
               <label>
-                {/* <p>{subCalcs[subCalc]['name']}</p> */}
                 {Object.keys(subCalc.years).includes(allYears[yearSelected]) ||
                 yearSelected === allYears.length - 1 ? (
                   <p
@@ -171,8 +157,6 @@ export function HabitatType({
                         subCalc,
                         setCalculationValue,
                         setLoading,
-                        latLonLimits,
-                        selectedArea,
                         yearSelected,
                       )
                     }}
@@ -206,5 +190,3 @@ export function HabitatType({
     </CalcTypeContainer>
   )
 }
-
-// https://mpa-ows.jncc.gov.uk/geoserver/mpa_mapper/wms?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&FORMAT=image%2Fpng8&TRANSPARENT=true&LAYERS=prot_annexi_reef_full&TILED=TRUE&WIDTH=256&HEIGHT=256&CRS=EPSG%3A4327&STYLES=&BBOX=40%2C-10%2C50%2C2

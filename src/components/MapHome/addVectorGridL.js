@@ -1,5 +1,4 @@
 'use strict'
-// import * as L from 'leaflet'
 
 function __$strToBlobUri(str, mime, isBinary) {
   try {

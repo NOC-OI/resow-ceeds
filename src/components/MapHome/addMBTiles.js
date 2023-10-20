@@ -1,6 +1,4 @@
 import 'leaflet/dist/leaflet'
-// import PropTypes from 'prop-types';
-// import { childrenType, GridLayer } from 'react-leaflet';
 import { protobuf } from '../MapHome/addVectorGridL'
 import { colors, eunis } from '../../data/mbTilesEmodnetLegend'
 

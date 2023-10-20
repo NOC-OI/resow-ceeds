@@ -9,8 +9,6 @@ export function Auth() {
 
   const APIBaseUrl = process.env.VITE_API_URL
 
-  // const redirectTo = request.cookies.get('redirectTo')?.value
-
   useEffect(() => {
     const fetchData = async () => {
       const searchParams = new URLSearchParams(document.location.search)
@@ -18,16 +16,8 @@ export function Auth() {
       const state = searchParams.get('state')
         ? searchParams.get('state')
         : 'orcid'
-      let response
+      let response: any
       try {
-        // response = await fetch(`${APIBaseUrl}user`, {
-        //   method: 'POST',
-        //   body: JSON.stringify({ code }),
-        //   mode: 'cors',
-        //   headers: {
-        //     'Content-Type': 'application/json',
-        //   },
-        // })
         response = await axios.post(
           `${APIBaseUrl}v1/user/?code=${code}&state=${state}`,
         )
@@ -37,8 +27,6 @@ export function Auth() {
       }
 
       const user = response.data
-      // const redirectURL = redirectTo ?? new URL('/', request.url)
-
       const cookieExpiresInSeconds = 60 * 60 * 24 * 6
 
       Cookies.set('token', user, {

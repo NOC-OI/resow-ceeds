@@ -12,12 +12,7 @@ import { DatePicker } from 'antd'
 import dayjs from 'dayjs'
 
 interface IndicatorSpeciesTypeOptionsProps {
-  title: any
   subLayer: any
-  subLayers: any
-  setInfoButtonBox: any
-  isClicked: any
-  setIsClicked: any
   selectedLayers: any
   setSelectedLayers: any
   layerAction: any
@@ -32,12 +27,7 @@ interface IndicatorSpeciesTypeOptionsProps {
 }
 
 export function IndicatorSpeciesTypeOptions({
-  title,
   subLayer,
-  subLayers,
-  setInfoButtonBox,
-  isClicked,
-  setIsClicked,
   selectedLayers,
   setSelectedLayers,
   layerAction,
@@ -293,7 +283,6 @@ export function IndicatorSpeciesTypeOptions({
               await handleChangeMapLayer(subLayer, true, 'notZero')
             }}
           >
-            {/* <p>{subCalcs[subCalc]['name']}</p> */}
             <ReactMarkdown
               children={subLayer.name}
               remarkPlugins={[remarkGfm, remarkMath, remarkBreaks]}

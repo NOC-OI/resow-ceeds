@@ -31,7 +31,6 @@ export function FullPagePopup({ setShowPopup }: FullPagePopupProps) {
           </p>
         </div>
         <div className="p-4">
-          {/* <h3 className="text-center font-bold p-4 text-lg">Other Topics...</h3> */}
           <div className="grid grid-cols-3 gap-1">
             <a href="" target="_blank" className="p-4 cursor-pointer">
               <FontAwesomeIcon icon={faVideo} />

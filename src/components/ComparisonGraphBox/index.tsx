@@ -108,7 +108,6 @@ export function ComparisonGraphBox({
                   height: 300,
                   hovermode: 'closest',
                   showlegend: false,
-                  // margin: { l: 40, r: 20, t: 30, b: 30 },
                   xaxis: {
                     hoverformat: '.0f',
                     title: {

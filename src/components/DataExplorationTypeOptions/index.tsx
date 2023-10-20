@@ -25,7 +25,6 @@ interface DataExplorationTypeOptionsProps {
   setActiveOpacity: any
   setActualLayer: any
   subLayers: any
-  layerLegend: any
   setLayerLegend: any
   layerAction: any
   setLayerAction: any
@@ -44,7 +43,6 @@ export function DataExplorationTypeOptions({
   setActiveOpacity,
   setActualLayer,
   subLayers,
-  layerLegend,
   setLayerLegend,
   layerAction,
   setLayerAction,

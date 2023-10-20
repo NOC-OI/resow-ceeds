@@ -13,10 +13,6 @@ interface GraphBoxProps {
   setGetPolyline: any
 }
 
-// interface keyable {
-//   [key: string]: any
-// }
-
 export function GraphBox({
   graphData,
   setGraphData,

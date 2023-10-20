@@ -17,7 +17,6 @@ interface DataExplorationTypeProps {
   setActualLayer: any
   layerAction: String
   setLayerAction: any
-  layerLegend: any
   setLayerLegend: any
   setInfoButtonBox?: any
   setShowPhotos?: any
@@ -35,7 +34,6 @@ export function DataExplorationType({
   setActualLayer,
   layerAction,
   setLayerAction,
-  layerLegend,
   setLayerLegend,
   setInfoButtonBox,
   setShowPhotos,
@@ -97,7 +95,6 @@ export function DataExplorationType({
               setActiveOpacity={setActiveOpacity}
               setActualLayer={setActualLayer}
               subLayers={subLayers}
-              layerLegend={layerLegend}
               setLayerLegend={setLayerLegend}
               layerAction={layerAction}
               setLayerAction={setLayerAction}

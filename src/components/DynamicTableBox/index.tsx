@@ -10,10 +10,6 @@ interface DynamicTableBoxProps {
   setDynamicTableData: any
 }
 
-// interface keyable {
-//   [key: string]: any
-// }
-
 export function DynamicTableBox({
   dynamicTableData,
   setDynamicTableData,
@@ -37,15 +33,6 @@ export function DynamicTableBox({
   // const coefVarValues = Array.from({ length: 10 }, (x, i) => (i + 1) * 5)
   // const aValues = [1, 2]
   const aValues = Array.from({ length: 2 }, (x, i) => i + 1)
-
-  // const coefVarValues = [5]
-  // const nValues = [4]
-  // const pValues = [0.05]
-  // const deltaValues = [14]
-  // const aValues = [2]
-
-  // change this slider to two values based on the replicates of COARSE from 2015: 39
-  // (the CV% for number of morphotypes) and 43 (the CV% for density)
 
   useEffect(() => {
     const calculateStatT = new CalculateStatT(

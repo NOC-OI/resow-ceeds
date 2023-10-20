@@ -25,7 +25,6 @@ interface ThreeDDataExplorationTypeOptionsProps {
   setActiveOpacity: any
   setActualLayer: any
   subLayers: any
-  layerLegend: any
   setLayerLegend: any
   layerAction: any
   setLayerAction: any
@@ -44,7 +43,6 @@ export function ThreeDDataExplorationTypeOptions({
   setActiveOpacity,
   setActualLayer,
   subLayers,
-  layerLegend,
   setLayerLegend,
   layerAction,
   setLayerAction,
@@ -197,10 +195,6 @@ export function ThreeDDataExplorationTypeOptions({
     }
   }
 
-  // function handleClickAnnotations() {
-  //   setShowAnnotations((showAnnotations) => !showAnnotations)
-  // }
-
   function handleClickZoom() {
     const layerInfo = JSON.parse(
       JSON.stringify({
@@ -341,14 +335,6 @@ export function ThreeDDataExplorationTypeOptions({
                 onClick={handleClickLegend}
               />
             ) : null}
-            {/* {subLayers[subLayer].data_type === 'COG' ? (
-              <FontAwesomeIcon
-                icon={faChartSimple}
-                title="Make a graph"
-                onClick={handleGenerateGraph}
-                className={getPolyline ? 'active' : ''}
-              />
-            ) : null} */}
             {['COG'].includes(subLayers[subLayer].data_type) && (
               <FontAwesomeIcon
                 icon={faCube}
@@ -366,26 +352,11 @@ export function ThreeDDataExplorationTypeOptions({
               title="Zoom to the layer"
               onClick={handleClickZoom}
             />
-            {/* {subLayers[subLayer].data_type !== 'Photo' ? ( */}
             <FontAwesomeIcon
               icon={faSliders}
               title="Change Opacity"
               onClick={handleClickSlider}
             />
-            {/* ) : null} */}
-            {/* {subLayers[subLayer].data_type !== 'Photo' ? (
-              <FontAwesomeIcon
-                icon={faSliders}
-                title="Change Opacity"
-                onClick={handleClickSlider}
-              />
-            ) : (
-              <FontAwesomeIcon
-                icon={faSliders}
-                title="Select by Annotations"
-                onClick={handleClickAnnotations}
-              />
-            )} */}
           </div>
         ) : null}
       </div>

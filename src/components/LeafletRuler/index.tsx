@@ -3,8 +3,6 @@ import { useMap } from 'react-leaflet'
 import './leaflet-ruler.css'
 import { ruler } from './leaflet-ruler'
 
-// export default function LeafletRuler(rulerOnMap: any, setRulerOnMap: any) {
-
 export default function LeafletRuler() {
   const map = useMap()
 

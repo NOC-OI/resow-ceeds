@@ -18,7 +18,7 @@ import {
   createWorldTerrainAsync,
 } from 'cesium'
 import './styles.css'
-import { ResiumContainer, ZoomButton, ZoomGroup } from './styles'
+import { ResiumContainer } from './styles'
 import React, { useEffect, useRef, useMemo, useState } from 'react'
 import { InfoBox } from '../InfoBox'
 import * as Cesium from 'cesium'
@@ -26,7 +26,6 @@ import { GetGeoblazeValue3D } from '../MapHome/getGeoblazeValue'
 import { Loading } from '../Loading'
 import { GetPhotoMarker } from '../MapHome/addPhotoMarker'
 import { GetTileLayer } from '../MapHome/addGeoraster'
-// import { GetTitilerDataOneValue } from '../GraphBox/getTitilerData'
 
 Ion.defaultAccessToken = process.env.VITE_CESIUM_TOKEN
 
@@ -47,22 +46,16 @@ interface ThreeDMapProps {
   actualLayer: string[]
   layerAction: String
   setLayerAction: any
-  activePhoto: any
-  setActivePhoto: any
   listLayers: any
   threeD: any
-  setThreeD: any
 }
 function ThreeDMap1({
   selectedLayers,
   actualLayer,
   layerAction,
   setLayerAction,
-  activePhoto,
-  setActivePhoto,
   listLayers,
   threeD,
-  setThreeD,
 }: ThreeDMapProps) {
   const colorScale = chroma
     .scale(['#f00', '#0f0', '#00f', 'gray'])
@@ -75,7 +68,6 @@ function ThreeDMap1({
   const [position, setPosition] = useState(null)
   const [loading, setLoading] = useState<boolean>(false)
   const [depth, setDepth] = useState({})
-  // const [viewer, setViewer] = useState<any>(null)
   const ref = useRef<CesiumComponentRef<CesiumViewer>>(null)
 
   const defaultOpacity = 0.7
@@ -141,30 +133,21 @@ function ThreeDMap1({
     const newList: any = []
     let count: number = 0
     let count2: number = 0
-    if (activePhoto) {
-      count++
-      newList.push(activePhoto)
-    }
-    // const lat = [mapBounds._southWest.lat, mapBounds._northEast.lat]
-    // const lng = [mapBounds._southWest.lng, mapBounds._northEast.lng]
+    // if (activePhoto) {
+    //   count++
+    //   newList.push(activePhoto)
+    // }
     shuffled.every((el: any) => {
       if (count >= n) {
         return false // "break"
       }
-      if (el.filename !== activePhoto.filename) {
-        if (el.show) {
-          count2++
-          // if (
-          //   el.latitude > lat[0] &&
-          //   el.latitude < lat[1] &&
-          //   el.longitude > lng[0] &&
-          //   el.longitude < lng[1]
-          // ) {
-          newList.push(el.filename)
-          count++
-          // }
-        }
+      // if (el.filename !== activePhoto.filename) {
+      if (el.show) {
+        count2++
+        newList.push(el.filename)
+        count++
       }
+      // }
       return true
     })
     if (count2 === 0) {
@@ -189,26 +172,6 @@ function ThreeDMap1({
         newPosition.lng = longitudeDegrees
         return newPosition
       })
-      // if (cogLayer) {
-      //   const layer = listLayers.Bathymetry.layerNames[cogLayer]
-      //   const getOneValueTitiler = new GetTitilerDataOneValue(
-      //     latitudeDegrees,
-      //     longitudeDegrees,
-      //     layer.url,
-      //   )
-      //   getOneValueTitiler.fetchData().then(async function () {
-      //     const dep = getOneValueTitiler.dep
-      //     if (dep) {
-      //       setDepth((depth: any) => {
-      //         const copy = { ...depth }
-      //         copy[cogLayer] = dep.toFixed(2)
-      //         return {
-      //           ...copy,
-      //         }
-      //       })
-      //     }
-      //   })
-      // }
       await batLayer
         .getGeoblaze({
           lat: latitudeDegrees,
@@ -323,7 +286,7 @@ function ThreeDMap1({
     actualLayer.forEach(async (actual) => {
       const layerName = selectedLayers[actual]
       let layer: any
-      let layers
+      let layers: any
       let dataSource
       if (layerName.data_type === 'wms') {
         layers = ref.current.cesiumElement.scene.imageryLayers
@@ -355,7 +318,6 @@ function ThreeDMap1({
         const color = createColor(colorScale, true)
 
         const shuffledPhotos = reorderPhotos(layerName.photos)
-        // const shuffledPhotos = layerName.photos
 
         await layerName.photos.map(async (photo: any) => {
           markers.push(
@@ -407,7 +369,6 @@ function ThreeDMap1({
       const layerName = listLayers[splitActual[0]].layerNames[splitActual[1]]
       let layers: any
       if (layerName.data_type === 'wms' || layerName.data_type === 'COG') {
-        // eslint-disable-next-line prefer-const
         layers = ref.current.cesiumElement.scene.imageryLayers
         layers?._layers.forEach(function (layer: any) {
           if ([actual].includes(layer.attribution)) {
@@ -587,33 +548,33 @@ function ThreeDMap1({
     }
   }, [selectedLayers])
 
-  function CesiumZoomControl() {
-    function zoomCamera(amount: number) {
-      if (amount > 0) {
-        ref.current.cesiumElement.camera.zoomIn(60)
-      } else {
-        ref.current.cesiumElement.camera.zoomOut(60)
-      }
-    }
+  // function CesiumZoomControl() {
+  //   function zoomCamera(amount: number) {
+  //     if (amount > 0) {
+  //       ref.current.cesiumElement.camera.zoomIn(60)
+  //     } else {
+  //       ref.current.cesiumElement.camera.zoomOut(60)
+  //     }
+  //   }
 
-    return (
-      <div className="leaflet-top leaflet-right top-10">
-        <ZoomGroup className="leaflet-control-zoom leaflet-bar leaflet-control">
-          <ZoomButton title="Zoom in" onClick={() => zoomCamera(1)}>
-            +
-          </ZoomButton>
-          <ZoomButton title="Zoom out" onClick={() => zoomCamera(-1)}>
-            -
-          </ZoomButton>
-        </ZoomGroup>
-      </div>
-    )
-  }
+  //   return (
+  //     <div className="leaflet-top leaflet-right top-10">
+  //       <ZoomGroup className="leaflet-control-zoom leaflet-bar leaflet-control">
+  //         <ZoomButton title="Zoom in" onClick={() => zoomCamera(1)}>
+  //           +
+  //         </ZoomButton>
+  //         <ZoomButton title="Zoom out" onClick={() => zoomCamera(-1)}>
+  //           -
+  //         </ZoomButton>
+  //       </ZoomGroup>
+  //     </div>
+  //   )
+  // }
 
   const displayMap = useMemo(
     () => (
       <Viewer
-        full
+        // full
         animation={false}
         timeline={false}
         ref={ref}
@@ -622,7 +583,7 @@ function ThreeDMap1({
         navigationHelpButton={false}
         scene3DOnly={true}
       >
-        <CesiumZoomControl />
+        {/* <CesiumZoomControl /> */}
         {/* <Cesium3DTileset
           url={CesiumTerrainProvider.fromIonAssetId(2182075)}
           onReady={handleReady}
@@ -638,7 +599,6 @@ function ThreeDMap1({
         </ScreenSpaceEventHandler>
       </Viewer>
     ),
-    // [cogLayer],
     [],
   )
 
@@ -653,30 +613,11 @@ function ThreeDMap1({
 
 function mapPropsAreEqual(prevMap: any, nextMap: any) {
   return (
-    // prevMap.selectedLayers === nextMap.selectedLayers &&
     prevMap.selectedLayers === nextMap.selectedLayers &&
     prevMap.threeD === nextMap.threeD &&
     prevMap.cogLayer === nextMap.cogLayer &&
     prevMap.actualLayer === nextMap.actualLayer
-    // prevMap.position === nextMap.position
   )
 }
 
 export const ThreeDMap = React.memo(ThreeDMap1, mapPropsAreEqual)
-
-// <Cesium3DTileset
-// url={Cesium.IonImageryProvider.fromAssetId(2158702)}
-// onReady={handleReady}
-// />
-
-// function handleReady(tileset) {
-//   if (ref.current?.cesiumElement) {
-//     ref.current?.cesiumElement.zoomTo(tileset)
-//   }
-// }
-// ref={(e) => {
-//   // setViewer(e && e.cesiumElement)
-//   viewer = e && e.cesiumElement
-// }}
-
-// <Cesium3DTileset url={Cesium.IonImageryProvider.fromAssetId(2158702)} /> //

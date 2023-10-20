@@ -10,11 +10,9 @@ import { ThreeDDataExplorationType } from '../ThreeDDataExplorationType'
 interface ThreeDDataExplorationSelectionProps {
   selectedLayers: Object
   setSelectedLayers: any
-  actualLayer: string[]
   setActualLayer: any
   layerAction: String
   setLayerAction: any
-  layerLegend: any
   setLayerLegend: any
   setInfoButtonBox?: any
   listLayers?: any
@@ -26,11 +24,9 @@ interface ThreeDDataExplorationSelectionProps {
 export function ThreeDDataExplorationSelection({
   selectedLayers,
   setSelectedLayers,
-  actualLayer,
   setActualLayer,
   layerAction,
   setLayerAction,
-  layerLegend,
   setLayerLegend,
   setInfoButtonBox,
   listLayers,
@@ -74,11 +70,9 @@ export function ThreeDDataExplorationSelection({
               childs={listLayers[layerClass].layerNames}
               selectedLayers={selectedLayers}
               setSelectedLayers={setSelectedLayers}
-              actualLayer={actualLayer}
               setActualLayer={setActualLayer}
               layerAction={layerAction}
               setLayerAction={setLayerAction}
-              layerLegend={layerLegend}
               setLayerLegend={setLayerLegend}
               setInfoButtonBox={setInfoButtonBox}
               isLogged={isLogged}

@@ -7,13 +7,10 @@ import {
 } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import React, { useEffect, useMemo, useState } from 'react'
-// import * as L from 'leaflet'
-// import { coastline } from '../../coastline'
 import { InfoBox } from '../InfoBox'
 import { GetTifLayer, GetTileLayer } from '../MapHome/addGeoraster'
 import { Loading } from '../Loading'
 import { GetGeoblazeValue } from '../MapHome/getGeoblazeValue'
-// import { listPhotos } from '../PhotoSelection/listPhotos';
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
@@ -36,7 +33,6 @@ function DisplayPosition({ map, depth }: DisplayPositionProps) {
 interface MapProps {
   photoId: any
   contrast: any
-  setContrast: any
   actualLayer: any
   setActualLayer: any
 }
@@ -44,14 +40,9 @@ interface MapProps {
 function MapHome1({
   photoId,
   contrast,
-  setContrast,
   actualLayer,
   setActualLayer,
 }: MapProps) {
-  // const MAPBOX_API_KEY = process.env.VITE_MAPBOX_API_KEY;
-  // const MAPBOX_USERID = 'mapbox/satellite-v9';
-  // const MAPBOX_ATTRIBUTION = "Map data &copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors, Imagery © <a href='https://www.mapbox.com/'>Mapbox</a>"
-
   const JOSBaseUrl = process.env.VITE_JASMIN_OBJECT_STORE_URL
   const APIBaseUrl = process.env.VITE_API_URL
 
@@ -99,10 +90,6 @@ function MapHome1({
     return [photoNumber, photoName, photoClass.replace('-', ' ')]
   }
 
-  // async function getPhotos() {
-  //   const listPhotos
-
-  // }
   const generateSelectedLayer = async (fitBounds: boolean) => {
     let layer: any
     let bounds
@@ -126,7 +113,6 @@ function MapHome1({
                 map.addLayer(layer, true)
                 layer && bringLayerToFront(layer)
                 if (fitBounds) {
-                  // map.fitBounds(defaultWMSBounds)
                   map.fitBounds(bounds)
                 }
                 setLoading(false)
@@ -267,18 +253,6 @@ function MapHome1({
               zIndex={9998}
             />
           </LayersControl.Overlay>
-          {/* <LayersControl.Overlay name="Coastline">
-            <GeoJSON
-              attribution="Coastlines"
-              data={coastline}
-              style={{
-                color: '#5a5c5a',
-                weight: 2,
-                opacity: 0.4,
-                fillOpacity: 0,
-              }}
-            />
-          </LayersControl.Overlay> */}
         </LayersControl>
       </MapContainer>
     ),
@@ -301,36 +275,3 @@ function mapPropsAreEqual(prevMap: any, nextMap: any) {
 }
 
 export const MapHomeSimple = React.memo(MapHome1, mapPropsAreEqual)
-
-// listPhotos.forEach((photos: any) => {
-//   if (photos.layerClass === photoValues[2]) {
-//     // while (photos.layerNames[photoValues[1]].photos.length === 0){
-//     //   let x = 1
-//     // }
-//     photos.layerNames[photoValues[1]].photos.every((photo: any) => {
-//       if (photo.id.toString() === photoValues[0]) {
-//         if (photo.local_data_type === 'Marker-COG'){
-//           photo.url = `${BASIC_BUCKET_URL}/${photo.filename}_1.tif`
-//           const getCOGLayer = new GetTileLayer(photo, [photo.url], contrast)
-//           getCOGLayer.getTile().then( async function () {
-//             layer = getCOGLayer.layer
-//             bounds = [
-//               [getCOGLayer.bounds[3], getCOGLayer.bounds[0]],
-//               [getCOGLayer.bounds[1], getCOGLayer.bounds[2]]
-//             ]
-//             map.addLayer(layer, true)
-//             layer? bringLayerToFront(layer): null
-//             if(fitBounds){
-//               map.fitBounds(bounds)
-//             }
-//             setLoading(false)
-//             setActualLayer([photo.url])
-//           });
-//         }
-//         return false
-//       } else{
-//         return true
-//       }
-//     });
-//   }
-// });

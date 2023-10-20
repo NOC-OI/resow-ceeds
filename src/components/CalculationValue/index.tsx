@@ -52,17 +52,6 @@ export function CalculationValue({
     return !!selectedLayers[subLayer]
   }
 
-  // function addMapLayer(layerInfo: any) {
-  //   setLayerAction('add')
-  //   const newSelectedLayer = layerInfo.dataInfo
-  //   newSelectedLayer.opacity = 1
-  //   newSelectedLayer.zoom = true
-  //   setSelectedLayers({
-  //     ...selectedLayers,
-  //     [layerInfo.subLayer]: newSelectedLayer,
-  //   })
-  // }
-
   function changeMapLayer(newSelectedLayers: any) {
     setLayerAction('marker-changes')
     setSelectedLayers((selectedLayers: any) => {
@@ -106,11 +95,7 @@ export function CalculationValue({
       })
     })
     setActualLayer(newActualLayers)
-    // if (verifyIfWasSelectedBefore(layerInfo.subLayer)) {
     changeMapLayer(newSelectedLayers)
-    // } else {
-    //   addMapLayer(layerInfo)
-    // }
   }
 
   useEffect(() => {
@@ -125,7 +110,6 @@ export function CalculationValue({
         }
       })
       setShowPhotos([])
-      // setShowPhotos(photoList)
     }
   }, [selectedLayers])
 
@@ -148,7 +132,6 @@ export function CalculationValue({
             {Object.keys(calculationValue.result[column]).map((calc) => {
               return (
                 <div key={`${column}_${calc}`}>
-                  {/* {calc !== 'Types' && <h2>{calc}</h2>} */}
                   {calculationValue.result[column][calc].map(
                     (results: any, i: any) => {
                       if (typeof results === 'object') {

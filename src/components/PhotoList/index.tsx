@@ -11,7 +11,6 @@ import { useEffect, useState } from 'react'
 
 interface PhotoListProps {
   showPhotos: any
-  setShowPhotos: any
   activePhoto: any
   setActivePhoto: any
   mapBounds: any
@@ -20,7 +19,6 @@ interface PhotoListProps {
 
 export function PhotoList({
   showPhotos,
-  setShowPhotos,
   activePhoto,
   setActivePhoto,
   mapBounds,
@@ -80,10 +78,8 @@ export function PhotoList({
   }, [mapBounds])
 
   useEffect(() => {
-    // if (activePhoto){
     const newList = reorderPhotos()
     setLocalPhotoList(newList)
-    // }
   }, [showPhotos])
   const styleValue = {
     marginLeft: '-21rem',
@@ -94,8 +90,6 @@ export function PhotoList({
       style={Object.keys(infoButtonBox).length > 0 ? styleValue : {}}
     >
       {localPhotoList.map((showPhoto: any) => {
-        // {shuffled.slice(0, n).map((showPhoto: ShowPhotoProps) => {
-        // showPhoto.low_res_url = `${showPhoto.url.slice(0,-4)}.png`
         if (showPhoto.active) {
           return (
             <CardPhotoActive

@@ -10,7 +10,6 @@ export class GetTitilerData {
       distance: Array(this.numberValues).fill(0),
       value: Array(this.numberValues).fill(0),
     }
-    // this.dataGraph = []
   }
 
   async fetchData() {
@@ -44,10 +43,6 @@ export class GetTitilerData {
       await axios.get(newUrl).then(async (r) => {
         this.dataGraph.distance[idx] = distance
         this.dataGraph.value[idx] = r.data.values[0]
-        // this.dataGraph.push({
-        //   x: distance,
-        //   y: r.data.values[0],
-        // })
       })
     })
   }
@@ -74,10 +69,6 @@ export class GetTitilerDataOneValue {
     }?url=${encodeURIComponent(newUrl)}&encoded=${isUrlEncoded}`
     await axios.get(urlForFetch).then(async (r) => {
       this.dep = r.data.values[0]
-      // this.dataGraph.push({
-      //   x: distance,
-      //   y: r.data.values[0],
-      // })
     })
   }
 }

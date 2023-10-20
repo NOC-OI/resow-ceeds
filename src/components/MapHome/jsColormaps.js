@@ -265,15 +265,10 @@ const data = {
 export const ocean = partial('ocean')
 export const oceanR = partial('ocean_r')
 
-/*
-Define auxiliary functions for evaluating colormaps
- */
-
 export function evaluateCmap(x, name, format, reverse) {
   if (reverse === true) {
     x = 1 - x
   }
-  // Get the colors and whether or not we need to interpolate
   const colors = data[name].colors
   const interpolate = data[name].interpolate
 

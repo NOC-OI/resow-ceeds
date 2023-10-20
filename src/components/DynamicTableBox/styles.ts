@@ -36,7 +36,7 @@ export const TableContainer = styled.table`
 
   tr {
     border-top: 1px solid #c1c3d1;
-    border-bottom-: 1px solid #c1c3d1;
+    border-bottom: 1px solid #c1c3d1;
     color: #666b85;
     font-size: 0.875rem;
     font-weight: normal;
@@ -62,14 +62,6 @@ export const TableContainer = styled.table`
     border-bottom: none;
   }
 
-  /* tr:nth-child(odd) td {
-    background: #ebebeb;
-  }
-
-  tr:nth-child(odd):hover td {
-    background: #4e5066;
-  }
- */
   tr:last-child td:first-child {
     border-bottom-left-radius: 3px;
   }

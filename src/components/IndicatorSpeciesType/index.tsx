@@ -15,9 +15,6 @@ interface IndicatorSpeciesTypeProps {
   content: any
   childs: any
   setCalculationValue: any
-  latLonLimits: any
-  selectedArea: any
-  setInfoButtonBox: any
   selectedLayers: any
   setSelectedLayers: any
   layerAction: any
@@ -36,9 +33,6 @@ export function IndicatorSpeciesType({
   content,
   childs,
   setCalculationValue,
-  latLonLimits,
-  selectedArea,
-  setInfoButtonBox,
   selectedLayers,
   setSelectedLayers,
   layerAction,
@@ -54,8 +48,6 @@ export function IndicatorSpeciesType({
   const [subLayers, setSubLayers] = useState([])
 
   const [isActive, setIsActive] = useState(false)
-
-  const [isClicked, setIsClicked] = useState('')
 
   function handleShowLayers() {
     if (!loading) {
@@ -93,12 +85,7 @@ export function IndicatorSpeciesType({
           return (
             <IndicatorSpeciesTypeOptions
               key={`${content}_${subLayer.name}`}
-              title={title}
               subLayer={subLayer}
-              subLayers={subLayers}
-              setInfoButtonBox={setInfoButtonBox}
-              isClicked={isClicked}
-              setIsClicked={setIsClicked}
               selectedLayers={selectedLayers}
               setSelectedLayers={setSelectedLayers}
               layerAction={layerAction}

@@ -11,43 +11,29 @@ import { YearSelection } from '../YearSelection'
 
 interface BiodiversitySelectionProps {
   setCalculationValue: any
-  selectedArea: boolean
-  setSelectedArea?: any
-  latLonLimits: any
-  setLatLonLimits?: any
   setInfoButtonBox?: any
   selectedLayers?: any
   setSelectedLayers?: any
-  layerAction?: any
   setLayerAction?: any
-  actualLayer?: any
   setActualLayer?: any
   listLayers?: any
   dataFields: any
   yearSelected: any
   setYearSelected: any
-  comparisonGraphData: any
   setComparisonGraphData: any
 }
 
 export function BiodiversitySelection({
   setCalculationValue,
-  selectedArea,
-  setSelectedArea,
-  latLonLimits,
-  setLatLonLimits,
   setInfoButtonBox,
   selectedLayers,
   setSelectedLayers,
-  layerAction,
   setLayerAction,
-  actualLayer,
   setActualLayer,
   listLayers,
   dataFields,
   yearSelected,
   setYearSelected,
-  comparisonGraphData,
   setComparisonGraphData,
 }: BiodiversitySelectionProps) {
   const calcClasses = dataFields.biodiversity
@@ -116,19 +102,13 @@ export function BiodiversitySelection({
               content={calcClass.content}
               childs={calcClass.calcNames}
               setCalculationValue={setCalculationValue}
-              latLonLimits={latLonLimits}
-              selectedArea={selectedArea}
               setInfoButtonBox={setInfoButtonBox}
               selectedLayers={selectedLayers}
               setSelectedLayers={setSelectedLayers}
-              layerAction={layerAction}
               setLayerAction={setLayerAction}
-              actualLayer={actualLayer}
               setActualLayer={setActualLayer}
               listLayers={listLayers}
               yearSelected={yearSelected}
-              setYearSelected={setYearSelected}
-              comparisonGraphData={comparisonGraphData}
               setComparisonGraphData={setComparisonGraphData}
             />
           )

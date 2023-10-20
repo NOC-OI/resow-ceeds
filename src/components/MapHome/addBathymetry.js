@@ -10,8 +10,6 @@ const MySource = WMS.Source.extend({
     }
   },
   getFeatureInfo: function (point, latlng, layers, callback) {
-    // Request WMS GetFeatureInfo and call callback with results
-    // (split from identify() to faciliate use outside of map events)
     const params = this.getFeatureInfoParams(point, layers)
     const url = this._url + L.Util.getParamString(params, this._url)
 
@@ -26,14 +24,11 @@ const MySource = WMS.Source.extend({
   },
 
   getFeatureInfoParams: function (point, layers) {
-    // Hook to generate parameters for WMS service GetFeatureInfo request
     let wmsParams, overlay
 
     if (this.options.untiled) {
-      // Use existing overlay
       wmsParams = this._overlay.wmsParams
     } else {
-      // Create overlay instance to leverage updateWmsParams
       overlay = this.createOverlay(true)
       overlay.updateWmsParams(this._map)
       wmsParams = overlay.wmsParams

@@ -3,10 +3,8 @@ import {
   LayerSelectionTitle,
   LayerTypes,
 } from '../DataExplorationSelection/styles'
-// import { AreaSelector } from '../AreaSelector'
 import { Info } from 'phosphor-react'
 import { SurveyDesignType } from '../SurveyDesignType'
-// import { AreaSelector } from '../AreaSelector'
 
 interface SurveyDesignSelectionProps {
   setInfoButtonBox?: any
@@ -15,7 +13,6 @@ interface SurveyDesignSelectionProps {
   fileSurveyDesign: any
   setFileSurveyDesign: any
   dataFields: any
-  dynamicTableData: any
   setDynamicTableData: any
   yearSelected: any
   setYearSelected: any
@@ -28,7 +25,6 @@ export function SurveyDesignSelection({
   fileSurveyDesign,
   setFileSurveyDesign,
   dataFields,
-  dynamicTableData,
   setDynamicTableData,
   yearSelected,
   setYearSelected,
@@ -75,7 +71,6 @@ export function SurveyDesignSelection({
               setDynamicGraphData={setDynamicGraphData}
               fileSurveyDesign={fileSurveyDesign}
               setFileSurveyDesign={setFileSurveyDesign}
-              dynamicTableData={dynamicTableData}
               setDynamicTableData={setDynamicTableData}
               yearSelected={yearSelected}
               setYearSelected={setYearSelected}

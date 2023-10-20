@@ -10,10 +10,6 @@ import { useEffect, useState } from 'react'
 
 interface IndicatorSpeciesSelectionProps {
   setCalculationValue: any
-  selectedArea: boolean
-  setSelectedArea: any
-  latLonLimits: any
-  setLatLonLimits: any
   setInfoButtonBox?: any
   selectedLayers: any
   setSelectedLayers: any
@@ -30,10 +26,6 @@ interface IndicatorSpeciesSelectionProps {
 
 export function IndicatorSpeciesSelection({
   setCalculationValue,
-  selectedArea,
-  setSelectedArea,
-  latLonLimits,
-  setLatLonLimits,
   setInfoButtonBox,
   selectedLayers,
   setSelectedLayers,
@@ -124,9 +116,6 @@ export function IndicatorSpeciesSelection({
               content={calcClass.content}
               childs={calcClass.calcNames}
               setCalculationValue={setCalculationValue}
-              latLonLimits={latLonLimits}
-              selectedArea={selectedArea}
-              setInfoButtonBox={setInfoButtonBox}
               selectedLayers={selectedLayers}
               setSelectedLayers={setSelectedLayers}
               layerAction={layerAction}

@@ -34,7 +34,7 @@ export function ThreeD() {
   const [listLayers, setListLayers] = useState([])
 
   const [showPopup, setShowPopup] = useState(false)
-  const [activePhoto, setActivePhoto] = useState('')
+  // const [activePhoto, setActivePhoto] = useState('')
 
   const [showLogin, setShowLogin] = useState(false)
   const [isLogged, setIsLogged] = useState(getUser())
@@ -85,14 +85,9 @@ export function ThreeD() {
           setSelectedSidebarOption={setSelectedSidebarOption}
           selectedLayers={selectedLayers}
           setSelectedLayers={setSelectedLayers}
-          actualLayer={actualLayer}
           setActualLayer={setActualLayer}
           setLayerAction={setLayerAction}
-          listLayers={listLayers}
-          setListLayers={setListLayers}
-          showPopup={showPopup}
           setShowPopup={setShowPopup}
-          showLogin={showLogin}
           setShowLogin={setShowLogin}
           isLogged={isLogged}
           loading={loading}
@@ -101,11 +96,9 @@ export function ThreeD() {
           <ThreeDDataExplorationSelection
             selectedLayers={selectedLayers}
             setSelectedLayers={setSelectedLayers}
-            actualLayer={actualLayer}
             setActualLayer={setActualLayer}
             layerAction={layerAction}
             setLayerAction={setLayerAction}
-            layerLegend={layerLegend}
             setLayerLegend={setLayerLegend}
             setInfoButtonBox={setInfoButtonBox}
             listLayers={listLayers}
@@ -124,13 +117,6 @@ export function ThreeD() {
           <InfoButtonBox
             infoButtonBox={infoButtonBox}
             setInfoButtonBox={setInfoButtonBox}
-            selectedLayers={selectedLayers}
-            setSelectedLayers={setSelectedLayers}
-            layerAction={layerAction}
-            setLayerAction={setLayerAction}
-            actualLayer={actualLayer}
-            setActualLayer={setActualLayer}
-            listLayers={listLayers}
           />
         ) : null}
       </SideBar>
@@ -139,11 +125,8 @@ export function ThreeD() {
         actualLayer={actualLayer}
         layerAction={layerAction}
         setLayerAction={setLayerAction}
-        activePhoto={activePhoto}
-        setActivePhoto={setActivePhoto}
         listLayers={listLayers}
         threeD={threeD}
-        setThreeD={setThreeD}
       />
       {showPopup && <FullPagePopup setShowPopup={setShowPopup} />}
 
@@ -153,7 +136,6 @@ export function ThreeD() {
           setIsLogged={setIsLogged}
           setShowLogin={setShowLogin}
           setFlashMessage={setFlashMessage}
-          setShowFlash={setShowFlash}
         />
       )}
       {showFlash && (

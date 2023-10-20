@@ -10,7 +10,6 @@ import {
 import 'leaflet/dist/leaflet.css'
 import React, { useEffect, useMemo, useState } from 'react'
 import * as L from 'leaflet'
-// import { coastline } from '../../coastline'
 import { InfoBox } from '../InfoBox'
 import { GetCOGLayer, GetTifLayer, GetTileLayer } from './addGeoraster'
 import { Loading } from '../Loading'
@@ -47,8 +46,6 @@ interface MapProps {
   actualLayer: string[]
   layerAction: String
   setLayerAction: any
-  selectedArea: boolean
-  latLonLimits: any
   showPhotos: any
   setShowPhotos: any
   activePhoto: any
@@ -57,7 +54,6 @@ interface MapProps {
   setMapBounds: any
   selectedSidebarOption: any
   getPolyline: any
-  setGetPolyline: any
   setGraphData: any
   setShowFlash: any
   setFlashMessage: any
@@ -70,8 +66,6 @@ function MapHome1({
   actualLayer,
   layerAction,
   setLayerAction,
-  selectedArea,
-  latLonLimits,
   showPhotos,
   setShowPhotos,
   activePhoto,
@@ -80,7 +74,6 @@ function MapHome1({
   setMapBounds,
   selectedSidebarOption,
   getPolyline,
-  setGetPolyline,
   setGraphData,
   setShowFlash,
   setFlashMessage,
@@ -113,17 +106,10 @@ function MapHome1({
 
   const activeIcon = L.icon({
     iconUrl: '/marker-icon_red.png',
-    // shadowUrl: '/marker-shadow.png',
     iconSize: [25, 25],
   })
-  // const inactiveIcon = L.icon({
-  //   iconUrl: '/marker-icon.png',
-  //   // shadowUrl: '/marker-shadow.png',
-  //   iconSize: [20, 20],
-  // })
   const smallIcon = L.icon({
     iconUrl: '/marker-icon.png',
-    // shadowUrl: '/marker-shadow.png',
     iconSize: [0.1, 0.1],
   })
 
@@ -148,7 +134,6 @@ function MapHome1({
           selectedSidebarOption,
         )
       ) {
-        // map.setView(new L.LatLng(50.3, -7.712108868853798), 10.5)
         map.options.minZoom = 3
       } else {
         map.setView(new L.LatLng(defaultView[0], defaultView[1]), 10.5)
@@ -401,8 +386,6 @@ function MapHome1({
           })
         }
       } else if (layerName.data_type === 'MBTiles') {
-        // bounds = defaultWMSBounds
-
         const getMBTilesLayer = new GetMBTiles(layerName, actual)
         await getMBTilesLayer.getLayer().then(async function () {
           layer = getMBTilesLayer.layer
@@ -492,7 +475,6 @@ function MapHome1({
       })
       changeIcons(activePhoto)
       setShowPhotos([])
-      // setShowPhotos(newShowPhotos)
     }
   }, [activePhoto])
 
@@ -503,7 +485,6 @@ function MapHome1({
         if (activePhoto.layerName === layer.options.attribution) {
           setActivePhoto('')
         }
-        // map.setView(new L.LatLng(50.39415159013279, -7.712108868853798), 5);
         setLayerAction('')
       }
     })
@@ -568,42 +549,42 @@ function MapHome1({
     setLayerAction('')
   }
 
-  useEffect(() => {
-    if (map) {
-      map.eachLayer(function (layer: any) {
-        if (layer.options.attribution === 'polygon') {
-          map.removeLayer(layer)
-        }
-      })
-      const polygon = L.polygon(latLonLimits, {
-        attribution: 'polygon',
-        color: '#ff96bc',
-        weight: 2,
-        opacity: 0.7,
-      })
-      polygon.addTo(map)
-    }
-  }, [latLonLimits])
+  // useEffect(() => {
+  //   if (map) {
+  //     map.eachLayer(function (layer: any) {
+  //       if (layer.options.attribution === 'polygon') {
+  //         map.removeLayer(layer)
+  //       }
+  //     })
+  //     const polygon = L.polygon(latLonLimits, {
+  //       attribution: 'polygon',
+  //       color: '#ff96bc',
+  //       weight: 2,
+  //       opacity: 0.7,
+  //     })
+  //     polygon.addTo(map)
+  //   }
+  // }, [latLonLimits])
 
-  useEffect(() => {
-    if (selectedArea) {
-      const polygon = L.polygon(latLonLimits, {
-        attribution: 'polygon',
-        color: '#ff96bc',
-        weight: 2,
-        opacity: 0.7,
-      })
-      polygon.addTo(map)
-    } else {
-      if (map) {
-        map.eachLayer(function (layer: any) {
-          if (layer.options.attribution === 'polygon') {
-            map.removeLayer(layer)
-          }
-        })
-      }
-    }
-  }, [selectedArea])
+  // useEffect(() => {
+  //   if (selectedArea) {
+  //     const polygon = L.polygon(latLonLimits, {
+  //       attribution: 'polygon',
+  //       color: '#ff96bc',
+  //       weight: 2,
+  //       opacity: 0.7,
+  //     })
+  //     polygon.addTo(map)
+  //   } else {
+  //     if (map) {
+  //       map.eachLayer(function (layer: any) {
+  //         if (layer.options.attribution === 'polygon') {
+  //           map.removeLayer(layer)
+  //         }
+  //       })
+  //     }
+  //   }
+  // }, [selectedArea])
 
   function removeNormalLayerFromMap(attribution: string) {
     map.eachLayer(function (layer: any) {
@@ -803,7 +784,6 @@ function MapHome1({
 
   const icon = L.icon({
     iconUrl: '/marker-icon_old.png',
-    // shadowUrl: '/marker-shadow.png',
     iconSize: [27, 45],
   })
   function handleSetLatlng(e: any) {
@@ -980,18 +960,6 @@ function MapHome1({
               zIndex={9998}
             />
           </LayersControl.Overlay>
-          {/* <LayersControl.Overlay name="Coastline">
-            <GeoJSON
-              attribution="Coastlines"
-              data={coastline}
-              style={{
-                color: '#5a5c5a',
-                weight: 2,
-                opacity: 0.4,
-                fillOpacity: 0,
-              }}
-            />
-          </LayersControl.Overlay> */}
         </LayersControl>
         <ScaleControl position="topright" />
         <LeafletRuler />
@@ -1004,7 +972,6 @@ function MapHome1({
     <div>
       {displayMap}
       {map ? <DisplayPosition map={map} depth={depth} /> : null}
-      {/* {map ? <DisplayBathymetry map={map} /> : null} */}
       {loading ? <Loading /> : null}
     </div>
   )
@@ -1024,232 +991,3 @@ function mapPropsAreEqual(prevMap: any, nextMap: any) {
 }
 
 export const MapHome = React.memo(MapHome1, mapPropsAreEqual)
-
-// async function getCOGLayer (layerName: any) {
-//   parseGeoraster(layerName.url).then(async (georaster: any) => {
-
-//     const layer = new GeoRasterLayer({
-//       georaster: georaster,
-//       resolution: 128,
-//       opacity: 1,
-//       keepBuffer: 25,
-//       debugLevel: 0,
-//       // mask: continent,
-//       // mask_strategy: "inside"
-//       // pixelValuesToColorFn: values => {
-//       //   return values[0] ? '#00000000' : values[0]
-//       // }
-//     });
-//     map.addLayer(layer)
-
-//     let nE = layer.getBounds().getNorthEast()
-//     let sW = layer.getBounds().getSouthWest()
-
-//     const newBounds = [[nE.lat, nE.lng],[sW.lat, sW.lng]]
-//     map.fitBounds(newBounds)
-//   });
-// };
-
-// async function showFeatureInfo () {
-//   // layerName.params['atribution'] = actualLayer
-//   // const layer = L.tileLayer.wms( layerName.url, layerName.params)
-//   const featureOptions = {
-//     service: 'wms',
-//     request: 'GetFeatureInfo',
-//     version: '1.3.0',
-//     QUERY_LAYERS: 'eusm2021_eunis2019_group',
-//     layers: 'eusm2021_eunis2019_group',
-//     info_format: 'text/html',
-//     transparent: true,
-//     feature_count: 25,
-//     I: 175,
-//     J: 39,
-//     width: '256',
-//     height: '256',
-//     viewParams: 'null;undefined',
-//   }
-
-// async function getWTMSLayer (layerName: Object) {
-//   // layerName.params['atribution'] = actualLayer
-//   // const layer = L.tileLayer.wms( layerName.url, layerName.params)
-//   const WMSOptions = {
-//     service: 'wms',
-//     attribution: actualLayer[0],
-//     request: 'GetMap',
-//     version: '1.3.0',
-//     layers: 'eusm2021_eunis2019_group',
-//     format: 'image/png',
-//     transparent: true,
-//     info_format: 'text/html',
-//     tiled: 'true',
-//     width: '150',
-//     height: '125',
-//     bounds: L.latLngBounds([[50, -11],[53, -8]])
-//   }
-//   const layer = L.tileLayer.wms( 'https://ows.emodnet-seabedhabitats.eu/geoserver/emodnet_view/wms?', WMSOptions)
-
-//   map ? map.addLayer(layer) : null
-//   // let nE = layer.getBounds().getNorthEast()
-//   // let sW = layer.getBounds().getSouthWest()
-
-//   // const newBounds = [[nE.lat, nE.lng],[sW.lat, sW.lng]]
-//   map.fitBounds([[46, -10],[52, 2]])
-// }
-
-// async function getWMSLayer2() {
-//   const params = {
-//     service: 'wms',
-//     attribution: actualLayer[0],
-//     version: '1.3.0',
-//     format: 'image/png',
-//     transparent: true,
-//     info_format: 'text/html',
-//     width: '256',
-//     height: '256',
-//     viewParams: 'null;undefined',
-//   }
-//   const url = 'https://emodnet.ec.europa.eu/geoviewer/proxy//https://ows.emodnet-seabedhabitats.eu/geoserver/emodnet_view/wms?'
-
-//   let layer = 'eusm2021_eunis2019_group'
-
-//   const getBathymetry = new GetBathymetryLayer(url, params, layer)
-//   await getBathymetry.getLayer().then( function () {
-//     map.addLayer(getBathymetry.layer)
-//   })
-// }
-
-// {/* <LayersControl.Overlay name="Background Bathymetry">
-// { customWMSLayer }
-// </LayersControl.Overlay> */}
-
-// async function customWMSLayer2() {
-//   const getBathymetry = new GetBathymetryLayer()
-//   await getBathymetry.getLayer().then( function () {
-//     map.addLayer(getBathymetry.layer)
-//   })
-// }
-
-// {/* <TileLayer
-//   attribution={'WMTS'}
-//   // url={'https://tile.openstreetmap.org/{z}/{x}/{y}.png'}
-//   url={'https://ows.emodnet-seabedhabitats.eu/geoserver/emodnet_view/gwc/service/wmts/rest/eusm2021_bio_full/emodnet_view:eusm2019_bio_full/EPSG:4326/EPSG:4326:{z}/{x}/{y}?format=image/png8'}
-//   tms={true}
-// /> */}
-
-// async function generateCanvasLayer() {
-//   setLoading(true)
-//   let url = "https://ihcantabria.github.io/Leaflet.CanvasLayer.Field/data/Bay_Speed.asc"
-
-//   let text = await d3.text(url).then(async function (text) {
-
-//     // const getCanvasLayer = new GetCanvasLayer(text)
-//     // await getCanvasLayer.getLayer().then( function () {
-//     //   map.addLayer(getCanvasLayer.layer)
-//     //   setLoading(false)
-//     // });
-
-//     const s = ScalarField.fromASCIIGrid(text)
-//     const layer = LayerScalarField(s)
-
-//     map.addLayer(layer)
-//     setLoading(false)
-
-//   });
-
-//   // const getCanvasLayer = new GetCanvasLayer(url)
-//   // await getCanvasLayer.getLayer().then( function () {
-
-//   //   map.addLayer(getCanvasLayer.layer)
-//   //   setLoading(false)
-//   // });
-// }
-
-// async function getGeojson() {
-//   await axios.get(`${JOSBaseUrl}haig-fras/frontend/bathymetry.geojson`).then(r => {
-//     return (
-//       r.data.json
-//     )
-//   })
-// }
-
-// , "crs": {"type": "name", "properties": {"name": "urn:ogc:def:crs:EPSG::4326"}}
-
-// useEffect(() => {
-//   if (map){
-//     customWMSLayer()
-//   }
-// }, [selectedLayers])
-
-// useEffect(() => {
-//   if (map){
-//     generateCanvasLayer()
-//   }
-// }, [selectedLayers])
-// function pointToLayer() {
-//   return null
-//   // return L.marker(latlng, { icon: {}}); // Change the icon to a custom icon
-// }
-
-// import { DrawPolygon } from './addLeafletDraw';
-// import 'leaflet-path-drag';
-// import FreeDraw from 'leaflet-freedraw';
-// import 'leaflet-draw'
-// import 'leaflet-path-transform';
-
-// import axios from 'axios';
-// import { GetCanvasLayer } from './addCanvasLayer';
-// import { GetBathymetryLayer } from './addBathymetry';
-// import { bathymetry } from '../../bathymetry';
-
-// newShowPhotos = changePhotosOrder(idx, 0, newShowPhotos)
-// function changePhotosOrder(fromIndex: number, toIndex: number, arr: any[]) {
-//   var element = arr[fromIndex];
-//   arr.splice(fromIndex, 1);
-//   arr.splice(toIndex, 0, element);
-//   return arr
-// }
-
-// useEffect(() => {
-//   if (latLonLimits){
-//     polygon.addTo(map);
-//   } else {
-//     if (map){
-//       map.eachLayer(function(layer: any){
-//         if (layer.options.attribution === 'polygon'){
-//           map.removeLayer(layer)
-//         }
-//       });
-//     }
-//   }
-// }, [selectedArea])
-
-// const freeDraw = new FreeDraw({
-//   mode: FreeDraw.ALL,
-//   leaveModeAfterCreate:true,
-//   maximumPolygons: 1,
-//   smoothFactor: 0.3,
-//   simplifyFactor: 2,
-//   strokeWidth: 3
-// });
-
-// useEffect(() => {
-//   if (selectedArea){
-//     map.addLayer(freeDraw);
-
-//     freeDraw.on("markers",function(event){
-//       if(event.eventType=='create' && event.latLngs.length > 0){
-
-//         //capture the current polygon bounds (store in 1st position)
-//         var latLngs = event.latLngs[0];
-//         freeDraw.clear(); //clear freedraw markers
-//         //create polygon from lat lng bounds retrieved
-//         var polygon = L.polygon(
-//             latLngs.map(function(latLng){
-//                 return [latLng.lat,latLng.lng];
-//             }), {
-//                 color: 'red',
-//             }).addTo(map);
-//       }
-//     })
-//   }
-// }, [selectedArea])

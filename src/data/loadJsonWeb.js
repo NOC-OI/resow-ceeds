@@ -1,5 +1,3 @@
-/* eslint-disable no-multi-str */
-// import { listLayers } from './listLayers'
 import axios from 'axios'
 
 export class GetJsonWeb {

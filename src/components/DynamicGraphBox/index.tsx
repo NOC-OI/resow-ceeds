@@ -14,10 +14,6 @@ interface DynamicGraphBoxProps {
   setFileSurveyDesign: any
 }
 
-// interface keyable {
-//   [key: string]: any
-// }
-
 export function DynamicGraphBox({
   dynamicGraphData,
   setDynamicGraphData,
@@ -33,12 +29,6 @@ export function DynamicGraphBox({
         ]
       : 'Density',
   )
-
-  // const [dumbState, setDumbState] = useState(false)
-
-  // useEffect(() => {
-  //   setTimeout(() => setDumbState((dumbState: any) => !dumbState), 1000)
-  // }, [dumbState])
 
   const [hoverValue, setHoverValue] = useState(['--', '--'])
   function handleChangeFile(e: any) {

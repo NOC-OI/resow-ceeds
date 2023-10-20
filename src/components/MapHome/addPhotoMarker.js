@@ -193,8 +193,6 @@ export class GetPhotoMarker {
 
     this.popupText = this.createPopup()
 
-    //   ANNOTATION</b>: <em>${organismList.join(', ')}</em><br>
-
     this.layer.options.attribution = this.actualLayer
     this.layer.options.organismList = organismList
     this.layer.options.filename = this.layerName.filename
@@ -206,12 +204,6 @@ export class GetPhotoMarker {
   }
 
   async getMarker3D() {
-    // const aRgbHex = this.color.match(/.{1,2}/g)
-    // const aRgb = [
-    //   parseInt(aRgbHex[0], 16),
-    //   parseInt(aRgbHex[1], 16),
-    //   parseInt(aRgbHex[2], 16),
-    // ]
     const position = Cartesian3.fromDegrees(
       this.layerName.coordinates[0],
       this.layerName.coordinates[1],

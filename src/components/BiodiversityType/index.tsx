@@ -19,19 +19,13 @@ interface BiodiversityTypeProps {
   content: string
   childs: any
   setCalculationValue: any
-  latLonLimits: any
-  selectedArea: any
   setInfoButtonBox?: any
   selectedLayers: any
   setSelectedLayers: any
-  layerAction: any
   setLayerAction: any
-  actualLayer: any
   setActualLayer: any
   listLayers: any
   yearSelected: any
-  setYearSelected: any
-  comparisonGraphData: any
   setComparisonGraphData: any
 }
 
@@ -40,8 +34,6 @@ async function handleShowCalcValues(
   params: keyable,
   setCalculationValue: any,
   setLoading: any,
-  latLonLimits: any,
-  selectedArea: any,
   setIsActiveText: any,
   yearSelected: any,
   activeText: any,
@@ -127,19 +119,13 @@ export function BiodiversityType({
   content,
   childs,
   setCalculationValue,
-  latLonLimits,
-  selectedArea,
   setInfoButtonBox,
   selectedLayers,
   setSelectedLayers,
-  layerAction,
   setLayerAction,
-  actualLayer,
   setActualLayer,
   listLayers,
   yearSelected,
-  setYearSelected,
-  comparisonGraphData,
   setComparisonGraphData,
 }: BiodiversityTypeProps) {
   const [subCalcs, setSubCalcs] = useState([])
@@ -255,8 +241,6 @@ export function BiodiversityType({
                         subCalc,
                         setCalculationValue,
                         setLoading,
-                        latLonLimits,
-                        selectedArea,
                         setIsActiveText,
                         yearSelected,
                         `${title}_${subCalc.name}_${subCalc.url}`,
@@ -289,5 +273,3 @@ export function BiodiversityType({
     </CalcTypeContainer>
   )
 }
-
-// https://mpa-ows.jncc.gov.uk/geoserver/mpa_mapper/wms?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&FORMAT=image%2Fpng8&TRANSPARENT=true&LAYERS=prot_annexi_reef_full&TILED=TRUE&WIDTH=256&HEIGHT=256&CRS=EPSG%3A4327&STYLES=&BBOX=40%2C-10%2C50%2C2

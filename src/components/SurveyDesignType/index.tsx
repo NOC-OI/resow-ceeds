@@ -23,7 +23,6 @@ interface SurveyDesignTypeProps {
   setDynamicGraphData: any
   fileSurveyDesign: any
   setFileSurveyDesign: any
-  dynamicTableData: any
   setDynamicTableData: any
   yearSelected: any
   setYearSelected: any
@@ -80,7 +79,6 @@ export function SurveyDesignType({
   dynamicGraphData,
   setDynamicGraphData,
   fileSurveyDesign,
-  dynamicTableData,
   setDynamicTableData,
   yearSelected,
   setYearSelected,

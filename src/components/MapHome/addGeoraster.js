@@ -16,33 +16,7 @@ export class GetCOGLayer {
   async parseGeo() {
     this.url = `${this.url}`
 
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    // const scale = chroma.scale(['white', 'black']).domain([-11022, 0])
-
-    // await fetch(this.url)
-    // .then(async response => await response.arrayBuffer())
-    // .then(async arrayBuffer => {
-    //   await parseGeoraster(arrayBuffer).then(async georaster => {
-    //     this.layer = new GeoRasterLayer({
-    //       georaster: georaster,
-    //       attribution: this.actualLayer,
-    //       resolution: 256,
-    //       opacity: 0.7,
-    //       debugLevel: 0,
-    //       // pixelValuesToColorFn: function (values) {
-    //       //   const elevation = values[0];
-    //       //   if (elevation > 0) return "rgba(34, 15, 50,0)";
-    //       //   return scale(elevation).hex();
-    //       // }
-    //       // mask: continent,
-    //       // mask_strategy: "inside"
-    //     });
-    //   })
-    // })
     await parseGeoraster(this.url).then(async (georaster) => {
-      // const options = { left: 0, top: 0, right: 4000, bottom: 4000, width: 10, height: 10 };
-      // georaster.getValues(options).then(values => {
-      // });
       this.layer = new GeoRasterLayer({
         georaster,
         attribution: this.actualLayer,
@@ -50,13 +24,6 @@ export class GetCOGLayer {
         opacity: 0.7,
         keepBuffer: 25,
         debugLevel: 0,
-        // pixelValuesToColorFn: function (values) {
-        //   const elevation = values[0];
-        //   if (elevation > 0) return "rgba(34, 15, 50,0)";
-        //   return scale(elevation).hex();
-        // }
-        // mask: continent,
-        // mask_strategy: "inside"
       })
     })
   }
@@ -72,33 +39,14 @@ export class GetTifLayer {
   }
 
   async parseGeo() {
-    // const scale = chroma.scale(['white', 'black']).domain([-11022, 0]);
-
     await fetch(this.url)
       .then(async (response) => await response.arrayBuffer())
       .then(async (arrayBuffer) => {
         await parseGeoraster(arrayBuffer).then(async (georaster) => {
-          // const min = georaster.mins[0]
-          // const max = georaster.maxs[0]
-          // const range = georaster.ranges[0]
-          // var scale = chroma.scale("Viridis");
           this.georaster = georaster
           this.layer = await new GeoRasterLayer({
             georaster,
             opacity: 0,
-            // pixelValuesToColorFn: function(pixelValues) {
-            //   var pixelValue = pixelValues[0]; // there's just one band in this raster
-
-            //   // if there's zero wind, don't return a color
-            //   if (pixelValue === 0) return null;
-
-            //   // scale to 0 - 1 used by chroma
-            //   var scaledPixelValue = (pixelValue - min) / range;
-
-            //   var color = scale(scaledPixelValue).hex();
-
-            //   return color;
-            // },
             resolution: this.resolution,
           })
         })
@@ -190,7 +138,6 @@ export class GetTileLayer {
     if (this.dataType === 'marker') {
       this.icon = L.icon({
         iconUrl: '/marker-icon.png',
-        // shadowUrl: '/marker-shadow.png',
         iconSize: [27, 45],
       })
 
@@ -234,10 +181,6 @@ export class GetTileLayer {
         bidx = [1, 2, 3]
       }
 
-      // let bidx = []
-      // bands.forEach((band, idx) => {
-      //   bidx.push(idx+1)
-      // })
       for (let i = 0; i < bands.length; i++) {
         const stats = cogStats[bands[i]]
         if (this.contrast) {
@@ -245,7 +188,6 @@ export class GetTileLayer {
             ? this.rescale.push(`${stats.percentile_2},${stats.percentile_98}`)
             : this.rescale.push('0,255')
         } else {
-          // stats? rescale.push(`0,${stats.percentile_98}`): rescale.push('0,255')
           this.rescale.push('0,255')
         }
       }

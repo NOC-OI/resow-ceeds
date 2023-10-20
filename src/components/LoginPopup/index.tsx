@@ -4,7 +4,6 @@ import {
   faVideo,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-// import { FormEvent } from 'react'
 import Cookies from 'js-cookie'
 import { FullPagePopupContainer } from '../FullPagePopup/styles'
 import { useNavigate } from 'react-router-dom'
@@ -17,7 +16,6 @@ interface LoginPopupProps {
   setIsLogged?: any
   setShowLogin?: any
   setFlashMessage?: any
-  setShowFlash?: any
 }
 
 export function LoginPopup({
@@ -25,7 +23,6 @@ export function LoginPopup({
   setIsLogged,
   setShowLogin,
   setFlashMessage,
-  setShowFlash,
 }: LoginPopupProps) {
   function handleClose() {
     setShowLogin(false)
@@ -72,7 +69,6 @@ export function LoginPopup({
       ) : (
         <FullPagePopupContainer onClick={handleClose}>
           <div className="w-[40rem] align-middle text-center">
-            {/* <FontAwesomeIcon icon={faCircleXmark} onClick={handleClose} /> */}
             <h2 className="text-center font-bold pb-3 capitalize text-3xl">
               Haig Fras Digital Twin - Pilot Study
             </h2>
@@ -84,7 +80,6 @@ export function LoginPopup({
               </p>
             </div>
             <div className="p-4">
-              {/* <h3 className="text-center font-bold p-4 text-lg">Other Topics...</h3> */}
               <div className="grid grid-cols-3 gap-1">
                 <a href="" target="_blank" className="p-4 cursor-pointer">
                   <FontAwesomeIcon icon={faVideo} />

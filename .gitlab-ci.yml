@@ -44,7 +44,7 @@ deploy-job-oracle:
 #     - docker save docker-repo.bodc.me/colsau/imfe-pilot/frontend | gzip -c - > frontend.tar.gz
 #     - scp frontend.tar.gz web:/home/gitlab-runner/
 #     - ssh web "gunzip -c frontend.tar.gz | docker load"
-     - ssh web 'cd frontend && docker stop frontend && docker container rm frontend && docker run -d -p 8080:80 --name frontend docker-repo.bodc.me/oceaninfo/imfe-pilot/frontend:latest'
+     - ssh web 'cd frontend && docker stop frontend && docker container rm frontend && docker run -d -p 8080:80 --name frontend uk-london-1.ocir.io/lrl8vbuxj1ma/frontend:latest'
 
 
 # trigger-job:

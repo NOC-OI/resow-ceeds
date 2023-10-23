@@ -6,48 +6,46 @@
 #       - docker build -t docker-repo.bodc.me/oceaninfo/imfe-pilot/frontend:latest .
 #       # - docker image tag docker-repo.bodc.me/oceaninfo/imfe-pilot/frontend:latest uk-london-1.ocir.io/lrl8vbuxj1ma/frontend:latest
 
-build-job-oracle:
+build-job:
   stage: build
   tags: 
-    - shell-oracle
+    - shell
   script:
+    - HYPERVISOR=`lscpu | grep "^Hypervisor" | awk '{print $3}'`
+    #hypervisor is VMWare on JASMIN and KVM for Oracle
+    - if [ "$HYPERVISOR" = "VMware" ] ; then
+    #note: we must have done a "docker login docker-repo.bodc.me" manually on the build and web VMs before this pipeline can run
+      - docker build -t docker-repo.bodc.me/oceaninfo/imfe-pilot/api_calculations_use_cases_web:latest .
+    - else
+    #push to oracle container registry 
       - docker build -t uk-london-1.ocir.io/lrl8vbuxj1ma/frontend:latest .
+    - fi
 
 
-# deploy-job:
-#   stage: deploy
-#   tags:
-#       - shell
-#   script:
-#      #note: we must have done a "docker login docker-repo.bodc.me" manually on the build and web VMs before this pipeline can run
-#      - docker push docker-repo.bodc.me/oceaninfo/imfe-pilot/frontend:latest
-#      - ssh web 'docker pull docker-repo.bodc.me/oceaninfo/imfe-pilot/frontend:latest'
-#      - ssh web "mkdir -p ~/frontend && cp .env.frontend-jasmin frontend/.env"
-# # workaround for when we can't access the container registry
-# #     - docker save docker-repo.bodc.me/colsau/imfe-pilot/frontend | gzip -c - > frontend.tar.gz
-# #     - scp frontend.tar.gz web:/home/gitlab-runner/
-# #     - ssh web "gunzip -c frontend.tar.gz | docker load"
-#      - ssh web 'cd frontend && docker stop frontend && docker container rm frontend && docker run -d -p 8080:80 --env-file ./.env --name frontend docker-repo.bodc.me/oceaninfo/imfe-pilot/frontend:latest'
-
-
-deploy-job-oracle:
+deploy-job:
   stage: deploy
   tags:
-      - shell-oracle
+      - shell
+  rules: #only deploy on the master branch
+    - if: '$CI_COMMIT_BRANCH == "master"'
   script:
      #note: we must have done a "docker login docker-repo.bodc.me" manually on the build and web VMs before this pipeline can run
-     - docker push uk-london-1.ocir.io/lrl8vbuxj1ma/frontend:latest
-     - ssh web 'docker pull uk-london-1.ocir.io/lrl8vbuxj1ma/frontend:latest'
-     - ssh web "mkdir -p ~/frontend && cp .env.frontend-oracle frontend/.env"
-
-# workaround for when we can't access the container registry
-#     - docker save docker-repo.bodc.me/colsau/imfe-pilot/frontend | gzip -c - > frontend.tar.gz
-#     - scp frontend.tar.gz web:/home/gitlab-runner/
-#     - ssh web "gunzip -c frontend.tar.gz | docker load"
-     - ssh web 'cd frontend && docker stop frontend && docker container rm frontend && docker run -d -p 8080:80 --name frontend uk-london-1.ocir.io/lrl8vbuxj1ma/frontend:latest'
+    - HYPERVISOR=`lscpu | grep "^Hypervisor" | awk '{print $3}'`
+    #hypervisor is VMWare on JASMIN and KVM for Oracle
+    - if [ "$HYPERVISOR" = "VMware" ] ; then
+    #note: we must have done a "docker login docker-repo.bodc.me" manually on the build and web VMs before this pipeline can run
+      - docker push docker-repo.bodc.me/oceaninfo/imfe-pilot/frontend:latest
+      - ssh web 'docker pull docker-repo.bodc.me/oceaninfo/imfe-pilot/frontend:latest'
+      - ssh web "mkdir -p ~/frontend && cp .env.frontend-jasmin frontend/.env"
+      - ssh web 'cd frontend && docker stop frontend && docker container rm frontend && docker run -d -p 8080:80 --env-file ./.env --name frontend docker-repo.bodc.me/oceaninfo/imfe-pilot/frontend:latest'
+    - else
+      - docker push uk-london-1.ocir.io/lrl8vbuxj1ma/frontend:latest
+      - ssh web 'docker pull uk-london-1.ocir.io/lrl8vbuxj1ma/frontend:latest'
+      - ssh web "mkdir -p ~/frontend && cp .env.frontend-oracle frontend/.env"
+      - ssh web 'cd frontend && docker stop frontend && docker container rm frontend && docker run -d -p 8080:80 --name frontend uk-london-1.ocir.io/lrl8vbuxj1ma/frontend:latest'
+    - fi
 
 
 # trigger-job:
 #   trigger:
 #     project: ocean-informatics/imfepilot/frontend_test
-

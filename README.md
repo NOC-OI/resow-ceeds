@@ -11,6 +11,10 @@ Todos os arquivos utilizados pelo frontend estao disponiveis em um Object Store.
 
 This app is currently running on Jasmin and Oracle Cloud, and could be accessed via the link https://imfe-pilot.noc.ac.uk/ and https://haigfras-salt.co.uk/
 
+## Documentacao
+
+Maiores informacoes, acesse a [documentacao completa](docs/main.md).
+
 ## Run this project
 
 In the project directory, you can run:

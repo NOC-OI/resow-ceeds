@@ -15,7 +15,7 @@ build-job:
     #hypervisor is VMWare on JASMIN and KVM for Oracle
     - if [ "$HYPERVISOR" = "VMware" ] ; then
     #note: we must have done a "docker login docker-repo.bodc.me" manually on the build and web VMs before this pipeline can run
-    - docker build -t docker-repo.bodc.me/oceaninfo/imfe-pilot/api_calculations_use_cases_web:latest .
+    - docker build -t docker-repo.bodc.me/oceaninfo/imfe-pilot/frontend:latest .
     - else
     #push to oracle container registry 
     - docker build -t uk-london-1.ocir.io/lrl8vbuxj1ma/frontend:latest .

@@ -1,77 +1,75 @@
-# Haig Fras Digital Twin Project: Frontend
+# Haig Fras Digital Twin Project: Frontend Documentation
 
-O projeto Digital Twin para Haig Fras tem como objetivo montar um sistema que represente um Gemeo Digital para a area de protecao ambiental
-Haig Fras, no mar Celta.
+## Introduction
 
+Welcome to the documentation for the Haig Fras Digital Twin Project's Frontend. This project's primary goal is to create a Digital Twin system for the Haig Fras marine protected area located in the Celtic Sea. This documentation provides an overview of the project, its infrastructure, features, and how to use the frontend.
 
-Todos os arquivos utilizados pelo frontend estao disponiveis em um Object Store. Atualmente estamos utilizando Object Stores compativeis com a API da AWS, como a JASMIN e a Oracle Cloud.
+## Project Overview
 
-## Acesso
+The Digital Twin project for Haig Fras aims to establish a system that represents a Digital Twin for the Haig Fras marine protected area in the Celtic Sea. It provides a digital representation of the ecosystem, allowing for monitoring and analysis.
 
-This app is currently running on Jasmin and Oracle Cloud, and could be accessed via the link https://imfe-pilot.noc.ac.uk/ and https://haigfras-salt.co.uk/
+The application offers the capability to render various file formats on maps, including COG (Cloud Optimized GeoTIFF), MBTiles, GeoJSON, geotiff, shapefiles, and PNG. It is available in both 2D and 3D versions, providing versatile functionality.
 
-![Autenticacao](public/readme/auth.png)
+## Access
 
-## Organizacao do Website
+The frontend application is currently hosted on Jasmin and Oracle Cloud, and you can access it through the following links:
 
-O aplicativo web esta organizado em torno do arquivo 'public/website.json'. Este arquivo apresenta a organizacao geral dos itens do 'Sidebar'. E' importante salientar que qualquer alteracao nesse arquivo deve ser realizada com cautela, pois podera alterar quebrar o site.
+- [https://imfe-pilot.noc.ac.uk/](https://imfe-pilot.noc.ac.uk/)
+- [https://haigfras-salt.co.uk/](https://haigfras-salt.co.uk/)
 
-Nesse arquivo e' possivel adicionar itens ou links ao SideBar, como tambem informacoes e novas layers.
+## General Project Infrastructure
+
+This project is based on a frontend that accesses data from various sources and employs different microservices. All these services are containerized using Docker for easy deployment and management.
+
+## Website Organization
+
+The web application's structure is centered around the configuration file [/public/website.json](/public/website.json). This file defines the general structure of the items in the site's sidebar. It's crucial to exercise caution when making changes to this file, as it can potentially disrupt the site's organization.
+
+Within this configuration file, you can add the following elements:
+- New sections to the sidebar
+- Information for info buttons
+- New layers
+- Change backend endpoints
 
 ## Features
 
-Esse aplicativo possui a habilidade de poder renderizar em mapas diversos formatos de arquivos, tais como COG (Cloud Optimised GeoTIFF), MBTiles, GeoJSON, geotiff, shape files and png. Esse aplicativo possui uma versao 2D e uma versao 3D.
+### Authentication
 
-Foram implementadas as seguintes features no projeto:
+For site access control, two types of authentication have been implemented: ORCID and Microsoft 365. You can find more details in the [Authentication documentation](auth.md).
 
-### Autenticacao
+### 2D Map
 
-Para controle de acesso do site, foram implementados dois tipos de autenticacao: ORCID e Microsoft 365. Maiores informacoes podem ser obtidas [aqui](docs/assets/auth.md).
+The 2D version is based on the [React Leaflet](https://react-leaflet.js.org/) library. For comprehensive information on the 2D map, please refer to the [2D Map documentation](2dmap.md).
 
-### Mapa 2D
+### 3D Map
 
-A versao 2D foi baseada na biblioteca [React Leaflet](https://react-leaflet.js.org/). Maiores informacoes podem ser obtidas [aqui](docs/assets/2dmap.md).
+The 3D version is built using the [Resium](https://resium.reearth.io/) library, which is Cesium for React. Find more details about the 3D map in the [3D Map documentation](3dmap.md).
 
-### Mapa 3D
+### Map Layers
 
-A versao 3D foi baseada na biblioteca [Resium](https://resium.reearth.io/) (Cesium for React). Maiores informacoes podem ser obtidas [aqui](docs/assets/3dmap.md).
+The layers used in the maps are generated from the STAC Catalog of the project. To do this, you need to convert the STAC Catalog into a JSON file and save it in the appropriate location. More information about this conversion is available at the repository [data-pipelines](https://git.noc.ac.uk/ocean-informatics/imfepilot/data-pipelines).
 
-### Organizacao das Layers
+It's essential to set this location as an environment variable, `VITE_LAYERS_JSON_URL` and `VITE_LAYERS3D_JSON_URL`.
 
-- [Cloud Optimised GeoTIFF](cog.md)
-- [MBTiles](cog.md)
-- [WMS Layers](cog.md)
+### Interaction with Different Data Types
 
-
-### Interaginco com diferentes tipos de dados:
-
-- [Cloud Optimised GeoTIFF](cog.md)
-- [MBTiles](cog.md)
+Different techniques are applied to process and render maps for various data formats, including:
+- [Cloud Optimized GeoTIFF](cog.md)
+- [MBTiles](mbtiles.md)
 - [WMS Layers](wms.md)
 - [Cesium Ion](cesium_ion.md)
+- [Photos](photos.md)
 
-### Calculos no backend
+### Frontend Calculations
 
-Para realizar alguns tipos de calculos, optou-se por 
+The frontend utilizes the [GeoBlaze](https://geoblaze.io/) library for performing specific operations. This library is particularly useful for conducting simple statistical operations on GeoTIFF files. When working with COG format images, it's important to download only the necessary tiles and then perform mathematical operations.
 
-Performing calculations based on information provided by the user. The calculations are performed in an API, available at https://imfe-pilot-api.noc.ac.uk.net/ and https://haigfras-salt-api.co.uk/, and in the repository [api_calculations_use_cases](https://git.noc.ac.uk/ocean-informatics/imfepilot/api_calculations_use_cases).
+### Backend Calculations
 
+Although most activities can be handled on the frontend, a backend has been implemented for specific calculations. You can find more information about these calculations in the [Backend Calculations documentation](backend.md).
 
-## Notes about the CI/CD pipeline
+### CI/CD Pipeline
 
-There is an automatic gitlab CI/CD pipeline in this repository. It is split into two jobs:
+This repository includes an automatic GitLab CI/CD pipeline for continuous integration and continuous deployment. More information about this pipeline can be found in the [CI/CD Pipeline documentation](cicd.md).
 
-**Build:**
-
-This job builds the docker container and tags it as docker-repo.bodc.me/oceaninfo/imfe-pilot/frontend:latest. 
-
-**Deploy:**
-
-This pushes the built container to the BODC container registry. It then SSHs into the host called web, pulls this container and restarts it. This requires a gitlab-runner user to be present on both the build and web VM, an SSH key needs to be configured to allow build to SSH into web. The salt rules repository will create the user and allows a manually generated key to login, but it doesn't create that key. If you reinstall these VMs you'll have to create new SSH keys and update the salt rules (salt/user/gitlab-runner.sls) with the new keys. 
-
-### Ensuring Docker is logged in
-The gitlab-runner user on both the build and web VM must have manually logged into the docker registry using the command `docker login docker-repo.bodc.me`. We have a user dedicated to the CI/CD pipeline for this. 
-
-### Firewall Complications
-A further complication is that the NOC firewall only allows requests from the fixed IP of the gateway VM, since we can guarantee that nobody else will share this IP. To get around this the deploy script sets up an SSH SOCKS proxy on port 3128 via the gateway to push and pull the containers. The Docker configuration is set (via a Salt rule - salt/docker/proxy.sls) to use localhost:3128 as a proxy. You will need to have the SSH tunnel running to execute the docker login command above. This can be done by running `ssh -D 3128 -f -N gateway` before executing any docker login/push/pull commands. Stop the SSH tunnel with `pkill -f "ssh -D 3128 -f -N gateway"`.
-
+Thank you for using the Haig Fras Digital Twin Project's Frontend. If you have any questions or need further assistance, please refer to the specific documentation sections or contact our support team.

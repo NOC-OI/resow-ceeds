@@ -1,30 +1,29 @@
-# Mapa 2D
+# 3D Map
 
-A versao 3D foi baseada na biblioteca [Resium](https://resium.reearth.io/) (Cesium for React). Foram criados alguns pacotes adicionais para interagir com os diferentes tipos de dados, que serao descritos nas outras features.
+## Introduction
 
-<br>
+Our 3D map version is built upon the [Resium](https://resium.reearth.io/) library, which is essentially Cesium for React. This powerful library serves as the foundation for creating interactive and immersive 3D geospatial experiences within our application. In this documentation, we'll explore the details of our 3D map implementation, interactions with the map, and essential observations for development and production use.
 
 ![3D Map](assets/3dmap.png)
-*Visao geral do mapa em 3D utilizando Resium*
 
-## Interacao com o Mapa
+*The image above provides an overview of our 3D map utilizing Resium.*
 
-A interacao com o mapa se da pela definicao de uma props 'ref' no Viewer do Resium.
+## Map Interaction
 
-E' passado para essa props 'ref' um useRef do React, criado no componente do Mapa 3d
+Interacting with the 3D map is a critical aspect of our geospatial application. To enable map interaction, we define a 'ref' prop within the Resium Viewer component. This 'ref' prop is passed a useRef created within the 3D Map component. This approach provides a means for managing and interacting with the 3D map.
 
-Toda vez que uma layer e' adicionada ao mapa, e' informado um valor de 'attribution' que e' unico para a layer. Com isso, toda vez que queremos interagir com essa layer, buscamos a layer com o valor de attributtion especifico e realizamos as operacoes necessarias.
+Similar to the 2D map, layers added to the 3D map are assigned a unique 'attribution' value. This value is vital for identifying and interacting with specific layers on the map. When an operation or interaction with a layer is required, the map seeks the layer with the corresponding attribution value, allowing for seamless interaction.
 
-E' importante salientar que o Cesium lida com layers de maneira diferente do Leaflet. A diferenca e' que cada tipo de layer e' salva no Cesium como um componente diferente. Um outro ponto importante e' que algumas layers no Cesium nao podem ser alteracas. Por isso, optou-se em muitos casos por remover e adicionar a layer.
+It's essential to note that the Cesium library handles layers differently from Leaflet. In Cesium, each type of layer is treated as a separate component. Furthermore, some layers in Cesium are not easily modifiable. This has led to the decision to remove and re-add layers in many cases to ensure they function as intended.
 
-## Observacoes importantes
+## Important Observations
 
-O React tem uma caracteristica de renderizar todos os componentes da pagina duas vezes. Essa e' uma caracteristica importante do React, pois auxiliar na realizacao de testes em desenvolvimento. Entretanto, quando estamos trabalhando com o Resium, isso se torna um problema. Na pratica, o React renderiza dois mapas 3D, sendo que somente o segundo mapa fica interativo. Dessa forma, de modo a permitir que voce consiga testar e usar o mapa quando em desenvolvimento, voce deve:
+While developing with React, it's important to be aware of a characteristic where React renders all components on the page twice. This behavior is a valuable feature for development testing but can present challenges when working with Resium. In practice, React renders two 3D maps, with only the second map being interactive. To address this and ensure that you can effectively test and use the map during development, follow these steps:
 
-- remover a props 'full' do Viewer;
-- Adicionar as seguintes informacoes aos 'styles.ts' do mapa 3d:
+- Remove the 'full' prop from the Viewer component.
+- Add the following information to the 'styles.ts' file of the 3D map component:
 
-```
+```jsx
 export const ResiumContainer = styled.div`
   /* div:first-child {
     div:first-child {
@@ -34,8 +33,12 @@ export const ResiumContainer = styled.div`
 `
 ```
 
-Essas informacoes devem ser removidas quando o aplicativo for enviado para producao.
+These adjustments should be removed when deploying the application for production use.
 
-## Observacoes
+## Additional Note
 
-Cabe destacar que tambem foi implementado um mapa exemplo utilizando MapBox3D, mas que nao esta atualmente em producao.
+It's worth mentioning that we have also implemented an example map using MapBox3D. However, it is not currently in production and serves as a separate experimental component.
+
+Our 3D map implementation opens up new possibilities for immersive geospatial experiences, and we are committed to continually enhancing its functionality.
+
+If you have any questions or need further information regarding our 3D map implementation, please consult the project repository or reach out to our support team for assistance.

@@ -1,5 +1,3 @@
-Certainly! Here's the English translation of the provided text:
-
 # Haig Fras Digital Twin Project: Frontend
 
 The Digital Twin project for Haig Fras aims to create a system representing a Digital Twin for the Haig Fras environmental protection area in the Celtic Sea.

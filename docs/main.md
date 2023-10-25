@@ -2,13 +2,13 @@
 
 ## Introduction
 
-Welcome to the documentation for the Haig Fras Digital Twin Project's Frontend. This project's primary goal is to create a Digital Twin system for the Haig Fras marine protected area located in the Celtic Sea. This documentation provides an overview of the project, its infrastructure, features, and how to use the frontend.
+Welcome to the documentation for the Haig Fras Digital Twin Project's Documentation. This project's primary goal is to create a Digital Twin system for the Haig Fras marine protected area located in the Celtic Sea. This documentation provides an overview of the project, its infrastructure and features.
 
 ## Project Overview
 
 The Digital Twin project for Haig Fras aims to establish a system that represents a Digital Twin for the Haig Fras marine protected area in the Celtic Sea. It provides a digital representation of the ecosystem, allowing for monitoring and analysis.
 
-The application offers the capability to render various file formats on maps, including COG (Cloud Optimized GeoTIFF), MBTiles, GeoJSON, geotiff, shapefiles, and PNG. It is available in both 2D and 3D versions, providing versatile functionality.
+The application offers the capability to render various file formats on maps, including COG (Cloud Optimized GeoTIFF), MBTiles, GeoJSON, GeoTIFF, Shapefiles, Geoparquet, and others. It is available in both 2D and 3D versions, providing versatile functionality.
 
 ## Access
 
@@ -20,6 +20,9 @@ The frontend application is currently hosted on Jasmin and Oracle Cloud, and you
 ## General Project Infrastructure
 
 This project is based on a frontend that accesses data from various sources and employs different microservices. All these services are containerized using Docker for easy deployment and management.
+
+![Project Schema](assets/project_schema.png)
+
 
 ## Website Organization
 

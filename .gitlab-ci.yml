@@ -46,6 +46,6 @@ deploy-job:
     - fi
 
 
-# trigger-job:
-#   trigger:
-#     project: ocean-informatics/imfepilot/frontend_test
+trigger-job:
+  trigger:
+    project: ocean-informatics/imfepilot/frontend_test

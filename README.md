@@ -1,19 +1,18 @@
+Certainly! Here's the English translation of the provided text:
+
 # Haig Fras Digital Twin Project: Frontend
 
-O projeto Digital Twin para Haig Fras tem como objetivo montar um sistema que represente um Gemeo Digital para a area de protecao ambiental
-Haig Fras, no mar Celta.
+The Digital Twin project for Haig Fras aims to create a system representing a Digital Twin for the Haig Fras environmental protection area in the Celtic Sea.
 
-Esse app foi codado em React, com a possibilidade de interagir com diferentes formatos de dados no backend e no frontend. Esse projeto tem como dependencia o uso de alguns servicos de backend para realizar atividades de servidor de tiles, como tambem para realizar autenticacao e calculos nos dados.
+This app is coded in React, with the ability to interact with various data formats on both the backend and frontend. This project relies on several backend services to perform tile server activities, as well as handle authentication and data calculations.
 
-Todos os arquivos utilizados pelo frontend estao disponiveis em um Object Store. Atualmente estamos utilizando Object Stores compativeis com a API da AWS, como a JASMIN e a Oracle Cloud.
+All files used by the frontend are available in an Object Store. Currently, we are using Object Stores compatible with the AWS API, such as JASMIN and Oracle Cloud.
 
-## Acesso
+## Access
 
-This app is currently running on Jasmin and Oracle Cloud, and could be accessed via the link https://imfe-pilot.noc.ac.uk/ and https://haigfras-salt.co.uk/
-
-## Documentacao
-
-Maiores informacoes, acesse a [documentacao completa](docs/main.md).
+This app is currently running on Jasmin and Oracle Cloud and can be accessed via the following links:
+- [https://imfe-pilot.noc.ac.uk/](https://imfe-pilot.noc.ac.uk/)
+- [https://haigfras-salt.co.uk/](https://haigfras-salt.co.uk/)
 
 ## Run this project
 
@@ -21,13 +20,13 @@ In the project directory, you can run:
 
 ### `npm install`
 
-It will install all the npm packages available on package.json file
+This command will install all the npm packages listed in the package.json file.
 
 ### Set ENV variables
 
-You need to create a .env.development file and add these env variables:
+You need to create a .env.development file and add the following environment variables:
 
-```
+```.env
 VITE_MAPBOX_API_KEY=
 VITE_WEBSITE_JSON_URL=/website.json
 VITE_LAYERS_JSON_URL=https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/frontend/layers.json
@@ -49,25 +48,20 @@ VITE_365_CLIENT_ID=
 VITE_365_TENANCY_ID=
 VITE_365_REDIRECT_URI=
 ```
-You can ask for the repo owner to access those variables.
 
-It is important to mention that, to avoid authentication, you need to set the variable VITE_LOGIN to "0", otherwise it will ask you to authenticate.
+You can request access to these variables from the repository owner.
+
+It's important to note that to disable authentication, you need to set the VITE_LOGIN variable to "0"; otherwise, it will prompt you to authenticate.
 
 ### `npm run dev`
 
-Runs the app in the development mode.\
-Open [http://localhost:8080](http://localhost:8080) to view it in the browser.
+This command runs the app in development mode. Open [http://localhost:8080](http://localhost:8080) to view it in your web browser.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+The page will automatically reload if you make edits, and any lint errors will be displayed in the console.
 
 ### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+This command builds the app for production in the `build` folder. It bundles React in production mode and optimizes the build for the best performance. The build is minified, and the filenames include hashes. Your app is then ready for deployment.
 
 ## Run script in production
 
@@ -75,3 +69,19 @@ Your app is ready to be deployed!
 docker build --progress=plain -t frontend .
 docker run -p 8080:80 -d frontend
 ```
+
+## CI/CD Pipeline
+
+This repository includes an automatic GitLab CI/CD pipeline for continuous integration and continuous deployment. It is divided into three jobs:
+
+**Build:**
+
+This job builds the Docker container and tags it as `docker-repo.bodc.me/oceaninfo/imfe-pilot/frontend:latest` or `uk-london-1.ocir.io/lrl8vbuxj1ma/frontend:latest`.
+
+**Deploy:**
+
+This job pushes the built container to the BODC container registry. It then SSHs into the host called "web," pulls this container, and restarts it. This requires a GitLab Runner user to be present on both the build and web VMs. An SSH key needs to be configured to allow the build to SSH into web. The salt rules repository will create the user and allow a manually generated key to log in, but it doesn't create that key. If you reinstall these VMs, you'll need to create new SSH keys and update the salt rules (`salt/user/gitlab-runner.sls`) with the new keys.
+
+**Tests:**
+
+This job tests your frontend application using the code described in the repository [https://git.noc.ac.uk/ocean-informatics/imfepilot/frontend_test](https://git.noc.ac.uk/ocean-informatics/imfepilot/frontend_test).

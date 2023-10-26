@@ -34,11 +34,15 @@ export function FullPagePopup({ setShowPopup }: FullPagePopupProps) {
           <div className="grid grid-cols-3 gap-1">
             <a href="" target="_blank" className="p-4 cursor-pointer">
               <FontAwesomeIcon icon={faVideo} />
-              <p className="text-center text-sm font-bold">Tutorial</p>
+              <p className="text-center text-sm font-bold">About</p>
             </a>
-            <a href="" target="_blank" className="p-4 cursor-pointer">
+            <a
+              href="https://imfe-pilot-documentation.co.uk/"
+              target="_blank"
+              className="p-4 cursor-pointer"
+            >
               <FontAwesomeIcon icon={faCode} />
-              <p className="text-center text-sm font-bold">Technologies</p>
+              <p className="text-center text-sm font-bold">Documentation</p>
             </a>
             <a
               href="https://catalogue-imfe.ceh.ac.uk/pimfe/documents"

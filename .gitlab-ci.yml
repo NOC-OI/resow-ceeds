@@ -42,7 +42,7 @@ deploy-job:
     - docker push uk-london-1.ocir.io/lrl8vbuxj1ma/frontend:latest
     - ssh web 'docker pull uk-london-1.ocir.io/lrl8vbuxj1ma/frontend:latest'
     - ssh web "mkdir -p ~/frontend && cp .env.frontend-oracle frontend/.env"
-    - ssh web 'cd frontend && docker stop frontend && docker container rm frontend && docker run -d -p 8080:80 --name frontend uk-london-1.ocir.io/lrl8vbuxj1ma/frontend:latest'
+    - ssh web 'cd frontend && docker stop frontend && docker container rm frontend && docker run -d -p 8080:80 --env-file ./.env --name frontend uk-london-1.ocir.io/lrl8vbuxj1ma/frontend:latest'
     - fi
 
 

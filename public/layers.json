@@ -51,7 +51,7 @@
       }
   }
  },
-  "Variables":{
+  "ENvironmental Data":{
     "layerNames":{
       "Chlorophyll":{
          "url":"https://pub-d25b385271574fbeb5c6af580799fafe.r2.dev/prediction_chl_actualDate.tiff",
@@ -225,12 +225,23 @@
             "params":{
                 "layers":"au%3Amarterritorial"
              }
-          } 
+          },
+          "Main Ports locations":{
+            "url":"https://pub-d25b385271574fbeb5c6af580799fafe.r2.dev/port_location.geojson",
+            "data_type":"GEOJSON",
+            "content":"Main Ports locations."
+         }
      }
-  },
+
+   },
   "Biology":{
      "layerNames":{
-        "Invasive Macroalgae":{
+      "Fisheries Intensity: bottom trawler":{
+         "url":"https://pub-d25b385271574fbeb5c6af580799fafe.r2.dev/bottomtrawl.geojson",
+         "data_type":"GEOJSON",
+         "content":"The layer highlights the average fishing pressure from bottom trawlers. These heavy, net-dragging fishing vessels can disturb seafloor habitats, causing habitat destruction and altering sediment composition. The practice can lead to the unintended capture of non-target species, including sensitive marine organisms. Bottom trawling can also result in the depletion of commercially valuable fish stocks and the disruption of complex benthic ecosystems. Additionally, the repetitive scraping of the seafloor can compromise its integrity, affecting essential ecological processes. Implementing sustainable fishing practices, such as selective gear and area closures, is crucial to minimize the ecological footprint of bottom trawling on coastal marine ecosystems."
+       },
+      "Invasive Macroalgae":{
            "url":"https://geo.vliz.be/geoserver/Emodnetbio/wms",
            "data_type":"wms",
            "content":"This layer represents...",

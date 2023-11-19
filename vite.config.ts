@@ -10,7 +10,7 @@ export default defineConfig(({ command, mode }) => {
 
   return {
     // plugins: [react(), mkcert(), EnvironmentPlugin('all'), cesium()],
-    // plugins: [react(), EnvironmentPlugin('all'), cesium()],
+    plugins: [react(), EnvironmentPlugin('all'), cesium()],
     server: {
       host: true,
       // https: true,

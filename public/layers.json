@@ -4,7 +4,7 @@
       "GEOMAR":{
          "url":"https://webgeo1.hidrografico.pt/geoserver/ows",
          "data_type":"wms",
-         "content":"This layer represents...",
+         "content":"O modelo batimétrico é constituído por uma malha regular de profundidades, cobre toda a Zona Económica Exclusiva (ZEE) de Portugal com um espaçamento de 1/16 arcos de minuto (ca 115 metros).",
          "protected":false,
          "params":{
             "layers":"mbat:mod_bat_zee_cont"
@@ -15,7 +15,7 @@
       "GEBCO-2023":{
          "url":"https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/layers/bathymetry/gebco/gebco_2023.tif",
          "data_type":"COG",
-         "content":"This layer represents...",
+         "content":"GEBCO’s current gridded bathymetric data set, the GEBCO_2023 Grid, is a global terrain model for ocean and land, providing elevation data, in meters, on a 15 arc-second interval grid. It is accompanied by a Type Identifier (TID) Grid that gives information on the types of source data that the GEBCO_2023 Grid is based on.",
          "protected":false,
          "get_value":{
             "depth":"m"
@@ -141,12 +141,7 @@
          "scale": [-0.500, -0.150],
          "date_range": true,
          "colors": ["#dedede", "#ff0000"]
-       },
-      "Test3":{
-         "url":"https://pub-d25b385271574fbeb5c6af580799fafe.r2.dev/Natura2000.geojson",
-         "data_type":"GEOJSON",
-         "content":"This layer represents..."
-      }
+       }
    }
   },
   "MPA":{
@@ -173,12 +168,12 @@
      "Kelps":{
          "url":"https://pub-d25b385271574fbeb5c6af580799fafe.r2.dev/kelps.geojson",
          "data_type":"GEOJSON",
-         "content":"This layer represents..."
+         "content":"This is a MaxEnt model map of the global distribution of the Laminarian kelp biome. This was modelled using 44,265 cleaned primary occurrence records from the Global Biodiversity Information Facility (GBIF), and the Ocean Biodiversity Information System (OBIS) and 13 environmental variables from the Global Marine Environment Datasets (GMED). Those variables included depth, dissolved oxygen, pH, nitrate concentration, average and maximum sea surface temperature, salinity, and others."
      },
      "Salt Marsh":{
-      "url":"https://pub-d25b385271574fbeb5c6af580799fafe.r2.dev/kelps.geojson",
+      "url":"https://pub-d25b385271574fbeb5c6af580799fafe.r2.dev/saltmarsh.geojson",
       "data_type":"GEOJSON",
-      "content":"This layer represents..."
+      "content":"This dataset displays the extent of our knowledge regarding the distribution of saltmarshes globally, drawing from occurrence data (surveyed and/or remotely sensed). The dataset was developed to provide a baseline inventory of the extent of our knowledge regarding the global distribution of saltmarshes, which are ecosystems located in the intertidal zone of sheltered marine and estuarine coastlines. These ecosystems comprise brackish, shallow water with salt-tolerant plants such as herbs, grasses and shrubs, and are commonly found at temperate and high latitudes. Saltmarshes are of ecological importance as they underpin the estuarine food web. In particular, saltmarshes serve as nesting, nursery and feeding grounds for numerous species of birds, fish, molluscs and crustaceans, including commercially important fish species such as herring (Clupea harengus), and are also home to a number of Endangered and Critically Endangered species. The dataset consists of one polygon layer, one point layer, and an accompanying Access database that contains species information (linked exclusively to the point dataset)."
   }
 
    }
@@ -193,17 +188,7 @@
          "params":{
             "layers":"eusm2021_eunis2019_group"
          }
-      },
-
-      "Energy Class":{
-           "url":"https://ows.emodnet-seabedhabitats.eu/geoserver/emodnet_view/wms",
-           "data_type":"wms",
-           "content":"This layer represents...",
-           "protected":false,
-           "params":{
-              "layers":"eusm2021_ene_full"
-           }
-        }
+      }
      }
   },
   "Administrative Areas":{
@@ -211,7 +196,7 @@
         "Portugal Continental ZEE":{
            "url":"https://webgeo2.hidrografico.pt//geoserver/ows?",
            "data_type":"wms",
-           "content":"This layer represents...",
+           "content":"Portugal Continental ZEE",
            "protected":false,
            "params":{
                "layers":"au:zee_continente"
@@ -220,7 +205,7 @@
          "Territorial Sea":{
             "url":"https://webgeo2.hidrografico.pt//geoserver/ows?",
             "data_type":"wms",
-            "content":"This layer represents...",
+            "content":"Territorial Sea",
             "protected":false,
             "params":{
                 "layers":"au%3Amarterritorial"
@@ -244,7 +229,7 @@
       "Invasive Macroalgae":{
            "url":"https://geo.vliz.be/geoserver/Emodnetbio/wms",
            "data_type":"wms",
-           "content":"This layer represents...",
+           "content":"Impacts on biodiversity and economy have been recorded due to the increase in the number of marine seaweeds outside of their natural over the last decades. This makes the development of management tools necessary, where species distribution models play a crucial role. Despite this, the modelling of non-native marine species distributions is challenging in terms of model building, evaluation and selection. This product aims to predict the European distribution of Asparagopsis armata, Caulerpa Taxifolia, Sargassum muticum and Undaria pinnatifida species for the historical period and a future climate change scenario.",
            "protected":false,
            "params":{
               "layers":"kuenm_models"
@@ -257,7 +242,7 @@
         "Seabed Substrate":{
            "url":"https://drive.emodnet-geology.eu/geoserver/gtk/wms",
            "data_type":"wms",
-           "content":"This layer represents...",
+           "content":"Seabed substrate from Emodnet Geology.",
            "protected":false,
            "params":{
               "layers":"gtk:seabed_substrate_250k"

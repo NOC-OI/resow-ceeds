@@ -1,5 +1,7 @@
 {
   "Bathymetry":{
+   "icon": "",
+
      "layerNames":{
       "GEOMAR":{
          "url":"https://webgeo1.hidrografico.pt/geoserver/ows",
@@ -26,6 +28,8 @@
    }
   },
   "Suitability":{
+   "icon": "",
+
    "layerNames":{
      "Kelps":{
       "layer_type":"suitability",
@@ -51,7 +55,8 @@
       }
   }
  },
-  "ENvironmental Data":{
+  "Environmental Data":{
+   "icon": "",
     "layerNames":{
       "Chlorophyll":{
          "url":"https://pub-d25b385271574fbeb5c6af580799fafe.r2.dev/prediction_chl_actualDate.tiff",
@@ -145,6 +150,8 @@
    }
   },
   "MPA":{
+   "icon": "",
+
     "layerNames":{
       "Natura2000 Network":{
          "url":"https://pub-d25b385271574fbeb5c6af580799fafe.r2.dev/Natura2000.geojson",
@@ -164,6 +171,8 @@
       }
    },
   "Species":{
+   "icon": "",
+
    "layerNames":{
      "Kelps":{
          "url":"https://pub-d25b385271574fbeb5c6af580799fafe.r2.dev/kelps.geojson",
@@ -179,6 +188,8 @@
    }
  },    
   "Seabed Habitats":{
+   "icon": "",
+
      "layerNames":{
       "Seabed Habitats":{
          "url":"https://ows.emodnet-seabedhabitats.eu/geoserver/emodnet_view/wms",
@@ -192,6 +203,8 @@
      }
   },
   "Administrative Areas":{
+   "icon": "",
+
      "layerNames":{
         "Portugal Continental ZEE":{
            "url":"https://webgeo2.hidrografico.pt//geoserver/ows?",
@@ -220,6 +233,8 @@
 
    },
   "Biology":{
+   "icon": "",
+
      "layerNames":{
       "Fisheries Intensity: bottom trawler":{
          "url":"https://pub-d25b385271574fbeb5c6af580799fafe.r2.dev/bottomtrawl.geojson",
@@ -238,6 +253,8 @@
      }
   },
   "Geology":{
+   "icon": "",
+
      "layerNames":{
         "Seabed Substrate":{
            "url":"https://drive.emodnet-geology.eu/geoserver/gtk/wms",

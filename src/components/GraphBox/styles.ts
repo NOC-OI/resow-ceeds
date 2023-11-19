@@ -12,7 +12,6 @@ export const InfoButtonBoxContainer = styled.div`
   padding: 0.5rem;
   border-radius: 16px;
   box-shadow: 0px 4px 4px ${(props) => props.theme.black};
-  z-index: 9999;
   white-space: pre-line;
   h1 {
     font-size: 0.85rem;

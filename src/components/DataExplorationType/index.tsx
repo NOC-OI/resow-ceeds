@@ -1,8 +1,8 @@
-import { ArrowCircleDown, ArrowCircleUp } from 'phosphor-react'
+import { Mountains } from 'phosphor-react'
 import { useEffect, useState } from 'react'
 // import { LayerTypeContainer } from './styles'
 import { DataExplorationTypeOptions } from '../DataExplorationTypeOptions'
-import { CalcTypeContainer } from '../BiodiversityType/styles'
+import { CalcTypeContainer } from './styles'
 
 interface keyable {
   [key: string]: any
@@ -20,9 +20,10 @@ interface DataExplorationTypeProps {
   setLayerLegend: any
   setInfoButtonBox?: any
   setShowPhotos?: any
-  isLogged?: any
   getPolyline: any
   setGetPolyline: any
+  setShowRange?: any
+  setClickPoint: any
 }
 
 export function DataExplorationType({
@@ -37,9 +38,9 @@ export function DataExplorationType({
   setLayerLegend,
   setInfoButtonBox,
   setShowPhotos,
-  isLogged,
   getPolyline,
   setGetPolyline,
+  setClickPoint,
 }: DataExplorationTypeProps) {
   const [subLayers, setSubLayers] = useState<keyable>({})
 
@@ -73,15 +74,15 @@ export function DataExplorationType({
   return (
     <CalcTypeContainer>
       <div>
-        <header id="general-types" onClick={handleShowLayers}>
-          <p>{content}</p>
+        <header
+          id="general-types"
+          onClick={handleShowLayers}
+          style={isActive ? { color: '#D49511' } : { color: 'white' }}
+        >
           <span title="expand">
-            {isActive ? (
-              <ArrowCircleUp size={24} />
-            ) : (
-              <ArrowCircleDown size={24} />
-            )}
+            <Mountains size={30} />
           </span>
+          <p>{content}</p>
         </header>
       </div>
       <div>
@@ -101,9 +102,9 @@ export function DataExplorationType({
               selectedLayers={selectedLayers}
               setSelectedLayers={setSelectedLayers}
               setInfoButtonBox={setInfoButtonBox}
-              isLogged={isLogged}
               getPolyline={getPolyline}
               setGetPolyline={setGetPolyline}
+              setClickPoint={setClickPoint}
             />
           )
         })}

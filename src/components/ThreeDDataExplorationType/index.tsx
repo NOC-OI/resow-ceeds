@@ -1,6 +1,6 @@
-import { ArrowCircleDown, ArrowCircleUp } from 'phosphor-react'
+import { Mountains } from 'phosphor-react'
 import { useState } from 'react'
-import { CalcTypeContainer } from '../BiodiversityType/styles'
+import { CalcTypeContainer } from '../DataExplorationType/styles'
 import { ThreeDDataExplorationTypeOptions } from '../ThreeDDataExplorationTypeOptions'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCube } from '@fortawesome/free-solid-svg-icons'
@@ -54,8 +54,15 @@ export function ThreeDDataExplorationType({
   return (
     <CalcTypeContainer>
       <div>
-        <header id="general-types" onClick={handleShowLayers}>
+        <header
+          id="general-types"
+          onClick={handleShowLayers}
+          style={isActive ? { color: '#D49511' } : { color: 'white' }}
+        >
           <div className="flex">
+            <span title="expand">
+              <Mountains size={30} />
+            </span>
             <p>{content}</p>
             {content === 'Bathymetry' ? (
               threeD ? (
@@ -73,13 +80,6 @@ export function ThreeDDataExplorationType({
               )
             ) : null}
           </div>
-          <span title="expand">
-            {isActive ? (
-              <ArrowCircleUp size={24} />
-            ) : (
-              <ArrowCircleDown size={24} />
-            )}
-          </span>
         </header>
       </div>
       <div>

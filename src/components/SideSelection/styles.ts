@@ -2,10 +2,11 @@ import styled from 'styled-components'
 
 export const SideSelectionContainer = styled.div`
   position: relative;
-  height: 90vh;
-  background-color: ${(props) => props.theme.white};
+  max-height: 80vh;
+  background-color: rgba(17, 17, 17, 0.6); /* Black */
+  border-radius: 30px;
+  font-size: 12px;
   padding: 0.375rem;
-  width: 1.5rem;
   z-index: 9999;
   border-radius: 16px;
   box-shadow: 0px 4px 4px ${(props) => props.theme.black};
@@ -15,23 +16,18 @@ export const SideSelectionLink = styled.header`
   display: flex;
   align-items: center;
   justify-content: center;
-
-  &:first-child {
-    padding-top: 1rem;
-  }
-
+  margin-left: 0.5rem;
+  padding: 0.25rem;
   svg {
     cursor: pointer;
-    padding-bottom: 1rem;
     height: 1.5rem;
     width: auto;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: ${(props) => props.theme['yellow-700']};
-
+    color: rgba(255, 255, 255, 0.7);
     &:hover {
-      color: ${(props) => props.theme['yellow-400']};
+      color: rgba(255, 255, 255, 1);
     }
   }
 `

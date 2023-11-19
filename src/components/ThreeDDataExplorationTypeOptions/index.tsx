@@ -4,17 +4,14 @@ import {
   faCircleInfo,
   faCube,
   faList,
-  faLock,
   faMagnifyingGlass,
   faSliders,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Annotations } from '../Annotations'
 import { colors, eunis } from '../../data/mbTilesEmodnetLegend'
-import { getUser } from '../../lib/auth'
-import { organisms } from '../../data/organisms'
 import { GetTileLayer } from '../MapHome/addGeoraster'
 import { oceanR } from '../MapHome/jsColormaps'
+import styles from '../DataExplorationTypeOptions/DataExplorationTypeOptions.module.css'
 
 const defaultOpacity = 0.7
 
@@ -56,13 +53,6 @@ export function ThreeDDataExplorationTypeOptions({
   const [opacityIsClicked, setOpacityIsClicked] = useState(
     activeOpacity === `${content}_${subLayer}`,
   )
-
-  const [showAnnotations, setShowAnnotations] = useState<boolean>(false)
-
-  let user: any | null = null
-  if (isLogged) {
-    user = getUser()
-  }
 
   function changeMapZoom(layerInfo: any) {
     setLayerAction('zoom')
@@ -157,7 +147,7 @@ export function ThreeDDataExplorationTypeOptions({
         layerInfo.dataInfo.plotLimits = true
         await addMapLayer(layerInfo)
       } else {
-        setShowAnnotations(false)
+        // setShowAnnotations(false)
         removeMapLayer(layerInfo)
       }
     } else {
@@ -269,19 +259,13 @@ export function ThreeDDataExplorationTypeOptions({
 
   return (
     <LayerTypeOptionsContainer>
-      <div
-        id="type-option"
-        className={
-          user?.access
-            ? ''
-            : subLayers[subLayer].protected && 'cursor-not-allowed'
-        }
-      >
+      <div id="type-option">
         <label
           key={`${content}_${subLayer}`}
           htmlFor={`${content}_${subLayer}`}
         >
           <input
+            className={styles.chk}
             onChange={handleChangeMapLayer}
             onClick={
               subLayers[subLayer].data_type === '3D'
@@ -292,33 +276,14 @@ export function ThreeDDataExplorationTypeOptions({
               subLayer: `${content}_${subLayer}`,
               dataInfo: subLayers[subLayer],
             })}
-            type={subLayers[subLayer].data_type === '3D' ? 'radio' : 'checkbox'}
+            type="checkbox"
             checked={verifyIfWasSelectedBefore(content, subLayer)}
             id={`${content}_${subLayer}`}
-            disabled={user?.access ? false : !!subLayers[subLayer].protected}
-            className={
-              user?.access
-                ? ''
-                : subLayers[subLayer].protected && 'cursor-not-allowed'
-            }
           />
-          <p
-            className={
-              user?.access
-                ? ''
-                : subLayers[subLayer].protected && 'cursor-not-allowed'
-            }
-          >
-            {subLayer}
-          </p>
-          {user?.access ? null : subLayers[subLayer].protected ? (
-            <FontAwesomeIcon
-              icon={faLock}
-              title={'You are not authorized to access this information.'}
-              className="pb-0.5"
-              style={{ cursor: 'help' }}
-            />
-          ) : null}
+          <label htmlFor={`${content}_${subLayer}`} className={styles.switch}>
+            <span className={styles.slider}></span>
+          </label>
+          <p>{subLayer}</p>
         </label>
         {verifyIfWasSelectedBefore(content, subLayer) ? (
           <div id="layer-edit">
@@ -328,7 +293,7 @@ export function ThreeDDataExplorationTypeOptions({
               title={'Show Layer Info'}
               onClick={() => handleClickLayerInfo(content, subLayer)}
             />
-            {!['Photo'].includes(subLayers[subLayer].data_type) ? (
+            {!['Photo', 'GEOJSON'].includes(subLayers[subLayer].data_type) ? (
               <FontAwesomeIcon
                 icon={faList}
                 title="Show Legend"
@@ -360,19 +325,6 @@ export function ThreeDDataExplorationTypeOptions({
           </div>
         ) : null}
       </div>
-      {showAnnotations && (
-        <Annotations
-          key={`${content}_${subLayer}`}
-          subLayer={subLayer}
-          content={content}
-          layerAction={layerAction}
-          setLayerAction={setLayerAction}
-          selectedLayers={selectedLayers}
-          setSelectedLayers={setSelectedLayers}
-          setActualLayer={setActualLayer}
-          organisms={organisms}
-        />
-      )}
       {opacityIsClicked && verifyIfWasSelectedBefore(content, subLayer) && (
         <input
           type="range"

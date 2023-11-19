@@ -5,6 +5,32 @@
   background-repeat: no-repeat;
   background-position: center;
 }
+.leaflet-control-zoom-in{
+  background-color: rgba(17, 17, 17, 0.6) !important;
+  box-shadow: 0px 0px 1px 1px white !important;
+}
+
+.leaflet-control-zoom-in span{
+  color: white;
+  opacity: 0.7;
+}
+.leaflet-control-zoom-in span:hover{
+  opacity: 1;
+}
+
+.leaflet-control-zoom-out span{
+  color: white;
+  opacity: 0.7;
+}
+.leaflet-control-zoom-out span:hover{
+  opacity: 1;
+}
+.leaflet-control-zoom-out{
+  background-color: rgba(17, 17, 17, 0.6) !important;
+  box-shadow: 0px 0px 1px 1px white !important;
+  color: white !important;
+}
+
 .leaflet-ruler:hover{
   background-image: url("/ruler_icon-colored.png");
 }
@@ -17,19 +43,21 @@
   border-color: chartreuse !important;
 }
 .leaflet-bar{
-  background-color: #ffffff;
+  background-color: rgba(17, 17, 17, 0.6);
 }
 .leaflet-control {
   cursor: pointer;
+  background-color: rgba(17, 17, 17, 0.6);
+  color: white;
 }
 .result-tooltip{
-  background-color: white;
+  background-color: rgba(17, 17, 17, 0.6);;
   border-width: medium;
   border-color: #de0000;
   font-size: smaller;
 }
 .moving-tooltip{
-  background-color: rgba(255, 255, 255, .7);
+  background-color: rgba(17, 17, 17, 0.6);;
   background-clip: padding-box;
   opacity: 0.5;
   border: dotted;

@@ -11,7 +11,7 @@ import 'leaflet/dist/leaflet.css'
 import React, { useEffect, useMemo, useState } from 'react'
 import * as L from 'leaflet'
 import { InfoBox } from '../InfoBox'
-import { GetCOGLayer, GetTifLayer, GetTileLayer } from './addGeoraster'
+import { GetTifLayer, GetTifLayer2, GetTileLayer } from './addGeoraster'
 import { Loading } from '../Loading'
 import { callBetterWMS } from './addBetterWMS'
 import { GetGeoblazeValue } from './getGeoblazeValue'
@@ -20,6 +20,9 @@ import { GetPhotoMarker } from './addPhotoMarker'
 import * as turf from '@turf/turf'
 import chroma from 'chroma-js'
 import LeafletRuler from '../LeafletRuler'
+import { yearMonths } from '../../data/yearMonths'
+import { limits } from '../../data/limits'
+import * as esri from 'esri-leaflet'
 
 interface DisplayPositionProps {
   map: any
@@ -59,6 +62,10 @@ interface MapProps {
   setFlashMessage: any
   surveyDesignCircleValues: any
   setSurveyDesignCircleValues: any
+  actualDate: any
+  setMapPopup: any
+  clickPoint: any
+  setClickPoint: any
 }
 
 function MapHome1({
@@ -72,34 +79,49 @@ function MapHome1({
   setActivePhoto,
   mapBounds,
   setMapBounds,
-  selectedSidebarOption,
   getPolyline,
   setGraphData,
   setShowFlash,
   setFlashMessage,
   surveyDesignCircleValues,
+  actualDate,
+  setMapPopup,
+  clickPoint,
+  setClickPoint,
 }: MapProps) {
+  const MAPBOX_API_KEY = import.meta.env.VITE_MAPBOX_API_KEY
+  const MAPBOX_USERID = 'mapbox/satellite-v9'
+
   const colorScale = chroma
     .scale(['#f00', '#0f0', '#00f', 'gray'])
     .mode('hsl')
     .colors(30)
   const JOSBaseUrl = process.env.VITE_JASMIN_OBJECT_STORE_URL
+  // const ESRI_KEY = process.env.VITE_ESRI
+
   const [map, setMap] = useState<any>(null)
 
   const [depth, setDepth] = useState({})
 
-  const defaultView = [50.3, -8.1421]
+  // const defaultView = [50.3, -8.1421]
+  const defaultView = [38.5, -10]
   const [mapCenter, setMapCenter] = useState(
     new L.LatLng(defaultView[0], defaultView[1]),
   )
+
   const defaultWMSBounds = [
-    [50.020174, -8.58279],
-    [50.578429, -7.70616],
+    [34.5, -6],
+    [42.5, -14],
   ]
 
+  // const defaultWMSBounds = [
+  //   [42, 9],
+  //   [44, -7.70616],
+  // ]
+
   // if (map) {
-  //   // console.log(Object.keys(map._layers).length)
-  //   // console.log(map._layers)
+  //   console.log(Object.keys(map._layers).length)
+  //   console.log(map._layers)
   // }
 
   const [loading, setLoading] = useState<boolean>(false)
@@ -119,6 +141,7 @@ function MapHome1({
       'Coastline',
       'Marine Conservation Zones',
       'Special Areas of Conservation',
+      'Bathymetry - Hidrografico',
     ]
     map.eachLayer(function (mapLayer: any) {
       if (frontLayers.includes(mapLayer.options.attribution)) {
@@ -127,20 +150,36 @@ function MapHome1({
     })
   }
 
+  async function changeMapDateLayers() {
+    let layer: any
+    map.eachLayer(async (mapLayer: any) => {
+      if (mapLayer.options.date_range) {
+        const layerName = selectedLayers[mapLayer.options.attribution]
+        const getTifLayer = new GetTifLayer2(
+          layerName,
+          mapLayer.options.attribution,
+          yearMonths[actualDate],
+          null,
+          limits,
+          null,
+        )
+        await getTifLayer.getTile().then(function () {
+          layer = getTifLayer.layer
+          layer.options.attribution = mapLayer.options.attribution
+          map.addLayer(layer, true)
+          map.removeLayer(mapLayer)
+        })
+      }
+    })
+    setLoading(false)
+  }
+
   useEffect(() => {
     if (map) {
-      if (
-        ['Data Exploration', 'Species of Interest'].includes(
-          selectedSidebarOption,
-        )
-      ) {
-        map.options.minZoom = 3
-      } else {
-        map.setView(new L.LatLng(defaultView[0], defaultView[1]), 10.5)
-        map.options.minZoom = 10
-      }
+      setLoading(true)
+      changeMapDateLayers()
     }
-  }, [selectedSidebarOption])
+  }, [actualDate])
 
   useEffect(() => {
     if (map) {
@@ -256,37 +295,74 @@ function MapHome1({
         layer.setOpacity(0.7)
         bounds = defaultWMSBounds
       } else if (layerName.data_type === 'COG') {
-        if (window.location.pathname === '/notileserver') {
-          const getCOGLayer = new GetCOGLayer(layerName, actual)
-          await getCOGLayer.parseGeo().then(function () {
-            layer = getCOGLayer.layer
-            // const nE = layer.getBounds().getNorthEast()
-            // const sW = layer.getBounds().getSouthWest()
-            // bounds = [
-            //   [nE.lat, nE.lng],
-            //   [sW.lat, sW.lng],
-            // ]
+        const getCOGLayer = new GetTileLayer(
+          layerName,
+          actual,
+          true,
+          yearMonths[actualDate],
+        )
+        await getCOGLayer.getTile().then(function () {
+          if (getCOGLayer.error) {
+            setFlashMessage({
+              messageType: 'error',
+              content: getCOGLayer.error,
+            })
+            setShowFlash(true)
+            return
+          }
+          layer = getCOGLayer.layer
+          // bounds = [
+          //   [getCOGLayer.bounds[3], getCOGLayer.bounds[0]],
+          //   [getCOGLayer.bounds[1], getCOGLayer.bounds[2]],
+          // ]
+          bounds = defaultWMSBounds
+        })
+      } else if (layerName.data_type === 'GTIFF') {
+        const getTifLayer = new GetTifLayer2(
+          layerName,
+          actual,
+          yearMonths[actualDate],
+          null,
+          limits,
+          null,
+        )
+        await getTifLayer.getTile().then(function () {
+          layer = getTifLayer.layer
+          bounds = defaultWMSBounds
+        })
+      } else if (layerName.data_type === 'arcgis') {
+        layer = esri.dynamicMapLayer({ url: layerName.url })
+        layer.setLayers([1, 2, 3, 4, 5, 6, 7, 8, 12, 13, 14, 15])
+        bounds = defaultWMSBounds
+      } else if (layerName.data_type === 'GEOJSON') {
+        await fetch(layerName.url)
+          .then((response) => response.json())
+          .then((data) => {
+            layer = L.geoJSON(data, {
+              onEachFeature: function (feature, layer) {
+                layer.on({
+                  click: () => {
+                    setMapPopup({
+                      [`${actual}`]: feature.properties,
+                    })
+                  },
+                })
+              },
+              style: function (feature) {
+                const color = colorScale[Math.floor(Math.random() * 30)]
+                const myStyle = {
+                  color,
+                  fillColor: color,
+                  weight: 3,
+                  opacity: 0.7,
+                  fillOpacity: 0.7,
+                }
+                return myStyle
+              },
+            })
             bounds = defaultWMSBounds
           })
-        } else {
-          const getCOGLayer = new GetTileLayer(layerName, actual, true)
-          await getCOGLayer.getTile().then(function () {
-            if (getCOGLayer.error) {
-              setFlashMessage({
-                messageType: 'error',
-                content: getCOGLayer.error,
-              })
-              setShowFlash(true)
-              return
-            }
-            layer = getCOGLayer.layer
-            // bounds = [
-            //   [getCOGLayer.bounds[3], getCOGLayer.bounds[0]],
-            //   [getCOGLayer.bounds[1], getCOGLayer.bounds[2]],
-            // ]
-            bounds = defaultWMSBounds
-          })
-        }
+          .catch((error) => console.error('Error:', error))
       } else if (layerName.data_type === 'Photo') {
         // bounds = defaultWMSBounds
         const markers: any = []
@@ -892,22 +968,49 @@ function MapHome1({
     }
   }, [getPolyline])
 
+  async function handleSetLatlngPoint(e: any) {
+    setGraphData([e.latlng])
+    setClickPoint(false)
+  }
+  useEffect(() => {
+    if (clickPoint) {
+      setFlashMessage({
+        messageType: 'warning',
+        content: 'Click on a point on the map to generate a time series graph',
+      })
+      setShowFlash(true)
+      map.on('click', handleSetLatlngPoint)
+    } else {
+      if (map) {
+        map.off('click', handleSetLatlngPoint)
+      }
+    }
+  }, [clickPoint])
+
   const displayMap = useMemo(
     () => (
       <MapContainer
         style={{ height: '100vh', width: '100vw' }}
         center={new L.LatLng(defaultView[0], defaultView[1])}
-        zoom={10.5}
+        zoom={7}
         zoomSnap={0.1}
         maxZoom={30}
-        minZoom={10}
+        // minZoom={10}
         scrollWheelZoom={true}
         zoomControl={false}
         ref={setMap}
       >
         <ZoomControl position="topright" />
         <LayersControl>
-          <LayersControl.BaseLayer checked name="OSM">
+          <LayersControl.BaseLayer checked name="Mapbox Satellite">
+            <Pane name="MAPBOX" style={{ zIndex: -1 }}>
+              <TileLayer
+                url={`https://api.mapbox.com/styles/v1/${MAPBOX_USERID}/tiles/256/{z}/{x}/{y}@2x?access_token=${MAPBOX_API_KEY}`}
+                attribution="MAPBOX"
+              />
+            </Pane>
+          </LayersControl.BaseLayer>
+          <LayersControl.BaseLayer name="OSM">
             <Pane name="OSM" style={{ zIndex: -1 }}>
               <TileLayer
                 attribution={'© OpenStreetMap'}
@@ -916,48 +1019,24 @@ function MapHome1({
               />
             </Pane>
           </LayersControl.BaseLayer>
-          <LayersControl.BaseLayer name="NASA Blue Marble">
-            <Pane name="NASA" style={{ zIndex: -1 }}>
-              <TileLayer
-                url="https://gibs-{s}.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default//EPSG3857_500m/{z}/{y}/{x}.jpeg"
-                attribution="&copy; NASA Blue Marble, image service by OpenGeo"
-              />
-            </Pane>
-          </LayersControl.BaseLayer>
-          <LayersControl.Overlay checked name="Special Areas of Conservation">
+          <LayersControl.Overlay checked name="Bathymetry">
             <WMSTileLayer
-              attribution="Special Areas of Conservation"
-              url="https://mpa-ows.jncc.gov.uk/mpa_mapper/wms?"
+              attribution="Bathymetry - Hidrografico"
+              url="https://webgeo2.hidrografico.pt/geoserver/ows?"
               params={{
                 service: 'wms',
                 request: 'GetMap',
-                version: '1.3.0',
-                layers: 'sac_mc_full',
+                version: '1.1.1',
+                layers: 'isobat:isobatimetria_8_16_30',
                 format: 'image/png',
                 transparent: true,
+                // bbox: '-1017529.7205322665,4774562.534805251,-939258.203568246,4852834.051769271',
+                // srs: 'EPSG:3857',
                 width: 256,
                 height: 256,
               }}
               opacity={1}
               zIndex={9999}
-            />
-          </LayersControl.Overlay>
-          <LayersControl.Overlay checked name="Marine Conservation Zones">
-            <WMSTileLayer
-              attribution="Marine Conservation Zones"
-              url="https://mpa-ows.jncc.gov.uk/mpa_mapper/wms?"
-              params={{
-                service: 'wms',
-                request: 'GetMap',
-                version: '1.3.0',
-                layers: 'mcz',
-                format: 'image/png',
-                transparent: true,
-                width: 256,
-                height: 256,
-              }}
-              opacity={1}
-              zIndex={9998}
             />
           </LayersControl.Overlay>
         </LayersControl>
@@ -986,6 +1065,8 @@ function mapPropsAreEqual(prevMap: any, nextMap: any) {
     prevMap.showPhotos === nextMap.showPhotos &&
     prevMap.activePhoto === nextMap.activePhoto &&
     prevMap.getPolyline === nextMap.getPolyline &&
+    prevMap.clickPoint === nextMap.clickPoint &&
+    prevMap.actualDate === nextMap.actualDate &&
     prevMap.surveyDesignCircleValues === nextMap.surveyDesignCircleValues
   )
 }

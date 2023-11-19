@@ -1,0 +1,247 @@
+{
+  "Bathymetry":{
+     "layerNames":{
+      "GEOMAR":{
+         "url":"https://webgeo1.hidrografico.pt/geoserver/ows",
+         "data_type":"wms",
+         "content":"This layer represents...",
+         "protected":false,
+         "params":{
+            "layers":"mbat:mod_bat_zee_cont"
+         },
+         "assetId":"2312189",
+         "threeD":false
+      },
+      "GEBCO-2023":{
+         "url":"https://pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/layers/bathymetry/gebco/gebco_2023.tif",
+         "data_type":"COG",
+         "content":"This layer represents...",
+         "protected":false,
+         "get_value":{
+            "depth":"m"
+         },
+         "assetId":"2182075",
+         "threeD":false
+      }
+   }
+  },
+  "Suitability":{
+   "layerNames":{
+     "Kelps":{
+      "layer_type":"suitability",
+      "url":"https://pub-d25b385271574fbeb5c6af580799fafe.r2.dev/color_sum_actualDate.tiff",
+      "data_type":"GTIFF",
+      "content":"Chlorophyll, a green pigment crucial for photosynthesis in marine plants and algae, serves as a key indicator of primary productivity in coastal ecosystems. Higher chlorophyll concentrations signify increased sunlight and nutrient availability, influencing the distribution and diversity of marine habitats and species. Climate change impacts chlorophyll levels through factors like rising sea temperatures, altered ocean circulation, and changing nutrient patterns, affecting the growth and distribution of phytoplankton. These changes can have cascading effects on coastal ecosystems, potentially leading to shifts in species composition and habitat distribution, making chlorophyll a critical parameter for understanding the dynamic interactions within marine environments.",
+      "units": "Not Suitable - Optimal",
+      "scale": [-10, -7.5, -5, -2.5, 0],
+      "date_range": true,
+      "colors": ["red", "orange", "yellow", "green", "green"],
+      "threshold": [0, 1]
+   },
+   "Seagrass":{
+      "layer_type":"suitability",
+      "url":"https://pub-d25b385271574fbeb5c6af580799fafe.r2.dev/color_sum_actualDate.tiff",
+      "data_type":"GTIFF",
+      "content":"Chlorophyll, a green pigment crucial for photosynthesis in marine plants and algae, serves as a key indicator of primary productivity in coastal ecosystems. Higher chlorophyll concentrations signify increased sunlight and nutrient availability, influencing the distribution and diversity of marine habitats and species. Climate change impacts chlorophyll levels through factors like rising sea temperatures, altered ocean circulation, and changing nutrient patterns, affecting the growth and distribution of phytoplankton. These changes can have cascading effects on coastal ecosystems, potentially leading to shifts in species composition and habitat distribution, making chlorophyll a critical parameter for understanding the dynamic interactions within marine environments.",
+      "units": "mmol/m3",
+      "scale": [-1, 0],
+      "date_range": true,
+      "colors": ["#dedede", "#ff0000"],
+      "threshold": [0.5, 2.0]
+      }
+  }
+ },
+  "Variables":{
+    "layerNames":{
+      "Chlorophyll":{
+         "url":"https://pub-d25b385271574fbeb5c6af580799fafe.r2.dev/prediction_chl_actualDate.tiff",
+         "data_type":"GTIFF",
+         "content":"Chlorophyll, a green pigment crucial for photosynthesis in marine plants and algae, serves as a key indicator of primary productivity in coastal ecosystems. Higher chlorophyll concentrations signify increased sunlight and nutrient availability, influencing the distribution and diversity of marine habitats and species. Climate change impacts chlorophyll levels through factors like rising sea temperatures, altered ocean circulation, and changing nutrient patterns, affecting the growth and distribution of phytoplankton. These changes can have cascading effects on coastal ecosystems, potentially leading to shifts in species composition and habitat distribution, making chlorophyll a critical parameter for understanding the dynamic interactions within marine environments.",
+         "units": "mmol/m3",
+         "scale": [0.01, 8.5],
+         "date_range": true,
+         "colors": ["#dedede", "#ff0000"],
+         "threshold": [0.5, 2.0]
+       },
+       "Nitrate":{
+         "url":"https://pub-d25b385271574fbeb5c6af580799fafe.r2.dev/prediction_no3_actualDate.tiff",
+         "data_type":"GTIFF",
+         "content":"Nitrate (NO3) refers to a form of nitrogen that is essential for the growth of marine plants and algae, forming a part of the nitrogen cycle. Nitrate levels influence the distribution of coastal marine habitats and species as they play a critical role in primary productivity. Coastal areas with elevated nitrate concentrations often support increased phytoplankton growth, influencing the composition of the marine food web and the distribution of species. Climate change can impact nitrate levels through altered precipitation patterns and increased runoff, leading to changes in nutrient availability in coastal waters. Understanding and monitoring nitrate dynamics are crucial for assessing and mitigating the effects of climate change on coastal marine ecosystems and maintaining their ecological balance.",
+         "units": "mmol/m3",
+         "scale": [0, 25],
+         "colors": ["#dedede", "#ff0000"],
+         "date_range": true,
+         "threshold": [0.5, 2.5]
+       },
+       "Dissolved Oxygen":{
+         "url":"https://pub-d25b385271574fbeb5c6af580799fafe.r2.dev/prediction_o2_actualDate.tiff",
+         "data_type":"GTIFF",
+         "content":"Dissolved Oxygen denotes the amount of oxygen dissolved in water, crucial for the respiration of marine organisms. The distribution of coastal marine habitats and species is intricately linked to DO levels, with sufficient oxygen supporting diverse marine life. Climate change contributes to alterations in DO by warming water, reducing oxygen solubility, and impacting circulation patterns. These changes, alongside increased nutrient runoff, can lead to lower DO concentrations, influencing the distribution of species and habitats in coastal ecosystems. The expansion of hypoxic zones poses a threat, emphasizing the importance of monitoring and mitigating climate-induced shifts in dissolved oxygen for the health of marine environments.",
+         "units": "mmol/m3",
+         "scale": [232, 312],
+         "colors": ["#dedede", "#ff0000"],
+         "date_range": true,
+         "threshold": [125, 156]
+       },
+       "pH":{
+         "url":"https://pub-d25b385271574fbeb5c6af580799fafe.r2.dev/prediction_ph_actualDate.tiff",
+         "data_type":"GTIFF",
+         "content":"pH in marine ecosystems represents the measure of acidity or alkalinity in water and profoundly influences the distribution of coastal marine habitats and species. The acidity level, measured on the pH scale, can impact the physiology and behavior of marine organisms. Changes in pH, often associated with ocean acidification resulting from increased carbon dioxide absorption, can affect the availability of carbonate ions crucial for shell-forming organisms. This alteration in pH levels may lead to cascading effects on the structure of marine communities and the distribution of species. Climate change, with its associated rise in atmospheric carbon dioxide, contributes to ocean acidification, underscoring the importance of monitoring pH dynamics to comprehend and address the implications of climate change on the health and resilience of coastal marine ecosystems.",
+         "units": "pH",
+         "scale": [7.0, 9.0],
+         "date_range": true,
+         "colors": ["#dedede", "#ff0000"],
+         "threshold": [7.9, 8.3]
+       },
+       "Phytoplankton":{
+         "url":"https://pub-d25b385271574fbeb5c6af580799fafe.r2.dev/prediction_phyc_actualDate.tiff",
+         "data_type":"GTIFF",
+         "content":"Phytoplankton, microscopic marine plants crucial for oceanic primary productivity, play a key role in shaping coastal ecosystems. These tiny organisms, containing chlorophyll for photosynthesis, serve as the base of the marine food web. The distribution and abundance of phytoplankton are influenced by factors such as nutrient availability, sea temperature, and ocean currents. Climate change impacts phytoplankton by altering these environmental factors, potentially leading to shifts in their spatial distribution and abundance. Changes in phytoplankton dynamics can have profound consequences for the entire marine ecosystem, affecting the availability of food resources for higher trophic levels. Therefore, monitoring phytoplankton is vital for understanding and predicting the broader impacts of climate change on coastal marine habitats and species.",
+         "units": "mmol/m3",
+         "scale": [0.6, 29.00],
+         "date_range": true,
+         "colors": ["#dedede", "#ff0000"],
+         "threshold": [1, 10]
+       },
+       "Phosphate":{
+         "url":"https://pub-d25b385271574fbeb5c6af580799fafe.r2.dev/prediction_po4_actualDate.tiff",
+         "data_type":"GTIFF",
+         "content":"Phosphate (PO4) refers to a form of phosphorus, an essential nutrient that influences the distribution of coastal marine habitats and species. Phosphate is a key component in the growth of marine plants and algae, contributing to primary productivity. Coastal areas with varying phosphate concentrations can affect the abundance and composition of phytoplankton, influencing the broader marine food web and the distribution of species. Climate change, by altering precipitation patterns and increasing nutrient runoff, can impact phosphate levels in coastal waters, potentially leading to shifts in nutrient availability. Monitoring phosphate dynamics is crucial for understanding and addressing the repercussions of climate change on coastal marine ecosystems and maintaining their ecological health.",
+         "units": "mmol/m3",
+         "scale": [0, 2.2],
+         "colors": ["#dedede", "#ff0000"],
+         "date_range": true,
+         "threshold": [0.1, 1.0]
+       },
+       "Salinity":{
+         "url":"https://pub-d25b385271574fbeb5c6af580799fafe.r2.dev/prediction_so_actualDate.tiff",
+         "data_type":"GTIFF",
+         "content":"Salinity in marine ecosystems refers to the concentration of dissolved salts in water and plays a significant role in shaping the distribution of coastal marine habitats and species. Different marine organisms have specific salinity tolerances, influencing their abundance and diversity in various coastal areas. Coastal ecosystems experience fluctuations in salinity due to factors such as river input, precipitation, and evaporation. Climate change can impact salinity levels through alterations in precipitation patterns and changes in ocean circulation. Variations in salinity can affect the osmoregulation and physiological processes of marine organisms, potentially influencing their distribution. Monitoring salinity dynamics is crucial for understanding and mitigating the effects of climate change on coastal marine ecosystems, as shifts in salinity can have cascading effects on the composition and health of these environments.",
+         "units": "mg/m3",
+         "scale": [28, 40],
+         "colors": ["#dedede", "#ff0000"],
+         "date_range": true,
+         "threshold": [37.5, 38.5]
+       },
+       "Surface Temperature":{
+         "url":"https://pub-d25b385271574fbeb5c6af580799fafe.r2.dev/prediction_analysed_sst_actualDate.tiff",
+         "data_type":"GTIFF",
+         "content":"Sea Surface Temperature (SST) in marine ecosystems is a key environmental factor influencing the distribution of coastal habitats and species. Variations in water temperature impact the metabolic rates, reproductive cycles, and overall physiology of marine organisms. Coastal ecosystems experience fluctuations in surface temperature due to seasonal changes, ocean currents, and climate patterns. Climate change contributes to rising sea surface temperatures, affecting the distribution of species and altering ecosystem dynamics. Changes in temperature influence the geographic range of marine organisms, affecting their abundance and interactions. Monitoring surface temperature is crucial for understanding the impacts of climate change on coastal marine ecosystems, as it provides insights into ecological responses, including shifts in species distribution and potential changes in community structure.",
+         "units": "°C",
+         "scale": [12, 26],
+         "colors": ["#dedede", "#ff0000"],
+         "date_range": true,
+         "threshold": [16, 24]
+       },
+       "Water Level":{
+         "url":"https://pub-d25b385271574fbeb5c6af580799fafe.r2.dev/prediction_zos_actualDate.tiff",
+         "data_type":"GTIFF",
+         "content":"Water level in marine ecosystems, often influenced by factors such as tides, storm surges, and sea level rise, is a critical parameter shaping the distribution of coastal marine habitats and species. Fluctuations in water level influence the accessibility and suitability of coastal areas for different organisms, affecting their life cycles and behaviors. Sea level rise, a consequence of climate change, can alter coastal ecosystems by inundating low-lying areas and influencing the extent of intertidal zones. These changes in water level can have profound impacts on the distribution of species and the structure of coastal habitats, with potential consequences for biodiversity and ecosystem function. Monitoring water level dynamics is essential for understanding and adapting to the effects of climate change on coastal marine ecosystems, as it directly influences the availability and characteristics of habitats crucial for marine life.",
+         "units": "m",
+         "scale": [-0.500, -0.150],
+         "date_range": true,
+         "colors": ["#dedede", "#ff0000"]
+       },
+      "Test3":{
+         "url":"https://pub-d25b385271574fbeb5c6af580799fafe.r2.dev/Natura2000.geojson",
+         "data_type":"GEOJSON",
+         "content":"This layer represents..."
+      }
+   }
+  },
+  "MPA":{
+    "layerNames":{
+      "Portugal MAP":{
+          "url":"https://pub-d25b385271574fbeb5c6af580799fafe.r2.dev/MPAs.geojson",
+          "data_type":"GEOJSON",
+          "content":"This layer represents..."
+      }
+    }
+  },
+  "Species":{
+   "layerNames":{
+     "Kelps":{
+         "url":"https://pub-d25b385271574fbeb5c6af580799fafe.r2.dev/kelps.geojson",
+         "data_type":"GEOJSON",
+         "content":"This layer represents..."
+     },
+     "Salt Marsh":{
+      "url":"https://pub-d25b385271574fbeb5c6af580799fafe.r2.dev/kelps.geojson",
+      "data_type":"GEOJSON",
+      "content":"This layer represents..."
+  }
+
+   }
+ },    
+  "Seabed Habitats":{
+     "layerNames":{
+      "Seabed Habitats":{
+         "url":"https://ows.emodnet-seabedhabitats.eu/geoserver/emodnet_view/wms",
+         "data_type":"wms",
+         "content":"Output of the 2021 EUSeaMap broad-scale predictive model, produced by EMODnet Seabed Habitats. \nThe extent of the mapped area includes the Mediterranean Sea, Black Sea, Baltic Sea, and areas of the North Eastern Atlantic extending from the Canary Islands in the south to the Barents Sea in the north. \nThe map was produced using a 'top-down' modelling approach using classified habitat descriptors to determine a final output habitat. \nHabitat descriptors differ per region but include: \n- Biological zone \n- Energy class \n- Oxygen regime \n- Salinity regime \n- Seabed substrate \n- Riverine input \nHabitat descriptors (excepting Substrate) are calculated using underlying physical data and thresholds derived from statistical analyses or expert judgement on known conditions. \nThe model is produced using R and Arc Model Builder (10.1). \nThe model was created using raster input layers with a cell size of 0.00104dd (roughly 100 metres). The model includes the sublittoral zone only; due to the high variability of the littoral zone, a lack of detailed substrate data and the resolution of the model, it is difficult to predict littoral habitats at this scale. \nEUSeaMap is classified into EUNIS 2019 level 3 (or more detailed levels where appropriate), EUNIS 2019 level 2 , EUNIS 2007-2011, the MSFD benthic broad habitat types, the HELCOM HUB classification in the Baltic, and the recently revised habitat classification in the Mediterranean. In the Black Sea, EUSeaMap is not classified into EUNIS 2007-2011 (due to inapplicability), but is classified according to a classification that was developed by EMODnet Seabed Habitats (Populus et a, 2017, and for a revised version Vasquez et al, 2020, See Online resources). \nReports that provide methods used for the classification of the predicted habitats into the new 2019 EUNIS classification, regional classifications, and MSFD BBHT (v.2017) are linked in Online Resources. \nA report on the methods used in the 2021 version of EUSeaMap (Vasquez et al., 2021) and reports on previous versions (v2016 and V2019) are linked in Online Resources.",
+         "protected":false,
+         "params":{
+            "layers":"eusm2021_eunis2019_group"
+         }
+      },
+
+      "Energy Class":{
+           "url":"https://ows.emodnet-seabedhabitats.eu/geoserver/emodnet_view/wms",
+           "data_type":"wms",
+           "content":"This layer represents...",
+           "protected":false,
+           "params":{
+              "layers":"eusm2021_ene_full"
+           }
+        }
+     }
+  },
+  "Administrative Areas":{
+     "layerNames":{
+        "Portugal Continental ZEE":{
+           "url":"https://webgeo2.hidrografico.pt//geoserver/ows?",
+           "data_type":"wms",
+           "content":"This layer represents...",
+           "protected":false,
+           "params":{
+               "layers":"au:zee_continente"
+            }
+         },
+         "Territorial Sea":{
+            "url":"https://webgeo2.hidrografico.pt//geoserver/ows?",
+            "data_type":"wms",
+            "content":"This layer represents...",
+            "protected":false,
+            "params":{
+                "layers":"au%3Amarterritorial"
+             }
+          } 
+     }
+  },
+  "Biology":{
+     "layerNames":{
+        "Invasive Macroalgae":{
+           "url":"https://geo.vliz.be/geoserver/Emodnetbio/wms",
+           "data_type":"wms",
+           "content":"This layer represents...",
+           "protected":false,
+           "params":{
+              "layers":"kuenm_models"
+           }
+        }
+     }
+  },
+  "Geology":{
+     "layerNames":{
+        "Seabed Substrate":{
+           "url":"https://drive.emodnet-geology.eu/geoserver/gtk/wms",
+           "data_type":"wms",
+           "content":"This layer represents...",
+           "protected":false,
+           "params":{
+              "layers":"gtk:seabed_substrate_250k"
+           }
+        }
+     }
+  }
+}

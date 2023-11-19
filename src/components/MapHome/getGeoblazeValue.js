@@ -76,3 +76,43 @@ export class GetGeoblazeValue3D {
     this.dep = this.dep[0]
   }
 }
+
+export class GetGeoblazeValuePoint {
+  constructor(coords, url, yearMonths) {
+    this.coords = coords[0]
+    this.url = url
+    this.yearMonths = yearMonths
+    this.dataGraph = {
+      time: Array(yearMonths.length).fill(0),
+      value: Array(yearMonths.length).fill(0),
+    }
+  }
+
+  async getGeoblaze() {
+    const latlng3857 = proj4('EPSG:4326', 'EPSG:3857').forward([
+      this.coords.lng,
+      this.coords.lat,
+    ])
+    await this.yearMonths.forEach(async (yearMonth, idx) => {
+      const newUrl = this.url.replace('actualDate', yearMonth)
+      try {
+        const georaster = await geoblaze.parse(newUrl)
+        const value = await geoblaze.identify(georaster, [
+          latlng3857[0],
+          latlng3857[1],
+        ])
+
+        const [year, month] = yearMonth.split('-')
+        this.dataGraph.time[idx] = new Date(parseInt(year), parseInt(month), 1)
+        // this.dataGraph.time[idx] = yearMonth
+        this.dataGraph.value[idx] = value[0]
+      } catch (err) {
+        // console.log(newUrl)
+        // console.log(yearMonth)
+        // console.log(err)
+
+        this.dataGraph.value[idx] = null
+      }
+    })
+  }
+}

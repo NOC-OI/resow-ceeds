@@ -7,7 +7,12 @@ export const LayerTypeOptionsContainer = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    font-weight: bold;
     label {
+      opacity: 0.7;
+      :hover {
+        opacity: 1;
+      }
       display: flex;
       align-items: center;
       padding-right: 0.675rem;
@@ -28,6 +33,7 @@ export const LayerTypeOptionsContainer = styled.div`
       p {
         vertical-align: middle;
         padding-left: 0.25rem;
+        color: ${(props) => props.theme.white};
       }
     }
     svg {
@@ -38,7 +44,12 @@ export const LayerTypeOptionsContainer = styled.div`
       }
     }
   }
+  input[type='range']:focus {
+    box-shadow: none;
+    outline: none;
+  }
   input[type='range'] {
     width: 100%;
+    accent-color: ${(props) => props.theme['yellow-700']};
   }
 `

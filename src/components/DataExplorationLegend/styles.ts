@@ -7,7 +7,8 @@ export const LayerLegendContainer = styled.div`
   top: 5vh;
   height: max-content;
   max-width: 40rem;
-  background-color: ${(props) => props.theme.white};
+  background-color: rgba(17, 17, 17, 0.6);
+  color: ${(props) => props.theme.white};
   z-index: 9999;
   max-height: 90vh;
   margin-left: 1rem;

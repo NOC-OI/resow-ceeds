@@ -1,16 +1,12 @@
 import styled from 'styled-components'
 
 export const LayerSelectionContainer = styled.div`
-  margin-left: -2.3rem;
-  height: 90vh;
-  width: 22rem;
-  background-color: ${(props) => props.theme.white};
   z-index: 9998;
   border-top-left-radius: 16px;
   border-top-right-radius: 16px;
   border-bottom-left-radius: 16px;
-  box-shadow: 0px 4px 4px ${(props) => props.theme.black};
   padding-bottom: 0.75rem;
+  color: ${(props) => props.theme.white};
 `
 
 export const LayerSelectionTitle = styled.div`
@@ -50,12 +46,12 @@ export const LayerSelectionTitle = styled.div`
 `
 
 export const LayerTypes = styled.div`
-  height: calc(90vh - 2.5rem + 0.75rem);
+  max-height: calc(90vh - 2.5rem + 0.75rem);
   overflow-y: auto;
 `
 
 export const WithAreaLayerTypes = styled.div`
-  height: calc(
+  max-height: calc(
     90vh - 2.5rem - 0.75rem - 1rem - 2rem - 0.75rem - 1.375rem - 0.5rem - 2rem -
       3.55rem
   );

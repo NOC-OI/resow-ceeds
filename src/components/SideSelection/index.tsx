@@ -1,36 +1,39 @@
-import {
-  SideSelectionContainer,
-  SideSelectionLink,
-  SideSelectionLinkFinal,
-} from './styles'
-
+import { SideSelectionContainer, SideSelectionLink } from './styles'
+import styles from './SideSelection.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faCircleQuestion,
-  faCircleUser,
   faCompassDrafting,
-  faFishFins,
   faLayerGroup,
   faTrash,
 } from '@fortawesome/free-solid-svg-icons'
 import { Icon } from '@iconify/react'
 import { useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
-import { Biodiversity } from '../../assets/biodiversity'
-import { Species } from '../../assets/species'
+import { DataExplorationSelection } from '../DataExplorationSelection'
+import { ThreeDDataExplorationSelection } from '../ThreeDDataExplorationSelection'
 
 interface SideSelectionProps {
-  selectedSidebarOption?: string
-  setSelectedSidebarOption?: any
-  selectedLayers?: any
-  setSelectedLayers?: any
-  setActualLayer?: any
-  setLayerAction?: any
+  selectedSidebarOption: any
+  setSelectedSidebarOption: any
+  selectedLayers: any
+  setSelectedLayers: any
+  setActualLayer: any
+  setLayerAction: any
   setShowPhotos?: any
-  setShowPopup?: any
-  setShowLogin?: any
-  isLogged?: any
-  loading?: any
+  setShowPopup: any
+  loading: any
+  actualLayer: any
+  layerAction: any
+  setLayerLegend: any
+  setInfoButtonBox: any
+  listLayers: any
+  getPolyline?: any
+  setGetPolyline?: any
+  setShowRange?: any
+  setClickPoint?: any
+  threeD?: any
+  setThreeD?: any
 }
 
 export function SideSelection({
@@ -42,9 +45,18 @@ export function SideSelection({
   setLayerAction,
   setShowPhotos,
   setShowPopup,
-  setShowLogin,
-  isLogged,
   loading,
+  actualLayer,
+  layerAction,
+  setLayerLegend,
+  setInfoButtonBox,
+  listLayers,
+  getPolyline,
+  setGetPolyline,
+  setShowRange,
+  setClickPoint,
+  threeD,
+  setThreeD,
 }: SideSelectionProps) {
   const navigate = useNavigate()
 
@@ -82,6 +94,16 @@ export function SideSelection({
     }
   }, [selectedSidebarOption])
 
+  useEffect(() => {
+    let futureShowRange = false
+    Object.keys(selectedLayers).forEach((layer: string) => {
+      if (selectedLayers[layer].date_range) {
+        futureShowRange = true
+      }
+    })
+    setShowRange(futureShowRange)
+  }, [selectedLayers])
+
   function handleEraseLayers() {
     setActualLayer(Object.keys(selectedLayers))
     setSelectedLayers({})
@@ -101,82 +123,113 @@ export function SideSelection({
   function handleToogleFullPagePopup() {
     setShowPopup((showPopup: any) => !showPopup)
   }
+  // const rout = window.location.pathname
 
-  function handleToogleLoginPopup() {
-    setShowLogin((showLogin: any) => !showLogin)
-  }
   return (
     <div>
       <SideSelectionContainer className={loading ? 'pointer-events-none' : ''}>
-        <SideSelectionLink
-          title={'Seabed Types'}
-          onClick={handleShowSelection}
-          id={'Seabed Types'}
-          className={selectedSidebarOption === 'Seabed Types' ? 'active' : ''}
-        >
-          <Species />
-        </SideSelectionLink>
-        <SideSelectionLink
-          title={'Species of Interest'}
-          onClick={handleShowSelection}
-          id={'Species of Interest'}
-          className={
-            selectedSidebarOption === 'Species of Interest' ? 'active' : ''
-          }
-        >
-          <FontAwesomeIcon icon={faFishFins} />
-        </SideSelectionLink>
-        <SideSelectionLink
-          title={'Biodiversity'}
-          onClick={handleShowSelection}
-          id={'Biodiversity'}
-          className={selectedSidebarOption === 'Biodiversity' ? 'active' : ''}
-        >
-          <Biodiversity />
-        </SideSelectionLink>
-        <SideSelectionLink
-          title={'Survey Design'}
-          onClick={handleShowSelection}
-          id={'Survey Design'}
-          className={selectedSidebarOption === 'Survey Design' ? 'active' : ''}
-        >
-          <FontAwesomeIcon icon={faCompassDrafting} />
-        </SideSelectionLink>
-        <SideSelectionLink
-          title={'Data Exploration'}
-          onClick={handleShowSelection}
-          id={'Data Exploration'}
-          className={
-            selectedSidebarOption === 'Data Exploration' ? 'active' : ''
-          }
-        >
-          <FontAwesomeIcon icon={faLayerGroup} />
-        </SideSelectionLink>
-        <SideSelectionLink
-          title={'3D Data Exploration'}
-          onClick={handleGoToBathymetry}
-          id={'3D Data Exploration'}
-          className={selectedSidebarOption === '3D' ? 'active' : ''}
-        >
-          <Icon icon="bi:badge-3d-fill" />
-        </SideSelectionLink>
-        <SideSelectionLink title={'Clean map'} onClick={handleEraseLayers}>
-          <FontAwesomeIcon icon={faTrash} />
-        </SideSelectionLink>
-        <SideSelectionLinkFinal>
+        <div className="flex">
+          {/* <SideSelectionLink
+            title={'Biodiversity'}
+            onClick={handleShowSelection}
+            id={'Biodiversity'}
+            className={
+              selectedSidebarOption === 'Biodiversity' ? styles.active : ''
+            }
+          >
+            <Biodiversity />
+          </SideSelectionLink> */}
+          <SideSelectionLink
+            title={'Suitability'}
+            onClick={handleShowSelection}
+            id={'Suitability'}
+            className={
+              selectedSidebarOption === 'Suitability' ? styles.active : ''
+            }
+          >
+            <FontAwesomeIcon icon={faCompassDrafting} />
+          </SideSelectionLink>
+          <SideSelectionLink
+            title={'Data Exploration'}
+            onClick={handleShowSelection}
+            id={'Data Exploration'}
+            className={
+              selectedSidebarOption === 'Data Exploration' ? styles.active : ''
+            }
+          >
+            <FontAwesomeIcon icon={faLayerGroup} />
+          </SideSelectionLink>
+          <SideSelectionLink
+            title={'3D Data Exploration'}
+            onClick={handleGoToBathymetry}
+            id={'3D Data Exploration'}
+            className={selectedSidebarOption === '3D' ? styles.active : ''}
+          >
+            <Icon icon="bi:badge-3d-fill" />
+          </SideSelectionLink>
+          <SideSelectionLink title={'Clean map'} onClick={handleEraseLayers}>
+            <FontAwesomeIcon icon={faTrash} />
+          </SideSelectionLink>
           <SideSelectionLink title={'Information about the application'}>
             <FontAwesomeIcon
               icon={faCircleQuestion}
               onClick={handleToogleFullPagePopup}
             />
           </SideSelectionLink>
-          <SideSelectionLink title={isLogged ? 'Logout' : 'Login'}>
-            <FontAwesomeIcon
-              icon={faCircleUser}
-              onClick={handleToogleLoginPopup}
+        </div>
+        <div>
+          {selectedSidebarOption === 'Data Exploration' && (
+            <DataExplorationSelection
+              selectedLayers={selectedLayers}
+              setSelectedLayers={setSelectedLayers}
+              actualLayer={actualLayer}
+              setActualLayer={setActualLayer}
+              layerAction={layerAction}
+              setLayerAction={setLayerAction}
+              setLayerLegend={setLayerLegend}
+              setInfoButtonBox={setInfoButtonBox}
+              listLayers={listLayers}
+              setShowPhotos={setShowPhotos}
+              getPolyline={getPolyline}
+              setGetPolyline={setGetPolyline}
+              setClickPoint={setClickPoint}
+              showSuitability={false}
             />
-          </SideSelectionLink>
-        </SideSelectionLinkFinal>
+          )}
+          {selectedSidebarOption === 'Suitability' && (
+            <DataExplorationSelection
+              selectedLayers={selectedLayers}
+              setSelectedLayers={setSelectedLayers}
+              actualLayer={actualLayer}
+              setActualLayer={setActualLayer}
+              layerAction={layerAction}
+              setLayerAction={setLayerAction}
+              setLayerLegend={setLayerLegend}
+              setInfoButtonBox={setInfoButtonBox}
+              listLayers={listLayers}
+              setShowPhotos={setShowPhotos}
+              getPolyline={getPolyline}
+              setGetPolyline={setGetPolyline}
+              setClickPoint={setClickPoint}
+              showSuitability={true}
+            />
+          )}
+          {selectedSidebarOption === '3D' && (
+            <ThreeDDataExplorationSelection
+              selectedLayers={selectedLayers}
+              setSelectedLayers={setSelectedLayers}
+              setActualLayer={setActualLayer}
+              layerAction={layerAction}
+              setLayerAction={setLayerAction}
+              setLayerLegend={setLayerLegend}
+              setInfoButtonBox={setInfoButtonBox}
+              listLayers={listLayers}
+              threeD={threeD}
+              setThreeD={setThreeD}
+              showSuitability={false}
+            />
+          )}
+        </div>
       </SideSelectionContainer>
     </div>
   )

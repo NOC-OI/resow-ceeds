@@ -7,6 +7,8 @@ import remarkMath from 'remark-math'
 import rehypeKatex from 'rehype-katex'
 import remarkBreaks from 'remark-breaks'
 import 'katex/dist/katex.min.css'
+import Draggable from 'react-draggable'
+import { useRef } from 'react'
 
 interface InfoButtonBoxProps {
   infoButtonBox: any
@@ -20,28 +22,34 @@ export function InfoButtonBox({
   function handleClose() {
     setInfoButtonBox({})
   }
-
+  const nodeRef = useRef(null)
   return (
-    <InfoButtonBoxContainer id="info-subsection" className="w-80">
-      <div>
-        <FontAwesomeIcon icon={faCircleXmark} onClick={handleClose} />
-      </div>
-      <div className="font-bold text-center pb-3">
-        <ReactMarkdown
-          children={infoButtonBox.title}
-          remarkPlugins={[remarkGfm, remarkMath, remarkBreaks]}
-          rehypePlugins={[rehypeKatex]}
-          linkTarget={'_blank'}
-        />
-      </div>
-      <InfoButtonBoxContent className="content-center pb-2">
-        <ReactMarkdown
-          children={infoButtonBox.content}
-          remarkPlugins={[remarkGfm, remarkMath, remarkBreaks]}
-          rehypePlugins={[rehypeKatex]}
-          linkTarget={'_blank'}
-        />
-      </InfoButtonBoxContent>
-    </InfoButtonBoxContainer>
+    <Draggable nodeRef={nodeRef}>
+      <InfoButtonBoxContainer
+        id="info-subsection"
+        ref={nodeRef}
+        className="w-80"
+      >
+        <div>
+          <FontAwesomeIcon icon={faCircleXmark} onClick={handleClose} />
+        </div>
+        <div className="font-bold text-center pb-3">
+          <ReactMarkdown
+            children={infoButtonBox.title}
+            remarkPlugins={[remarkGfm, remarkMath, remarkBreaks]}
+            rehypePlugins={[rehypeKatex]}
+            linkTarget={'_blank'}
+          />
+        </div>
+        <InfoButtonBoxContent className="content-center pb-2">
+          <ReactMarkdown
+            children={infoButtonBox.content}
+            remarkPlugins={[remarkGfm, remarkMath, remarkBreaks]}
+            rehypePlugins={[rehypeKatex]}
+            linkTarget={'_blank'}
+          />
+        </InfoButtonBoxContent>
+      </InfoButtonBoxContainer>
+    </Draggable>
   )
 }

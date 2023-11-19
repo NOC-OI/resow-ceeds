@@ -3,7 +3,8 @@ import styled from 'styled-components'
 export const InfoButtonBoxContainer = styled.div`
   right: 0.5rem;
   top: 5vh;
-  background-color: ${(props) => props.theme.white};
+  background-color: rgba(17, 17, 17, 0.6);
+  color: ${(props) => props.theme.white};
   z-index: 9999;
   max-height: 90vh;
   height: max-content;

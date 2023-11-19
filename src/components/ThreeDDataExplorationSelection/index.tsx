@@ -1,10 +1,8 @@
 /* eslint-disable no-multi-str */
 import {
   LayerSelectionContainer,
-  LayerSelectionTitle,
   LayerTypes,
 } from '../DataExplorationSelection/styles'
-import { Info } from 'phosphor-react'
 import { ThreeDDataExplorationType } from '../ThreeDDataExplorationType'
 
 interface ThreeDDataExplorationSelectionProps {
@@ -19,6 +17,7 @@ interface ThreeDDataExplorationSelectionProps {
   isLogged?: any
   threeD: any
   setThreeD: any
+  showSuitability: any
 }
 
 export function ThreeDDataExplorationSelection({
@@ -33,53 +32,57 @@ export function ThreeDDataExplorationSelection({
   isLogged,
   threeD,
   setThreeD,
+  showSuitability,
 }: ThreeDDataExplorationSelectionProps) {
-  function handleClickLayerInfo(title: String, content: string) {
-    setInfoButtonBox({
-      title,
-      content,
-    })
-  }
-
   return (
     <LayerSelectionContainer>
-      <LayerSelectionTitle>
-        <div>
-          <h1>3D Data Exploration</h1>
-          <Info
-            id="info-section-button"
-            size={20}
-            onClick={() =>
-              handleClickLayerInfo(
-                '3D Data Exploration',
-                'A GIS tool to explore the available data layers \
-                for the region. \n \
-                A description of all data used is available in the \
-                [Asset Register](https://catalogue-imfe.ceh.ac.uk/pimfe/documents).',
-              )
-            }
-          />
-        </div>
-      </LayerSelectionTitle>
       <LayerTypes>
         {Object.keys(listLayers).map((layerClass: any) => {
-          return (
-            <ThreeDDataExplorationType
-              key={layerClass}
-              content={layerClass}
-              childs={listLayers[layerClass].layerNames}
-              selectedLayers={selectedLayers}
-              setSelectedLayers={setSelectedLayers}
-              setActualLayer={setActualLayer}
-              layerAction={layerAction}
-              setLayerAction={setLayerAction}
-              setLayerLegend={setLayerLegend}
-              setInfoButtonBox={setInfoButtonBox}
-              isLogged={isLogged}
-              threeD={threeD}
-              setThreeD={setThreeD}
-            />
-          )
+          if (showSuitability) {
+            if (layerClass === 'Suitability') {
+              return (
+                <ThreeDDataExplorationType
+                  key={layerClass}
+                  content={layerClass}
+                  childs={listLayers[layerClass].layerNames}
+                  selectedLayers={selectedLayers}
+                  setSelectedLayers={setSelectedLayers}
+                  setActualLayer={setActualLayer}
+                  layerAction={layerAction}
+                  setLayerAction={setLayerAction}
+                  setLayerLegend={setLayerLegend}
+                  setInfoButtonBox={setInfoButtonBox}
+                  isLogged={isLogged}
+                  threeD={threeD}
+                  setThreeD={setThreeD}
+                />
+              )
+            } else {
+              return null
+            }
+          } else {
+            if (layerClass !== 'Suitability') {
+              return (
+                <ThreeDDataExplorationType
+                  key={layerClass}
+                  content={layerClass}
+                  childs={listLayers[layerClass].layerNames}
+                  selectedLayers={selectedLayers}
+                  setSelectedLayers={setSelectedLayers}
+                  setActualLayer={setActualLayer}
+                  layerAction={layerAction}
+                  setLayerAction={setLayerAction}
+                  setLayerLegend={setLayerLegend}
+                  setInfoButtonBox={setInfoButtonBox}
+                  isLogged={isLogged}
+                  threeD={threeD}
+                  setThreeD={setThreeD}
+                />
+              )
+            } else {
+              return null
+            }
+          }
         })}
       </LayerTypes>
     </LayerSelectionContainer>

@@ -5,15 +5,15 @@ export const InfoBoxContainer = styled.div`
   right: 0.5rem;
   bottom: 5vh;
   width: 6.5rem;
-  background-color: ${(props) => props.theme.white};
+  background-color: rgba(17, 17, 17, 0.6); /* Black */
   z-index: 9999;
   height: max-content;
   margin-left: 1rem;
   padding: 0.5rem;
   border-radius: 16px;
-  box-shadow: 0px 4px 4px ${(props) => props.theme.black};
+  box-shadow: 0px 4px 4px ${(props) => props.theme.white};
   z-index: 9999;
-
+  color: ${(props) => props.theme.white};
   h1 {
     font-size: 1rem;
     line-height: 1.6;

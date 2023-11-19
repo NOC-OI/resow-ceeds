@@ -6,7 +6,7 @@ import {
   ScreenSpaceEvent,
   CesiumComponentRef,
 } from 'resium'
-import chroma from 'chroma-js'
+import chroma, { limits } from 'chroma-js'
 import * as turf from '@turf/turf'
 
 import {
@@ -25,7 +25,8 @@ import * as Cesium from 'cesium'
 import { GetGeoblazeValue3D } from '../MapHome/getGeoblazeValue'
 import { Loading } from '../Loading'
 import { GetPhotoMarker } from '../MapHome/addPhotoMarker'
-import { GetTileLayer } from '../MapHome/addGeoraster'
+import { GetTifLayer2, GetTileLayer } from '../MapHome/addGeoraster'
+import { yearMonths } from '../../data/yearMonths'
 
 Ion.defaultAccessToken = process.env.VITE_CESIUM_TOKEN
 
@@ -48,6 +49,7 @@ interface ThreeDMapProps {
   setLayerAction: any
   listLayers: any
   threeD: any
+  actualDate: any
 }
 function ThreeDMap1({
   selectedLayers,
@@ -56,6 +58,7 @@ function ThreeDMap1({
   setLayerAction,
   listLayers,
   threeD,
+  actualDate,
 }: ThreeDMapProps) {
   const colorScale = chroma
     .scale(['#f00', '#0f0', '#00f', 'gray'])
@@ -70,11 +73,13 @@ function ThreeDMap1({
   const [depth, setDepth] = useState({})
   const ref = useRef<CesiumComponentRef<CesiumViewer>>(null)
 
-  const defaultOpacity = 0.7
   const defaultWMSBounds = [
-    [50.020174, -8.58279],
-    [50.578429, -7.70616],
+    [34.5, -14],
+    [42.5, -6],
   ]
+
+  const defaultOpacity = 0.7
+
   const batOrder = ['Shipborne', 'Emodnet', 'Gebco']
 
   const [cogLayer, setCogLayer] = useState('')
@@ -92,33 +97,19 @@ function ThreeDMap1({
 
   Cesium.Camera.DEFAULT_VIEW_RECTANGLE = startCoordinates
 
-  const jnccSpecial = new WebMapServiceImageryProvider({
-    url: 'https://mpa-ows.jncc.gov.uk/mpa_mapper/wms?',
-    parameters: {
-      service: 'wms',
-      request: 'GetMap',
-      version: '1.3.0',
-      format: 'image/png',
-      transparent: 'true',
-      width: 256,
-      height: 256,
-    },
-    layers: 'sac_mc_full',
-  })
   const jnccMCZ = new WebMapServiceImageryProvider({
-    url: 'https://mpa-ows.jncc.gov.uk/mpa_mapper/wms?',
+    url: 'https://webgeo2.hidrografico.pt/geoserver/ows?',
     parameters: {
       service: 'wms',
       request: 'GetMap',
-      version: '1.3.0',
+      version: '1.1.1',
       format: 'image/png',
       transparent: 'true',
       width: 256,
       height: 256,
     },
-    layers: 'mcz',
+    layers: 'isobat:isobatimetria_8_16_30',
   })
-
   const terrainProvider = createWorldTerrainAsync()
 
   function getGeorasterLayer() {
@@ -224,8 +215,62 @@ function ThreeDMap1({
     return layer
   }
 
+  async function generateAddGJsonLayer(
+    layer,
+    layers,
+    layerName,
+    actual,
+    alpha,
+  ) {
+    const color1 = createColor(colorScale, true, 0.3)
+    const myStyle = {
+      stroke: color1,
+      fill: color1,
+      strokeWidth: 3,
+    }
+    layer = await Cesium.GeoJsonDataSource.load(layerName.url, myStyle)
+    layer.attribution = actual
+    layer.originalColor = color1
+    layer.alpha = alpha
+    layers.add(layer)
+    correctBaseWMSOrder(layers)
+  }
+
+  async function generateAddTIFLayer(layer, layers, layerName, actual, alpha) {
+    const getTifLayer = new GetTifLayer2(
+      layerName,
+      actual,
+      yearMonths[actualDate],
+      null,
+      limits,
+      null,
+    )
+    await getTifLayer.getTile(rout).then(function () {
+      layer = getTifLayer.layer
+      layer.alpha = alpha
+      layers.add(layer)
+      correctBaseWMSOrder(layers)
+    })
+    if (actual.split('_')[0] === 'Bathymetry') {
+      if (cogLayer) {
+        if (
+          batOrder.indexOf(actual.split('_')[1]) < batOrder.indexOf(cogLayer)
+        ) {
+          setCogLayer(actual.split('_')[1])
+        }
+      } else {
+        setCogLayer(actual.split('_')[1])
+      }
+    }
+  }
+
   async function generateAddCOGLayer(layer, layers, layerName, actual, alpha) {
-    const getCOGLayer = new GetTileLayer(layerName, actual, true)
+    const getCOGLayer = new GetTileLayer(
+      layerName,
+      actual,
+      true,
+      yearMonths[actualDate],
+    )
     await getCOGLayer.getTile(rout).then(function () {
       layer = getCOGLayer.layer
       layer.alpha = alpha
@@ -270,13 +315,12 @@ function ThreeDMap1({
 
   async function correctBaseWMSOrder(layers: any) {
     layers?._layers.forEach(function (imageryLayers: any) {
-      if (imageryLayers._imageryProvider._layers === 'mcz') {
+      if (
+        imageryLayers._imageryProvider._layers ===
+        'isobat:isobatimetria_8_16_30'
+      ) {
         layers.remove(imageryLayers)
         const layer = new Cesium.ImageryLayer(jnccMCZ, {})
-        layers.add(layer)
-      } else if (imageryLayers._imageryProvider._layers === 'sac_mc_full') {
-        layers.remove(imageryLayers)
-        const layer = new Cesium.ImageryLayer(jnccSpecial, {})
         layers.add(layer)
       }
     })
@@ -309,6 +353,11 @@ function ThreeDMap1({
           parseInt(layerName.url),
         )
         ref.current.cesiumElement.terrainProvider = terrainUrl
+      } else if (layerName.data_type === 'GTIFF') {
+        layers = ref.current.cesiumElement.scene.imageryLayers
+        generateAddTIFLayer(layer, layers, layerName, actual, defaultOpacity)
+      } else if (layerName.data_type === 'GEOJSON') {
+        generateAddGJsonLayer(layer, layers, layerName, actual, defaultOpacity)
       } else if (layerName.data_type === 'Photo') {
         ref.current.cesiumElement.infoBox.frame.removeAttribute('sandbox')
         ref.current.cesiumElement.infoBox.frame.src = 'about:blank'
@@ -412,6 +461,22 @@ function ThreeDMap1({
             layers.remove(layer)
           }
         })
+      } else if (layerName.data_type === 'GEOJSON') {
+        layers = ref.current.cesiumElement.dataSources
+        let numberDataSources = 1
+
+        while (numberDataSources > 0) {
+          numberDataSources = 0
+          for (let i = 0; i < layers._dataSources.length; i++) {
+            const layer = layers._dataSources[i]
+            if (actualLayer.includes(layer.attribution)) {
+              layers.remove(layer)
+              numberDataSources = 1
+              break // exit the loop as soon as we remove a layer
+            }
+          }
+        }
+        setLayerAction('')
       }
     })
     setLoading(false)
@@ -428,7 +493,7 @@ function ThreeDMap1({
         parseInt(threeD.dataInfo.assetId),
       )
 
-      const threeDCoordinates = Rectangle.fromDegrees(-8.1, 49.27, -7.9, 49.3)
+      const threeDCoordinates = Rectangle.fromDegrees(-10.1, 38.6, -10, 38.7)
 
       ref.current.cesiumElement.terrainProvider = terrainUrl
       ref.current.cesiumElement.camera.flyTo({
@@ -511,8 +576,24 @@ function ThreeDMap1({
               layerNew.alpha = layer.alpha
               layers.add(layerNew)
               correctBaseWMSOrder(layers)
-            } else {
+            } else if (layerName.data_type === 'COG') {
               generateAddCOGLayer(
+                layer,
+                layers,
+                layerName,
+                actual,
+                selectedLayers[layer.attribution].opacity,
+              )
+            } else if (layerName.data_type === 'GTIFF') {
+              generateAddTIFLayer(
+                layer,
+                layers,
+                layerName,
+                actual,
+                selectedLayers[layer.attribution].opacity,
+              )
+            } else if (layerName.data_type === 'GEOJSON') {
+              generateAddGJsonLayer(
                 layer,
                 layers,
                 layerName,
@@ -548,33 +629,10 @@ function ThreeDMap1({
     }
   }, [selectedLayers])
 
-  // function CesiumZoomControl() {
-  //   function zoomCamera(amount: number) {
-  //     if (amount > 0) {
-  //       ref.current.cesiumElement.camera.zoomIn(60)
-  //     } else {
-  //       ref.current.cesiumElement.camera.zoomOut(60)
-  //     }
-  //   }
-
-  //   return (
-  //     <div className="leaflet-top leaflet-right top-10">
-  //       <ZoomGroup className="leaflet-control-zoom leaflet-bar leaflet-control">
-  //         <ZoomButton title="Zoom in" onClick={() => zoomCamera(1)}>
-  //           +
-  //         </ZoomButton>
-  //         <ZoomButton title="Zoom out" onClick={() => zoomCamera(-1)}>
-  //           -
-  //         </ZoomButton>
-  //       </ZoomGroup>
-  //     </div>
-  //   )
-  // }
-
   const displayMap = useMemo(
     () => (
       <Viewer
-        full
+        // full
         animation={false}
         timeline={false}
         ref={ref}
@@ -589,7 +647,6 @@ function ThreeDMap1({
           onReady={handleReady}
         /> */}
         <ImageryLayer imageryProvider={jnccMCZ} />
-        <ImageryLayer imageryProvider={jnccSpecial} />
         <CameraFlyTo destination={startCoordinates} duration={3} />
         <ScreenSpaceEventHandler>
           <ScreenSpaceEvent

@@ -1,0 +1,7 @@
+.active svg{
+}
+.active{
+  cursor: pointer;
+  background-color: #D49511; /* Black */
+  border-radius: 50%;
+}

@@ -67,6 +67,7 @@ export function DataExplorationSelection({
                   getPolyline={getPolyline}
                   setGetPolyline={setGetPolyline}
                   setClickPoint={setClickPoint}
+                  listLayers={listLayers}
                 />
               )
             } else {
@@ -91,6 +92,7 @@ export function DataExplorationSelection({
                   getPolyline={getPolyline}
                   setGetPolyline={setGetPolyline}
                   setClickPoint={setClickPoint}
+                  listLayers={listLayers}
                 />
               )
             } else {

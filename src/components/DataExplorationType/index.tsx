@@ -1,4 +1,4 @@
-import { Mountains } from 'phosphor-react'
+import { Fish, Mountains, StackSimple, Waves } from 'phosphor-react'
 import { useEffect, useState } from 'react'
 // import { LayerTypeContainer } from './styles'
 import { DataExplorationTypeOptions } from '../DataExplorationTypeOptions'
@@ -24,6 +24,7 @@ interface DataExplorationTypeProps {
   setGetPolyline: any
   setShowRange?: any
   setClickPoint: any
+  listLayers: any
 }
 
 export function DataExplorationType({
@@ -41,6 +42,7 @@ export function DataExplorationType({
   getPolyline,
   setGetPolyline,
   setClickPoint,
+  listLayers,
 }: DataExplorationTypeProps) {
   const [subLayers, setSubLayers] = useState<keyable>({})
 
@@ -70,7 +72,8 @@ export function DataExplorationType({
       // setShowPhotos(photoList)
     }
   }, [selectedLayers])
-
+  console.log('subLayers')
+  console.log(subLayers)
   return (
     <CalcTypeContainer>
       <div>
@@ -80,7 +83,17 @@ export function DataExplorationType({
           style={isActive ? { color: '#D49511' } : { color: 'white' }}
         >
           <span title="expand">
-            <Mountains size={30} />
+            {listLayers[`${content}`].icon === 'mountain' ? (
+              <Mountains size={30} />
+            ) : listLayers[`${content}`].icon === 'waves' ? (
+              <Waves size={30} />
+            ) : listLayers[`${content}`].icon === 'fish' ? (
+              <Fish size={30} />
+            ) : listLayers[`${content}`].icon === 'area' ? (
+              <StackSimple size={32} />
+            ) : (
+              <StackSimple size={32} />
+            )}
           </span>
           <p>{content}</p>
         </header>

@@ -55,6 +55,7 @@ export function ThreeDDataExplorationSelection({
                   isLogged={isLogged}
                   threeD={threeD}
                   setThreeD={setThreeD}
+                  listLayers={listLayers}
                 />
               )
             } else {
@@ -77,6 +78,7 @@ export function ThreeDDataExplorationSelection({
                   isLogged={isLogged}
                   threeD={threeD}
                   setThreeD={setThreeD}
+                  listLayers={listLayers}
                 />
               )
             } else {

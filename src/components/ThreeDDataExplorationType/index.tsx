@@ -1,4 +1,4 @@
-import { Mountains } from 'phosphor-react'
+import { Fish, Mountains, StackSimple, Waves } from 'phosphor-react'
 import { useState } from 'react'
 import { CalcTypeContainer } from '../DataExplorationType/styles'
 import { ThreeDDataExplorationTypeOptions } from '../ThreeDDataExplorationTypeOptions'
@@ -22,6 +22,7 @@ interface ThreeDDataExplorationTypeProps {
   isLogged?: any
   threeD: any
   setThreeD: any
+  listLayers: any
 }
 
 export function ThreeDDataExplorationType({
@@ -37,6 +38,7 @@ export function ThreeDDataExplorationType({
   isLogged,
   threeD,
   setThreeD,
+  listLayers,
 }: ThreeDDataExplorationTypeProps) {
   const [subLayers, setSubLayers] = useState<keyable>({})
 
@@ -61,7 +63,17 @@ export function ThreeDDataExplorationType({
         >
           <div className="flex">
             <span title="expand">
-              <Mountains size={30} />
+              {listLayers[`${content}`].icon === 'mountain' ? (
+                <Mountains size={30} />
+              ) : listLayers[`${content}`].icon === 'waves' ? (
+                <Waves size={30} />
+              ) : listLayers[`${content}`].icon === 'fish' ? (
+                <Fish size={30} />
+              ) : listLayers[`${content}`].icon === 'area' ? (
+                <StackSimple size={32} />
+              ) : (
+                <StackSimple size={32} />
+              )}
             </span>
             <p>{content}</p>
             {content === 'Bathymetry' ? (

@@ -56,7 +56,7 @@
   }
  },
   "Environmental Data":{
-   "icon": "",
+   "icon": "waves",
     "layerNames":{
       "Chlorophyll":{
          "url":"https://pub-d25b385271574fbeb5c6af580799fafe.r2.dev/prediction_chl_actualDate.tiff",
@@ -150,7 +150,7 @@
    }
   },
   "MPA":{
-   "icon": "",
+   "icon": "area",
 
     "layerNames":{
       "Natura2000 Network":{
@@ -171,7 +171,7 @@
       }
    },
   "Species":{
-   "icon": "",
+   "icon": "fish",
 
    "layerNames":{
      "Kelps":{
@@ -188,7 +188,7 @@
    }
  },    
   "Seabed Habitats":{
-   "icon": "",
+   "icon": "area",
 
      "layerNames":{
       "Seabed Habitats":{
@@ -203,7 +203,7 @@
      }
   },
   "Administrative Areas":{
-   "icon": "",
+   "icon": "area",
 
      "layerNames":{
         "Portugal Continental ZEE":{
@@ -233,7 +233,7 @@
 
    },
   "Biology":{
-   "icon": "",
+   "icon": "fish",
 
      "layerNames":{
       "Fisheries Intensity: bottom trawler":{
@@ -253,7 +253,7 @@
      }
   },
   "Geology":{
-   "icon": "",
+   "icon": "mountain",
 
      "layerNames":{
         "Seabed Substrate":{

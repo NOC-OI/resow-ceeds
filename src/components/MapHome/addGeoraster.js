@@ -111,7 +111,7 @@ export class GetTifLayer2 {
       if (bands.length >= 3) {
         bidx = [1, 2, 3]
       }
-
+      this.contrast = true
       for (let i = 0; i < bands.length; i++) {
         const stats = cogStats[bands[i]]
         if (this.contrast) {
@@ -141,7 +141,7 @@ export class GetTifLayer2 {
         .then((r) => r.data)
       this.tileUrl = this.tileJson.tiles[0]
       if (rout === '/3d') {
-        this.colourScheme = 'ocean_r'
+        this.colourScheme = 'reds'
       }
 
       if (bands.length === 1) {

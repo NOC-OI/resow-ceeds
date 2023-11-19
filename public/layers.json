@@ -151,13 +151,23 @@
   },
   "MPA":{
     "layerNames":{
-      "Portugal MAP":{
-          "url":"https://pub-d25b385271574fbeb5c6af580799fafe.r2.dev/MPAs.geojson",
-          "data_type":"GEOJSON",
-          "content":"This layer represents..."
+      "Natura2000 Network":{
+         "url":"https://pub-d25b385271574fbeb5c6af580799fafe.r2.dev/Natura2000.geojson",
+         "data_type":"GEOJSON",
+         "content":"The Natura 2000 network in the context of EU marine conservation policies is a cornerstone initiative designed to protect and manage natural habitats and species of European importance. Under the Birds Directive and the Habitats Directive, the Natura 2000 network includes designated sites both on land and in marine environments. In marine ecosystems, these sites contribute to the conservation of biodiversity and the sustainable use of resources. Natura 2000 aims to ensure the long-term survival of species and habitats by establishing a cohesive network of protected areas across EU member states, promoting ecological coherence and biodiversity conservation in the marine environment."
+       },
+       "Marine Protected Areas (MPAs) established under the framework of the Regional Sea Conventions (RSCs)":{
+         "url":"https://pub-d25b385271574fbeb5c6af580799fafe.r2.dev/MPAs.geojson",
+         "data_type":"GEOJSON",
+         "content":"Marine Protected Areas (MPAs) established under the framework of the Regional Sea Conventions (RSCs) in the context of EU marine conservation policies are designated zones aimed at safeguarding marine ecosystems and biodiversity. These areas are integral components of international and regional efforts to promote sustainable marine management. Implemented under the Barcelona Convention, OSPAR Convention, and other RSCs, MPAs contribute to the conservation of critical habitats and species by regulating human activities and minimizing environmental impacts. Through this framework, the EU works collaboratively with neighboring countries to establish and manage MPAs, fostering ecological coherence and biodiversity preservation in shared marine regions."
+       },
+       "Common Database on Designated Areas (CDDA), Nationally designated area":{
+         "url":"https://pub-d25b385271574fbeb5c6af580799fafe.r2.dev/CDDA.geojson",
+         "data_type":"GEOJSON",
+         "content":"In the context of EU marine conservation policies, a 'Nationally Designated Area' (NDA) refers to an area within the jurisdiction of a member state that has been officially designated and protected for conservation purposes. These designations align with EU directives such as the Birds Directive, the Habitats Directive, and the Marine Strategy Framework Directive, which aim to conserve biodiversity and promote the sustainable use of marine resources. Member states are responsible for designating and managing these areas, contributing to the broader goals of preserving marine habitats, species, and ecosystems of national significance. As policy frameworks may evolve, it is advisable to consult the latest legal documents and official publications for the most current information on Nationally Designated Areas and EU marine conservation policies."
+       }
       }
-    }
-  },
+   },
   "Species":{
    "layerNames":{
      "Kelps":{

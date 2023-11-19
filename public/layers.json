@@ -29,7 +29,7 @@
    "layerNames":{
      "Kelps":{
       "layer_type":"suitability",
-      "url":"https://pub-d25b385271574fbeb5c6af580799fafe.r2.dev/color_sum_actualDate.tiff",
+      "url":"https://pub-d25b385271574fbeb5c6af580799fafe.r2.dev/total_color_sum_actualDate.tiff",
       "data_type":"GTIFF",
       "content":"Chlorophyll, a green pigment crucial for photosynthesis in marine plants and algae, serves as a key indicator of primary productivity in coastal ecosystems. Higher chlorophyll concentrations signify increased sunlight and nutrient availability, influencing the distribution and diversity of marine habitats and species. Climate change impacts chlorophyll levels through factors like rising sea temperatures, altered ocean circulation, and changing nutrient patterns, affecting the growth and distribution of phytoplankton. These changes can have cascading effects on coastal ecosystems, potentially leading to shifts in species composition and habitat distribution, making chlorophyll a critical parameter for understanding the dynamic interactions within marine environments.",
       "units": "Not Suitable - Optimal",
@@ -40,7 +40,7 @@
    },
    "Seagrass":{
       "layer_type":"suitability",
-      "url":"https://pub-d25b385271574fbeb5c6af580799fafe.r2.dev/color_sum_actualDate.tiff",
+      "url":"https://pub-d25b385271574fbeb5c6af580799fafe.r2.dev/total_color_sum_actualDate.tiff",
       "data_type":"GTIFF",
       "content":"Chlorophyll, a green pigment crucial for photosynthesis in marine plants and algae, serves as a key indicator of primary productivity in coastal ecosystems. Higher chlorophyll concentrations signify increased sunlight and nutrient availability, influencing the distribution and diversity of marine habitats and species. Climate change impacts chlorophyll levels through factors like rising sea temperatures, altered ocean circulation, and changing nutrient patterns, affecting the growth and distribution of phytoplankton. These changes can have cascading effects on coastal ecosystems, potentially leading to shifts in species composition and habitat distribution, making chlorophyll a critical parameter for understanding the dynamic interactions within marine environments.",
       "units": "mmol/m3",

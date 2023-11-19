@@ -205,15 +205,18 @@ export function DataExplorationTypeOptions({
           dataType: subLayers[subLayer].data_type,
         })
       } else {
-        const times = 10
-        const layerScale = subLayers[subLayer].scale
-        const values = linspace(layerScale[0], layerScale[1], times)
+        const values = subLayers[subLayer].scale
+        // const scale = subLayers[subLayer].colors
+        const times = 100
         const scale = []
+        const newValues = linspace(values[0], values[values.length - 1], times)
+        console.log(newValues)
+
         const colorScale = chroma
           .scale(subLayers[subLayer].colors)
-          .domain([0, times - 1])
+          .domain(values)
         for (let i = 0; i < times; i++) {
-          scale.push(colorScale(i).hex())
+          scale.push(colorScale(newValues[i]).hex())
         }
         setLayerLegend({
           layerName: subLayer,
@@ -221,6 +224,22 @@ export function DataExplorationTypeOptions({
           legend: [scale, values],
           dataType: subLayers[subLayer].data_type,
         })
+        // const times = 10
+        // const layerScale = subLayers[subLayer].scale
+        // const values = linspace(layerScale[0], layerScale[1], times)
+        // const scale = []
+        // const colorScale = chroma
+        //   .scale(subLayers[subLayer].colors)
+        //   .domain([0, times - 1])
+        // for (let i = 0; i < times; i++) {
+        //   scale.push(colorScale(i).hex())
+        // }
+        // setLayerLegend({
+        //   layerName: subLayer,
+        //   dataDescription: ['', subLayers[subLayer].units],
+        //   legend: [scale, values],
+        //   dataType: subLayers[subLayer].data_type,
+        // })
       }
     }
   }

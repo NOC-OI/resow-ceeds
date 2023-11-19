@@ -33,7 +33,7 @@ export function InfoButtonBox({
         <div>
           <FontAwesomeIcon icon={faCircleXmark} onClick={handleClose} />
         </div>
-        <div className="font-bold text-center pb-3">
+        <div className="font-bold text-center pb-3 text-xl">
           <ReactMarkdown
             children={infoButtonBox.title}
             remarkPlugins={[remarkGfm, remarkMath, remarkBreaks]}

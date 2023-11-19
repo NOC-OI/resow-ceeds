@@ -130,6 +130,11 @@ function MapHome1({
     iconUrl: '/marker-icon_red.png',
     iconSize: [25, 25],
   })
+
+  const normalIcon = L.icon({
+    iconUrl: '/marker-icon_old.png',
+    iconSize: [25, 37],
+  })
   const smallIcon = L.icon({
     iconUrl: '/marker-icon.png',
     iconSize: [0.1, 0.1],
@@ -339,6 +344,9 @@ function MapHome1({
           .then((response) => response.json())
           .then((data) => {
             layer = L.geoJSON(data, {
+              pointToLayer: function (feature, latlng) {
+                return L.marker(latlng, { icon: normalIcon })
+              },
               onEachFeature: function (feature, layer) {
                 layer.on({
                   click: () => {

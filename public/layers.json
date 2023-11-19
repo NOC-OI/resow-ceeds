@@ -35,7 +35,7 @@
       "layer_type":"suitability",
       "url":"https://pub-d25b385271574fbeb5c6af580799fafe.r2.dev/total_color_sum_actualDate.tiff",
       "data_type":"GTIFF",
-      "content":"Chlorophyll, a green pigment crucial for photosynthesis in marine plants and algae, serves as a key indicator of primary productivity in coastal ecosystems. Higher chlorophyll concentrations signify increased sunlight and nutrient availability, influencing the distribution and diversity of marine habitats and species. Climate change impacts chlorophyll levels through factors like rising sea temperatures, altered ocean circulation, and changing nutrient patterns, affecting the growth and distribution of phytoplankton. These changes can have cascading effects on coastal ecosystems, potentially leading to shifts in species composition and habitat distribution, making chlorophyll a critical parameter for understanding the dynamic interactions within marine environments.",
+      "content":"Habitat suitability assessments based on forecasted marine variables provide crucial insights into the dynamic ecological conditions that influence the viability of marine ecosystems. By integrating predictive models with factors such as sea surface temperature, salinity, and nutrient concentrations, researchers can gauge the potential suitability of habitats for various marine species. These forecasts enable a proactive approach to conservation and resource management, aiding in the identification of areas at risk or those likely to thrive under changing environmental conditions. This information proves invaluable for implementing targeted conservation strategies and adapting to the evolving challenges posed by climate change in marine ecosystems.",
       "units": "Not Suitable - Optimal",
       "scale": [-10, -7.5, -5, -2.5, 0],
       "date_range": true,
@@ -46,12 +46,12 @@
       "layer_type":"suitability",
       "url":"https://pub-d25b385271574fbeb5c6af580799fafe.r2.dev/total_color_sum_actualDate.tiff",
       "data_type":"GTIFF",
-      "content":"Chlorophyll, a green pigment crucial for photosynthesis in marine plants and algae, serves as a key indicator of primary productivity in coastal ecosystems. Higher chlorophyll concentrations signify increased sunlight and nutrient availability, influencing the distribution and diversity of marine habitats and species. Climate change impacts chlorophyll levels through factors like rising sea temperatures, altered ocean circulation, and changing nutrient patterns, affecting the growth and distribution of phytoplankton. These changes can have cascading effects on coastal ecosystems, potentially leading to shifts in species composition and habitat distribution, making chlorophyll a critical parameter for understanding the dynamic interactions within marine environments.",
-      "units": "mmol/m3",
-      "scale": [-1, 0],
+      "content":"Habitat suitability assessments based on forecasted marine variables provide crucial insights into the dynamic ecological conditions that influence the viability of marine ecosystems. By integrating predictive models with factors such as sea surface temperature, salinity, and nutrient concentrations, researchers can gauge the potential suitability of habitats for various marine species. These forecasts enable a proactive approach to conservation and resource management, aiding in the identification of areas at risk or those likely to thrive under changing environmental conditions. This information proves invaluable for implementing targeted conservation strategies and adapting to the evolving challenges posed by climate change in marine ecosystems.",
+      "units": "Not Suitable - Optimal",
+      "scale": [-10, -7.5, -5, -2.5, 0],
       "date_range": true,
-      "colors": ["#dedede", "#ff0000"],
-      "threshold": [0.5, 2.0]
+      "colors": ["red", "orange", "yellow", "green", "green"],
+      "threshold": [0, 1]
       }
   }
  },
@@ -62,32 +62,33 @@
          "url":"https://pub-d25b385271574fbeb5c6af580799fafe.r2.dev/prediction_chl_actualDate.tiff",
          "data_type":"GTIFF",
          "content":"Chlorophyll, a green pigment crucial for photosynthesis in marine plants and algae, serves as a key indicator of primary productivity in coastal ecosystems. Higher chlorophyll concentrations signify increased sunlight and nutrient availability, influencing the distribution and diversity of marine habitats and species. Climate change impacts chlorophyll levels through factors like rising sea temperatures, altered ocean circulation, and changing nutrient patterns, affecting the growth and distribution of phytoplankton. These changes can have cascading effects on coastal ecosystems, potentially leading to shifts in species composition and habitat distribution, making chlorophyll a critical parameter for understanding the dynamic interactions within marine environments.",
-         "units": "mmol/m3",
-         "scale": [0.01, 8.5],
+         "units": "mg/m3",
+         "threshold": [0.01, 8.5],
          "date_range": true,
-         "colors": ["#dedede", "#ff0000"],
-         "threshold": [0.5, 2.0]
-       },
+         "scale": [0.01, 0.5, 1, 1.5, 2.0,8.5],
+         "colors": ["red", "orange", "green", "orange", "red", "red"]
+
+      },
        "Nitrate":{
          "url":"https://pub-d25b385271574fbeb5c6af580799fafe.r2.dev/prediction_no3_actualDate.tiff",
          "data_type":"GTIFF",
          "content":"Nitrate (NO3) refers to a form of nitrogen that is essential for the growth of marine plants and algae, forming a part of the nitrogen cycle. Nitrate levels influence the distribution of coastal marine habitats and species as they play a critical role in primary productivity. Coastal areas with elevated nitrate concentrations often support increased phytoplankton growth, influencing the composition of the marine food web and the distribution of species. Climate change can impact nitrate levels through altered precipitation patterns and increased runoff, leading to changes in nutrient availability in coastal waters. Understanding and monitoring nitrate dynamics are crucial for assessing and mitigating the effects of climate change on coastal marine ecosystems and maintaining their ecological balance.",
          "units": "mmol/m3",
-         "scale": [0, 25],
-         "colors": ["#dedede", "#ff0000"],
+         "scale": [0, 0.5, 1, 2, 2.5, 25],
+         "colors": ["red", "orange", "green", "orange", "red", "red"],
          "date_range": true,
-         "threshold": [0.5, 2.5]
+         "threshold": [0, 25]
        },
        "Dissolved Oxygen":{
          "url":"https://pub-d25b385271574fbeb5c6af580799fafe.r2.dev/prediction_o2_actualDate.tiff",
          "data_type":"GTIFF",
          "content":"Dissolved Oxygen denotes the amount of oxygen dissolved in water, crucial for the respiration of marine organisms. The distribution of coastal marine habitats and species is intricately linked to DO levels, with sufficient oxygen supporting diverse marine life. Climate change contributes to alterations in DO by warming water, reducing oxygen solubility, and impacting circulation patterns. These changes, alongside increased nutrient runoff, can lead to lower DO concentrations, influencing the distribution of species and habitats in coastal ecosystems. The expansion of hypoxic zones poses a threat, emphasizing the importance of monitoring and mitigating climate-induced shifts in dissolved oxygen for the health of marine environments.",
          "units": "mmol/m3",
-         "scale": [232, 312],
+         "scale": [220, 315],
          "colors": ["#dedede", "#ff0000"],
          "date_range": true,
-         "threshold": [125, 156]
-       },
+         "threshold": [243, 267]
+      },
        "pH":{
          "url":"https://pub-d25b385271574fbeb5c6af580799fafe.r2.dev/prediction_ph_actualDate.tiff",
          "data_type":"GTIFF",
@@ -97,7 +98,7 @@
          "date_range": true,
          "colors": ["#dedede", "#ff0000"],
          "threshold": [7.9, 8.3]
-       },
+      },
        "Phytoplankton":{
          "url":"https://pub-d25b385271574fbeb5c6af580799fafe.r2.dev/prediction_phyc_actualDate.tiff",
          "data_type":"GTIFF",
@@ -122,7 +123,7 @@
          "url":"https://pub-d25b385271574fbeb5c6af580799fafe.r2.dev/prediction_so_actualDate.tiff",
          "data_type":"GTIFF",
          "content":"Salinity in marine ecosystems refers to the concentration of dissolved salts in water and plays a significant role in shaping the distribution of coastal marine habitats and species. Different marine organisms have specific salinity tolerances, influencing their abundance and diversity in various coastal areas. Coastal ecosystems experience fluctuations in salinity due to factors such as river input, precipitation, and evaporation. Climate change can impact salinity levels through alterations in precipitation patterns and changes in ocean circulation. Variations in salinity can affect the osmoregulation and physiological processes of marine organisms, potentially influencing their distribution. Monitoring salinity dynamics is crucial for understanding and mitigating the effects of climate change on coastal marine ecosystems, as shifts in salinity can have cascading effects on the composition and health of these environments.",
-         "units": "mg/m3",
+         "units": "",
          "scale": [28, 40],
          "colors": ["#dedede", "#ff0000"],
          "date_range": true,
@@ -158,12 +159,12 @@
          "data_type":"GEOJSON",
          "content":"The Natura 2000 network in the context of EU marine conservation policies is a cornerstone initiative designed to protect and manage natural habitats and species of European importance. Under the Birds Directive and the Habitats Directive, the Natura 2000 network includes designated sites both on land and in marine environments. In marine ecosystems, these sites contribute to the conservation of biodiversity and the sustainable use of resources. Natura 2000 aims to ensure the long-term survival of species and habitats by establishing a cohesive network of protected areas across EU member states, promoting ecological coherence and biodiversity conservation in the marine environment."
        },
-       "Marine Protected Areas (MPAs) established under the framework of the Regional Sea Conventions (RSCs)":{
+       "MPAs - RSCs framework":{
          "url":"https://pub-d25b385271574fbeb5c6af580799fafe.r2.dev/MPAs.geojson",
          "data_type":"GEOJSON",
          "content":"Marine Protected Areas (MPAs) established under the framework of the Regional Sea Conventions (RSCs) in the context of EU marine conservation policies are designated zones aimed at safeguarding marine ecosystems and biodiversity. These areas are integral components of international and regional efforts to promote sustainable marine management. Implemented under the Barcelona Convention, OSPAR Convention, and other RSCs, MPAs contribute to the conservation of critical habitats and species by regulating human activities and minimizing environmental impacts. Through this framework, the EU works collaboratively with neighboring countries to establish and manage MPAs, fostering ecological coherence and biodiversity preservation in shared marine regions."
        },
-       "Common Database on Designated Areas (CDDA), Nationally designated area":{
+       "Common Database on Designated Areas":{
          "url":"https://pub-d25b385271574fbeb5c6af580799fafe.r2.dev/CDDA.geojson",
          "data_type":"GEOJSON",
          "content":"In the context of EU marine conservation policies, a 'Nationally Designated Area' (NDA) refers to an area within the jurisdiction of a member state that has been officially designated and protected for conservation purposes. These designations align with EU directives such as the Birds Directive, the Habitats Directive, and the Marine Strategy Framework Directive, which aim to conserve biodiversity and promote the sustainable use of marine resources. Member states are responsible for designating and managing these areas, contributing to the broader goals of preserving marine habitats, species, and ecosystems of national significance. As policy frameworks may evolve, it is advisable to consult the latest legal documents and official publications for the most current information on Nationally Designated Areas and EU marine conservation policies."

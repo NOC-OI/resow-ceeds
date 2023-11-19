@@ -40,7 +40,7 @@ export const InfoButtonBoxContent = styled.div`
   overflow-y: auto;
   overflow-x: hidden;
   p {
-    font-size: 0.75rem;
+    font-size: 0.9rem;
     line-height: 1.6;
     text-align: justify;
     padding-bottom: 0.5rem;

@@ -49,27 +49,34 @@ export function InfoBox({ position = null, depth = {} }: InfoBoxProps) {
   return (
     <InfoBoxContainer id="infobox-container">
       <h1>CEEDS</h1>
-      <div>
-        <p>Lat:</p>
-        <span>{lat}</span>
-      </div>
-      <div>
-        <p>Lon:</p>
-        <span>{lng}</span>
-      </div>
-      <div>
-        <p>Depth:</p>
-        {depth.Shipborne ? (
-          <span>{`${depth.Shipborne} m`}</span>
-        ) : depth.Emodnet ? (
-          <span>{`${depth.Emodnet} m`}</span>
-        ) : depth.Gebco ? (
-          <span>{`${depth.Gebco} m`}</span>
-        ) : depth.Depth ? (
-          <span>{`${depth.Depth} m`}</span>
-        ) : (
-          <span>-- m</span>
-        )}
+      <div className="flex justify-between">
+        <div className="">
+          <img src="favicon.png" className="h-16" />
+        </div>
+        <div className="w-24">
+          <div className="flex align-middle justify-between text-[0.75rem] leading-6">
+            <p>Lat:</p>
+            <span>{lat}</span>
+          </div>
+          <div className="flex align-middle justify-between text-[0.75rem] leading-6">
+            <p>Lon:</p>
+            <span>{lng}</span>
+          </div>
+          <div className="flex align-middle justify-between text-[0.75rem] leading-6">
+            <p>Depth:</p>
+            {depth.Shipborne ? (
+              <span>{`${depth.Shipborne} m`}</span>
+            ) : depth.Emodnet ? (
+              <span>{`${depth.Emodnet} m`}</span>
+            ) : depth.Gebco ? (
+              <span>{`${depth.Gebco} m`}</span>
+            ) : depth.Depth ? (
+              <span>{`${depth.Depth} m`}</span>
+            ) : (
+              <span>-- m</span>
+            )}
+          </div>
+        </div>
       </div>
     </InfoBoxContainer>
   )

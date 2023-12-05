@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { MapHome } from '../../components/MapHome'
 import { SideSelection } from '../../components/SideSelection'
-import { SideBar, HomeContainer, BottomBar, BottomLeft } from './styles'
+import { SideBar, HomeContainer, BottomBar } from './styles'
 import { CalculationValue } from '../../components/CalculationValue'
 import { DataExplorationLegend } from '../../components/DataExplorationLegend'
 import { InfoButtonBox } from '../../components/InfoButtonBox'
@@ -147,9 +147,7 @@ export function Home() {
           />
         ) : null}
       </BottomBar>
-      <BottomLeft>
-        <img src="favicon.png" className="h-16" />
-      </BottomLeft>
+
       <MapHome
         selectedLayers={selectedLayers}
         actualLayer={actualLayer}

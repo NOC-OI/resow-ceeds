@@ -1048,7 +1048,7 @@ function MapHome1({
             />
           </LayersControl.Overlay>
         </LayersControl>
-        <ScaleControl position="topright" />
+        <ScaleControl position="bottomleft" />
         <LeafletRuler />
       </MapContainer>
     ),

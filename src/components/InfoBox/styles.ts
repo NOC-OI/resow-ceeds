@@ -4,7 +4,7 @@ export const InfoBoxContainer = styled.div`
   position: absolute;
   right: 0.5rem;
   bottom: 5vh;
-  width: 6.5rem;
+  width: 11rem;
   background-color: rgba(17, 17, 17, 0.6); /* Black */
   z-index: 9999;
   height: max-content;
@@ -18,12 +18,5 @@ export const InfoBoxContainer = styled.div`
     font-size: 1rem;
     line-height: 1.6;
     text-align: center;
-  }
-  div {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 0.75rem;
-    line-height: 1.6;
   }
 `

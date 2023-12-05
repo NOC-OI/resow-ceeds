@@ -147,9 +147,9 @@ export function Home() {
           />
         ) : null}
       </BottomBar>
-      <BottomLeft>
-        <img src="favicon_galene.png" className="h-16" />
-      </BottomLeft>
+      {/* <BottomLeft>
+        <img src="favicon_CEEDS.png" className="h-16" />
+      </BottomLeft> */}
       <MapHome
         selectedLayers={selectedLayers}
         actualLayer={actualLayer}
@@ -173,7 +173,7 @@ export function Home() {
         clickPoint={clickPoint}
         setClickPoint={setClickPoint}
       />
-      {showPopup && <FullPagePopup setShowPopup={setShowPopup} />}
+      {/* {showPopup && <FullPagePopup setShowPopup={setShowPopup} />} */}
       {showFlash && (
         <FlashMessages
           type={flashMessage.messageType}

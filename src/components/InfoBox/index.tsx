@@ -48,7 +48,7 @@ export function InfoBox({ position = null, depth = {} }: InfoBoxProps) {
   }
   return (
     <InfoBoxContainer id="infobox-container">
-      <h1>GALENE</h1>
+      <h1>CEEDS</h1>
       <div>
         <p>Lat:</p>
         <span>{lat}</span>

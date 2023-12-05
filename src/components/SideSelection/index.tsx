@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faCircleQuestion,
   faCompassDrafting,
+  faDownload,
   faLayerGroup,
   faTrash,
 } from '@fortawesome/free-solid-svg-icons'
@@ -158,6 +159,16 @@ export function SideSelection({
             }
           >
             <FontAwesomeIcon icon={faLayerGroup} />
+          </SideSelectionLink>
+          <SideSelectionLink
+            title={'Download'}
+            onClick={handleShowSelection}
+            id={'Download'}
+            className={
+              selectedSidebarOption === 'Download' ? styles.active : ''
+            }
+          >
+            <FontAwesomeIcon icon={faDownload} />
           </SideSelectionLink>
           <SideSelectionLink
             title={'3D Data Exploration'}

@@ -1,14 +1,15 @@
 import styled from 'styled-components'
 
 export const InfoButtonBoxContainer = styled.div`
-  right: 0.5rem;
+  margin-left: 1rem;
+  left: 100%;
   top: 5vh;
   background-color: rgba(17, 17, 17, 0.6);
   color: ${(props) => props.theme.white};
   z-index: 9999;
   max-height: 90vh;
   height: max-content;
-  margin-left: 1rem;
+  position: absolute;
   padding: 0.5rem;
   border-radius: 16px;
   box-shadow: 0px 4px 4px ${(props) => props.theme.black};

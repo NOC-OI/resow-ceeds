@@ -16,10 +16,10 @@ export function FullPagePopup({ setShowPopup }: FullPagePopupProps) {
       <div className="w-[40rem] align-middle text-center">
         <FontAwesomeIcon icon={faCircleXmark} onClick={handleClose} />
         <div>
-          <img src="favicon_galene.png" className="h-40" />
+          <img src="favicon_CEEDS.png" className="h-40" />
         </div>
         <h2 className="text-center font-bold pb-3 capitalize text-5xl">
-          GALENE
+          CEEDS
         </h2>
         <div className="p-4">
           <p className="text-center font-bold text-3xl">

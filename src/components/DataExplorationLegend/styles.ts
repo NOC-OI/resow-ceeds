@@ -3,8 +3,9 @@ import styled from 'styled-components'
 export const LayerLegendContainer = styled.div`
   overflow-y: auto;
   overflow-x: auto;
-  right: 0.5rem;
+  left: 100%;
   top: 5vh;
+  position: absolute;
   height: max-content;
   max-width: 40rem;
   background-color: rgba(17, 17, 17, 0.6);

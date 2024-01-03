@@ -45,7 +45,9 @@ export function FullPagePopup({ setShowPopup }: FullPagePopupProps) {
               target="_blank"
               className="p-4 cursor-pointer bg-yellow-500 rounded-xl"
             >
-              <p className="text-center text-xl font-bold">LEGISLATION</p>
+              <p className="text-center text-xl font-bold">
+                Decision Making Tool
+              </p>
             </a>
           </div>
         </div>

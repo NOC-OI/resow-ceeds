@@ -13,6 +13,17 @@ interface FlashMessagesProps {
   setActive: any
 }
 
+export function errorFlash(
+  error: string,
+  setFlashMessage: (arg0: { messageType: string; content: string }) => void,
+  setShowFlash: (arg0: boolean) => void,
+) {
+  setFlashMessage({
+    messageType: 'error',
+    content: error,
+  })
+  setShowFlash(true)
+}
 export function FlashMessages({
   message,
   width,

@@ -74,30 +74,26 @@ export function DataExplorationSelection({
               return null
             }
           } else {
-            if (layerClass !== 'Suitability') {
-              return (
-                <DataExplorationType
-                  key={layerClass}
-                  content={layerClass}
-                  childs={listLayers[layerClass].layerNames}
-                  selectedLayers={selectedLayers}
-                  setSelectedLayers={setSelectedLayers}
-                  actualLayer={actualLayer}
-                  setActualLayer={setActualLayer}
-                  layerAction={layerAction}
-                  setLayerAction={setLayerAction}
-                  setLayerLegend={setLayerLegend}
-                  setInfoButtonBox={setInfoButtonBox}
-                  setShowPhotos={setShowPhotos}
-                  getPolyline={getPolyline}
-                  setGetPolyline={setGetPolyline}
-                  setClickPoint={setClickPoint}
-                  listLayers={listLayers}
-                />
-              )
-            } else {
-              return null
-            }
+            return (
+              <DataExplorationType
+                key={layerClass}
+                content={layerClass}
+                childs={listLayers[layerClass].layerNames}
+                selectedLayers={selectedLayers}
+                setSelectedLayers={setSelectedLayers}
+                actualLayer={actualLayer}
+                setActualLayer={setActualLayer}
+                layerAction={layerAction}
+                setLayerAction={setLayerAction}
+                setLayerLegend={setLayerLegend}
+                setInfoButtonBox={setInfoButtonBox}
+                setShowPhotos={setShowPhotos}
+                getPolyline={getPolyline}
+                setGetPolyline={setGetPolyline}
+                setClickPoint={setClickPoint}
+                listLayers={listLayers}
+              />
+            )
           }
         })}
       </LayerTypes>

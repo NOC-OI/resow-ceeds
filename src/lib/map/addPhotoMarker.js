@@ -1,16 +1,84 @@
 import 'leaflet/dist/leaflet'
 import * as L from 'leaflet'
-import { organisms } from '../../data/organisms'
+import { organisms } from '../data/organisms'
 import { Entity, Cartesian3 } from 'cesium'
 
 export class GetPhotoMarker {
-  constructor(layerName, actualLayer, color, files) {
+  constructor(layerName, actualLayer, color) {
     this.layerName = layerName
     this.actualLayer = actualLayer
     this.layer = null
     this.popupText = ''
     this.fileName = null
     this.color = color
+  }
+
+  async getMarker() {
+    this.layer = {}
+    const icon = L.divIcon({
+      html: `<div class='all-icon'>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="15"
+          height="15"
+          viewBox="0 0 50 50"
+        >
+          <circle
+            cx="25"
+            cy="25"
+            r="24"
+            stroke="black"
+            fill="${this.color}"
+          />
+        </svg>
+      </div>`,
+      iconSize: [0, 0],
+      iconAnchor: [0, 0],
+    })
+    this.layer = L.marker(
+      [this.layerName.coordinates[1], this.layerName.coordinates[0]],
+      {
+        riseOnHover: true,
+        autoPanOnFocus: false,
+        icon,
+      },
+    )
+
+    const organismList = []
+    organisms.forEach((organism) => {
+      if (this.layerName[organism] === 1) {
+        organismList.push(organism)
+      }
+    })
+
+    this.popupText = this.createPopup()
+
+    this.layer.options.attribution = this.actualLayer
+    this.layer.options.organismList = organismList
+    this.layer.options.filename = this.layerName.filename
+    this.layer.options.layerName = this.layerName
+    this.layer.options.popupText = this.popupText
+    this.layer.options.color = this.color
+    this.fileName = this.layerName.filename
+    this.layer.options.dataType = 'marker'
+  }
+
+  async getMarker3D() {
+    const position = Cartesian3.fromDegrees(
+      this.layerName.coordinates[0],
+      this.layerName.coordinates[1],
+    )
+    this.popupText = this.createPopup()
+
+    const pointGraphics = { pixelSize: 10, color: this.color }
+    this.layer = new Entity({
+      position,
+      point: pointGraphics,
+      id: this.layerName.filename,
+      description: this.popupText,
+      attribution: this.actualLayer,
+      name: this.actualLayer,
+    })
   }
 
   createPopup() {
@@ -151,73 +219,5 @@ export class GetPhotoMarker {
         </a>`
     }
     `
-  }
-
-  async getMarker() {
-    this.layer = {}
-    const icon = L.divIcon({
-      html: `<div class='all-icon'>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="15"
-          height="15"
-          viewBox="0 0 50 50"
-        >
-          <circle
-            cx="25"
-            cy="25"
-            r="24"
-            stroke="black"
-            fill="${this.color}"
-          />
-        </svg>
-      </div>`,
-      iconSize: [0, 0],
-      iconAnchor: [0, 0],
-    })
-    this.layer = L.marker(
-      [this.layerName.coordinates[1], this.layerName.coordinates[0]],
-      {
-        riseOnHover: true,
-        autoPanOnFocus: false,
-        icon,
-      },
-    )
-
-    const organismList = []
-    organisms.forEach((organism) => {
-      if (this.layerName[organism] === 1) {
-        organismList.push(organism)
-      }
-    })
-
-    this.popupText = this.createPopup()
-
-    this.layer.options.attribution = this.actualLayer
-    this.layer.options.organismList = organismList
-    this.layer.options.filename = this.layerName.filename
-    this.layer.options.layerName = this.layerName
-    this.layer.options.popupText = this.popupText
-    this.layer.options.color = this.color
-    this.fileName = this.layerName.filename
-    this.layer.options.dataType = 'marker'
-  }
-
-  async getMarker3D() {
-    const position = Cartesian3.fromDegrees(
-      this.layerName.coordinates[0],
-      this.layerName.coordinates[1],
-    )
-    this.popupText = this.createPopup()
-
-    const pointGraphics = { pixelSize: 10, color: this.color }
-    this.layer = new Entity({
-      position,
-      point: pointGraphics,
-      id: this.layerName.filename,
-      description: this.popupText,
-      attribution: this.actualLayer,
-      name: this.actualLayer,
-    })
   }
 }

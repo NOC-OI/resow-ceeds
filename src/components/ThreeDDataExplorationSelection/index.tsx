@@ -62,28 +62,24 @@ export function ThreeDDataExplorationSelection({
               return null
             }
           } else {
-            if (layerClass !== 'Suitability') {
-              return (
-                <ThreeDDataExplorationType
-                  key={layerClass}
-                  content={layerClass}
-                  childs={listLayers[layerClass].layerNames}
-                  selectedLayers={selectedLayers}
-                  setSelectedLayers={setSelectedLayers}
-                  setActualLayer={setActualLayer}
-                  layerAction={layerAction}
-                  setLayerAction={setLayerAction}
-                  setLayerLegend={setLayerLegend}
-                  setInfoButtonBox={setInfoButtonBox}
-                  isLogged={isLogged}
-                  threeD={threeD}
-                  setThreeD={setThreeD}
-                  listLayers={listLayers}
-                />
-              )
-            } else {
-              return null
-            }
+            return (
+              <ThreeDDataExplorationType
+                key={layerClass}
+                content={layerClass}
+                childs={listLayers[layerClass].layerNames}
+                selectedLayers={selectedLayers}
+                setSelectedLayers={setSelectedLayers}
+                setActualLayer={setActualLayer}
+                layerAction={layerAction}
+                setLayerAction={setLayerAction}
+                setLayerLegend={setLayerLegend}
+                setInfoButtonBox={setInfoButtonBox}
+                isLogged={isLogged}
+                threeD={threeD}
+                setThreeD={setThreeD}
+                listLayers={listLayers}
+              />
+            )
           }
         })}
       </LayerTypes>

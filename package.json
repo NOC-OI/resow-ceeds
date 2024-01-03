@@ -1,5 +1,5 @@
 {
-  "name": "haigfras",
+  "name": "ceeds",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -81,6 +81,7 @@
     "react-is": "^18.2.0",
     "react-katex": "^3.0.1",
     "react-leaflet": "^4.2.1",
+    "react-leaflet-draw": "^0.20.4",
     "react-markdown": "^8.0.7",
     "react-plotly.js": "^2.6.0",
     "react-router-dom": "^6.9.0",

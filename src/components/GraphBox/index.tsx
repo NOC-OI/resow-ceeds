@@ -2,12 +2,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { InfoButtonBoxContainer } from '../InfoButtonBox/styles'
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons'
 import { useEffect, useRef, useState } from 'react'
-import { GetTitilerData } from './getTitilerData'
+import { GetTitilerData } from '../../lib/map/getTitilerData'
 import { Loading } from '../Loading'
 import Plot from 'react-plotly.js'
 import Draggable from 'react-draggable'
-import { GetGeoblazeValuePoint } from '../MapHome/getGeoblazeValue'
 import { yearMonths } from '../../data/yearMonths'
+import { GetGeoblazeValuePoint } from '../../lib/map/getGeoblazeValue'
 
 interface GraphBoxProps {
   graphData: any
@@ -26,9 +26,8 @@ export function GraphBox({
   setClickPoint,
   selectedLayers,
 }: GraphBoxProps) {
-  const [data, setData] = useState<any>({ distance: [], value: [] })
+  const [data, setData] = useState<any>(null)
 
-  const [waitState, setWaitState] = useState(false)
   function handleClose() {
     setGetPolyline(false)
     setClickPoint(false)
@@ -36,28 +35,25 @@ export function GraphBox({
   }
 
   useEffect(() => {
-    setTimeout(() => {
-      setWaitState(true)
-    }, 3000)
+    async function fetchData() {
+      if (graphData.length === 1) {
+        const getGeoblazeValue = new GetGeoblazeValuePoint(
+          graphData,
+          actualLayer[0],
+          yearMonths,
+        )
+        await getGeoblazeValue.getGeoblaze()
+        setData(getGeoblazeValue.dataGraph)
+      } else {
+        const getTitilerData = new GetTitilerData(graphData, actualLayer[0])
+        getTitilerData.fetchData().then(async function () {
+          setData(getTitilerData.dataGraph)
+        })
+      }
+    }
+    fetchData()
   }, [])
 
-  useEffect(() => {
-    if (graphData.length === 1) {
-      const getGeoblazeValue = new GetGeoblazeValuePoint(
-        graphData,
-        actualLayer[0],
-        yearMonths,
-      )
-      getGeoblazeValue.getGeoblaze().then(async function () {
-        setData(getGeoblazeValue.dataGraph)
-      })
-    } else {
-      const getTitilerData = new GetTitilerData(graphData, actualLayer[0])
-      getTitilerData.fetchData().then(async function () {
-        setData(getTitilerData.dataGraph)
-      })
-    }
-  }, [])
   const nodeRef = useRef(null)
 
   const [yearStart, monthStart] = yearMonths[0].split('-')
@@ -74,8 +70,7 @@ export function GraphBox({
           <FontAwesomeIcon icon={faCircleXmark} onClick={handleClose} />
         </div>
         <div className="font-bold text-center pb-3">Graph</div>
-
-        {!waitState ? (
+        {!data ? (
           <div>
             <p>Generating graph...</p>
             <Loading />

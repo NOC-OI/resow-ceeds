@@ -6,12 +6,9 @@ import {
   ScreenSpaceEvent,
   CesiumComponentRef,
 } from 'resium'
-import chroma, { limits } from 'chroma-js'
 import * as turf from '@turf/turf'
-
 import {
   Ion,
-  Rectangle,
   ScreenSpaceEventType,
   WebMapServiceImageryProvider,
   Viewer as CesiumViewer,
@@ -20,12 +17,27 @@ import {
 import './styles.css'
 import { ResiumContainer } from './styles'
 import React, { useEffect, useRef, useMemo, useState } from 'react'
-import { InfoBox } from '../InfoBox'
 import * as Cesium from 'cesium'
-import { GetGeoblazeValue3D } from '../MapHome/getGeoblazeValue'
 import { Loading } from '../Loading'
-import { GetPhotoMarker } from '../MapHome/addPhotoMarker'
-import { GetTifLayer2, GetTileLayer } from '../MapHome/addGeoraster'
+import { GetPhotoMarker } from '../../lib/map/addPhotoMarker'
+import { GetCOGLayer } from '../../lib/map/addGeoraster'
+import {
+  batOrder,
+  bathymetryUrl,
+  cesiumHeading,
+  cesiumPitch,
+  cesiumRoll,
+  cesiumStartCoordinates,
+  colorScale,
+  createColor,
+  createTurfPoint,
+  defaultOpacity,
+  defineNewDepthValue,
+  getGeorasterLayer,
+  reorderPhotos,
+  threeDCoordinates,
+} from '../../lib/map/utils'
+import { InfoBox } from '../InfoBox'
 import { yearMonths } from '../../data/yearMonths'
 
 Ion.defaultAccessToken = process.env.VITE_CESIUM_TOKEN
@@ -45,7 +57,7 @@ interface keyable {
 interface ThreeDMapProps {
   selectedLayers: keyable
   actualLayer: string[]
-  layerAction: String
+  layerAction: string
   setLayerAction: any
   listLayers: any
   threeD: any
@@ -60,42 +72,24 @@ function ThreeDMap1({
   threeD,
   actualDate,
 }: ThreeDMapProps) {
-  const colorScale = chroma
-    .scale(['#f00', '#0f0', '#00f', 'gray'])
-    .mode('hsl')
-    .colors(30)
-
-  const JOSBaseUrl = process.env.VITE_JASMIN_OBJECT_STORE_URL
-  const rout = window.location.pathname
-
   const [position, setPosition] = useState(null)
   const [loading, setLoading] = useState<boolean>(false)
   const [depth, setDepth] = useState({})
   const ref = useRef<CesiumComponentRef<CesiumViewer>>(null)
 
-  const defaultWMSBounds = [
-    [34.5, -14],
-    [42.5, -6],
-  ]
-
-  const defaultOpacity = 0.7
-
-  const batOrder = ['Shipborne', 'Emodnet', 'Gebco']
-
   const [cogLayer, setCogLayer] = useState('')
 
-  const url = `${JOSBaseUrl}haig-fras/frontend/images/bathymetry.tif`
+  const [batLayer, setBatLayer] = useState(null)
 
-  const batLayer = useMemo(() => getGeorasterLayer(), [url])
+  useEffect(() => {
+    async function fetchLayer() {
+      const layer = await getGeorasterLayer(bathymetryUrl)
+      setBatLayer(layer)
+    }
+    fetchLayer()
+  }, [bathymetryUrl])
 
-  const startCoordinates = Rectangle.fromDegrees(
-    defaultWMSBounds[0][1],
-    defaultWMSBounds[0][0],
-    defaultWMSBounds[1][1],
-    defaultWMSBounds[1][0],
-  )
-
-  Cesium.Camera.DEFAULT_VIEW_RECTANGLE = startCoordinates
+  Cesium.Camera.DEFAULT_VIEW_RECTANGLE = cesiumStartCoordinates
 
   const jnccMCZ = new WebMapServiceImageryProvider({
     url: 'https://webgeo2.hidrografico.pt/geoserver/ows?',
@@ -110,42 +104,9 @@ function ThreeDMap1({
     },
     layers: 'isobat:isobatimetria_8_16_30',
   })
+
   const terrainProvider = createWorldTerrainAsync()
 
-  function getGeorasterLayer() {
-    const getGeoblazeValue = new GetGeoblazeValue3D(url)
-    getGeoblazeValue.parseGeoraster()
-    return getGeoblazeValue
-  }
-
-  function reorderPhotos(photos: any) {
-    const shuffled = photos.sort(() => 0.5 - Math.random())
-    const n = shuffled.length > 700 ? 700 : shuffled.length
-    const newList: any = []
-    let count: number = 0
-    let count2: number = 0
-    // if (activePhoto) {
-    //   count++
-    //   newList.push(activePhoto)
-    // }
-    shuffled.every((el: any) => {
-      if (count >= n) {
-        return false // "break"
-      }
-      // if (el.filename !== activePhoto.filename) {
-      if (el.show) {
-        count2++
-        newList.push(el.filename)
-        count++
-      }
-      // }
-      return true
-    })
-    if (count2 === 0) {
-      return []
-    }
-    return newList
-  }
   async function handleHoverUpdateInfoBox(e: any) {
     if (ref.current?.cesiumElement) {
       const ellipsoid = ref.current.cesiumElement.scene.globe.ellipsoid
@@ -163,31 +124,29 @@ function ThreeDMap1({
         newPosition.lng = longitudeDegrees
         return newPosition
       })
-      await batLayer
-        .getGeoblaze({
-          lat: latitudeDegrees,
-          lng: longitudeDegrees,
-        })
-        .then(async function () {
-          const dep = batLayer.dep
-          if (dep) {
-            setDepth((depth: any) => {
-              const copy = { ...depth }
-              copy.Depth = dep.toFixed(2)
-              return {
-                ...copy,
-              }
-            })
-          } else {
-            setDepth((depth: any) => {
-              const copy = { ...depth }
-              copy.Depth = null
-              return {
-                ...copy,
-              }
-            })
-          }
-        })
+      const latlng = {
+        lat: latitudeDegrees,
+        lng: longitudeDegrees,
+      }
+      defineNewDepthValue('_Depth', {}, latlng, null, batLayer, setDepth)
+    }
+  }
+
+  async function createGeoJsonLayer(actual, turfConvex, layerName = 'limits') {
+    const colorLimits = createColor(colorScale, true, 0.3)
+
+    const myStyle = {
+      stroke: colorLimits,
+      fill: colorLimits,
+      strokeWidth: 3,
+    }
+    let turfLayer: any
+    if (turfConvex) {
+      turfLayer = await Cesium.GeoJsonDataSource.load(turfConvex, myStyle)
+      turfLayer.attribution = actual
+      turfLayer.originalColor = colorLimits
+      turfLayer.name = layerName
+      return turfLayer
     }
   }
 
@@ -215,63 +174,25 @@ function ThreeDMap1({
     return layer
   }
 
-  async function generateAddGJsonLayer(
-    layer,
-    layers,
-    layerName,
-    actual,
-    alpha,
-  ) {
-    const color1 = createColor(colorScale, true, 0.3)
-    const myStyle = {
-      stroke: color1,
-      fill: color1,
-      strokeWidth: 3,
-    }
-    layer = await Cesium.GeoJsonDataSource.load(layerName.url, myStyle)
-    layer.attribution = actual
-    layer.originalColor = color1
-    layer.alpha = alpha
-    layers.add(layer)
-    correctBaseWMSOrder(layers)
-  }
-
-  async function generateAddTIFLayer(layer, layers, layerName, actual, alpha) {
-    const getTifLayer = new GetTifLayer2(
-      layerName,
-      actual,
-      yearMonths[actualDate],
-      null,
-      limits,
-      null,
-    )
-    await getTifLayer.getTile(rout).then(function () {
-      layer = getTifLayer.layer
-      layer.alpha = alpha
-      layers.add(layer)
-      correctBaseWMSOrder(layers)
-    })
-    if (actual.split('_')[0] === 'Bathymetry') {
-      if (cogLayer) {
-        if (
-          batOrder.indexOf(actual.split('_')[1]) < batOrder.indexOf(cogLayer)
-        ) {
-          setCogLayer(actual.split('_')[1])
-        }
-      } else {
-        setCogLayer(actual.split('_')[1])
+  const wmsLayers = { mcz: jnccMCZ }
+  async function correctBaseWMSOrder(layers: any) {
+    layers?._layers.forEach(function (imageryLayers: any) {
+      if (
+        Object.keys(wmsLayers).includes(imageryLayers._imageryProvider._layers)
+      ) {
+        layers.remove(imageryLayers)
+        const layer = new Cesium.ImageryLayer(
+          wmsLayers[imageryLayers._imageryProvider._layers],
+          {},
+        )
+        layers.add(layer)
       }
-    }
+    })
   }
 
   async function generateAddCOGLayer(layer, layers, layerName, actual, alpha) {
-    const getCOGLayer = new GetTileLayer(
-      layerName,
-      actual,
-      true,
-      yearMonths[actualDate],
-    )
-    await getCOGLayer.getTile(rout).then(function () {
+    const getCOGLayer = new GetCOGLayer(layerName, actual, 3)
+    await getCOGLayer.getTile().then(function () {
       layer = getCOGLayer.layer
       layer.alpha = alpha
       layers.add(layer)
@@ -288,42 +209,6 @@ function ThreeDMap1({
         setCogLayer(actual.split('_')[1])
       }
     }
-  }
-  // if (ref.current?.cesiumElement) {
-  //   // const layers = ref.current.cesiumElement.scene.imageryLayers
-  //   const layers = ref.current.cesiumElement.dataSources
-  // }
-
-  function createColor(colorScale: any, rgb: any, alpha: any = 1) {
-    let color: any
-    if (rgb) {
-      if (!alpha) {
-        alpha = 1
-      }
-      const colorRgb = chroma(colorScale[Math.floor(Math.random() * 30)]).rgb()
-      color = new Cesium.Color(
-        colorRgb[0] / 255,
-        colorRgb[1] / 255,
-        colorRgb[2] / 255,
-        alpha,
-      )
-    } else {
-      color = colorScale[Math.floor(Math.random() * 30)]
-    }
-    return color
-  }
-
-  async function correctBaseWMSOrder(layers: any) {
-    layers?._layers.forEach(function (imageryLayers: any) {
-      if (
-        imageryLayers._imageryProvider._layers ===
-        'isobat:isobatimetria_8_16_30'
-      ) {
-        layers.remove(imageryLayers)
-        const layer = new Cesium.ImageryLayer(jnccMCZ, {})
-        layers.add(layer)
-      }
-    })
   }
 
   async function generateSelectedLayer() {
@@ -348,41 +233,43 @@ function ThreeDMap1({
           actual,
           defaultOpacity,
         )
-      } else if (layerName.data_type === '3D') {
-        const terrainUrl = await Cesium.CesiumTerrainProvider.fromIonAssetId(
-          parseInt(layerName.url),
-        )
-        ref.current.cesiumElement.terrainProvider = terrainUrl
       } else if (layerName.data_type === 'GTIFF') {
         layers = ref.current.cesiumElement.scene.imageryLayers
-        generateAddTIFLayer(layer, layers, layerName, actual, defaultOpacity)
+        layerName.url = layerName.url.replace(
+          'actualDate',
+          yearMonths[actualDate],
+        )
+        await generateAddCOGLayer(
+          layer,
+          layers,
+          layerName,
+          actual,
+          defaultOpacity,
+        )
       } else if (layerName.data_type === 'GEOJSON') {
-        generateAddGJsonLayer(layer, layers, layerName, actual, defaultOpacity)
+        layers = ref.current.cesiumElement.dataSources
+        const geoJsonLayer = createGeoJsonLayer(
+          actual,
+          layerName.url,
+          'geojson_layer',
+        )
+        layers.add(geoJsonLayer)
       } else if (layerName.data_type === 'Photo') {
         ref.current.cesiumElement.infoBox.frame.removeAttribute('sandbox')
         ref.current.cesiumElement.infoBox.frame.src = 'about:blank'
         dataSource = new Cesium.CustomDataSource(actual)
         layers = ref.current.cesiumElement.dataSources
-        const markers: any = []
-        const color = createColor(colorScale, true)
-
+        let markers: any = []
+        const colorMarker = createColor(colorScale, true)
         const shuffledPhotos = reorderPhotos(layerName.photos)
-
         await layerName.photos.map(async (photo: any) => {
-          markers.push(
-            turf.point([
-              photo.coordinates[0] + 0.003,
-              photo.coordinates[1] + 0.003,
-            ]),
-          )
-          markers.push(
-            turf.point([
-              photo.coordinates[0] - 0.003,
-              photo.coordinates[1] - 0.003,
-            ]),
-          )
+          markers = createTurfPoint(markers, photo.coordinates, 0.003)
           if (shuffledPhotos.includes(photo.filename)) {
-            const getPhotoMarker = new GetPhotoMarker(photo, actual, color)
+            const getPhotoMarker = new GetPhotoMarker(
+              photo,
+              actual,
+              colorMarker,
+            )
             await getPhotoMarker.getMarker3D().then(async function () {
               dataSource.entities.add(getPhotoMarker.layer)
             })
@@ -392,20 +279,8 @@ function ThreeDMap1({
         layers.add(dataSource)
         const turfConvex = turf.convex(turf.featureCollection(markers))
         if (layerName.plotLimits) {
-          const color1 = createColor(colorScale, true, 0.3)
-          const myStyle = {
-            stroke: color1,
-            fill: color1,
-            strokeWidth: 3,
-          }
-          let turfLayer: any
-          if (turfConvex) {
-            turfLayer = await Cesium.GeoJsonDataSource.load(turfConvex, myStyle)
-            turfLayer.attribution = actual
-            turfLayer.originalColor = color1
-            turfLayer.name = 'limits'
-            layers.add(turfLayer)
-          }
+          const turfLayer = createGeoJsonLayer(actual, turfConvex)
+          layers.add(turfLayer)
         }
       }
     })
@@ -445,9 +320,14 @@ function ThreeDMap1({
             setCogLayer(newCogLayer)
           }
         }
-      } else if (layerName.data_type === '3D') {
-        layers = ref.current.cesiumElement
-        layers.terrainProvider = await terrainProvider
+      } else if (layerName.data_type === 'GEOJSON') {
+        layers = ref.current.cesiumElement.dataSources
+        layers._dataSources.forEach(function (layer: any) {
+          if (actualLayer.includes(layer.attribution)) {
+            layers.remove(layer)
+          }
+        })
+        setLayerAction('')
       } else if (layerName.data_type === 'Photo') {
         layers = ref.current.cesiumElement.dataSources
         layers._dataSources.forEach(function (layer: any) {
@@ -461,22 +341,6 @@ function ThreeDMap1({
             layers.remove(layer)
           }
         })
-      } else if (layerName.data_type === 'GEOJSON') {
-        layers = ref.current.cesiumElement.dataSources
-        let numberDataSources = 1
-
-        while (numberDataSources > 0) {
-          numberDataSources = 0
-          for (let i = 0; i < layers._dataSources.length; i++) {
-            const layer = layers._dataSources[i]
-            if (actualLayer.includes(layer.attribution)) {
-              layers.remove(layer)
-              numberDataSources = 1
-              break // exit the loop as soon as we remove a layer
-            }
-          }
-        }
-        setLayerAction('')
       }
     })
     setLoading(false)
@@ -487,20 +351,24 @@ function ThreeDMap1({
     setLayerAction('')
   }
 
+  // if (ref.current?.cesiumElement) {
+  //   // const layers = ref.current.cesiumElement.scene.imageryLayers
+  //   const layers = ref.current.cesiumElement.dataSources
+  // }
+
   async function handleTerrainLayer() {
     if (threeD) {
       const terrainUrl = await Cesium.CesiumTerrainProvider.fromIonAssetId(
         parseInt(threeD.dataInfo.assetId),
       )
 
-      const threeDCoordinates = Rectangle.fromDegrees(-10.1, 38.6, -10, 38.7)
-
       ref.current.cesiumElement.terrainProvider = terrainUrl
       ref.current.cesiumElement.camera.flyTo({
         destination: threeDCoordinates,
         orientation: {
-          pitch: Cesium.Math.toRadians(-10.0),
-          roll: Cesium.Math.toRadians(0.0),
+          heading: cesiumHeading,
+          pitch: cesiumPitch,
+          roll: cesiumRoll,
         },
       })
     } else {
@@ -547,7 +415,7 @@ function ThreeDMap1({
           if (actualLayer.includes(layer.attribution)) {
             if (layer._name === 'limits') {
               const color = layer.originalColor
-              color.alpha = selectedLayers[layer.attribution].opacity
+              color.alpha = Number(selectedLayers[layer.attribution].opacity)
               if (color.alpha > 0.99) {
                 color.alpha = 0.99
               }
@@ -564,7 +432,7 @@ function ThreeDMap1({
   async function changeMapZoom() {
     let layers: any
     actualLayer.forEach(async (actual) => {
-      const splitActual = actual.split('_')[1]
+      const splitActual = actual.split('_')
       const layerName = listLayers[splitActual[0]].layerNames[splitActual[1]]
       if (layerName.data_type === 'wms' || layerName.data_type === 'COG') {
         layers = ref.current.cesiumElement.scene.imageryLayers
@@ -576,24 +444,8 @@ function ThreeDMap1({
               layerNew.alpha = layer.alpha
               layers.add(layerNew)
               correctBaseWMSOrder(layers)
-            } else if (layerName.data_type === 'COG') {
+            } else {
               generateAddCOGLayer(
-                layer,
-                layers,
-                layerName,
-                actual,
-                selectedLayers[layer.attribution].opacity,
-              )
-            } else if (layerName.data_type === 'GTIFF') {
-              generateAddTIFLayer(
-                layer,
-                layers,
-                layerName,
-                actual,
-                selectedLayers[layer.attribution].opacity,
-              )
-            } else if (layerName.data_type === 'GEOJSON') {
-              generateAddGJsonLayer(
                 layer,
                 layers,
                 layerName,
@@ -602,7 +454,7 @@ function ThreeDMap1({
               )
             }
             ref.current.cesiumElement.camera.flyTo({
-              destination: startCoordinates,
+              destination: cesiumStartCoordinates,
             })
             setLayerAction('')
           }
@@ -612,20 +464,18 @@ function ThreeDMap1({
   }
 
   useEffect(() => {
-    if (layerAction === 'remove') {
-      setLoading(true)
-      removeLayerFromMap()
-      setLayerAction('')
-    } else if (layerAction === 'add') {
-      setLoading(true)
-      addLayerIntoMap()
-      setLayerAction('')
-    } else if (layerAction === 'zoom') {
-      changeMapZoom()
-      setLayerAction('')
-    } else if (layerAction === 'opacity') {
-      changeMapOpacity()
-      setLayerAction('')
+    if (layerAction) {
+      const actionMap = {
+        remove: removeLayerFromMap,
+        add: addLayerIntoMap,
+        zoom: changeMapZoom,
+        opacity: changeMapOpacity,
+      }
+      if (actionMap[layerAction]) {
+        setLoading(true)
+        actionMap[layerAction]()
+        setLayerAction('')
+      }
     }
   }, [selectedLayers])
 
@@ -647,7 +497,7 @@ function ThreeDMap1({
           onReady={handleReady}
         /> */}
         <ImageryLayer imageryProvider={jnccMCZ} />
-        <CameraFlyTo destination={startCoordinates} duration={3} />
+        <CameraFlyTo destination={cesiumStartCoordinates} duration={3} />
         <ScreenSpaceEventHandler>
           <ScreenSpaceEvent
             action={(e) => handleHoverUpdateInfoBox(e)}

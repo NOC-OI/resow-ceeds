@@ -1,6 +1,7 @@
 import 'leaflet/dist/leaflet'
-import { protobuf } from '../MapHome/addVectorGridL'
-import { colors, eunis } from '../../data/mbTilesEmodnetLegend'
+// import { protobuf } from '../MapHome/addVectorGridL'
+import { colors, eunis } from '../data/mbTilesEmodnetLegend'
+import { protobuf } from './addVectorGridL'
 
 export class GetMBTiles {
   constructor(layerName, actualLayer) {

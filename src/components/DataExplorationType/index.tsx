@@ -72,8 +72,6 @@ export function DataExplorationType({
       // setShowPhotos(photoList)
     }
   }, [selectedLayers])
-  console.log('subLayers')
-  console.log(subLayers)
   return (
     <CalcTypeContainer>
       <div>

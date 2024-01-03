@@ -130,16 +130,6 @@ export function SideSelection({
     <div>
       <SideSelectionContainer className={loading ? 'pointer-events-none' : ''}>
         <div className="flex">
-          {/* <SideSelectionLink
-            title={'Biodiversity'}
-            onClick={handleShowSelection}
-            id={'Biodiversity'}
-            className={
-              selectedSidebarOption === 'Biodiversity' ? styles.active : ''
-            }
-          >
-            <Biodiversity />
-          </SideSelectionLink> */}
           <SideSelectionLink
             title={'Suitability'}
             onClick={handleShowSelection}

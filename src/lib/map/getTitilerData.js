@@ -30,21 +30,23 @@ export class GetTitilerData {
     this.dataGraph = { distance: [], value: [] }
 
     const latLngIni = { latitude: latitudes[0], longitude: longitudes[0] }
-    latitudes.forEach(async (lat, idx) => {
-      const distance = haversine(
-        latLngIni,
-        { latitude: latitudes[idx], longitude: longitudes[idx] },
-        { unit: 'km' },
-      )
+    await Promise.all(
+      latitudes.map(async (lat, idx) => {
+        const distance = haversine(
+          latLngIni,
+          { latitude: latitudes[idx], longitude: longitudes[idx] },
+          { unit: 'km' },
+        )
 
-      const newUrl = `${TILE_SERVER_URL}cog/point/${longitudes[idx]},${
-        latitudes[idx]
-      }?url=${encodeURIComponent(this.url)}`
-      await axios.get(newUrl).then(async (r) => {
-        this.dataGraph.distance[idx] = distance
-        this.dataGraph.value[idx] = r.data.values[0]
-      })
-    })
+        const newUrl = `${TILE_SERVER_URL}cog/point/${longitudes[idx]},${
+          latitudes[idx]
+        }?url=${encodeURIComponent(this.url)}`
+        await axios.get(newUrl).then(async (r) => {
+          this.dataGraph.distance[idx] = distance
+          this.dataGraph.value[idx] = r.data.values[0]
+        })
+      }),
+    )
   }
 }
 

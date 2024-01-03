@@ -6,23 +6,40 @@ import {
   Pane,
   ScaleControl,
   ZoomControl,
+  FeatureGroup,
+  Circle,
 } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import React, { useEffect, useMemo, useState } from 'react'
 import * as L from 'leaflet'
 import { InfoBox } from '../InfoBox'
-import { GetTifLayer, GetTifLayer2, GetTileLayer } from './addGeoraster'
+import { GetTifLayer, GetCOGLayer } from '../../lib/map/addGeoraster'
 import { Loading } from '../Loading'
-import { callBetterWMS } from './addBetterWMS'
-import { GetGeoblazeValue } from './getGeoblazeValue'
-import { GetMBTiles } from './addMBTiles'
-import { GetPhotoMarker } from './addPhotoMarker'
+import { callBetterWMS } from '../../lib/map/addBetterWMS'
+import { GetMBTiles } from '../../lib/map/addMBTiles'
+import { GetPhotoMarker } from '../../lib/map/addPhotoMarker'
 import * as turf from '@turf/turf'
-import chroma from 'chroma-js'
 import LeafletRuler from '../LeafletRuler'
 import { yearMonths } from '../../data/yearMonths'
-import { limits } from '../../data/limits'
+// import { limits } from '../../data/limits'
 import * as esri from 'esri-leaflet'
+import { EditControl } from 'react-leaflet-draw'
+import {
+  bathymetryUrl,
+  colorScale,
+  createColor,
+  createIcon,
+  createTurfPoint,
+  defaultOpacity,
+  defaultView,
+  defaultWMSBounds,
+  defaultZoom,
+  defineNewDepthValue,
+  getGeorasterLayer,
+  reorderPhotos,
+  smallIcon,
+} from '../../lib/map/utils'
+import { errorFlash } from '../FlashMessages'
 
 interface DisplayPositionProps {
   map: any
@@ -47,7 +64,7 @@ function DisplayPosition({ map, depth }: DisplayPositionProps) {
 interface MapProps {
   selectedLayers: keyable
   actualLayer: string[]
-  layerAction: String
+  layerAction: string
   setLayerAction: any
   showPhotos: any
   setShowPhotos: any
@@ -91,54 +108,17 @@ function MapHome1({
 }: MapProps) {
   const MAPBOX_API_KEY = import.meta.env.VITE_MAPBOX_API_KEY
   const MAPBOX_USERID = 'mapbox/satellite-v9'
-
-  const colorScale = chroma
-    .scale(['#f00', '#0f0', '#00f', 'gray'])
-    .mode('hsl')
-    .colors(30)
-  const JOSBaseUrl = process.env.VITE_JASMIN_OBJECT_STORE_URL
   // const ESRI_KEY = process.env.VITE_ESRI
 
   const [map, setMap] = useState<any>(null)
 
   const [depth, setDepth] = useState({})
 
-  // const defaultView = [50.3, -8.1421]
-  const defaultView = [38.5, -10]
-  const [mapCenter, setMapCenter] = useState(
+  const [mapCenter, setMapCenter] = useState<L.LatLng>(
     new L.LatLng(defaultView[0], defaultView[1]),
   )
 
-  const defaultWMSBounds = [
-    [34.5, -6],
-    [42.5, -14],
-  ]
-
-  // const defaultWMSBounds = [
-  //   [42, 9],
-  //   [44, -7.70616],
-  // ]
-
-  // if (map) {
-  //   console.log(Object.keys(map._layers).length)
-  //   console.log(map._layers)
-  // }
-
   const [loading, setLoading] = useState<boolean>(false)
-
-  const activeIcon = L.icon({
-    iconUrl: '/marker-icon_red.png',
-    iconSize: [25, 25],
-  })
-
-  const normalIcon = L.icon({
-    iconUrl: '/marker-icon_old.png',
-    iconSize: [25, 37],
-  })
-  const smallIcon = L.icon({
-    iconUrl: '/marker-icon.png',
-    iconSize: [0.1, 0.1],
-  })
 
   function bringLayerToFront(layer: any) {
     layer.bringToFront()
@@ -146,7 +126,6 @@ function MapHome1({
       'Coastline',
       'Marine Conservation Zones',
       'Special Areas of Conservation',
-      'Bathymetry - Hidrografico',
     ]
     map.eachLayer(function (mapLayer: any) {
       if (frontLayers.includes(mapLayer.options.attribution)) {
@@ -155,22 +134,31 @@ function MapHome1({
     })
   }
 
+  useEffect(() => {
+    if (map) {
+      map.on('moveend', function () {
+        setMapBounds(map.getBounds())
+        setMapCenter(map.getCenter())
+      })
+    }
+  }, [map])
+
   async function changeMapDateLayers() {
     let layer: any
     map.eachLayer(async (mapLayer: any) => {
       if (mapLayer.options.date_range) {
         const layerName = selectedLayers[mapLayer.options.attribution]
-        const getTifLayer = new GetTifLayer2(
-          layerName,
+        const url = layerName.url.replace('actualDate', yearMonths[actualDate])
+        const getTifLayer = new GetTifLayer(
+          url,
           mapLayer.options.attribution,
-          yearMonths[actualDate],
-          null,
-          limits,
-          null,
+          undefined,
+          undefined,
+          layerName,
         )
-        await getTifLayer.getTile().then(function () {
+        await getTifLayer.parseGeo().then(function () {
           layer = getTifLayer.layer
-          layer.options.attribution = mapLayer.options.attribution
+          layer.options.date_range = layerName.date_range
           map.addLayer(layer, true)
           map.removeLayer(mapLayer)
         })
@@ -195,30 +183,11 @@ function MapHome1({
     }
   }, [map])
 
-  async function getWMSLayer(layerName: any, actual: any) {
-    const params: keyable = {
-      service: 'wms',
-      request: 'GetMap',
-      version: '1.3.0',
-      layers: layerName.params.layers,
-      format: 'image/png',
-      transparent: true,
-      width: 20,
-      height: 20,
-      attribution: actual,
-    }
-    if (layerName.params.style) {
-      params.style = layerName.params.style
-    }
-    const layer = callBetterWMS(layerName.url, params)
-    return layer
-  }
-
   async function changeIcons(photo: any) {
     map.eachLayer(function (mapLayer: any) {
       if (mapLayer.options.dataType === 'marker') {
         if (mapLayer.options.filename === photo.filename) {
-          mapLayer.setIcon(activeIcon)
+          mapLayer.setIcon(createIcon('/marker-icon_red.png', [25, 25]))
           if (!photo.notCenter) {
             map.setView(
               new L.LatLng(mapLayer._latlng.lat, mapLayer._latlng.lng),
@@ -252,42 +221,44 @@ function MapHome1({
     })
   }
 
-  function reorderPhotos(photos: any) {
-    const shuffled = photos.sort(() => 0.5 - Math.random())
-    const n = shuffled.length > 700 ? 700 : shuffled.length
-    const newList: any = []
-    let count: number = 0
-    let count2: number = 0
-    if (activePhoto) {
-      count++
-      newList.push(activePhoto)
+  async function addLayerIntoMap() {
+    await generateSelectedLayer()
+    setLayerAction('')
+  }
+
+  function createTurfLayer(actual, turfConvex) {
+    const colorLimits = createColor(colorScale)
+
+    const myStyle = {
+      color: colorLimits,
+      fillColor: colorLimits,
+      weight: 3,
+      opacity: defaultOpacity,
+      fillOpacity: defaultOpacity,
     }
-    const lat = [mapBounds._southWest.lat, mapBounds._northEast.lat]
-    const lng = [mapBounds._southWest.lng, mapBounds._northEast.lng]
-    shuffled.every((el: any) => {
-      if (count >= n) {
-        return false // "break"
+    if (turfConvex) {
+      const turflayer = L.geoJson(turfConvex, {
+        style: myStyle,
+      })
+      turflayer.options.attribution = actual
+      return turflayer
+    }
+  }
+
+  async function addGeoblazeValue(layerName, actual, getCoords, layer) {
+    map.on('mousemove', function (evt: { originalEvent: any }) {
+      const latlng = map.mouseEventToLatLng(evt.originalEvent)
+      let coords = null
+      if (getCoords) {
+        const pixelPoint = map
+          .project(latlng, Math.floor(map.getZoom()))
+          .floor()
+        const tileSize = { x: 256, y: 256 }
+        coords = pixelPoint.unscaleBy(tileSize).floor()
+        coords.z = Math.floor(map.getZoom()) // { x: 212, y: 387, z: 10 }
       }
-      if (el.filename !== activePhoto.filename) {
-        if (el.show) {
-          count2++
-          if (
-            el.coordinates[1] > lat[0] &&
-            el.coordinates[1] < lat[1] &&
-            el.coordinates[0] > lng[0] &&
-            el.coordinates[0] < lng[1]
-          ) {
-            newList.push(el.filename)
-            count++
-          }
-        }
-      }
-      return true
+      defineNewDepthValue(actual, layerName, latlng, coords, layer, setDepth)
     })
-    if (count2 === 0) {
-      return []
-    }
-    return newList
   }
 
   async function generateSelectedLayer() {
@@ -297,23 +268,12 @@ function MapHome1({
       let bounds
       if (layerName.data_type === 'wms') {
         layer = await getWMSLayer(layerName, actual)
-        layer.setOpacity(0.7)
         bounds = defaultWMSBounds
       } else if (layerName.data_type === 'COG') {
-        const getCOGLayer = new GetTileLayer(
-          layerName,
-          actual,
-          true,
-          yearMonths[actualDate],
-        )
+        const getCOGLayer = new GetCOGLayer(layerName, actual, true)
         await getCOGLayer.getTile().then(function () {
           if (getCOGLayer.error) {
-            setFlashMessage({
-              messageType: 'error',
-              content: getCOGLayer.error,
-            })
-            setShowFlash(true)
-            return
+            errorFlash(getCOGLayer.error, setFlashMessage, setShowFlash)
           }
           layer = getCOGLayer.layer
           // bounds = [
@@ -322,17 +282,39 @@ function MapHome1({
           // ]
           bounds = defaultWMSBounds
         })
+      } else if (layerName.data_type === 'MBTiles') {
+        const getMBTilesLayer = new GetMBTiles(layerName, actual)
+        await getMBTilesLayer.getLayer().then(async function () {
+          layer = getMBTilesLayer.layer
+          if (layer) {
+            layer.on('click', async function (e: any) {
+              const strContent: string[] = []
+              Object.keys(e.layer.properties).forEach((c) => {
+                strContent.push(
+                  `<p>${c}: ${
+                    e.layer.properties[c] === ' ' ? '--' : e.layer.properties[c]
+                  }<p>`,
+                )
+              })
+              L.popup({ maxWidth: 200 })
+                .setLatLng(e.latlng)
+                .setContent(strContent.join(''))
+                .openOn(map)
+            })
+          }
+        })
       } else if (layerName.data_type === 'GTIFF') {
-        const getTifLayer = new GetTifLayer2(
-          layerName,
+        const url = layerName.url.replace('actualDate', yearMonths[actualDate])
+        const getTifLayer = new GetTifLayer(
+          url,
           actual,
-          yearMonths[actualDate],
-          null,
-          limits,
-          null,
+          undefined,
+          undefined,
+          layerName,
         )
-        await getTifLayer.getTile().then(function () {
+        await getTifLayer.parseGeo().then(function () {
           layer = getTifLayer.layer
+          layer.options.date_range = layerName.date_range
           bounds = defaultWMSBounds
         })
       } else if (layerName.data_type === 'arcgis') {
@@ -340,59 +322,24 @@ function MapHome1({
         layer.setLayers([1, 2, 3, 4, 5, 6, 7, 8, 12, 13, 14, 15])
         bounds = defaultWMSBounds
       } else if (layerName.data_type === 'GEOJSON') {
-        await fetch(layerName.url)
-          .then((response) => response.json())
-          .then((data) => {
-            layer = L.geoJSON(data, {
-              pointToLayer: function (feature, latlng) {
-                return L.marker(latlng, { icon: normalIcon })
-              },
-              onEachFeature: function (feature, layer) {
-                layer.on({
-                  click: () => {
-                    setMapPopup({
-                      [`${actual}`]: feature.properties,
-                    })
-                  },
-                })
-              },
-              style: function (feature) {
-                const color = colorScale[Math.floor(Math.random() * 30)]
-                const myStyle = {
-                  color,
-                  fillColor: color,
-                  weight: 3,
-                  opacity: 0.7,
-                  fillOpacity: 0.7,
-                }
-                return myStyle
-              },
-            })
-            bounds = defaultWMSBounds
-          })
-          .catch((error) => console.error('Error:', error))
+        layer = await generateGeoJsonLayer(layerName, actual, layer)
+        bounds = defaultWMSBounds
       } else if (layerName.data_type === 'Photo') {
-        // bounds = defaultWMSBounds
-        const markers: any = []
-        const color = colorScale[Math.floor(Math.random() * 30)]
-        const color1 = colorScale[Math.floor(Math.random() * 30)]
-
-        const shuffledPhotos = reorderPhotos(layerName.photos)
+        let markers: any = []
+        const colorMarker = colorScale[Math.floor(Math.random() * 30)]
+        const shuffledPhotos = reorderPhotos(
+          layerName.photos,
+          showPhotos,
+          mapBounds,
+        )
         await layerName.photos.map(async (photo: any) => {
-          markers.push(
-            turf.point([
-              photo.coordinates[0] + 0.003,
-              photo.coordinates[1] + 0.003,
-            ]),
-          )
-          markers.push(
-            turf.point([
-              photo.coordinates[0] - 0.003,
-              photo.coordinates[1] - 0.003,
-            ]),
-          )
+          markers = createTurfPoint(markers, photo.coordinates, 0.003)
           if (shuffledPhotos.includes(photo.filename)) {
-            const getPhotoMarker = new GetPhotoMarker(photo, actual, color)
+            const getPhotoMarker = new GetPhotoMarker(
+              photo,
+              actual,
+              colorMarker,
+            )
             await getPhotoMarker.getMarker().then(async function () {
               map.addLayer(getPhotoMarker.layer)
               if (getPhotoMarker.layer) {
@@ -422,122 +369,27 @@ function MapHome1({
           [turfBbox[1] - 0.05, turfBbox[0] - 0.35],
           [turfBbox[3] + 0.05, turfBbox[2] + 0.15],
         ]
-        if (layerName.plotLimits) {
-          const myStyle = {
-            color1,
-            fillColor: color1,
-            weight: 3,
-            opacity: 0.7,
-            fillOpacity: 0.7,
-          }
-          if (turfConvex) {
-            const turflayer = L.geoJson(turfConvex, {
-              style: myStyle,
-            })
-            turflayer.options.attribution = actual
-            turflayer.addTo(map)
-          }
+        if (layerName.plotLimits && turfConvex) {
+          const turflayer = createTurfLayer(actual, turfConvex)
+          turflayer.addTo(map)
         }
       } else if (layerName.data_type === 'Photo-Limits') {
-        const markers: any = []
+        let markers: any = []
         layerName.photos.map(async (photo: any) => {
-          markers.push(
-            turf.point([
-              photo.coordinates[0] + 0.003,
-              photo.coordinates[1] + 0.003,
-            ]),
-          )
-          markers.push(
-            turf.point([
-              photo.coordinates[0] - 0.003,
-              photo.coordinates[1] - 0.003,
-            ]),
-          )
+          markers = createTurfPoint(markers, photo.coordinates, 0.003)
         })
-        const color = colorScale[Math.floor(Math.random() * 30)]
-        const myStyle = {
-          color,
-          fillColor: color,
-          weight: 3,
-          opacity: 0.7,
-        }
-
         const turfConvex = turf.convex(turf.featureCollection(markers))
-
-        if (turfConvex) {
-          layer = L.geoJson(turfConvex, {
-            style: myStyle,
-          })
-        }
-      } else if (layerName.data_type === 'MBTiles') {
-        const getMBTilesLayer = new GetMBTiles(layerName, actual)
-        await getMBTilesLayer.getLayer().then(async function () {
-          layer = getMBTilesLayer.layer
-          if (layer) {
-            layer.on('click', async function (e: any) {
-              const strContent: string[] = []
-              Object.keys(e.layer.properties).forEach((c) => {
-                strContent.push(
-                  `<p>${c}: ${
-                    e.layer.properties[c] === ' ' ? '--' : e.layer.properties[c]
-                  }<p>`,
-                )
-              })
-              L.popup({ maxWidth: 200 })
-                .setLatLng(e.latlng)
-                .setContent(strContent.join(''))
-                .openOn(map)
-            })
-          }
-        })
+        layer = createTurfLayer(actual, turfConvex)
       }
       if (layerName.data_type !== 'Photo') {
         layer.options.attribution = actual
         map.addLayer(layer, true)
-        if (layerName.data_type === 'COG' && layerName.get_value) {
-          map.on('mousemove', function (evt: { originalEvent: any }) {
-            if (selectedLayers[actual]) {
-              const latlng = map.mouseEventToLatLng(evt.originalEvent)
-              const tileSize = { x: 256, y: 256 }
-              const pixelPoint = map
-                .project(latlng, Math.floor(map.getZoom()))
-                .floor()
-              const coords = pixelPoint.unscaleBy(tileSize).floor()
-              coords.z = Math.floor(map.getZoom()) // { x: 212, y: 387, z: 10 }
-              const getGeoblazeValue = new GetGeoblazeValue(
-                layer,
-                latlng,
-                coords,
-                layerName,
-              )
-              getGeoblazeValue.getGeoblaze().then(function () {
-                const dep = getGeoblazeValue.dep
-                const depthName = actual.split('_')[1]
-                if (dep) {
-                  if (dep > 0.0) {
-                    setDepth((depth: any) => {
-                      const copy = { ...depth }
-                      copy[depthName] = dep.toFixed(2)
-                      return {
-                        ...copy,
-                      }
-                    })
-                  }
-                } else {
-                  setDepth((depth: any) => {
-                    const copy = { ...depth }
-                    delete copy[depthName]
-                    return {
-                      ...copy,
-                    }
-                  })
-                }
-              })
-            }
-          })
-        }
-
         layer && bringLayerToFront(layer)
+        if (layerName.data_type === 'COG' && layerName.get_value) {
+          if (selectedLayers[actual]) {
+            addGeoblazeValue(layerName, actual, true, null)
+          }
+        }
       }
       if (layerName.data_type !== 'Photo') {
         bounds = defaultWMSBounds
@@ -546,6 +398,100 @@ function MapHome1({
     })
     setLoading(false)
   }
+
+  async function generateGeoJsonLayer(layerName, actual, layer) {
+    await fetch(layerName.url)
+      .then((response) => response.json())
+      .then((data) => {
+        layer = L.geoJSON(data, {
+          pointToLayer: function (feature, latlng) {
+            return L.marker(latlng, {
+              icon: createIcon('/marker-icon_old.png', [25, 37]),
+            })
+          },
+          onEachFeature: function (feature, layer) {
+            layer.on({
+              // click: () => {
+              //   setMapPopup({
+              //     [`${actual}`]: feature.properties,
+              //   })
+              // },
+              click: () => {
+                const popupContent = `<h3>${actual}</h3><p>${JSON.stringify(
+                  feature.properties,
+                )}</p>`
+                layer.bindPopup(popupContent).openPopup()
+              },
+            })
+          },
+          style: function () {
+            const color = colorScale[Math.floor(Math.random() * 30)]
+            const myStyle = {
+              color,
+              fillColor: color,
+              weight: 3,
+              opacity: defaultOpacity,
+              fillOpacity: defaultOpacity,
+            }
+            return myStyle
+          },
+        })
+      })
+      .catch((error) => console.error('Error:', error))
+    return layer
+  }
+
+  async function getWMSLayer(layerName: keyable, actual: string) {
+    const params: keyable = {
+      service: 'wms',
+      request: 'GetMap',
+      version: '1.3.0',
+      layers: layerName.params.layers,
+      format: 'image/png',
+      transparent: true,
+      width: 20,
+      height: 20,
+      attribution: actual,
+    }
+    if (layerName.params.style) {
+      params.style = layerName.params.style
+    }
+    const layer = callBetterWMS(layerName.url, params)
+    layer.setOpacity(defaultOpacity)
+    return layer
+  }
+
+  function removeLayerFromMap(): void {
+    map.eachLayer(function (layer) {
+      if (actualLayer.includes(layer.options.attribution)) {
+        map.removeLayer(layer)
+        if (activePhoto.layerName === layer.options.attribution) {
+          setActivePhoto('')
+        }
+        setLayerAction('')
+      }
+    })
+    setLoading(false)
+  }
+
+  const [batLayer, setBatLayer] = useState(null)
+
+  useEffect(() => {
+    async function fetchLayer() {
+      const layer = await getGeorasterLayer(bathymetryUrl)
+      setBatLayer(layer)
+    }
+    fetchLayer()
+  }, [bathymetryUrl])
+
+  useEffect(() => {
+    if (map) {
+      const fetchData = async () => {
+        await addGeoblazeValue({}, '_Depth', false, batLayer)
+      }
+      fetchData()
+    }
+  }, [batLayer])
 
   useEffect(() => {
     if (activePhoto) {
@@ -561,77 +507,6 @@ function MapHome1({
       setShowPhotos([])
     }
   }, [activePhoto])
-
-  function removeLayerFromMap(): void {
-    map.eachLayer(function (layer: any) {
-      if (actualLayer.includes(layer.options.attribution)) {
-        map.removeLayer(layer)
-        if (activePhoto.layerName === layer.options.attribution) {
-          setActivePhoto('')
-        }
-        setLayerAction('')
-      }
-    })
-    setLoading(false)
-  }
-  useEffect(() => {
-    if (map) {
-      const actualLayer = 'bathymetry'
-      let layerExist = false
-      map.eachLayer(function (layer: any) {
-        if (actualLayer.includes(layer.options.attribution)) {
-          layerExist = true
-          return false
-        }
-      })
-      if (!layerExist) {
-        setLoading(true)
-
-        const url = `${JOSBaseUrl}haig-fras/frontend/images/bathymetry.tif`
-
-        const fetchData = async () => {
-          const getTifLayer = new GetTifLayer(url, [actualLayer])
-          await getTifLayer.parseGeo().then(function () {
-            map.addLayer(getTifLayer.layer)
-            map.on('mousemove', function (evt: { originalEvent: any }) {
-              const latlng = map.mouseEventToLatLng(evt.originalEvent)
-              const getGeoblazeValue = new GetGeoblazeValue(
-                getTifLayer.georaster,
-                latlng,
-              )
-              getGeoblazeValue.getGeoblaze().then(function () {
-                const dep = getGeoblazeValue.dep
-                if (dep) {
-                  setDepth((depth: any) => {
-                    const copy = { ...depth }
-                    copy.Depth = dep.toFixed(2)
-                    return {
-                      ...copy,
-                    }
-                  })
-                } else {
-                  setDepth((depth: any) => {
-                    const copy = { ...depth }
-                    copy.Depth = null
-                    return {
-                      ...copy,
-                    }
-                  })
-                }
-              })
-            })
-            setLoading(false)
-          })
-        }
-        fetchData()
-      }
-    }
-  }, [map])
-
-  async function addLayerIntoMap() {
-    await generateSelectedLayer()
-    setLayerAction('')
-  }
 
   // useEffect(() => {
   //   if (map) {
@@ -742,6 +617,7 @@ function MapHome1({
           }
         }
         setLayerAction('')
+        setLoading(false)
         return false
       }
     })
@@ -762,6 +638,7 @@ function MapHome1({
         }
       }
     })
+    setLoading(false)
   }
 
   function changeMapMarkerShow() {
@@ -773,32 +650,18 @@ function MapHome1({
         }
       }
     })
-    const markersAll: any = []
+    let markersAll: any = []
     actualLayer.forEach(async (actual) => {
       const color = colorScale[Math.floor(Math.random() * 30)]
-      const markers: any = []
+      let markers: any = []
       await selectedLayers[actual].photos.map(async (photo: any) => {
-        markersAll.push(
-          turf.point([photo.coordinates[0], photo.coordinates[1]]),
-        )
-        markers.push(
-          turf.point([
-            photo.coordinates[0] + 0.003,
-            photo.coordinates[1] + 0.003,
-          ]),
-        )
-        markers.push(
-          turf.point([
-            photo.coordinates[0] - 0.003,
-            photo.coordinates[1] - 0.003,
-          ]),
-        )
+        markersAll = createTurfPoint(markersAll, photo.coordinates, 0)
+        markers = createTurfPoint(markers, photo.coordinates, 0.003)
         const getPhotoMarker = new GetPhotoMarker(photo, actual, color)
         await getPhotoMarker.getMarker().then(async function () {
           if (getPhotoMarker.layer) {
             if (selectedLayers[actual].show.includes(getPhotoMarker.fileName)) {
               map.addLayer(getPhotoMarker.layer)
-              // @ts-ignore
               getPhotoMarker.layer.on('click', async function (e) {
                 L.popup()
                   .setLatLng(e.latlng)
@@ -816,20 +679,9 @@ function MapHome1({
       })
       if (selectedLayers[actual].plotLimits) {
         const turfConvex = turf.convex(turf.featureCollection(markers))
-        const color1 = colorScale[Math.floor(Math.random() * 30)]
-        const myStyle = {
-          color1,
-          fillColor: color1,
-          weight: 3,
-          opacity: 0.7,
-          fillOpacity: 0.7,
-        }
-        if (turfConvex) {
-          const turflayer = L.geoJson(turfConvex, {
-            style: myStyle,
-          })
-          turflayer.options.attribution = actual
-          turflayer.addTo(map)
+        const turfLayer = createTurfLayer(actual, turfConvex)
+        if (turfLayer) {
+          turfLayer.addTo(map)
         }
       }
     })
@@ -840,37 +692,29 @@ function MapHome1({
       [turfBbox[3] + 0.05, turfBbox[2] + 0.15],
     ]
     map.fitBounds(bounds)
+    setLoading(false)
   }
 
   useEffect(() => {
     if (map) {
       map.closePopup()
     }
-    if (layerAction === 'remove') {
+    const actionMap = {
+      remove: removeLayerFromMap,
+      add: addLayerIntoMap,
+      zoom: changeMapZoom,
+      opacity: changeMapOpacity,
+      'marker-changes': changeMapMarkerShow,
+    }
+    if (actionMap[layerAction]) {
       setLoading(true)
-      removeLayerFromMap()
-      setLayerAction('')
-    } else if (layerAction === 'add') {
-      setLoading(true)
-      addLayerIntoMap()
-      setLayerAction('')
-    } else if (layerAction === 'zoom') {
-      changeMapZoom()
-      setLayerAction('')
-    } else if (layerAction === 'opacity') {
-      changeMapOpacity()
-      setLayerAction('')
-    } else if (layerAction === 'marker-changes') {
-      changeMapMarkerShow()
+      actionMap[layerAction]()
       setLayerAction('')
     }
   }, [selectedLayers])
 
-  const icon = L.icon({
-    iconUrl: '/marker-icon_old.png',
-    iconSize: [27, 45],
-  })
   function handleSetLatlng(e: any) {
+    const icon = createIcon('/marker-icon_old.png', [27, 45])
     let counter = 0
     const lineLayer: any[] = []
     Object.keys(map._layers).forEach((layer) => {
@@ -930,7 +774,6 @@ function MapHome1({
       map.off('click', handleSetLatlng)
     }
   }
-
   useEffect(() => {
     if (map) {
       if (getPolyline) {
@@ -995,15 +838,61 @@ function MapHome1({
     }
   }, [clickPoint])
 
+  function onChange() {
+    // this._editableFG contains the edited geometry, which can be manipulated through the leaflet API
+
+    const { onChange } = this.props
+
+    if (!this._editableFG || !onChange) {
+      return
+    }
+    const geojsonData = this._editableFG.toGeoJSON()
+    onChange(geojsonData)
+  }
+
+  function onEditPath(e) {
+    let numEdited = 0
+    e.layers.eachLayer((layer) => {
+      numEdited += 1
+    })
+    console.log(`_onEdited: edited ${numEdited} layers`, e)
+
+    onChange()
+  }
+
+  function onCreate(e) {
+    const type = e.layerType
+    // const layer = e.layer
+    if (type === 'marker') {
+      // Do marker specific actions
+      console.log('_onCreated: marker created', e)
+    } else {
+      console.log('_onCreated: something else created:', type, e)
+    }
+    // Do whatever else you need to. (save to db; etc)
+
+    onChange()
+  }
+
+  function onDeleted(e) {
+    let numDeleted = 0
+    e.layers.eachLayer((layer) => {
+      numDeleted += 1
+    })
+    console.log(`onDeleted: removed ${numDeleted} layers`, e)
+
+    onChange()
+  }
+
   const displayMap = useMemo(
     () => (
       <MapContainer
         style={{ height: '100vh', width: '100vw' }}
         center={new L.LatLng(defaultView[0], defaultView[1])}
-        zoom={7}
+        zoom={defaultZoom}
         zoomSnap={0.1}
         maxZoom={30}
-        // minZoom={10}
+        minZoom={3}
         scrollWheelZoom={true}
         zoomControl={false}
         ref={setMap}
@@ -1027,19 +916,17 @@ function MapHome1({
               />
             </Pane>
           </LayersControl.BaseLayer>
-          <LayersControl.Overlay checked name="Bathymetry">
+          <LayersControl.Overlay checked name="Special Areas of Conservation">
             <WMSTileLayer
-              attribution="Bathymetry - Hidrografico"
-              url="https://webgeo2.hidrografico.pt/geoserver/ows?"
+              attribution="Special Areas of Conservation"
+              url="https://mpa-ows.jncc.gov.uk/mpa_mapper/wms?"
               params={{
                 service: 'wms',
                 request: 'GetMap',
-                version: '1.1.1',
-                layers: 'isobat:isobatimetria_8_16_30',
+                version: '1.3.0',
+                layers: 'sac_mc_full',
                 format: 'image/png',
                 transparent: true,
-                // bbox: '-1017529.7205322665,4774562.534805251,-939258.203568246,4852834.051769271',
-                // srs: 'EPSG:3857',
                 width: 256,
                 height: 256,
               }}
@@ -1047,7 +934,36 @@ function MapHome1({
               zIndex={9999}
             />
           </LayersControl.Overlay>
+          <LayersControl.Overlay checked name="Marine Conservation Zones">
+            <WMSTileLayer
+              attribution="Marine Conservation Zones"
+              url="https://mpa-ows.jncc.gov.uk/mpa_mapper/wms?"
+              params={{
+                service: 'wms',
+                request: 'GetMap',
+                version: '1.3.0',
+                layers: 'mcz',
+                format: 'image/png',
+                transparent: true,
+                width: 256,
+                height: 256,
+              }}
+              opacity={1}
+              zIndex={9998}
+            />
+          </LayersControl.Overlay>
         </LayersControl>
+        <FeatureGroup>
+          <EditControl
+            position="topright"
+            onEdited={onEditPath}
+            onCreated={onCreate}
+            onDeleted={onDeleted}
+            draw={{
+              rectangle: false,
+            }}
+          />
+        </FeatureGroup>
         <ScaleControl position="bottomleft" />
         <LeafletRuler />
       </MapContainer>

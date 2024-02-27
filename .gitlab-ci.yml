@@ -33,4 +33,4 @@ deploy-job:
     - ssh web "docker pull $CONTAINER_NAME"
     - ssh web "mkdir -p frontend"
     - scp .env web:frontend/.env
-    - ssh web "cd frontend && docker stop frontend && docker container rm frontend && docker run -d -p 8080:80 --env-file ./.env --name frontend $CONTAINER_NAME"
+    - ssh web "cd frontend && docker ps -a | grep -q "frontend" && docker stop frontend && docker container rm frontend || echo && docker run -d -p 8080:80 --env-file ./.env --name frontend $CONTAINER_NAME"

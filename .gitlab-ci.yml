@@ -27,6 +27,7 @@ deploy-job:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY       
     - docker push $CONTAINER_NAME
     - ./make_env.sh
+    - eval "$(ssh-agent -s)"
     - ssh-add /home/tobfer/.ssh/id_rsa_jasmin2
     - ssh web "docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY"
     - ssh web "docker pull $CONTAINER_NAME"

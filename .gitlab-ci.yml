@@ -13,7 +13,6 @@ build-job:
   script:
     - CONTAINER_NAME=$CI_REGISTRY/nocacuk/ocean-informatics/resow/frontend:latest
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    #write env file, variables should be (mostly) supplied as CI variables.
     - ./make_env.sh
     - docker build -t $CONTAINER_NAME .
 

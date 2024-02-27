@@ -7,7 +7,6 @@ import {
   ScaleControl,
   ZoomControl,
   FeatureGroup,
-  Circle,
 } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import React, { useEffect, useMemo, useState } from 'react'
@@ -960,7 +959,7 @@ function MapHome1({
             onCreated={onCreate}
             onDeleted={onDeleted}
             draw={{
-              rectangle: false,
+              rectangle: true,
             }}
           />
         </FeatureGroup>

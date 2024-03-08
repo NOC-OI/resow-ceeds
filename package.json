@@ -10,7 +10,7 @@
     "dev": "vite",
     "lint": "eslint src --ext .ts --fix",
     "build": "tsc && cross-env NODE_OPTIONS=--max-old-space-size=8192 vite build",
-    "postinstall": "npm run build",
+    "postinstall": "patch-package",
     "serve-heroku": "vite --host 0.0.0.0 --port $PORT preview",
     "preview": "vite preview"
   },
@@ -110,6 +110,7 @@
     "@types/esri-leaflet": "^3.0.3",
     "@types/js-cookie": "^3.0.3",
     "@types/leaflet": "^1.9.3",
+    "@types/leaflet-draw": "^1.0.11",
     "@types/leaflet.vectorgrid": "^1.3.1",
     "@types/node": "^18.15.5",
     "@types/react": "^18.0.28",

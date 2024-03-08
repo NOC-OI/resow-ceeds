@@ -24,6 +24,7 @@ export function Home() {
   const [actualDate, setActualDate] = useState(yearMonths.indexOf('2021-05'))
 
   const [graphData, setGraphData] = useState(null)
+  const [rectangleLimits, setRectangleLimits] = useState(null)
 
   const [selectedLayers, setSelectedLayers] = useState<Object>({})
 
@@ -179,6 +180,7 @@ export function Home() {
         setPosition={setPosition}
         setDepth={setDepth}
         selectedBaseLayer={selectedBaseLayer}
+        setRectangleLimits={setRectangleLimits}
       />
       <InfoBox position={position} depth={depth} />
       {/* {showPopup && <FullPagePopup setShowPopup={setShowPopup} />} */}

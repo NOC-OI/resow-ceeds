@@ -10,6 +10,7 @@ import { GetLayers } from '../../data/loadLayers'
 import { Loading } from '../../components/Loading'
 import { RangeSelection } from '../../components/RangeSelection'
 import { yearMonths } from '../../data/yearMonths'
+import { defaultBaseLayer } from '../../lib/map/utils'
 
 export function ThreeD() {
   const [selectedSidebarOption, setSelectedSidebarOption] =
@@ -20,6 +21,7 @@ export function ThreeD() {
   const [selectedLayers, setSelectedLayers] = useState<Object>({})
 
   const [actualLayer, setActualLayer] = useState<string[]>([''])
+  const [selectedBaseLayer, setSelectedBaseLayer] = useState(defaultBaseLayer)
 
   const [layerAction, setLayerAction] = useState('')
   const [loading, setLoading] = useState(true)
@@ -59,7 +61,6 @@ export function ThreeD() {
           setActualLayer={setActualLayer}
           setLayerAction={setLayerAction}
           setShowPopup={setShowPopup}
-          loading={loading}
           actualLayer={actualLayer}
           layerAction={layerAction}
           setLayerLegend={setLayerLegend}
@@ -68,6 +69,8 @@ export function ThreeD() {
           threeD={threeD}
           setThreeD={setThreeD}
           setShowRange={setShowRange}
+          selectedBaseLayer={selectedBaseLayer}
+          setSelectedBaseLayer={setSelectedBaseLayer}
         />
         {layerLegend ? (
           <DataExplorationLegend

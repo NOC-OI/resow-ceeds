@@ -48,21 +48,21 @@ export function InfoBox({ position = null, depth = {} }: InfoBoxProps) {
   }
   return (
     <InfoBoxContainer id="infobox-container">
-      <h1>CEEDS</h1>
-      <div className="flex justify-between">
+      <h1 className="text-[2rem] leading-6 text-center p-2">CEEDS</h1>
+      <div className="flex justify-between items-center">
         <div className="">
-          <img src="favicon.png" className="h-16" />
+          <img src="favicon.png" className="h-24" />
         </div>
-        <div className="w-24">
-          <div className="flex align-middle justify-between text-[0.75rem] leading-6">
+        <div className="w-32 flex flex-col gap-1">
+          <div className="flex align-middle justify-between text-[1rem] leading-6">
             <p>Lat:</p>
             <span>{lat}</span>
           </div>
-          <div className="flex align-middle justify-between text-[0.75rem] leading-6">
+          <div className="flex align-middle justify-between text-[1rem] leading-6">
             <p>Lon:</p>
             <span>{lng}</span>
           </div>
-          <div className="flex align-middle justify-between text-[0.75rem] leading-6">
+          <div className="flex align-middle justify-between text-[1rem] leading-6">
             <p>Depth:</p>
             {depth.Shipborne ? (
               <span>{`${depth.Shipborne} m`}</span>

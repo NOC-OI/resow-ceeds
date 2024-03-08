@@ -1,19 +1,13 @@
 import {
   MapContainer,
   TileLayer,
-  WMSTileLayer,
-  LayersControl,
-  Pane,
   ScaleControl,
   ZoomControl,
-  FeatureGroup,
 } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import React, { useEffect, useMemo, useState } from 'react'
 import * as L from 'leaflet'
-import { InfoBox } from '../InfoBox'
 import { GetTifLayer, GetCOGLayer } from '../../lib/map/addGeoraster'
-import { Loading } from '../Loading'
 import { callBetterWMS } from '../../lib/map/addBetterWMS'
 import { GetMBTiles } from '../../lib/map/addMBTiles'
 import { GetPhotoMarker } from '../../lib/map/addPhotoMarker'
@@ -21,47 +15,29 @@ import * as turf from '@turf/turf'
 import LeafletRuler from '../LeafletRuler'
 import { yearMonths } from '../../data/yearMonths'
 // import { limits } from '../../data/limits'
+import 'leaflet-draw'
 import * as esri from 'esri-leaflet'
-import { EditControl } from 'react-leaflet-draw'
+import { useContextHandle } from '../../lib/contextHandle'
 import {
   bathymetryUrl,
   colorScale,
   createColor,
   createIcon,
   createTurfPoint,
+  defaultBaseLayer,
   defaultOpacity,
   defaultView,
   defaultWMSBounds,
   defaultZoom,
   defineNewDepthValue,
   getGeorasterLayer,
+  keyable,
   reorderPhotos,
   smallIcon,
 } from '../../lib/map/utils'
-import { errorFlash } from '../FlashMessages'
-
-interface DisplayPositionProps {
-  map: any
-  depth: any
-}
-
-interface keyable {
-  [key: string]: any
-}
-
-function DisplayPosition({ map, depth }: DisplayPositionProps) {
-  const [position, setPosition] = useState(null)
-
-  useEffect(() => {
-    map.on('mousemove', (e: any) => {
-      setPosition(e.latlng)
-    })
-  }, [map])
-  return <InfoBox position={position} depth={depth} />
-}
 
 interface MapProps {
-  selectedLayers: keyable
+  selectedLayers: any
   actualLayer: string[]
   layerAction: string
   setLayerAction: any
@@ -74,14 +50,14 @@ interface MapProps {
   selectedSidebarOption: any
   getPolyline: any
   setGraphData: any
-  setShowFlash: any
-  setFlashMessage: any
-  surveyDesignCircleValues: any
-  setSurveyDesignCircleValues: any
   actualDate: any
   setMapPopup: any
   clickPoint: any
   setClickPoint: any
+  setDepth: any
+  setPosition: any
+  selectedBaseLayer: any
+  setRectangleLimits: any
 }
 
 function MapHome1({
@@ -97,40 +73,35 @@ function MapHome1({
   setMapBounds,
   getPolyline,
   setGraphData,
-  setShowFlash,
-  setFlashMessage,
-  surveyDesignCircleValues,
   actualDate,
   setMapPopup,
   clickPoint,
   setClickPoint,
+  setDepth,
+  setPosition,
+  selectedBaseLayer,
+  setRectangleLimits,
 }: MapProps) {
-  const MAPBOX_API_KEY = import.meta.env.VITE_MAPBOX_API_KEY
-  const MAPBOX_USERID = 'mapbox/satellite-v9'
-  // const ESRI_KEY = process.env.VITE_ESRI
+  const { setFlashMessage, setLoading } = useContextHandle()
 
   const [map, setMap] = useState<any>(null)
-
-  const [depth, setDepth] = useState({})
 
   const [mapCenter, setMapCenter] = useState<L.LatLng>(
     new L.LatLng(defaultView[0], defaultView[1]),
   )
 
-  const [loading, setLoading] = useState<boolean>(false)
-
   function bringLayerToFront(layer: any) {
     layer.bringToFront()
-    const frontLayers = [
-      'Coastline',
-      'Marine Conservation Zones',
-      'Special Areas of Conservation',
-    ]
-    map.eachLayer(function (mapLayer: any) {
-      if (frontLayers.includes(mapLayer.options.attribution)) {
-        mapLayer.bringToFront()
-      }
-    })
+    // const frontLayers = [
+    //   'Coastline',
+    //   'Marine Conservation Zones',
+    //   'Special Areas of Conservation',
+    // ]
+    // map.eachLayer(function (mapLayer: any) {
+    //   if (frontLayers.includes(mapLayer.options.attribution)) {
+    //     mapLayer.bringToFront()
+    //   }
+    // })
   }
 
   useEffect(() => {
@@ -138,6 +109,9 @@ function MapHome1({
       map.on('moveend', function () {
         setMapBounds(map.getBounds())
         setMapCenter(map.getCenter())
+      })
+      map.on('mousemove', (e: { latlng: unknown }) => {
+        setPosition(e.latlng)
       })
     }
   }, [map])
@@ -181,6 +155,24 @@ function MapHome1({
       })
     }
   }, [map])
+
+  useEffect(() => {
+    if (map) {
+      const layer = new L.TileLayer(selectedBaseLayer.url)
+      layer.options.attribution = 'base layer'
+      map.eachLayer((currentLayer) => {
+        if (currentLayer.options.attribution === 'base layer') {
+          map.removeLayer(currentLayer)
+        }
+      })
+      map.addLayer(layer)
+      map.eachLayer((currentLayer) => {
+        if (currentLayer.options.attribution !== 'base layer') {
+          bringLayerToFront(currentLayer)
+        }
+      })
+    }
+  }, [selectedBaseLayer])
 
   async function changeIcons(photo: any) {
     map.eachLayer(function (mapLayer: any) {
@@ -272,7 +264,10 @@ function MapHome1({
         const getCOGLayer = new GetCOGLayer(layerName, actual, true)
         await getCOGLayer.getTile().then(function () {
           if (getCOGLayer.error) {
-            errorFlash(getCOGLayer.error, setFlashMessage, setShowFlash)
+            setFlashMessage({
+              messageType: 'error',
+              content: getCOGLayer.error,
+            })
           }
           layer = getCOGLayer.layer
           // bounds = [
@@ -393,7 +388,8 @@ function MapHome1({
       if (layerName.data_type !== 'Photo') {
         bounds = defaultWMSBounds
       }
-      map.fitBounds(bounds)
+      console.log(bounds)
+      // map.fitBounds(bounds)
     })
     setLoading(false)
   }
@@ -410,17 +406,17 @@ function MapHome1({
           },
           onEachFeature: function (feature, layer) {
             layer.on({
-              // click: () => {
-              //   setMapPopup({
-              //     [`${actual}`]: feature.properties,
-              //   })
-              // },
               click: () => {
-                const popupContent = `<h3>${actual}</h3><p>${JSON.stringify(
-                  feature.properties,
-                )}</p>`
-                layer.bindPopup(popupContent).openPopup()
+                setMapPopup({
+                  [`${actual}`]: feature.properties,
+                })
               },
+              // click: () => {
+              //   const popupContent = `<h3>${actual}</h3><p>${JSON.stringify(
+              //     feature.properties,
+              //   )}</p>`
+              //   layer.bindPopup(popupContent).openPopup()
+              // },
             })
           },
           style: function () {
@@ -440,7 +436,7 @@ function MapHome1({
     return layer
   }
 
-  async function getWMSLayer(layerName: keyable, actual: string) {
+  async function getWMSLayer(layerName: any, actual: any) {
     const params: keyable = {
       service: 'wms',
       request: 'GetMap',
@@ -551,52 +547,6 @@ function MapHome1({
       }
     })
   }
-  function addCircleLayerIntoMap() {
-    const circle1 = L.circle(
-      [mapCenter.lat, (mapCenter.lng + mapBounds._northEast.lng) / 2],
-      surveyDesignCircleValues[1],
-      {
-        attribution: 'circle',
-        color: '#ffd3c9',
-        weight: 2,
-        opacity: 0.7,
-        fillOpacity: 0.7,
-      },
-    )
-    circle1.addTo(map)
-    const circle2 = L.circle(
-      [mapCenter.lat, (mapCenter.lng + mapBounds._northEast.lng) / 2],
-      surveyDesignCircleValues[0],
-      {
-        attribution: 'circle',
-        color: '#ff96bc',
-        weight: 2,
-        opacity: 0.7,
-        fillOpacity: 0.7,
-      },
-    )
-    circle2.addTo(map)
-  }
-
-  useEffect(() => {
-    if (surveyDesignCircleValues.length > 0) {
-      removeNormalLayerFromMap('circle')
-      addCircleLayerIntoMap()
-    } else {
-      if (map) {
-        removeNormalLayerFromMap('circle')
-      }
-    }
-  }, [surveyDesignCircleValues])
-
-  useEffect(() => {
-    if (map) {
-      if (surveyDesignCircleValues.length > 0) {
-        removeNormalLayerFromMap('circle')
-        addCircleLayerIntoMap()
-      }
-    }
-  }, [mapCenter])
 
   async function changeMapZoom() {
     map.eachLayer(function (layer: any) {
@@ -780,7 +730,6 @@ function MapHome1({
           messageType: 'warning',
           content: 'Select two points in the map to make a graph',
         })
-        setShowFlash(true)
         map.dragging.disable()
         map.touchZoom.disable()
         map.doubleClickZoom.disable()
@@ -828,7 +777,6 @@ function MapHome1({
         messageType: 'warning',
         content: 'Click on a point on the map to generate a time series graph',
       })
-      setShowFlash(true)
       map.on('click', handleSetLatlngPoint)
     } else {
       if (map) {
@@ -837,50 +785,71 @@ function MapHome1({
     }
   }, [clickPoint])
 
-  function onChange() {
-    // this._editableFG contains the edited geometry, which can be manipulated through the leaflet API
-
-    const { onChange } = this.props
-
-    if (!this._editableFG || !onChange) {
-      return
-    }
-    const geojsonData = this._editableFG.toGeoJSON()
-    onChange(geojsonData)
-  }
-
-  function onEditPath(e) {
-    let numEdited = 0
-    e.layers.eachLayer((layer) => {
-      numEdited += 1
+  async function addInitialLayers() {
+    const layerNames = [
+      [
+        {
+          url: 'https://mpa-ows.jncc.gov.uk/mpa_mapper/wms',
+          params: {
+            layers: 'sac_mc_full',
+          },
+        },
+        'Marine Protected Areas_Special Areas of Conservation',
+      ],
+      [
+        {
+          url: 'https://mpa-ows.jncc.gov.uk/mpa_mapper/wms',
+          params: {
+            layers: 'mcz',
+          },
+        },
+        'Marine Protected Areas_Marine Conservation Zones',
+      ],
+    ]
+    layerNames.forEach(async (layerName) => {
+      const layer = await getWMSLayer(layerName[0], layerName[1])
+      map.addLayer(layer)
     })
-    console.log(`_onEdited: edited ${numEdited} layers`, e)
-
-    onChange()
   }
 
-  function onCreate(e) {
-    const type = e.layerType
-    // const layer = e.layer
-    if (type === 'marker') {
-      // Do marker specific actions
-      console.log('_onCreated: marker created', e)
-    } else {
-      console.log('_onCreated: something else created:', type, e)
+  useEffect(() => {
+    if (map) {
+      addInitialLayers()
     }
-    // Do whatever else you need to. (save to db; etc)
+  }, [map])
 
-    onChange()
-  }
+  const DrawControl = () => {
+    useEffect(() => {
+      if (map) {
+        const drawnItems = new L.FeatureGroup()
+        map.addLayer(drawnItems)
 
-  function onDeleted(e) {
-    let numDeleted = 0
-    e.layers.eachLayer((layer) => {
-      numDeleted += 1
-    })
-    console.log(`onDeleted: removed ${numDeleted} layers`, e)
+        const drawControl = new L.Control.Draw({
+          draw: {
+            polyline: false,
+            polygon: false,
+            circle: false,
+            circlemarker: false,
+            marker: false,
+          },
+        })
 
-    onChange()
+        map.addControl(drawControl)
+
+        map.on(L.Draw.Event.CREATED, (e) => {
+          removeNormalLayerFromMap('drawn')
+          const { layer } = e
+          layer.options.attribution = 'drawn'
+          setRectangleLimits(layer.getBounds())
+          drawnItems.addLayer(layer)
+        })
+        return () => {
+          map.removeControl(drawControl)
+        }
+      }
+    }, [map])
+
+    return null
   }
 
   const displayMap = useMemo(
@@ -897,7 +866,10 @@ function MapHome1({
         ref={setMap}
       >
         <ZoomControl position="topright" />
-        <LayersControl>
+        <ScaleControl position="bottomleft" />
+        <LeafletRuler />
+        <TileLayer attribution={'base layer'} url={defaultBaseLayer.url} />
+        {/* <LayersControl>
           <LayersControl.BaseLayer checked name="Mapbox Satellite">
             <Pane name="MAPBOX" style={{ zIndex: -1 }}>
               <TileLayer
@@ -951,8 +923,8 @@ function MapHome1({
               zIndex={9998}
             />
           </LayersControl.Overlay>
-        </LayersControl>
-        <FeatureGroup>
+        </LayersControl> */}
+        {/* <FeatureGroup>
           <EditControl
             position="topright"
             onEdited={onEditPath}
@@ -962,21 +934,18 @@ function MapHome1({
               rectangle: true,
             }}
           />
-        </FeatureGroup>
-        <ScaleControl position="bottomleft" />
-        <LeafletRuler />
+        </FeatureGroup> */}
+        <DrawControl />
       </MapContainer>
     ),
     [map],
   )
+  // <div>
+  //   {displayMap}
+  //   {map ? <DisplayPosition map={map} depth={depth} /> : null}
+  // </div>
 
-  return (
-    <div>
-      {displayMap}
-      {map ? <DisplayPosition map={map} depth={depth} /> : null}
-      {loading ? <Loading /> : null}
-    </div>
-  )
+  return <div className="absolute top-0 left-0">{displayMap}</div>
 }
 
 function mapPropsAreEqual(prevMap: any, nextMap: any) {
@@ -990,7 +959,7 @@ function mapPropsAreEqual(prevMap: any, nextMap: any) {
     prevMap.getPolyline === nextMap.getPolyline &&
     prevMap.clickPoint === nextMap.clickPoint &&
     prevMap.actualDate === nextMap.actualDate &&
-    prevMap.surveyDesignCircleValues === nextMap.surveyDesignCircleValues
+    prevMap.selectedBaseLayer === nextMap.selectedBaseLayer
   )
 }
 

@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
 import { DataExplorationSelection } from '../DataExplorationSelection'
 import { ThreeDDataExplorationSelection } from '../ThreeDDataExplorationSelection'
+import { useContextHandle } from '../../lib/contextHandle'
 
 interface SideSelectionProps {
   selectedSidebarOption: any
@@ -23,7 +24,6 @@ interface SideSelectionProps {
   setLayerAction: any
   setShowPhotos?: any
   setShowPopup: any
-  loading: any
   actualLayer: any
   layerAction: any
   setLayerLegend: any
@@ -35,6 +35,8 @@ interface SideSelectionProps {
   setClickPoint?: any
   threeD?: any
   setThreeD?: any
+  selectedBaseLayer: any
+  setSelectedBaseLayer: any
 }
 
 export function SideSelection({
@@ -46,7 +48,6 @@ export function SideSelection({
   setLayerAction,
   setShowPhotos,
   setShowPopup,
-  loading,
   actualLayer,
   layerAction,
   setLayerLegend,
@@ -58,9 +59,11 @@ export function SideSelection({
   setClickPoint,
   threeD,
   setThreeD,
+  selectedBaseLayer,
+  setSelectedBaseLayer,
 }: SideSelectionProps) {
   const navigate = useNavigate()
-
+  const { loading } = useContextHandle()
   async function handleShowSelection(e: any) {
     if (
       window.location.pathname === '/3d' ||
@@ -129,17 +132,7 @@ export function SideSelection({
   return (
     <div>
       <SideSelectionContainer className={loading ? 'pointer-events-none' : ''}>
-        <div className="flex">
-          <SideSelectionLink
-            title={'Suitability'}
-            onClick={handleShowSelection}
-            id={'Suitability'}
-            className={
-              selectedSidebarOption === 'Suitability' ? styles.active : ''
-            }
-          >
-            <FontAwesomeIcon icon={faCompassDrafting} />
-          </SideSelectionLink>
+        <div className="flex gap-6">
           <SideSelectionLink
             title={'Data Exploration'}
             onClick={handleShowSelection}
@@ -194,25 +187,8 @@ export function SideSelection({
               getPolyline={getPolyline}
               setGetPolyline={setGetPolyline}
               setClickPoint={setClickPoint}
-              showSuitability={false}
-            />
-          )}
-          {selectedSidebarOption === 'Suitability' && (
-            <DataExplorationSelection
-              selectedLayers={selectedLayers}
-              setSelectedLayers={setSelectedLayers}
-              actualLayer={actualLayer}
-              setActualLayer={setActualLayer}
-              layerAction={layerAction}
-              setLayerAction={setLayerAction}
-              setLayerLegend={setLayerLegend}
-              setInfoButtonBox={setInfoButtonBox}
-              listLayers={listLayers}
-              setShowPhotos={setShowPhotos}
-              getPolyline={getPolyline}
-              setGetPolyline={setGetPolyline}
-              setClickPoint={setClickPoint}
-              showSuitability={true}
+              selectedBaseLayer={selectedBaseLayer}
+              setSelectedBaseLayer={setSelectedBaseLayer}
             />
           )}
           {selectedSidebarOption === '3D' && (

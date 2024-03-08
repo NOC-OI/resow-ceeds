@@ -23,6 +23,25 @@ export function createTurfPoint(markers, coordinates, dif) {
   return markers
 }
 
+export const baseLayers = [
+  {
+    attribution: 'OpenStreetMap',
+    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+  },
+  {
+    attribution: 'Mapbox Satellite',
+    url: `https://api.mapbox.com/styles/v1/mapbox/satellite-v9/tiles/256/{z}/{x}/{y}@2x?access_token=${
+      import.meta.env.VITE_MAPBOX_API_KEY
+    }`,
+  },
+  {
+    attribution: 'Esri Satellite',
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+  },
+]
+
+export const defaultBaseLayer = baseLayers[1]
+
 export function reorderPhotos(
   photos: any,
   activePhoto: any = null,

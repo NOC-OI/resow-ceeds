@@ -11,10 +11,6 @@
   --large: 75%;
 }
 
-body {
-  overflow: hidden;
-}
-
 .toast {
   z-index: 99999;
   display: flex;

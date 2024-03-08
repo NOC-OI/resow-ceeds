@@ -96,7 +96,7 @@ export function DataExplorationType({
           <p>{content}</p>
         </header>
       </div>
-      <div>
+      <div className="flex flex-col gap-1 pt-1">
         {Object.keys(subLayers).map((subLayer) => {
           return (
             <DataExplorationTypeOptions

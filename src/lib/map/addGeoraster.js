@@ -42,7 +42,11 @@ export class GetTifLayer {
             resolution: this.resolution,
             pixelValuesToColorFn: function (values) {
               const population = values[0]
+              console.log(population)
               if (!population) {
+                return
+              }
+              if (population === -9999) {
                 return
               }
               return scale(population).hex()
@@ -133,6 +137,9 @@ export class GetCOGLayer {
   async getTile() {
     const [newUrl, isUrlEncoded] = getUrlTileServer(this.layerName, this.url)
 
+    if (this.layerName.color) {
+      this.colourScheme = this.layerName.color.toLowerCase()
+    }
     const cogInfo = await this.getInfo()
 
     if (cogInfo === 500) {

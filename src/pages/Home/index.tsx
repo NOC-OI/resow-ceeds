@@ -5,19 +5,22 @@ import { SideBar, HomeContainer, BottomBar } from './styles'
 import { CalculationValue } from '../../components/CalculationValue'
 import { DataExplorationLegend } from '../../components/DataExplorationLegend'
 import { InfoButtonBox } from '../../components/InfoButtonBox'
-import { FullPagePopup } from '../../components/FullPagePopup'
-import { FlashMessages } from '../../components/FlashMessages'
 import { GraphBox } from '../../components/GraphBox'
 import { GetLayers } from '../../data/loadLayers'
-import { Loading } from '../../components/Loading'
 import { RangeSelection } from '../../components/RangeSelection'
 import { yearMonths } from '../../data/yearMonths'
 import { MapPopup } from '../../components/MapPopup'
+import { InfoBox } from '../../components/InfoBox'
+import { defaultBaseLayer } from '../../lib/map/utils'
+import { useContextHandle } from '../../lib/contextHandle'
 
 export function Home() {
   const [selectedSidebarOption, setSelectedSidebarOption] = useState<string>('')
+  const { setLoading } = useContextHandle()
 
-  const [surveyDesignCircleValues, setSurveyDesignCircleValues] = useState([])
+  const [depth, setDepth] = useState({})
+  const [position, setPosition] = useState(null)
+
   const [actualDate, setActualDate] = useState(yearMonths.indexOf('2021-05'))
 
   const [graphData, setGraphData] = useState(null)
@@ -31,6 +34,7 @@ export function Home() {
   const [calculationValue, setCalculationValue] = useState('')
 
   const [showPhotos, setShowPhotos] = useState<object[]>([])
+  const [selectedBaseLayer, setSelectedBaseLayer] = useState(defaultBaseLayer)
 
   const [layerLegend, setLayerLegend] = useState('')
   const [infoButtonBox, setInfoButtonBox] = useState({})
@@ -48,13 +52,7 @@ export function Home() {
   const [listLayers, setListLayers] = useState([])
 
   const [showPopup, setShowPopup] = useState(true)
-  const [loading, setLoading] = useState(true)
 
-  const [showFlash, setShowFlash] = useState(false)
-  const [flashMessage, setFlashMessage] = useState({
-    messageType: '',
-    content: '',
-  })
   const [clickPoint, setClickPoint] = useState(false)
 
   const [mapPopup, setMapPopup] = useState({})
@@ -66,6 +64,17 @@ export function Home() {
       setListLayers((listLayers: any) =>
         listLayers.lenght > 0 ? listLayers : getLayers.data,
       )
+      setSelectedLayers({
+        ...selectedLayers,
+        'Marine Protected Areas_Special Areas of Conservation':
+          getLayers.data['Marine Protected Areas'].layerNames[
+            'Special Areas of Conservation'
+          ],
+        'Marine Protected Areas_Marine Conservation Zones':
+          getLayers.data['Marine Protected Areas'].layerNames[
+            'Marine Conservation Zones'
+          ],
+      })
       setLoading(false)
     })
   }
@@ -85,7 +94,6 @@ export function Home() {
           setLayerAction={setLayerAction}
           setShowPhotos={setShowPhotos}
           setShowPopup={setShowPopup}
-          loading={loading}
           actualLayer={actualLayer}
           layerAction={layerAction}
           setLayerLegend={setLayerLegend}
@@ -95,6 +103,8 @@ export function Home() {
           setGetPolyline={setGetPolyline}
           setShowRange={setShowRange}
           setClickPoint={setClickPoint}
+          selectedBaseLayer={selectedBaseLayer}
+          setSelectedBaseLayer={setSelectedBaseLayer}
         />
         {graphData ? (
           <GraphBox
@@ -162,28 +172,16 @@ export function Home() {
         selectedSidebarOption={selectedSidebarOption}
         getPolyline={getPolyline}
         setGraphData={setGraphData}
-        setShowFlash={setShowFlash}
-        setFlashMessage={setFlashMessage}
-        surveyDesignCircleValues={surveyDesignCircleValues}
-        setSurveyDesignCircleValues={setSurveyDesignCircleValues}
         actualDate={actualDate}
         setMapPopup={setMapPopup}
         clickPoint={clickPoint}
         setClickPoint={setClickPoint}
+        setPosition={setPosition}
+        setDepth={setDepth}
+        selectedBaseLayer={selectedBaseLayer}
       />
-      {showPopup && <FullPagePopup setShowPopup={setShowPopup} />}
-      {showFlash && (
-        <FlashMessages
-          type={flashMessage.messageType}
-          message={flashMessage.content}
-          duration={5000}
-          active={showFlash}
-          setActive={setShowFlash}
-          position={'bcenter'}
-          width={'medium'}
-        />
-      )}
-      {loading ? <Loading /> : null}
+      <InfoBox position={position} depth={depth} />
+      {/* {showPopup && <FullPagePopup setShowPopup={setShowPopup} />} */}
     </HomeContainer>
   )
 }

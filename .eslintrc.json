@@ -1,5 +1,8 @@
 {
   "extends": [
     "@rocketseat/eslint-config/node" //, "react-app/jest"
-  ]
+  ],
+  "rules": {
+    "@typescript-eslint/no-explicit-any": "off"
+  }
 }

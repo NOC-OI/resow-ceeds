@@ -100,7 +100,9 @@
   display: none;
 }
 
-
+.leaflet-draw-section{
+  display: none;
+}
 
 .leaflet-container a:hover{
   color: #D49511 !important;

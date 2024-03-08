@@ -5,7 +5,7 @@ export const SideSelectionContainer = styled.div`
   max-height: 80vh;
   background-color: rgba(17, 17, 17, 0.6); /* Black */
   border-radius: 30px;
-  font-size: 12px;
+  font-size: 1rem;
   padding: 0.375rem;
   z-index: 9999;
   border-radius: 16px;
@@ -16,11 +16,10 @@ export const SideSelectionLink = styled.header`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-left: 0.5rem;
   padding: 0.25rem;
   svg {
     cursor: pointer;
-    height: 1.5rem;
+    height: 2.5rem;
     width: auto;
     display: flex;
     justify-content: center;

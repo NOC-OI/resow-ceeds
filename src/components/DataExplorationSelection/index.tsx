@@ -3,6 +3,7 @@ import { LayerSelectionContainer, LayerTypes } from './styles'
 import { DataExplorationType } from '../DataExplorationType'
 // import { Info } from 'phosphor-react'
 import styles from './DataExplorationSelection.module.css'
+import { BaseLayerSwitcher } from '../BaseLayerSwitcher'
 
 interface DataExplorationSelectionProps {
   selectedLayers: Object
@@ -20,6 +21,8 @@ interface DataExplorationSelectionProps {
   setShowRange?: any
   setClickPoint: any
   showSuitability?: any
+  selectedBaseLayer: any
+  setSelectedBaseLayer: any
 }
 
 export function DataExplorationSelection({
@@ -37,6 +40,8 @@ export function DataExplorationSelection({
   setGetPolyline,
   setClickPoint,
   showSuitability,
+  selectedBaseLayer,
+  setSelectedBaseLayer,
 }: DataExplorationSelectionProps) {
   // function handleClickLayerInfo(title: String, content: string) {
   //   setInfoButtonBox({
@@ -47,55 +52,30 @@ export function DataExplorationSelection({
   return (
     <LayerSelectionContainer className={styles.fade_in}>
       <LayerTypes>
-        {Object.keys(listLayers).map((layerClass: any) => {
-          if (showSuitability) {
-            if (layerClass === 'Suitability') {
-              return (
-                <DataExplorationType
-                  key={layerClass}
-                  content={layerClass}
-                  childs={listLayers[layerClass].layerNames}
-                  selectedLayers={selectedLayers}
-                  setSelectedLayers={setSelectedLayers}
-                  actualLayer={actualLayer}
-                  setActualLayer={setActualLayer}
-                  layerAction={layerAction}
-                  setLayerAction={setLayerAction}
-                  setLayerLegend={setLayerLegend}
-                  setInfoButtonBox={setInfoButtonBox}
-                  setShowPhotos={setShowPhotos}
-                  getPolyline={getPolyline}
-                  setGetPolyline={setGetPolyline}
-                  setClickPoint={setClickPoint}
-                  listLayers={listLayers}
-                />
-              )
-            } else {
-              return null
-            }
-          } else {
-            return (
-              <DataExplorationType
-                key={layerClass}
-                content={layerClass}
-                childs={listLayers[layerClass].layerNames}
-                selectedLayers={selectedLayers}
-                setSelectedLayers={setSelectedLayers}
-                actualLayer={actualLayer}
-                setActualLayer={setActualLayer}
-                layerAction={layerAction}
-                setLayerAction={setLayerAction}
-                setLayerLegend={setLayerLegend}
-                setInfoButtonBox={setInfoButtonBox}
-                setShowPhotos={setShowPhotos}
-                getPolyline={getPolyline}
-                setGetPolyline={setGetPolyline}
-                setClickPoint={setClickPoint}
-                listLayers={listLayers}
-              />
-            )
-          }
-        })}
+        <BaseLayerSwitcher
+          setSelectedBaseLayer={setSelectedBaseLayer}
+          selectedBaseLayer={selectedBaseLayer}
+        />
+        {Object.keys(listLayers).map((layerClass: any) => (
+          <DataExplorationType
+            key={layerClass}
+            content={layerClass}
+            childs={listLayers[layerClass].layerNames}
+            selectedLayers={selectedLayers}
+            setSelectedLayers={setSelectedLayers}
+            actualLayer={actualLayer}
+            setActualLayer={setActualLayer}
+            layerAction={layerAction}
+            setLayerAction={setLayerAction}
+            setLayerLegend={setLayerLegend}
+            setInfoButtonBox={setInfoButtonBox}
+            setShowPhotos={setShowPhotos}
+            getPolyline={getPolyline}
+            setGetPolyline={setGetPolyline}
+            setClickPoint={setClickPoint}
+            listLayers={listLayers}
+          />
+        ))}
       </LayerTypes>
     </LayerSelectionContainer>
   )

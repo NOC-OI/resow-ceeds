@@ -38,7 +38,7 @@ export const baseLayers = [
   },
 ]
 
-export const defaultBaseLayer = baseLayers[1]
+export const defaultBaseLayer = baseLayers[2]
 
 export function reorderPhotos(
   photos: any,

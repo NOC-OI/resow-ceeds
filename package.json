@@ -64,6 +64,7 @@
     "leaflet.wms": "^0.2.0",
     "mapbox-gl": "^2.15.0",
     "openai": "^4.24.1",
+    "patch-package": "^8.0.0",
     "phosphor-react": "^1.4.1",
     "plotly.js": "^2.24.3",
     "postcss": "^8.4.23",

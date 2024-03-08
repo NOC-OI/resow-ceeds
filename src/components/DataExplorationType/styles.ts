@@ -29,7 +29,7 @@ export const CalcTypeContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: left;
-    font-size: 1rem;
+    font-size: 0.875rem;
     padding-right: 0.25rem;
     cursor: pointer;
     &:hover {
@@ -38,8 +38,8 @@ export const CalcTypeContainer = styled.div`
     }
     svg {
       padding-right: 0.5rem;
-      width: 1.25rem;
-      height: 1.25rem;
+      width: 0.875rem;
+      height: 0.875rem;
     }
 
     /* svg {

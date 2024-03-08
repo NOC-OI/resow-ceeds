@@ -4,7 +4,7 @@ export const InfoBoxContainer = styled.div`
   position: absolute;
   right: 0.5rem;
   bottom: 5vh;
-  width: 15rem;
+  width: max-content;
   background-color: rgba(17, 17, 17, 0.6); /* Black */
   z-index: 9999;
   height: max-content;

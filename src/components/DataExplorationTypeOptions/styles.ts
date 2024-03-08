@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 export const LayerTypeOptionsContainer = styled.div`
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   font-weight: normal;
   div {
     display: flex;

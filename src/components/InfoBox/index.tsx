@@ -48,10 +48,10 @@ export function InfoBox({ position = null, depth = {} }: InfoBoxProps) {
   }
   return (
     <InfoBoxContainer id="infobox-container">
-      <h1 className="text-[2rem] leading-6 text-center p-2">CEEDS</h1>
-      <div className="flex justify-between items-center">
+      <h1 className="text-[1.5rem] leading-6 text-center pb-2">CEEDS</h1>
+      <div className="flex justify-between items-center gap-2">
         <div className="">
-          <img src="favicon.png" className="h-24" />
+          <img src="favicon.png" className="h-20" />
         </div>
         <div className="w-32 flex flex-col gap-1">
           <div className="flex align-middle justify-between text-[1rem] leading-6">

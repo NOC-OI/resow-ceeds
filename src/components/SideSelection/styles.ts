@@ -19,7 +19,7 @@ export const SideSelectionLink = styled.header`
   padding: 0.25rem;
   svg {
     cursor: pointer;
-    height: 2.5rem;
+    height: 2rem;
     width: auto;
     display: flex;
     justify-content: center;

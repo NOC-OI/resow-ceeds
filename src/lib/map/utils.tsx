@@ -30,9 +30,7 @@ export const baseLayers = [
   },
   {
     attribution: 'Mapbox Satellite',
-    url: `https://api.mapbox.com/styles/v1/mapbox/satellite-v9/tiles/256/{z}/{x}/{y}@2x?access_token=${
-      import.meta.env.VITE_MAPBOX_API_KEY
-    }`,
+    url: `https://api.mapbox.com/styles/v1/mapbox/satellite-v9/tiles/256/{z}/{x}/{y}@2x?access_token=${process.env.VITE_MAPBOX_API_KEY}`,
   },
   {
     attribution: 'Esri Satellite',

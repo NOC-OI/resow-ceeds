@@ -346,7 +346,7 @@ export function DataExplorationTypeOptions({
                 )
               }
             />
-            {![subLayers[subLayer].data_type].includes(['Photo', 'GEOJSON']) ? (
+            {!['Photo', 'GEOJSON'].includes(subLayers[subLayer].data_type) ? (
               <FontAwesomeIcon
                 icon={faList}
                 title="Show Legend"
@@ -402,12 +402,13 @@ export function DataExplorationTypeOptions({
                 )
               }
             />
-            {/* {subLayers[subLayer].data_type !== 'Photo' ? ( */}
-            <FontAwesomeIcon
-              icon={faSliders}
-              title="Change Opacity"
-              onClick={() => handleClickSlider(setOpacityIsClicked)}
-            />
+            {!['Photo', 'GEOJSON'].includes(subLayers[subLayer].data_type) && (
+              <FontAwesomeIcon
+                icon={faSliders}
+                title="Change Opacity"
+                onClick={() => handleClickSlider(setOpacityIsClicked)}
+              />
+            )}
             {/* ) : null} */}
             {/* {subLayers[subLayer].data_type !== 'Photo' ? (
               <FontAwesomeIcon

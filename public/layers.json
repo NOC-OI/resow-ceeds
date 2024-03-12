@@ -29,9 +29,9 @@
   "Case Study Areas": {
     "icon": "",
     "layerNames": {
-      "Case Study Area Summaries": {
-        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/suitability/hsm/hsm_uk.tif",
-        "data_type": "COG",
+      "Summaries": {
+        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/case_study_areas/summaries/summary.geojson",
+        "data_type": "GEOJSON",
         "content": "The ReSOW project worked at seven case study areas spread throughout the UK. For each site, the project gathered data on carbon storage and fisheries, and conducted stakeholder surveys. This layer indicates the locations of case study areas and includes a summary narrative (with images) about each.",
         "protected": false,
         "threeD": false

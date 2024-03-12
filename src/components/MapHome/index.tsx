@@ -401,7 +401,7 @@ function MapHome1({
         layer = L.geoJSON(data, {
           pointToLayer: function (feature, latlng) {
             return L.marker(latlng, {
-              icon: createIcon('/marker-icon_old.png', [25, 37]),
+              icon: createIcon('/marker-icon.png', [25, 25]),
             })
           },
           onEachFeature: function (feature, layer) {

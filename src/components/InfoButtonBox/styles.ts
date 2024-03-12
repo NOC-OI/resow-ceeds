@@ -28,6 +28,11 @@ export const InfoButtonBoxContainer = styled.div`
     justify-content: flex-end;
     padding-bottom: 0.375rem;
   }
+  a {
+    text-decoration: underline;
+    color: white;
+    font-weight: bold;
+  }
   svg {
     cursor: pointer;
     &:hover {

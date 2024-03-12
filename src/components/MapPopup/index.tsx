@@ -18,25 +18,35 @@ export function MapPopup({ mapPopup, setMapPopup }: MapPopupProps) {
   const title = Object.keys(mapPopup)[0]
   const content = mapPopup[title]
   return (
-    <Draggable nodeRef={nodeRef}>
+    <Draggable nodeRef={nodeRef} cancel=".clickable">
       <InfoButtonBoxContainer
         id="info-subsection"
         ref={nodeRef}
         className="w-80"
       >
         <div>
-          <FontAwesomeIcon icon={faCircleXmark} onClick={handleClose} />
+          <FontAwesomeIcon
+            icon={faCircleXmark}
+            onClick={handleClose}
+            className="clickable"
+          />
         </div>
         <div className="font-bold text-center pb-3">
           {title.replace('_', ': ')}
         </div>
         {Object.keys(content).map((key) => {
           return (
-            <div className="flex pb-2 justify-between">
+            <div className="flex pb-2 gap-1 justify-between" key={key}>
               <div>
-                <strong>{key}</strong>:
+                <strong>{key === 'filename' ? 'More Info:' : key}</strong>:
               </div>
-              <div>{content[key]}</div>
+              {key === 'filename' ? (
+                <a href={`${content[key]}`} target="_blank">
+                  Click Here
+                </a>
+              ) : (
+                <div>{content[key]}</div>
+              )}
             </div>
           )
         })}

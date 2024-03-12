@@ -66,14 +66,13 @@ const BetterWMS = L.TileLayer.WMS.extend({
     let verifyContent = content.split('body')[1]
     verifyContent = verifyContent.replace(/(\r|\n|\s|>|<)/g, '')
     verifyContent = verifyContent.replace('/', '')
-    let newContent = content
-    if (!verifyContent) {
-      newContent = 'No data available'
+    const newContent = content
+    if (verifyContent) {
+      L.popup({ maxWidth: 200 })
+        .setLatLng(latlng)
+        .setContent(newContent)
+        .openOn(this._map)
     }
-    L.popup({ maxWidth: 200 })
-      .setLatLng(latlng)
-      .setContent(newContent)
-      .openOn(this._map)
   },
 })
 

@@ -60,14 +60,18 @@ export function GraphBox({
   const [yearEnd, monthEnd] = yearMonths[yearMonths.length - 1].split('-')
 
   return (
-    <Draggable nodeRef={nodeRef}>
+    <Draggable nodeRef={nodeRef} cancel=".clickable">
       <InfoButtonBoxContainer
         ref={nodeRef}
         id="graph-box"
         className="min-h-[20rem] min-w-[15rem]"
       >
         <div>
-          <FontAwesomeIcon icon={faCircleXmark} onClick={handleClose} />
+          <FontAwesomeIcon
+            icon={faCircleXmark}
+            onClick={handleClose}
+            className="clickable"
+          />
         </div>
         <div className="font-bold text-center pb-3">Graph</div>
         {!data ? (

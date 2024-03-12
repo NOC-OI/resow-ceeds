@@ -21,13 +21,14 @@ export function DataExplorationLegend({
   const nodeRef = useRef(null)
 
   return (
-    <Draggable nodeRef={nodeRef}>
+    <Draggable nodeRef={nodeRef} cancel=".clickable">
       <LayerLegendContainer ref={nodeRef} id="legend-box">
         <div className="flex justify-end pb-1">
           <FontAwesomeIcon
             contentStyleType={'regular'}
             icon={faCircleXmark}
             onClick={handleClose}
+            className="clickable"
           />
         </div>
         <div>

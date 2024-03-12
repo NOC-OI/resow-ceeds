@@ -24,14 +24,18 @@ export function InfoButtonBox({
   }
   const nodeRef = useRef(null)
   return (
-    <Draggable nodeRef={nodeRef}>
+    <Draggable nodeRef={nodeRef} cancel=".clickable">
       <InfoButtonBoxContainer
         id="info-subsection"
         ref={nodeRef}
         className="w-80"
       >
         <div>
-          <FontAwesomeIcon icon={faCircleXmark} onClick={handleClose} />
+          <FontAwesomeIcon
+            icon={faCircleXmark}
+            onClick={handleClose}
+            className="clickable"
+          />
         </div>
         <div className="font-bold text-center pb-3 text-xl">
           <ReactMarkdown

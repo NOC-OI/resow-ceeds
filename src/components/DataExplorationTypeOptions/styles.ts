@@ -8,6 +8,7 @@ export const LayerTypeOptionsContainer = styled.div`
     justify-content: space-between;
     align-items: center;
     font-weight: bold;
+    gap: 0.375rem;
     label {
       opacity: 0.7;
       :hover {
@@ -36,8 +37,12 @@ export const LayerTypeOptionsContainer = styled.div`
         color: ${(props) => props.theme.white};
       }
     }
+    a {
+      cursor: pointer;
+      color: ${(props) => props.theme.white};
+      opacity: 0.7;
+    }
     svg {
-      padding-left: 0.375rem;
       cursor: pointer;
       &:hover {
         color: ${(props) => props.theme['yellow-700']};

@@ -3,6 +3,7 @@ import { LayerTypeOptionsContainer } from './styles'
 import {
   faChartSimple,
   faCircleInfo,
+  faDownload,
   faList,
   faMagnifyingGlass,
   faSliders,
@@ -408,6 +409,11 @@ export function DataExplorationTypeOptions({
                 title="Change Opacity"
                 onClick={() => handleClickSlider(setOpacityIsClicked)}
               />
+            )}
+            {subLayers[subLayer].download && (
+              <a href={subLayers[subLayer].download} target="_blank">
+                <FontAwesomeIcon icon={faDownload} title="Download layer" />
+              </a>
             )}
             {/* ) : null} */}
             {/* {subLayers[subLayer].data_type !== 'Photo' ? (

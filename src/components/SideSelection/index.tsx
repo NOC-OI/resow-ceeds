@@ -2,10 +2,11 @@ import { SideSelectionContainer, SideSelectionLink } from './styles'
 import styles from './SideSelection.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
+  faCamera,
   faCircleQuestion,
-  faCompassDrafting,
   faDownload,
   faLayerGroup,
+  faSquarePlus,
   faTrash,
 } from '@fortawesome/free-solid-svg-icons'
 import { Icon } from '@iconify/react'
@@ -14,6 +15,8 @@ import { useEffect } from 'react'
 import { DataExplorationSelection } from '../DataExplorationSelection'
 import { ThreeDDataExplorationSelection } from '../ThreeDDataExplorationSelection'
 import { useContextHandle } from '../../lib/contextHandle'
+import { DownloadSelection } from '../DownloadSelection'
+import { UploadSelection } from '../UploadSelection'
 
 interface SideSelectionProps {
   selectedSidebarOption: any
@@ -37,6 +40,8 @@ interface SideSelectionProps {
   setThreeD?: any
   selectedBaseLayer: any
   setSelectedBaseLayer: any
+  printBox: any
+  setPrintBox: any
 }
 
 export function SideSelection({
@@ -61,6 +66,8 @@ export function SideSelection({
   setThreeD,
   selectedBaseLayer,
   setSelectedBaseLayer,
+  printBox,
+  setPrintBox,
 }: SideSelectionProps) {
   const navigate = useNavigate()
   const { loading } = useContextHandle()
@@ -130,7 +137,7 @@ export function SideSelection({
   // const rout = window.location.pathname
 
   return (
-    <div>
+    <div id="side-selection">
       <SideSelectionContainer className={loading ? 'pointer-events-none' : ''}>
         <div className="flex gap-6">
           <SideSelectionLink
@@ -152,6 +159,22 @@ export function SideSelection({
             }
           >
             <FontAwesomeIcon icon={faDownload} />
+          </SideSelectionLink>
+          <SideSelectionLink
+            title={'Upload'}
+            onClick={handleShowSelection}
+            id={'Upload'}
+            className={selectedSidebarOption === 'Upload' ? styles.active : ''}
+          >
+            <FontAwesomeIcon icon={faSquarePlus} />
+          </SideSelectionLink>
+          <SideSelectionLink
+            title={'Print'}
+            onClick={() => setPrintBox(true)}
+            id={'Print'}
+            className={printBox ? styles.active : ''}
+          >
+            <FontAwesomeIcon icon={faCamera} />
           </SideSelectionLink>
           <SideSelectionLink
             title={'3D Data Exploration'}
@@ -204,6 +227,20 @@ export function SideSelection({
               threeD={threeD}
               setThreeD={setThreeD}
               showSuitability={false}
+            />
+          )}
+          {selectedSidebarOption === 'Download' && (
+            <DownloadSelection
+              selectedLayers={selectedLayers}
+              setSelectedLayers={setSelectedLayers}
+              listLayers={listLayers}
+            />
+          )}
+          {selectedSidebarOption === 'Upload' && (
+            <UploadSelection
+              selectedLayers={selectedLayers}
+              setSelectedLayers={setSelectedLayers}
+              listLayers={listLayers}
             />
           )}
         </div>

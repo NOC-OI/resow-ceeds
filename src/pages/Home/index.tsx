@@ -13,20 +13,25 @@ import { MapPopup } from '../../components/MapPopup'
 import { InfoBox } from '../../components/InfoBox'
 import { defaultBaseLayer } from '../../lib/map/utils'
 import { useContextHandle } from '../../lib/contextHandle'
+import { DownloadManagementHandleProvider } from '../../lib/data/downloadManagement'
+import { FullPagePopup } from '../../components/FullPagePopup'
+import { PrintSelection } from '../../components/PrintSelection'
+import { usePrintPageHandle } from '../../lib/data/printPageManagement'
+import { PrintSelectionArea } from '../../components/PrintSelectionArea'
+import { UploadDataHandleProvider } from '../../lib/data/uploadDataManagement'
 
 export function Home() {
   const [selectedSidebarOption, setSelectedSidebarOption] = useState<string>('')
   const { setLoading } = useContextHandle()
-
+  const { canSelect } = usePrintPageHandle()
   const [depth, setDepth] = useState({})
   const [position, setPosition] = useState(null)
 
   const [actualDate, setActualDate] = useState(yearMonths.indexOf('2021-05'))
 
   const [graphData, setGraphData] = useState(null)
-  const [rectangleLimits, setRectangleLimits] = useState(null)
 
-  const [selectedLayers, setSelectedLayers] = useState<Object>({})
+  const [selectedLayers, setSelectedLayers] = useState<any>({})
 
   const [actualLayer, setActualLayer] = useState<string[]>([''])
 
@@ -38,6 +43,8 @@ export function Home() {
   const [selectedBaseLayer, setSelectedBaseLayer] = useState(defaultBaseLayer)
 
   const [layerLegend, setLayerLegend] = useState('')
+  const [printBox, setPrintBox] = useState(false)
+
   const [infoButtonBox, setInfoButtonBox] = useState({})
 
   const [activePhoto, setActivePhoto] = useState('')
@@ -52,7 +59,7 @@ export function Home() {
 
   const [listLayers, setListLayers] = useState([])
 
-  const [showPopup, setShowPopup] = useState(true)
+  const [showPopup, setShowPopup] = useState(false)
 
   const [clickPoint, setClickPoint] = useState(false)
 
@@ -84,106 +91,112 @@ export function Home() {
   }, [])
 
   return (
-    <HomeContainer>
-      <SideBar>
-        <SideSelection
-          selectedSidebarOption={selectedSidebarOption}
-          setSelectedSidebarOption={setSelectedSidebarOption}
-          selectedLayers={selectedLayers}
-          setSelectedLayers={setSelectedLayers}
-          setActualLayer={setActualLayer}
-          setLayerAction={setLayerAction}
-          setShowPhotos={setShowPhotos}
-          setShowPopup={setShowPopup}
-          actualLayer={actualLayer}
-          layerAction={layerAction}
-          setLayerLegend={setLayerLegend}
-          setInfoButtonBox={setInfoButtonBox}
-          listLayers={listLayers}
-          getPolyline={getPolyline}
-          setGetPolyline={setGetPolyline}
-          setShowRange={setShowRange}
-          setClickPoint={setClickPoint}
-          selectedBaseLayer={selectedBaseLayer}
-          setSelectedBaseLayer={setSelectedBaseLayer}
-        />
-        {graphData ? (
-          <GraphBox
-            graphData={graphData}
-            setGraphData={setGraphData}
+    <DownloadManagementHandleProvider>
+      <UploadDataHandleProvider>
+        <HomeContainer>
+          <SideBar>
+            <SideSelection
+              selectedSidebarOption={selectedSidebarOption}
+              setSelectedSidebarOption={setSelectedSidebarOption}
+              selectedLayers={selectedLayers}
+              setSelectedLayers={setSelectedLayers}
+              setActualLayer={setActualLayer}
+              setLayerAction={setLayerAction}
+              setShowPhotos={setShowPhotos}
+              setShowPopup={setShowPopup}
+              actualLayer={actualLayer}
+              layerAction={layerAction}
+              setLayerLegend={setLayerLegend}
+              setInfoButtonBox={setInfoButtonBox}
+              listLayers={listLayers}
+              getPolyline={getPolyline}
+              setGetPolyline={setGetPolyline}
+              setShowRange={setShowRange}
+              setClickPoint={setClickPoint}
+              selectedBaseLayer={selectedBaseLayer}
+              setSelectedBaseLayer={setSelectedBaseLayer}
+              printBox={printBox}
+              setPrintBox={setPrintBox}
+            />
+            {graphData ? (
+              <GraphBox
+                graphData={graphData}
+                setGraphData={setGraphData}
+                actualLayer={actualLayer}
+                setGetPolyline={setGetPolyline}
+                setClickPoint={setClickPoint}
+                selectedLayers={selectedLayers}
+              />
+            ) : null}
+            {layerLegend ? (
+              <DataExplorationLegend
+                layerLegend={layerLegend}
+                setLayerLegend={setLayerLegend}
+              />
+            ) : null}
+            {printBox ? <PrintSelection setPrintBox={setPrintBox} /> : null}
+            {calculationValue && (
+              <CalculationValue
+                calculationValue={calculationValue}
+                setCalculationValue={setCalculationValue}
+                selectedLayers={selectedLayers}
+                setSelectedLayers={setSelectedLayers}
+                listLayers={listLayers}
+                layerAction={layerAction}
+                setLayerAction={setLayerAction}
+                actualLayer={actualLayer}
+                setActualLayer={setActualLayer}
+                setShowPhotos={setShowPhotos}
+              />
+            )}
+            {Object.keys(infoButtonBox).length !== 0 ? (
+              <InfoButtonBox
+                infoButtonBox={infoButtonBox}
+                setInfoButtonBox={setInfoButtonBox}
+              />
+            ) : null}
+            {Object.keys(mapPopup).length !== 0 ? (
+              <MapPopup mapPopup={mapPopup} setMapPopup={setMapPopup} />
+            ) : null}
+          </SideBar>
+          <BottomBar>
+            {showRange ? (
+              <RangeSelection
+                actualDate={actualDate}
+                setActualDate={setActualDate}
+                setLayerAction={setLayerAction}
+                setActualLayer={setActualLayer}
+                selectedLayers={selectedLayers}
+              />
+            ) : null}
+          </BottomBar>
+          <MapHome
+            selectedLayers={selectedLayers}
             actualLayer={actualLayer}
-            setGetPolyline={setGetPolyline}
-            setClickPoint={setClickPoint}
-            selectedLayers={selectedLayers}
-          />
-        ) : null}
-        {layerLegend ? (
-          <DataExplorationLegend
-            layerLegend={layerLegend}
-            setLayerLegend={setLayerLegend}
-          />
-        ) : null}
-        {calculationValue && (
-          <CalculationValue
-            calculationValue={calculationValue}
-            setCalculationValue={setCalculationValue}
-            selectedLayers={selectedLayers}
-            setSelectedLayers={setSelectedLayers}
-            listLayers={listLayers}
             layerAction={layerAction}
             setLayerAction={setLayerAction}
-            actualLayer={actualLayer}
-            setActualLayer={setActualLayer}
+            showPhotos={showPhotos}
             setShowPhotos={setShowPhotos}
-          />
-        )}
-        {Object.keys(infoButtonBox).length !== 0 ? (
-          <InfoButtonBox
-            infoButtonBox={infoButtonBox}
-            setInfoButtonBox={setInfoButtonBox}
-          />
-        ) : null}
-        {Object.keys(mapPopup).length !== 0 ? (
-          <MapPopup mapPopup={mapPopup} setMapPopup={setMapPopup} />
-        ) : null}
-      </SideBar>
-      <BottomBar>
-        {showRange ? (
-          <RangeSelection
+            activePhoto={activePhoto}
+            setActivePhoto={setActivePhoto}
+            mapBounds={mapBounds}
+            setMapBounds={setMapBounds}
+            selectedSidebarOption={selectedSidebarOption}
+            getPolyline={getPolyline}
+            setGraphData={setGraphData}
             actualDate={actualDate}
-            setActualDate={setActualDate}
-            setLayerAction={setLayerAction}
-            setActualLayer={setActualLayer}
-            selectedLayers={selectedLayers}
+            setMapPopup={setMapPopup}
+            clickPoint={clickPoint}
+            setClickPoint={setClickPoint}
+            setPosition={setPosition}
+            setDepth={setDepth}
+            selectedBaseLayer={selectedBaseLayer}
           />
-        ) : null}
-      </BottomBar>
-
-      <MapHome
-        selectedLayers={selectedLayers}
-        actualLayer={actualLayer}
-        layerAction={layerAction}
-        setLayerAction={setLayerAction}
-        showPhotos={showPhotos}
-        setShowPhotos={setShowPhotos}
-        activePhoto={activePhoto}
-        setActivePhoto={setActivePhoto}
-        mapBounds={mapBounds}
-        setMapBounds={setMapBounds}
-        selectedSidebarOption={selectedSidebarOption}
-        getPolyline={getPolyline}
-        setGraphData={setGraphData}
-        actualDate={actualDate}
-        setMapPopup={setMapPopup}
-        clickPoint={clickPoint}
-        setClickPoint={setClickPoint}
-        setPosition={setPosition}
-        setDepth={setDepth}
-        selectedBaseLayer={selectedBaseLayer}
-        setRectangleLimits={setRectangleLimits}
-      />
-      <InfoBox position={position} depth={depth} />
-      {/* {showPopup && <FullPagePopup setShowPopup={setShowPopup} />} */}
-    </HomeContainer>
+          <InfoBox position={position} depth={depth} />
+          {showPopup && <FullPagePopup setShowPopup={setShowPopup} />}
+          {canSelect ? <PrintSelectionArea /> : null}
+        </HomeContainer>
+      </UploadDataHandleProvider>
+    </DownloadManagementHandleProvider>
   )
 }

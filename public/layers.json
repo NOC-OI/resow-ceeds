@@ -47,7 +47,9 @@
         "content": "Habitat suitability model for Zostera marina suitability (0-1) for United Kingdon, Ireland and Channel Isles area created using ensemble of GLM, GAM, RF, BRT, MARS, MaxENT methods. Presence data compiled from range of sources (see Bertelli et al., 2023) with environmental data as predictor variables from EMODNet and Copernicus. These variables include - Light (PAR) availability at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/), units Mol.phot.m-2.d-1, resolution ~0.3km2 , 1.1 x 0.7 km, 0.003°/10 arc seconds, 01 Jan2005 – 31 Dec 2009; Bathymetry (EMODnet Bathymetry and topography, http://www.emodnet.eu/emodnet-maps-catalogue) in metres below chart datum, resolution ~0.115km, 0.001°x 3.75 arc seconds, ~70m x 116m; January Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc) resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Salinity (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu, NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km, 2019-present hourly-Daily mean; Wave energy at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/) in N.m2.s-1, resolution ~0.3km,~342x195m; Energy at seabed due to currents (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/, Data from EU SeaMap (2016), Energy in the Celtic Sea and North Sea) in N.m2.s-1, resolution ~0.3km, ~342x195m; Slope, Calculated from bathymetry data with GIS software.",
         "colors": "YlGn",
         "protected": false,
-        "threeD": false
+        "threeD": false,
+        "download": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/studland/studland_hsm.tif",
+        "download_area": true
       },
       "Isles of Scilly HSM": {
         "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/ios/ios_log_hsm.tif",
@@ -101,7 +103,9 @@
         "colors": "YlGn",
         "scale": [0, 1],
         "protected": false,
-        "threeD": false
+        "threeD": false,
+        "download": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/studland/studland_hsm.tif",
+        "download_area": true
       }
     }
   },
@@ -115,7 +119,9 @@
         "protected": false,
         "params": {
           "layers": "sac_mc_full"
-        }
+        },
+        "download": "https://hub.jncc.gov.uk/assets/598a60db-9323-4781-b5a8-dcf0ca3b29f9",
+        "download_area": false
       },
       "Marine Conservation Zones": {
         "url": "https://mpa-ows.jncc.gov.uk/mpa_mapper/wms",
@@ -124,7 +130,9 @@
         "protected": false,
         "params": {
           "layers": "mcz"
-        }
+        },
+        "download": "https://hub.jncc.gov.uk/assets/e72853f4-08b9-4fc6-b677-e3476fdd786c",
+        "download_area": false
       }
     }
   },

@@ -19,11 +19,7 @@ export function MapPopup({ mapPopup, setMapPopup }: MapPopupProps) {
   const content = mapPopup[title]
   return (
     <Draggable nodeRef={nodeRef} cancel=".clickable">
-      <InfoButtonBoxContainer
-        id="info-subsection"
-        ref={nodeRef}
-        className="w-80"
-      >
+      <InfoButtonBoxContainer id="mappopup-box" ref={nodeRef} className="w-80">
         <div>
           <FontAwesomeIcon
             icon={faCircleXmark}

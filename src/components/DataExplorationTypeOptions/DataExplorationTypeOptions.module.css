@@ -13,6 +13,19 @@
   transition: all .5s ease-in-out;
   cursor: pointer;
 }
+.switch_disabled {
+  position: relative;
+  background-color: #777;
+  width: 18px;
+  height: 5px;
+  border-radius: 40px;
+  display: flex;
+  opacity: 0.5;
+  align-items: center;
+  transition: all .5s ease-in-out;
+  cursor: not-allowed !important;
+}
+
 
 .slider {
   left: 1;

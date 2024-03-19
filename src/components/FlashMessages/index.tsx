@@ -36,13 +36,13 @@ export function FlashMessages({
 
   setTimeout(() => {
     setShowFlash(false)
-  }, duration)
+  }, flashMessage.duration || duration)
   return (
     <>
       {showFlash && (
         <CSSTransition
           in={showFlash}
-          timeout={duration}
+          timeout={flashMessage.duration || duration}
           classNames="toast"
           unmountOnExit
           onExit={() => setShowFlash(!showFlash)}

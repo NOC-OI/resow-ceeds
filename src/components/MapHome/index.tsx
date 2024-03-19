@@ -35,6 +35,8 @@ import {
   reorderPhotos,
   smallIcon,
 } from '../../lib/map/utils'
+import { useDownloadManagementHandle } from '../../lib/data/downloadManagement'
+import { useUploadDataHandle } from '../../lib/data/uploadDataManagement'
 
 interface MapProps {
   selectedLayers: any
@@ -57,7 +59,6 @@ interface MapProps {
   setDepth: any
   setPosition: any
   selectedBaseLayer: any
-  setRectangleLimits: any
 }
 
 function MapHome1({
@@ -71,6 +72,7 @@ function MapHome1({
   setActivePhoto,
   mapBounds,
   setMapBounds,
+  selectedSidebarOption,
   getPolyline,
   setGraphData,
   actualDate,
@@ -80,12 +82,11 @@ function MapHome1({
   setDepth,
   setPosition,
   selectedBaseLayer,
-  setRectangleLimits,
 }: MapProps) {
   const { setFlashMessage, setLoading } = useContextHandle()
-
+  const { selectedUploadInfo, setSelectedUploadInfo } = useUploadDataHandle()
+  const { drawRectangle, setRectangleLimits } = useDownloadManagementHandle()
   const [map, setMap] = useState<any>(null)
-
   const [mapCenter, setMapCenter] = useState<L.LatLng>(
     new L.LatLng(defaultView[0], defaultView[1]),
   )
@@ -394,6 +395,42 @@ function MapHome1({
     setLoading(false)
   }
 
+  async function generateUploadedGeoJsonLayer() {
+    const layer = L.geoJSON(selectedUploadInfo.data, {
+      pointToLayer: function (feature, latlng) {
+        return L.marker(latlng, {
+          icon: createIcon('/marker-icon.png', [25, 25]),
+        })
+      },
+      onEachFeature: function (feature, layer) {
+        layer.on({
+          click: () => {
+            setMapPopup({
+              'Uploaded Layer': feature.properties,
+            })
+          },
+        })
+      },
+      style: function () {
+        const color = colorScale[Math.floor(Math.random() * 30)]
+        const myStyle = {
+          color,
+          fillColor: color,
+          weight: 3,
+          opacity: defaultOpacity,
+          fillOpacity: defaultOpacity,
+        }
+        return myStyle
+      },
+    })
+    layer.addTo(map)
+  }
+  useEffect(() => {
+    if (Object.keys(selectedUploadInfo).length > 0) {
+      generateUploadedGeoJsonLayer()
+    }
+  }, [selectedUploadInfo])
+
   async function generateGeoJsonLayer(layerName, actual, layer) {
     await fetch(layerName.url)
       .then((response) => response.json())
@@ -481,6 +518,14 @@ function MapHome1({
 
   useEffect(() => {
     if (map) {
+      if (selectedSidebarOption !== 'Download') {
+        removeNormalLayerFromMap('drawn')
+      }
+    }
+  }, [selectedSidebarOption])
+
+  useEffect(() => {
+    if (map) {
       const fetchData = async () => {
         await addGeoblazeValue({}, '_Depth', false, batLayer)
       }
@@ -502,43 +547,6 @@ function MapHome1({
       setShowPhotos([])
     }
   }, [activePhoto])
-
-  // useEffect(() => {
-  //   if (map) {
-  //     map.eachLayer(function (layer: any) {
-  //       if (layer.options.attribution === 'polygon') {
-  //         map.removeLayer(layer)
-  //       }
-  //     })
-  //     const polygon = L.polygon(latLonLimits, {
-  //       attribution: 'polygon',
-  //       color: '#ff96bc',
-  //       weight: 2,
-  //       opacity: 0.7,
-  //     })
-  //     polygon.addTo(map)
-  //   }
-  // }, [latLonLimits])
-
-  // useEffect(() => {
-  //   if (selectedArea) {
-  //     const polygon = L.polygon(latLonLimits, {
-  //       attribution: 'polygon',
-  //       color: '#ff96bc',
-  //       weight: 2,
-  //       opacity: 0.7,
-  //     })
-  //     polygon.addTo(map)
-  //   } else {
-  //     if (map) {
-  //       map.eachLayer(function (layer: any) {
-  //         if (layer.options.attribution === 'polygon') {
-  //           map.removeLayer(layer)
-  //         }
-  //       })
-  //     }
-  //   }
-  // }, [selectedArea])
 
   function removeNormalLayerFromMap(attribution: string) {
     map.eachLayer(function (layer: any) {
@@ -818,6 +826,19 @@ function MapHome1({
     }
   }, [map])
 
+  useEffect(() => {
+    if (map) {
+      if (drawRectangle) {
+        const rectangle = new L.Draw.Rectangle(map, {
+          shapeOptions: {
+            color: 'red',
+          },
+        })
+        rectangle.enable()
+      }
+    }
+  }, [drawRectangle])
+
   const DrawControl = () => {
     useEffect(() => {
       if (map) {
@@ -869,81 +890,11 @@ function MapHome1({
         <ScaleControl position="bottomleft" />
         <LeafletRuler />
         <TileLayer attribution={'base layer'} url={defaultBaseLayer.url} />
-        {/* <LayersControl>
-          <LayersControl.BaseLayer checked name="Mapbox Satellite">
-            <Pane name="MAPBOX" style={{ zIndex: -1 }}>
-              <TileLayer
-                url={`https://api.mapbox.com/styles/v1/${MAPBOX_USERID}/tiles/256/{z}/{x}/{y}@2x?access_token=${MAPBOX_API_KEY}`}
-                attribution="MAPBOX"
-              />
-            </Pane>
-          </LayersControl.BaseLayer>
-          <LayersControl.BaseLayer name="OSM">
-            <Pane name="OSM" style={{ zIndex: -1 }}>
-              <TileLayer
-                attribution={'© OpenStreetMap'}
-                maxZoom={30}
-                url={'https://tile.openstreetmap.org/{z}/{x}/{y}.png'}
-              />
-            </Pane>
-          </LayersControl.BaseLayer>
-          <LayersControl.Overlay checked name="Special Areas of Conservation">
-            <WMSTileLayer
-              attribution="Special Areas of Conservation"
-              url="https://mpa-ows.jncc.gov.uk/mpa_mapper/wms?"
-              params={{
-                service: 'wms',
-                request: 'GetMap',
-                version: '1.3.0',
-                layers: 'sac_mc_full',
-                format: 'image/png',
-                transparent: true,
-                width: 256,
-                height: 256,
-              }}
-              opacity={1}
-              zIndex={9999}
-            />
-          </LayersControl.Overlay>
-          <LayersControl.Overlay checked name="Marine Conservation Zones">
-            <WMSTileLayer
-              attribution="Marine Conservation Zones"
-              url="https://mpa-ows.jncc.gov.uk/mpa_mapper/wms?"
-              params={{
-                service: 'wms',
-                request: 'GetMap',
-                version: '1.3.0',
-                layers: 'mcz',
-                format: 'image/png',
-                transparent: true,
-                width: 256,
-                height: 256,
-              }}
-              opacity={1}
-              zIndex={9998}
-            />
-          </LayersControl.Overlay>
-        </LayersControl> */}
-        {/* <FeatureGroup>
-          <EditControl
-            position="topright"
-            onEdited={onEditPath}
-            onCreated={onCreate}
-            onDeleted={onDeleted}
-            draw={{
-              rectangle: true,
-            }}
-          />
-        </FeatureGroup> */}
         <DrawControl />
       </MapContainer>
     ),
     [map],
   )
-  // <div>
-  //   {displayMap}
-  //   {map ? <DisplayPosition map={map} depth={depth} /> : null}
-  // </div>
 
   return <div className="absolute top-0 left-0">{displayMap}</div>
 }
@@ -958,8 +909,11 @@ function mapPropsAreEqual(prevMap: any, nextMap: any) {
     prevMap.activePhoto === nextMap.activePhoto &&
     prevMap.getPolyline === nextMap.getPolyline &&
     prevMap.clickPoint === nextMap.clickPoint &&
+    prevMap.drawRectangle === nextMap.drawRectangle &&
+    prevMap.rectangleLimits === nextMap.rectangleLimits &&
     prevMap.actualDate === nextMap.actualDate &&
-    prevMap.selectedBaseLayer === nextMap.selectedBaseLayer
+    prevMap.selectedBaseLayer === nextMap.selectedBaseLayer &&
+    prevMap.selectedUploadInfo === nextMap.selectedUploadInfo
   )
 }
 

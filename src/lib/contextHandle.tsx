@@ -1,4 +1,4 @@
-import {
+import React, {
   createContext,
   useState,
   ReactNode,
@@ -14,10 +14,12 @@ interface ContextHandleContextType {
   flashMessage: {
     messageType: string
     content: string
+    duration?: number
   }
   setFlashMessage: (flashMessage: {
     messageType: string
     content: string
+    duration?: number
   }) => void
 }
 

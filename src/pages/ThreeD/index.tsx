@@ -17,6 +17,7 @@ export function ThreeD() {
     useState<string>('3D')
   const [threeD, setThreeD] = useState(null)
   const [actualDate, setActualDate] = useState(yearMonths.indexOf('2021-05'))
+  const [printBox, setPrintBox] = useState(false)
 
   const [selectedLayers, setSelectedLayers] = useState<Object>({})
 
@@ -66,11 +67,11 @@ export function ThreeD() {
           setLayerLegend={setLayerLegend}
           setInfoButtonBox={setInfoButtonBox}
           listLayers={listLayers}
-          threeD={threeD}
-          setThreeD={setThreeD}
           setShowRange={setShowRange}
           selectedBaseLayer={selectedBaseLayer}
           setSelectedBaseLayer={setSelectedBaseLayer}
+          printBox={printBox}
+          setPrintBox={setPrintBox}
         />
         {layerLegend ? (
           <DataExplorationLegend

@@ -57,7 +57,7 @@ export function UploadSelection({
   const handleFileUpload = (localUploadInfo) => {
     const reader = new FileReader()
     reader.onload = (e) => {
-      const geojsonData = JSON.parse(e.target.result)
+      const geojsonData = JSON.parse(e.target.result.toString())
       setSelectedUploadInfo({ file: localUploadInfo.file, data: geojsonData })
     }
     reader.readAsText(localUploadInfo.file)

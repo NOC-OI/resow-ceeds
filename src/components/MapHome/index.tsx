@@ -84,13 +84,12 @@ function MapHome1({
   selectedBaseLayer,
 }: MapProps) {
   const { setFlashMessage, setLoading } = useContextHandle()
-  const { selectedUploadInfo, setSelectedUploadInfo } = useUploadDataHandle()
+  const { actualLayerUpload, setActualLayerUpload } = useUploadDataHandle()
   const { drawRectangle, setRectangleLimits } = useDownloadManagementHandle()
   const [map, setMap] = useState<any>(null)
   const [mapCenter, setMapCenter] = useState<L.LatLng>(
     new L.LatLng(defaultView[0], defaultView[1]),
   )
-
   function bringLayerToFront(layer: any) {
     layer.bringToFront()
     // const frontLayers = [
@@ -396,7 +395,7 @@ function MapHome1({
   }
 
   async function generateUploadedGeoJsonLayer() {
-    const layer = L.geoJSON(selectedUploadInfo.data, {
+    const layer = L.geoJSON(actualLayerUpload.layer.data, {
       pointToLayer: function (feature, latlng) {
         return L.marker(latlng, {
           icon: createIcon('/marker-icon.png', [25, 25]),
@@ -423,13 +422,20 @@ function MapHome1({
         return myStyle
       },
     })
+    layer.options.attribution = `uploaded-${actualLayerUpload.layer.name}`
     layer.addTo(map)
+    setActualLayerUpload({
+      ...actualLayerUpload,
+      layer: { ...actualLayerUpload.layer, active: true },
+    })
   }
   useEffect(() => {
-    if (Object.keys(selectedUploadInfo).length > 0) {
-      generateUploadedGeoJsonLayer()
+    if (Object.keys(actualLayerUpload.layer).length > 0) {
+      if (!actualLayerUpload.layer.active) {
+        generateUploadedGeoJsonLayer()
+      }
     }
-  }, [selectedUploadInfo])
+  }, [actualLayerUpload])
 
   async function generateGeoJsonLayer(layerName, actual, layer) {
     await fetch(layerName.url)
@@ -913,7 +919,7 @@ function mapPropsAreEqual(prevMap: any, nextMap: any) {
     prevMap.rectangleLimits === nextMap.rectangleLimits &&
     prevMap.actualDate === nextMap.actualDate &&
     prevMap.selectedBaseLayer === nextMap.selectedBaseLayer &&
-    prevMap.selectedUploadInfo === nextMap.selectedUploadInfo
+    prevMap.actualLayerUpload === nextMap.actualLayerUpload
   )
 }
 

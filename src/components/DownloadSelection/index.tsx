@@ -85,7 +85,6 @@ export function DownloadSelection({
     }
   }, [error])
   function checkInputValue() {
-    console.log(downloadInputValue)
     if (
       downloadInputValue.region[0] === '' ||
       downloadInputValue.region[1] === '' ||
@@ -99,7 +98,6 @@ export function DownloadSelection({
     return false
   }
   const handleSubmit = async (event) => {
-    console.log('submit')
     setRectangleLimits(null)
     setDrawRectangle(false)
     if (checkInputValue()) {

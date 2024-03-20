@@ -5,7 +5,6 @@ interface ColorBarProps {
 }
 
 export function ColorBar({ layerLegend }: ColorBarProps) {
-  console.log(layerLegend, 'layerLegend')
   return (
     <ColorBarContainer>
       <div className="flex justify-center font-extrabold gap-3">

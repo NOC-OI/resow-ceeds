@@ -1,29 +1,31 @@
 /* eslint-disable no-multi-str */
 // import { Info } from 'phosphor-react'
 import styles from '../DataExplorationSelection/DataExplorationSelection.module.css'
-import { LayerSelectionContainer } from '../DataExplorationSelection/styles'
+import {
+  LayerSelectionContainer,
+  LayerSelectionTitle,
+  LayerTypes,
+} from '../DataExplorationSelection/styles'
 import { useEffect, useRef, useState } from 'react'
 import { Button } from '@mui/material'
 import { useUploadDataHandle } from '../../lib/data/uploadDataManagement'
 import { CssTextField } from './styles'
+import { CalcTypeContainer } from '../DataExplorationType/styles'
+import { LayerTypeOptionsContainer } from '../DataExplorationTypeOptions/styles'
+import styles1 from '../DataExplorationTypeOptions/DataExplorationTypeOptions.module.css'
 
-interface UploadSelectionProps {
-  selectedLayers: any
-  setSelectedLayers: any
-  listLayers: any
-}
+// interface UploadSelectionProps {}
 
-export function UploadSelection({
-  selectedLayers,
-  setSelectedLayers,
-  listLayers,
-}: UploadSelectionProps) {
+export function UploadSelection() {
   const {
     uploadFormats,
-    selectedUploadFormat,
-    setSelectedUploadFormat,
-    selectedUploadInfo,
-    setSelectedUploadInfo,
+    actualLayerUpload,
+    setActualLayerUpload,
+    selectedLayersUpload,
+    setSelectedLayersUpload,
+    listLayersUpload,
+    setActualLayerAction,
+    setActualLayerUploadNow,
   } = useUploadDataHandle()
   const [error, setError] = useState('')
   const errorTimeoutRef = useRef<number | null>(null)
@@ -48,8 +50,10 @@ export function UploadSelection({
     }
   }, [error])
   function checkInputValue() {
-    console.log(selectedUploadFormat, localUploadInfo)
-    if (!selectedUploadFormat || Object.keys(localUploadInfo).length === 0) {
+    if (
+      !actualLayerUpload.uploadFormat ||
+      Object.keys(localUploadInfo).length === 0
+    ) {
       return true
     }
     return false
@@ -58,11 +62,19 @@ export function UploadSelection({
     const reader = new FileReader()
     reader.onload = (e) => {
       const geojsonData = JSON.parse(e.target.result.toString())
-      setSelectedUploadInfo({ file: localUploadInfo.file, data: geojsonData })
+      setActualLayerUpload((actualLayerUpload) => {
+        const newActualLayerUpload = { ...actualLayerUpload }
+        return {
+          uploadFormat: newActualLayerUpload.uploadFormat,
+          layer: {
+            name: localUploadInfo.file.name,
+            data: geojsonData,
+          },
+        }
+      })
     }
     reader.readAsText(localUploadInfo.file)
   }
-
   const handleSubmit = async () => {
     if (checkInputValue()) {
       setError('Please fill all the fields')
@@ -73,8 +85,7 @@ export function UploadSelection({
 
   const [labelText, setLabelText] = useState('Choose file')
   const handleChangeUploadFormat = (event) => {
-    setSelectedUploadInfo({})
-    setSelectedUploadFormat(event.target.value)
+    setActualLayerUpload({ uploadFormat: event.target.value, layer: {} })
   }
   const handleFileChange = (event) => {
     let fileName = event.target.files[0]
@@ -87,6 +98,33 @@ export function UploadSelection({
       setLocalUploadInfo({})
     }
     setLabelText(fileName)
+  }
+
+  async function addMapLayerUpload(layerInfo: any, layerClass: string) {
+    setActualLayerAction('add')
+    setSelectedLayersUpload({
+      ...selectedLayersUpload,
+      [layerClass]: layerInfo,
+    })
+  }
+
+  function removeMapLayerUpload(layerClass: string) {
+    setActualLayerAction('remove')
+    setSelectedLayersUpload((selectedLayersUpload: any) => {
+      const copy = { ...selectedLayersUpload }
+      delete copy[layerClass]
+      return copy
+    })
+  }
+
+  async function handleChangeMapLayerUpload(e: any, layerClass: string) {
+    const layerInfo = listLayersUpload[layerClass]
+    setActualLayerUploadNow(layerClass)
+    if (e.target.checked) {
+      await addMapLayerUpload(layerInfo, layerClass)
+    } else {
+      removeMapLayerUpload(layerClass)
+    }
   }
 
   return (
@@ -103,7 +141,7 @@ export function UploadSelection({
               </p>
               <select
                 id="fileFormat-select"
-                value={selectedUploadFormat}
+                value={actualLayerUpload.uploadFormat}
                 onChange={(e) => handleChangeUploadFormat(e)}
                 className="clickable bg-black border border-black bg-opacity-20 text-white text-sm rounded-lg  block w-max p-2 hover:bg-opacity-80"
               >
@@ -118,7 +156,7 @@ export function UploadSelection({
                 ))}
               </select>
             </div>
-            {['GeoJSON', 'GeoTIFF'].includes(selectedUploadFormat) ? (
+            {['GeoJSON', 'GeoTIFF'].includes(actualLayerUpload.uploadFormat) ? (
               <div className="flex justify-between w-full items-center">
                 <p className="pt-4 text-md font-bold text-white mb-2 text-center">
                   Upload File
@@ -145,7 +183,7 @@ export function UploadSelection({
                   </label>
                 </div>
               </div>
-            ) : selectedUploadFormat === 'WMS' ? (
+            ) : actualLayerUpload.uploadFormat === 'WMS' ? (
               <div className="flex justify-center w-full items-center">
                 <CssTextField
                   id="wms-url"
@@ -188,6 +226,46 @@ export function UploadSelection({
       >
         Upload
       </Button>
+      {Object.keys(listLayersUpload).length > 0 && (
+        <LayerSelectionTitle>
+          <h1>Layers Uploaded</h1>
+        </LayerSelectionTitle>
+      )}
+      <LayerTypes>
+        {Object.keys(listLayersUpload).map((layerClass: any) => {
+          return (
+            <CalcTypeContainer key={layerClass}>
+              <LayerTypeOptionsContainer>
+                <div id="type-option">
+                  <label htmlFor={layerClass} title="layer uploaded">
+                    <input
+                      id={layerClass}
+                      onChange={(e) =>
+                        handleChangeMapLayerUpload(e, layerClass)
+                      }
+                      className={styles1.chk}
+                      type="checkbox"
+                      name="baseLayer"
+                      checked={Object.keys(selectedLayersUpload).includes(
+                        layerClass,
+                      )}
+                    />
+                    <label htmlFor={layerClass} title="layer uploaded">
+                      <span className={styles1.slider}></span>
+                    </label>
+                    <p>{layerClass}</p>
+                  </label>
+                </div>
+              </LayerTypeOptionsContainer>
+            </CalcTypeContainer>
+          )
+        })}
+      </LayerTypes>
+      {Object.keys(listLayersUpload).length > 0 && (
+        <p className="text-center italic text-sm">
+          If you refresh or close this page, this list will be erased
+        </p>
+      )}
     </LayerSelectionContainer>
   )
 }

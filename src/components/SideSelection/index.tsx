@@ -236,13 +236,7 @@ export function SideSelection({
               listLayers={listLayers}
             />
           )}
-          {selectedSidebarOption === 'Upload' && (
-            <UploadSelection
-              selectedLayers={selectedLayers}
-              setSelectedLayers={setSelectedLayers}
-              listLayers={listLayers}
-            />
-          )}
+          {selectedSidebarOption === 'Upload' && <UploadSelection />}
         </div>
       </SideSelectionContainer>
     </div>

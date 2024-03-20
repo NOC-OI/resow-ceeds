@@ -26,7 +26,6 @@ export function Home() {
   const { canSelect } = usePrintPageHandle()
   const [depth, setDepth] = useState({})
   const [position, setPosition] = useState(null)
-
   const [actualDate, setActualDate] = useState(yearMonths.indexOf('2021-05'))
 
   const [graphData, setGraphData] = useState(null)

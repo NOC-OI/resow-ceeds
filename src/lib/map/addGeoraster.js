@@ -42,7 +42,6 @@ export class GetTifLayer {
             resolution: this.resolution,
             pixelValuesToColorFn: function (values) {
               const population = values[0]
-              console.log(population)
               if (!population) {
                 return
               }

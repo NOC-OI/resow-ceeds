@@ -51,7 +51,6 @@ export function CalculationValue({
   function verifyIfWasSelectedBefore(subLayer: string) {
     return !!selectedLayers[subLayer]
   }
-
   function changeMapLayer(newSelectedLayers: any) {
     setLayerAction('marker-changes')
     setSelectedLayers((selectedLayers: any) => {

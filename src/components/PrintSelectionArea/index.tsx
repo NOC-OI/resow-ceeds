@@ -96,7 +96,6 @@ export function PrintSelectionArea() {
           const logo = new Image()
           logo.src = 'favicon.png'
           logo.onload = () => {
-            console.log(logo)
             const logoWidth = 100
             const logoHeight = (logo.height / logo.width) * logoWidth
             let logoX: number

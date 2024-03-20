@@ -56,7 +56,6 @@ export function PrintSelection({ setPrintBox }: PrintSelectionProps) {
       return newRemovedIds
     })
   }
-  console.log(removedIds)
   function verifyIfItIsSelected(key) {
     return removedIds[key][1] === '1'
   }

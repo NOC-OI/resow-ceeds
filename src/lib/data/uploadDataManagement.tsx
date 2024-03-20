@@ -1,13 +1,25 @@
-import { createContext, useState, ReactNode, useContext } from 'react'
+import {
+  createContext,
+  useState,
+  ReactNode,
+  useContext,
+  useEffect,
+} from 'react'
 // import { useContextHandle } from '../contextHandle'
 // import { fetchApiGet } from '../api'
 
 interface UploadDataHandleContextType {
   uploadFormats: string[]
-  selectedUploadFormat: string
-  setSelectedUploadFormat: (format: string) => void
-  selectedUploadInfo: any
-  setSelectedUploadInfo: (info: any) => void
+  actualLayerUpload: any
+  setActualLayerUpload: (layer: any) => void
+  selectedLayersUpload: any
+  setSelectedLayersUpload: (layers: any) => void
+  listLayersUpload: any
+  setListLayersUpload: (layers: any) => void
+  actualLayerAction: string
+  setActualLayerAction: (action: string) => void
+  actualLayerUploadNow: string
+  setActualLayerUploadNow: (action: string) => void
 }
 const UploadDataHandleContext = createContext<
   UploadDataHandleContextType | undefined
@@ -32,18 +44,55 @@ export const UploadDataHandleProvider: React.FC<
     'KMZ',
     'WMS',
   ]
-  const [selectedUploadFormat, setSelectedUploadFormat] = useState('GeoJSON')
 
-  const [selectedUploadInfo, setSelectedUploadInfo] = useState({})
-
+  const [actualLayerUpload, setActualLayerUpload] = useState<any>({
+    uploadFormat: 'GeoJSON',
+    layer: {},
+  })
+  const [actualLayerAction, setActualLayerAction] = useState<string>('')
+  const [actualLayerUploadNow, setActualLayerUploadNow] = useState<string>('')
+  const [selectedLayersUpload, setSelectedLayersUpload] = useState<any>({})
+  const [listLayersUpload, setListLayersUpload] = useState<any>({})
+  useEffect(() => {
+    if (actualLayerUpload.layer.active) {
+      setSelectedLayersUpload((selectedLayersUpload: any) => {
+        const newSelectedLayersUpload = { ...selectedLayersUpload }
+        return {
+          ...newSelectedLayersUpload,
+          [actualLayerUpload.layer.name]: {
+            name: actualLayerUpload.layer.name,
+            data: actualLayerUpload.layer.data,
+            data_type: actualLayerUpload.uploadFormat,
+          },
+        }
+      })
+      setListLayersUpload((listLayersUpload: any) => {
+        const newListLayersUpload = { ...listLayersUpload }
+        return {
+          ...newListLayersUpload,
+          [actualLayerUpload.layer.name]: {
+            name: actualLayerUpload.layer.name,
+            data: actualLayerUpload.layer.data,
+            data_type: actualLayerUpload.uploadFormat,
+          },
+        }
+      })
+    }
+  }, [actualLayerUpload])
   return (
     <UploadDataHandleContext.Provider
       value={{
         uploadFormats,
-        selectedUploadFormat,
-        setSelectedUploadFormat,
-        selectedUploadInfo,
-        setSelectedUploadInfo,
+        actualLayerUpload,
+        setActualLayerUpload,
+        selectedLayersUpload,
+        setSelectedLayersUpload,
+        listLayersUpload,
+        setListLayersUpload,
+        actualLayerAction,
+        setActualLayerAction,
+        actualLayerUploadNow,
+        setActualLayerUploadNow,
       }}
     >
       {children}

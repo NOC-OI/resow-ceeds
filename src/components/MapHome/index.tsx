@@ -394,6 +394,58 @@ function MapHome1({
     setLoading(false)
   }
 
+  async function generateUploadedGTIFFLayer() {
+    const getTifLayer = new GetTifLayer(
+      actualLayerUpload.layer.data,
+      `uploaded-${actualLayerUpload.layer.name}`,
+      undefined,
+      undefined,
+      undefined,
+    )
+    await getTifLayer.parseGeoSimple().then(function () {
+      const layer = getTifLayer.layer
+      layer.addTo(map)
+      setActualLayerUpload({
+        ...actualLayerUpload,
+        layer: { ...actualLayerUpload.layer, active: true },
+      })
+    })
+
+    // const layer = L.geoJSON(actualLayerUpload.layer.data, {
+    //   pointToLayer: function (feature, latlng) {
+    //     return L.marker(latlng, {
+    //       icon: createIcon('/marker-icon.png', [25, 25]),
+    //     })
+    //   },
+    //   onEachFeature: function (feature, layer) {
+    //     layer.on({
+    //       click: () => {
+    //         setMapPopup({
+    //           'Uploaded Layer': feature.properties,
+    //         })
+    //       },
+    //     })
+    //   },
+    //   style: function () {
+    //     const color = colorScale[Math.floor(Math.random() * 30)]
+    //     const myStyle = {
+    //       color,
+    //       fillColor: color,
+    //       weight: 3,
+    //       opacity: defaultOpacity,
+    //       fillOpacity: defaultOpacity,
+    //     }
+    //     return myStyle
+    //   },
+    // })
+    // layer.options.attribution = `uploaded-${actualLayerUpload.layer.name}`
+    // layer.addTo(map)
+    // setActualLayerUpload({
+    //   ...actualLayerUpload,
+    //   layer: { ...actualLayerUpload.layer, active: true },
+    // })
+  }
+
   async function generateUploadedGeoJsonLayer() {
     const layer = L.geoJSON(actualLayerUpload.layer.data, {
       pointToLayer: function (feature, latlng) {
@@ -432,7 +484,11 @@ function MapHome1({
   useEffect(() => {
     if (Object.keys(actualLayerUpload.layer).length > 0) {
       if (!actualLayerUpload.layer.active) {
-        generateUploadedGeoJsonLayer()
+        if (actualLayerUpload.uploadFormat === 'GeoJSON') {
+          generateUploadedGeoJsonLayer()
+        } else if (actualLayerUpload.uploadFormat === 'GeoTIFF') {
+          generateUploadedGTIFFLayer()
+        }
       }
     }
   }, [actualLayerUpload])

@@ -28,10 +28,33 @@ export class GetTifLayer {
     })
   }
 
+  async parseGeoSimple() {
+    const stats = await geoblaze.stats(this.url)
+    console.log(stats)
+    this.layer = await new GeoRasterLayer({
+      georaster: this.url,
+      opacity: defaultOpacity,
+      resolution: this.resolution,
+      // pixelValuesToColorFn: function (values) {
+      //   const population = values[0]
+      //   if (!population) {
+      //     return
+      //   }
+      //   if (population === -9999) {
+      //     return
+      //   }
+      //   return scale(population).hex()
+      // },
+    })
+    this.layer.options.attribution = this.actualLayer
+  }
+
   async parseGeo() {
     await fetch(this.url)
       .then(async (response) => await response.arrayBuffer())
       .then(async (arrayBuffer) => {
+        console.log(arrayBuffer)
+
         await parseGeoraster(arrayBuffer).then(async (georaster) => {
           this.scale = this.layerName.scale
           const scale = chroma.scale(this.layerName.colors).domain(this.scale)

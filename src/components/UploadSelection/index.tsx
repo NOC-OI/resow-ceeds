@@ -13,8 +13,8 @@ import { CssTextField } from './styles'
 import { CalcTypeContainer } from '../DataExplorationType/styles'
 import { LayerTypeOptionsContainer } from '../DataExplorationTypeOptions/styles'
 import styles1 from '../DataExplorationTypeOptions/DataExplorationTypeOptions.module.css'
-
-// interface UploadSelectionProps {}
+import { MuiColorInput } from 'mui-color-input'
+import parseGeoraster from 'georaster'
 
 export function UploadSelection() {
   const {
@@ -58,28 +58,55 @@ export function UploadSelection() {
     }
     return false
   }
-  const handleFileUpload = (localUploadInfo) => {
+
+  // const [value, setValue] = useState('#ffffff')
+
+  // const handleChange = (newValue) => {
+  //   setValue(newValue)
+  // }
+
+  const handleFileUpload = async (localUploadInfo) => {
     const reader = new FileReader()
-    reader.onload = (e) => {
-      const geojsonData = JSON.parse(e.target.result.toString())
+    reader.onload = async (e) => {
+      let data: any
+      if (actualLayerUpload.uploadFormat === 'GeoTIFF') {
+        console.log('GeoTIFF')
+      } else if (actualLayerUpload.uploadFormat === 'GeoJSON') {
+        data = JSON.parse(e.target.result.toString())
+      }
       setActualLayerUpload((actualLayerUpload) => {
         const newActualLayerUpload = { ...actualLayerUpload }
         return {
           uploadFormat: newActualLayerUpload.uploadFormat,
           layer: {
             name: localUploadInfo.file.name,
-            data: geojsonData,
+            data,
           },
         }
       })
     }
-    reader.readAsText(localUploadInfo.file)
+    if (actualLayerUpload.uploadFormat === 'GeoTIFF') {
+      parseGeoraster(localUploadInfo.file).then((georaster) => {
+        setActualLayerUpload((actualLayerUpload) => {
+          const newActualLayerUpload = { ...actualLayerUpload }
+          return {
+            uploadFormat: newActualLayerUpload.uploadFormat,
+            layer: {
+              name: localUploadInfo.file.name,
+              data: georaster,
+            },
+          }
+        })
+      })
+    } else if (actualLayerUpload.uploadFormat === 'GeoJSON') {
+      reader.readAsText(localUploadInfo.file)
+    }
   }
   const handleSubmit = async () => {
     if (checkInputValue()) {
       setError('Please fill all the fields')
     } else {
-      handleFileUpload(localUploadInfo)
+      await handleFileUpload(localUploadInfo)
     }
   }
 
@@ -157,30 +184,57 @@ export function UploadSelection() {
               </select>
             </div>
             {['GeoJSON', 'GeoTIFF'].includes(actualLayerUpload.uploadFormat) ? (
-              <div className="flex justify-between w-full items-center">
-                <p className="pt-4 text-md font-bold text-white mb-2 text-center">
-                  Upload File
-                </p>
-                <div className="flex justify-center gap-6 items-center">
-                  <label
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                    htmlFor="file_input"
-                  >
-                    Upload file
-                  </label>
-                  <input
-                    id="file_input"
-                    type="file"
-                    style={{ display: 'none' }}
-                    onChange={handleFileChange}
-                  />
-                  <label
-                    htmlFor="file_input"
-                    className="block w-full text-sm text-white rounded-lg cursor-pointer bg-black bg-opacity-50 hover:bg-opacity-80"
-                    style={{ padding: '10px', textAlign: 'center' }}
-                  >
-                    {labelText}
-                  </label>
+              <div className="w-full">
+                <div className="flex justify-between w-full items-center">
+                  <p className="pt-4 text-md font-bold text-white mb-2 text-center">
+                    Upload File
+                  </p>
+                  <div className="flex justify-center gap-6 items-center">
+                    <label
+                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      htmlFor="file_input"
+                    >
+                      Upload file
+                    </label>
+                    <input
+                      id="file_input"
+                      type="file"
+                      style={{ display: 'none' }}
+                      onChange={handleFileChange}
+                    />
+                    <label
+                      htmlFor="file_input"
+                      className="block w-full text-sm text-white rounded-lg cursor-pointer bg-black bg-opacity-50 hover:bg-opacity-80"
+                      style={{ padding: '10px', textAlign: 'center' }}
+                    >
+                      {labelText}
+                    </label>
+                  </div>
+                </div>
+                <div className="flex justify-between w-full items-center">
+                  <p className="pt-4 text-md font-bold text-white mb-2 text-center">
+                    {actualLayerUpload.uploadFormat === 'GeoJSON'
+                      ? 'Geometry Colors'
+                      : 'Color Scale'}
+                  </p>
+                  <div className="flex justify-end items-center">
+                    <input
+                      type="color"
+                      className="p-1 h-10 w-14 block bg-white border border-gray-200 cursor-pointer rounded-lg disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700"
+                      id="hs-color-input"
+                      value="#2563eb"
+                      title="Choose your color"
+                    />
+                    {actualLayerUpload.uploadFormat === 'GeoTIFF' && (
+                      <input
+                        type="color"
+                        className="p-1 h-10 w-14 block bg-white border border-gray-200 cursor-pointer rounded-lg disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700"
+                        id="hs-color-input"
+                        value="#2563eb"
+                        title="Choose your color"
+                      />
+                    )}
+                  </div>
                 </div>
               </div>
             ) : actualLayerUpload.uploadFormat === 'WMS' ? (

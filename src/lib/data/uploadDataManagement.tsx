@@ -5,6 +5,7 @@ import {
   useContext,
   useEffect,
 } from 'react'
+import { defaultOpacity } from '../map/utils'
 // import { useContextHandle } from '../contextHandle'
 // import { fetchApiGet } from '../api'
 
@@ -16,10 +17,8 @@ interface UploadDataHandleContextType {
   setSelectedLayersUpload: (layers: any) => void
   listLayersUpload: any
   setListLayersUpload: (layers: any) => void
-  actualLayerAction: string
-  setActualLayerAction: (action: string) => void
-  actualLayerUploadNow: string
-  setActualLayerUploadNow: (action: string) => void
+  actualLayerNowUpload: string[]
+  setActualLayerNowUpload: (action: string[]) => void
 }
 const UploadDataHandleContext = createContext<
   UploadDataHandleContextType | undefined
@@ -46,23 +45,29 @@ export const UploadDataHandleProvider: React.FC<
   ]
 
   const [actualLayerUpload, setActualLayerUpload] = useState<any>({
-    uploadFormat: 'GeoJSON',
-    layer: {},
+    dataType: 'GeoJSON',
+    colors: ['#0859fc', '#fd1317'],
+    data: '',
+    name: '',
+    active: false,
   })
-  const [actualLayerAction, setActualLayerAction] = useState<string>('')
-  const [actualLayerUploadNow, setActualLayerUploadNow] = useState<string>('')
   const [selectedLayersUpload, setSelectedLayersUpload] = useState<any>({})
   const [listLayersUpload, setListLayersUpload] = useState<any>({})
+  const [actualLayerNowUpload, setActualLayerNowUpload] = useState<string[]>([])
   useEffect(() => {
-    if (actualLayerUpload.layer.active) {
+    if (actualLayerUpload.active) {
       setSelectedLayersUpload((selectedLayersUpload: any) => {
         const newSelectedLayersUpload = { ...selectedLayersUpload }
         return {
           ...newSelectedLayersUpload,
-          [actualLayerUpload.layer.name]: {
-            name: actualLayerUpload.layer.name,
-            data: actualLayerUpload.layer.data,
-            data_type: actualLayerUpload.uploadFormat,
+          [`uploaded_${actualLayerUpload.name}`]: {
+            name: actualLayerUpload.name,
+            data: actualLayerUpload.data,
+            dataType: actualLayerUpload.dataType,
+            url: actualLayerUpload.url,
+            colors: actualLayerUpload.colors,
+            scale: actualLayerUpload.scale,
+            opacity: defaultOpacity,
           },
         }
       })
@@ -70,10 +75,14 @@ export const UploadDataHandleProvider: React.FC<
         const newListLayersUpload = { ...listLayersUpload }
         return {
           ...newListLayersUpload,
-          [actualLayerUpload.layer.name]: {
-            name: actualLayerUpload.layer.name,
-            data: actualLayerUpload.layer.data,
-            data_type: actualLayerUpload.uploadFormat,
+          [actualLayerUpload.name]: {
+            name: actualLayerUpload.name,
+            data: actualLayerUpload.data,
+            url: actualLayerUpload.url,
+            dataType: actualLayerUpload.dataType,
+            colors: actualLayerUpload.colors,
+            scale: actualLayerUpload.scale,
+            opacity: defaultOpacity,
           },
         }
       })
@@ -89,10 +98,8 @@ export const UploadDataHandleProvider: React.FC<
         setSelectedLayersUpload,
         listLayersUpload,
         setListLayersUpload,
-        actualLayerAction,
-        setActualLayerAction,
-        actualLayerUploadNow,
-        setActualLayerUploadNow,
+        actualLayerNowUpload,
+        setActualLayerNowUpload,
       }}
     >
       {children}

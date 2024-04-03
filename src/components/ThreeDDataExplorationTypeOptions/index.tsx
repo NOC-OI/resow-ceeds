@@ -9,8 +9,6 @@ import {
   faSliders,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Annotations } from '../Annotations'
-import { organisms } from '../../lib/data/organisms'
 // import { colors, eunis } from '../../lib/data/mbTilesEmodnetLegend'
 import { getUser } from '../../lib/auth'
 import {
@@ -68,7 +66,6 @@ export function ThreeDDataExplorationTypeOptions({
   if (isLogged) {
     user = getUser()
   }
-  const [showAnnotations, setShowAnnotations] = useState<boolean>(false)
 
   async function handleAddTerrainLayer() {
     const layerInfo = JSON.parse(
@@ -109,7 +106,6 @@ export function ThreeDDataExplorationTypeOptions({
                 setLayerAction,
                 setSelectedLayers,
                 selectedLayers,
-                setShowAnnotations,
               )
             }
             value={JSON.stringify({
@@ -153,16 +149,21 @@ export function ThreeDDataExplorationTypeOptions({
                 )
               }
             />
-            {!['Photo', 'GEOJSON'].includes(subLayers[subLayer].data_type) ? (
+            {!['Photo', 'GeoJSON'].includes(subLayers[subLayer].dataType) ? (
               <FontAwesomeIcon
                 icon={faList}
                 title="Show Legend"
                 onClick={() =>
-                  handleClickLegend(subLayers, subLayer, setLayerLegend)
+                  handleClickLegend(
+                    subLayers,
+                    subLayer,
+                    setLayerLegend,
+                    content,
+                  )
                 }
               />
             ) : null}
-            {['COG'].includes(subLayers[subLayer].data_type) && (
+            {['COG'].includes(subLayers[subLayer].dataType) && (
               <FontAwesomeIcon
                 icon={faCube}
                 title="Add 3D terrain to the Map"
@@ -199,19 +200,6 @@ export function ThreeDDataExplorationTypeOptions({
           </div>
         ) : null}
       </div>
-      {showAnnotations && (
-        <Annotations
-          key={`${content}_${subLayer}`}
-          subLayer={subLayer}
-          content={content}
-          layerAction={layerAction}
-          setLayerAction={setLayerAction}
-          selectedLayers={selectedLayers}
-          setSelectedLayers={setSelectedLayers}
-          setActualLayer={setActualLayer}
-          organisms={organisms}
-        />
-      )}
       {opacityIsClicked &&
         verifyIfWasSelectedBefore(content, subLayer, selectedLayers) && (
           <input
@@ -219,7 +207,10 @@ export function ThreeDDataExplorationTypeOptions({
             step={0.1}
             min={0}
             max={1}
-            value={getPreviousOpacityValue(content, subLayer, selectedLayers)}
+            value={getPreviousOpacityValue(
+              `${content}_${subLayer}`,
+              selectedLayers,
+            )}
             onChange={(e) =>
               handleChangeOpacity(
                 e,

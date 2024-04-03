@@ -5,11 +5,14 @@ interface ColorBarProps {
 }
 
 export function ColorBar({ layerLegend }: ColorBarProps) {
+  const dataDescription = layerLegend.dataDescription
+    ? layerLegend.dataDescription
+    : ['', '']
   return (
     <ColorBarContainer>
       <div className="flex justify-center font-extrabold gap-3">
-        <p className="text-lg">{layerLegend.dataDescription[0]}</p>
-        <p className="text-lg">{layerLegend.dataDescription[1]}</p>
+        <p className="text-lg">{dataDescription[0]}</p>
+        <p className="text-lg">{dataDescription[1]}</p>
       </div>
       <div className="flex justify-between font-extrabold">
         <p className="text-lg">
@@ -20,9 +23,9 @@ export function ColorBar({ layerLegend }: ColorBarProps) {
         </p>
       </div>
       <div className="flex">
-        {layerLegend.legend[0].map((value: string) => (
+        {layerLegend.legend[0].map((value: string, idx) => (
           <ColorBarItem
-            key={value}
+            key={idx}
             style={{
               backgroundColor: `rgb(${value[0]},${value[1]},${value[2]})`,
             }}

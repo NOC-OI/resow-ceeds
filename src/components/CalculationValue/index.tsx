@@ -101,7 +101,7 @@ export function CalculationValue({
     if (layerAction) {
       const photoList: any[] = []
       Object.keys(selectedLayers).forEach((layer) => {
-        if (selectedLayers[layer].data_type === 'Photo') {
+        if (selectedLayers[layer].dataType === 'Photo') {
           selectedLayers[layer].photos.forEach((photo: any) => {
             photo.layerName = actualLayer[0]
             photoList.push(photo)

@@ -105,6 +105,7 @@ export function Home() {
               setShowPopup={setShowPopup}
               actualLayer={actualLayer}
               layerAction={layerAction}
+              layerLegend={layerLegend}
               setLayerLegend={setLayerLegend}
               setInfoButtonBox={setInfoButtonBox}
               listLayers={listLayers}
@@ -131,6 +132,9 @@ export function Home() {
               <DataExplorationLegend
                 layerLegend={layerLegend}
                 setLayerLegend={setLayerLegend}
+                setSelectedLayers={setSelectedLayers}
+                setLayerAction={setLayerAction}
+                setActualLayer={setActualLayer}
               />
             ) : null}
             {printBox ? <PrintSelection setPrintBox={setPrintBox} /> : null}

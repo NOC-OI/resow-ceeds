@@ -25,26 +25,35 @@ export class GetTifLayer {
   async loadGeo() {
     await geoblaze.load(this.url).then(async (georaster) => {
       this.layer = georaster
+      this.stats = await geoblaze.stats(georaster)
     })
   }
 
   async parseGeoSimple() {
-    const stats = await geoblaze.stats(this.url)
-    console.log(stats)
+    this.scale = this.url.scale
+    const color = this.url.colors
+    let scale
+    if (color.slice(-2) === '_r') {
+      scale = chroma
+        .scale(this.url.colors.slice(0, -2))
+        .domain([this.scale[1], this.scale[0]])
+    } else {
+      scale = chroma.scale(this.url.colors).domain(this.scale)
+    }
     this.layer = await new GeoRasterLayer({
-      georaster: this.url,
-      opacity: defaultOpacity,
+      georaster: this.url.data,
+      opacity: this.url.opacity,
       resolution: this.resolution,
-      // pixelValuesToColorFn: function (values) {
-      //   const population = values[0]
-      //   if (!population) {
-      //     return
-      //   }
-      //   if (population === -9999) {
-      //     return
-      //   }
-      //   return scale(population).hex()
-      // },
+      pixelValuesToColorFn: function (values) {
+        const population = values[0]
+        if (!population) {
+          return
+        }
+        if (population === -9999) {
+          return
+        }
+        return scale(population).hex()
+      },
     })
     this.layer.options.attribution = this.actualLayer
   }
@@ -53,11 +62,22 @@ export class GetTifLayer {
     await fetch(this.url)
       .then(async (response) => await response.arrayBuffer())
       .then(async (arrayBuffer) => {
-        console.log(arrayBuffer)
-
         await parseGeoraster(arrayBuffer).then(async (georaster) => {
-          this.scale = this.layerName.scale
-          const scale = chroma.scale(this.layerName.colors).domain(this.scale)
+          if (this.layerName.scale) {
+            this.scale = this.layerName.scale
+          } else {
+            const stats = await geoblaze.stats(georaster)
+            this.scale = [stats[0].min, stats[0].max]
+          }
+          let scale
+          const color = this.layerName.colors
+          if (color.slice(-2) === '_r') {
+            scale = chroma
+              .scale(this.layerName.colors.slice(0, -2))
+              .domain([this.scale[1], this.scale[0]])
+          } else {
+            scale = chroma.scale(this.layerName.colors).domain(this.scale)
+          }
           this.georaster = georaster
           this.layer = await new GeoRasterLayer({
             georaster,
@@ -159,8 +179,8 @@ export class GetCOGLayer {
   async getTile() {
     const [newUrl, isUrlEncoded] = getUrlTileServer(this.layerName, this.url)
 
-    if (this.layerName.color) {
-      this.colourScheme = this.layerName.color.toLowerCase()
+    if (this.layerName.colors) {
+      this.colourScheme = this.layerName.colors.toLowerCase()
     }
     const cogInfo = await this.getInfo()
 
@@ -205,12 +225,16 @@ export class GetCOGLayer {
       const rescale = []
       for (let i = 0; i < bands.length; i++) {
         const stats = this.stats[bands[i]]
-        if (this.contrast) {
-          stats
-            ? rescale.push(`${stats.percentile_2},${stats.percentile_98}`)
-            : rescale.push('0,255')
+        if (this.layerName.scale) {
+          rescale.push(`${this.layerName.scale[0]},${this.layerName.scale[1]}`)
         } else {
-          rescale.push('0,255')
+          if (this.contrast) {
+            stats
+              ? rescale.push(`${stats.percentile_2},${stats.percentile_98}`)
+              : rescale.push('0,255')
+          } else {
+            rescale.push('0,255')
+          }
         }
       }
 

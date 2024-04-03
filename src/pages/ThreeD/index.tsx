@@ -64,6 +64,7 @@ export function ThreeD() {
           setShowPopup={setShowPopup}
           actualLayer={actualLayer}
           layerAction={layerAction}
+          layerLegend={layerLegend}
           setLayerLegend={setLayerLegend}
           setInfoButtonBox={setInfoButtonBox}
           listLayers={listLayers}
@@ -77,6 +78,9 @@ export function ThreeD() {
           <DataExplorationLegend
             layerLegend={layerLegend}
             setLayerLegend={setLayerLegend}
+            setSelectedLayers={setSelectedLayers}
+            setLayerAction={setLayerAction}
+            setActualLayer={setActualLayer}
           />
         ) : null}
         {Object.keys(infoButtonBox).length !== 0 ? (

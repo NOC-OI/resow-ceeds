@@ -17,6 +17,7 @@ import { ThreeDDataExplorationSelection } from '../ThreeDDataExplorationSelectio
 import { useContextHandle } from '../../lib/contextHandle'
 import { DownloadSelection } from '../DownloadSelection'
 import { UploadSelection } from '../UploadSelection'
+import { useUploadDataHandle } from '../../lib/data/uploadDataManagement'
 
 interface SideSelectionProps {
   selectedSidebarOption: any
@@ -29,6 +30,7 @@ interface SideSelectionProps {
   setShowPopup: any
   actualLayer: any
   layerAction: any
+  layerLegend: any
   setLayerLegend: any
   setInfoButtonBox: any
   listLayers: any
@@ -55,6 +57,7 @@ export function SideSelection({
   setShowPopup,
   actualLayer,
   layerAction,
+  layerLegend,
   setLayerLegend,
   setInfoButtonBox,
   listLayers,
@@ -71,6 +74,7 @@ export function SideSelection({
 }: SideSelectionProps) {
   const navigate = useNavigate()
   const { loading } = useContextHandle()
+  const { setSelectedLayersUpload } = useUploadDataHandle()
   async function handleShowSelection(e: any) {
     if (
       window.location.pathname === '/3d' ||
@@ -92,7 +96,7 @@ export function SideSelection({
       if (selectedSidebarOption === 'Data Exploration') {
         const photoList: any[] = []
         Object.keys(selectedLayers).forEach((layer: string) => {
-          if (selectedLayers[layer].data_type === 'Photo') {
+          if (selectedLayers[layer].dataType === 'Photo') {
             selectedLayers[layer].photos.forEach((photo: any) => {
               photoList.push(photo)
             })
@@ -118,6 +122,7 @@ export function SideSelection({
   function handleEraseLayers() {
     setActualLayer(Object.keys(selectedLayers))
     setSelectedLayers({})
+    setSelectedLayersUpload({})
     setLayerAction('remove')
   }
 
@@ -203,6 +208,7 @@ export function SideSelection({
               setActualLayer={setActualLayer}
               layerAction={layerAction}
               setLayerAction={setLayerAction}
+              layerLegend={layerLegend}
               setLayerLegend={setLayerLegend}
               setInfoButtonBox={setInfoButtonBox}
               listLayers={listLayers}
@@ -236,7 +242,14 @@ export function SideSelection({
               listLayers={listLayers}
             />
           )}
-          {selectedSidebarOption === 'Upload' && <UploadSelection />}
+          {selectedSidebarOption === 'Upload' && (
+            <UploadSelection
+              layerAction={layerAction}
+              setLayerAction={setLayerAction}
+              layerLegend={layerLegend}
+              setLayerLegend={setLayerLegend}
+            />
+          )}
         </div>
       </SideSelectionContainer>
     </div>

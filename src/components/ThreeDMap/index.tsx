@@ -132,7 +132,7 @@ function ThreeDMap1({
     }
   }
 
-  async function createGeoJsonLayer(actual, turfConvex, layerName = 'limits') {
+  async function createGeoJSONLayer(actual, turfConvex, layerName = 'limits') {
     const colorLimits = createColor(colorScale, true, 0.3)
 
     const myStyle = {
@@ -217,14 +217,14 @@ function ThreeDMap1({
       let layer: any
       let layers: any
       let dataSource
-      if (layerName.data_type === 'wms') {
+      if (layerName.dataType === 'WMS') {
         layers = ref.current.cesiumElement.scene.imageryLayers
         layer = getWMSLayer(layerName, actual)
         layer.attribution = actual
         layer.alpha = defaultOpacity
         layers.add(layer)
         correctBaseWMSOrder(layers)
-      } else if (layerName.data_type === 'COG') {
+      } else if (layerName.dataType === 'COG') {
         layers = ref.current.cesiumElement.scene.imageryLayers
         await generateAddCOGLayer(
           layer,
@@ -233,7 +233,7 @@ function ThreeDMap1({
           actual,
           defaultOpacity,
         )
-      } else if (layerName.data_type === 'GTIFF') {
+      } else if (layerName.dataType === 'GeoTIFF') {
         layers = ref.current.cesiumElement.scene.imageryLayers
         layerName.url = layerName.url.replace(
           'actualDate',
@@ -246,15 +246,15 @@ function ThreeDMap1({
           actual,
           defaultOpacity,
         )
-      } else if (layerName.data_type === 'GEOJSON') {
+      } else if (layerName.dataType === 'GeoJSON') {
         layers = ref.current.cesiumElement.dataSources
-        const geoJsonLayer = createGeoJsonLayer(
+        const geoJsonLayer = createGeoJSONLayer(
           actual,
           layerName.url,
           'geojson_layer',
         )
         layers.add(geoJsonLayer)
-      } else if (layerName.data_type === 'Photo') {
+      } else if (layerName.dataType === 'Photo') {
         ref.current.cesiumElement.infoBox.frame.removeAttribute('sandbox')
         ref.current.cesiumElement.infoBox.frame.src = 'about:blank'
         dataSource = new Cesium.CustomDataSource(actual)
@@ -279,7 +279,7 @@ function ThreeDMap1({
         layers.add(dataSource)
         const turfConvex = turf.convex(turf.featureCollection(markers))
         if (layerName.plotLimits) {
-          const turfLayer = createGeoJsonLayer(actual, turfConvex)
+          const turfLayer = createGeoJSONLayer(actual, turfConvex)
           layers.add(turfLayer)
         }
       }
@@ -292,7 +292,7 @@ function ThreeDMap1({
       const splitActual = actual.split('_')
       const layerName = listLayers[splitActual[0]].layerNames[splitActual[1]]
       let layers: any
-      if (layerName.data_type === 'wms' || layerName.data_type === 'COG') {
+      if (layerName.dataType === 'WMS' || layerName.dataType === 'COG') {
         layers = ref.current.cesiumElement.scene.imageryLayers
         layers?._layers.forEach(function (layer: any) {
           if ([actual].includes(layer.attribution)) {
@@ -320,7 +320,7 @@ function ThreeDMap1({
             setCogLayer(newCogLayer)
           }
         }
-      } else if (layerName.data_type === 'GEOJSON') {
+      } else if (layerName.dataType === 'GeoJSON') {
         layers = ref.current.cesiumElement.dataSources
         layers._dataSources.forEach(function (layer: any) {
           if (actualLayer.includes(layer.attribution)) {
@@ -328,7 +328,7 @@ function ThreeDMap1({
           }
         })
         setLayerAction('')
-      } else if (layerName.data_type === 'Photo') {
+      } else if (layerName.dataType === 'Photo') {
         layers = ref.current.cesiumElement.dataSources
         layers._dataSources.forEach(function (layer: any) {
           if (actualLayer.includes(layer.attribution)) {
@@ -387,12 +387,12 @@ function ThreeDMap1({
     actualLayer.forEach(async (actual) => {
       const splitActual = actual.split('_')
       const layerName = listLayers[splitActual[0]].layerNames[splitActual[1]]
-      if (layerName.data_type === 'wms' || layerName.data_type === 'COG') {
+      if (layerName.dataType === 'WMS' || layerName.dataType === 'COG') {
         layers = ref.current.cesiumElement.scene.imageryLayers
         layers?._layers.forEach(function (layer: any) {
           if ([actual].includes(layer.attribution)) {
             layers.remove(layer)
-            if (layerName.data_type === 'wms') {
+            if (layerName.dataType === 'WMS') {
               layer = getWMSLayer(layerName, actual)
               layer.attribution = actual
               layer.alpha = selectedLayers[layer.attribution].opacity
@@ -409,7 +409,7 @@ function ThreeDMap1({
             }
           }
         })
-      } else if (layerName.data_type === 'Photo') {
+      } else if (layerName.dataType === 'Photo') {
         layers = ref.current.cesiumElement.dataSources
         layers._dataSources.forEach(function (layer: any) {
           if (actualLayer.includes(layer.attribution)) {
@@ -434,12 +434,12 @@ function ThreeDMap1({
     actualLayer.forEach(async (actual) => {
       const splitActual = actual.split('_')
       const layerName = listLayers[splitActual[0]].layerNames[splitActual[1]]
-      if (layerName.data_type === 'wms' || layerName.data_type === 'COG') {
+      if (layerName.dataType === 'WMS' || layerName.dataType === 'COG') {
         layers = ref.current.cesiumElement.scene.imageryLayers
         layers?._layers.forEach(function (layer: any) {
           if ([actual].includes(layer.attribution)) {
             layers.remove(layer)
-            if (layerName.data_type === 'wms') {
+            if (layerName.dataType === 'WMS') {
               const layerNew = getWMSLayer(layerName, actualLayer[0])
               layerNew.alpha = layer.alpha
               layers.add(layerNew)

@@ -17,6 +17,7 @@ interface DataExplorationTypeProps {
   setActualLayer: any
   layerAction: String
   setLayerAction: any
+  layerLegend: any
   setLayerLegend: any
   setInfoButtonBox?: any
   setShowPhotos?: any
@@ -36,6 +37,7 @@ export function DataExplorationType({
   setActualLayer,
   layerAction,
   setLayerAction,
+  layerLegend,
   setLayerLegend,
   setInfoButtonBox,
   setShowPhotos,
@@ -61,7 +63,7 @@ export function DataExplorationType({
     if (layerAction) {
       const photoList: any[] = []
       Object.keys(selectedLayers).forEach((layer) => {
-        if (selectedLayers[layer].data_type === 'Photo') {
+        if (selectedLayers[layer].dataType === 'Photo') {
           selectedLayers[layer].photos.forEach((photo: any) => {
             photo.layerName = actualLayer[0]
             photoList.push(photo)
@@ -107,6 +109,7 @@ export function DataExplorationType({
               setActiveOpacity={setActiveOpacity}
               setActualLayer={setActualLayer}
               subLayers={subLayers}
+              layerLegend={layerLegend}
               setLayerLegend={setLayerLegend}
               layerAction={layerAction}
               setLayerAction={setLayerAction}

@@ -96,7 +96,7 @@ export function ThreeDDataExplorationType({
       </div>
       <div>
         {Object.keys(subLayers).map((subLayer) => {
-          if (subLayers[subLayer].data_type !== 'MBTiles') {
+          if (subLayers[subLayer].dataType !== 'MBTiles') {
             return (
               <ThreeDDataExplorationTypeOptions
                 key={`${content}_${subLayer}`}

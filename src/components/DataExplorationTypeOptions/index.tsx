@@ -9,13 +9,12 @@ import {
   faSliders,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Annotations } from '../Annotations'
 import { colors, eunis } from '../../data/mbTilesEmodnetLegend'
-import { organisms } from '../../data/organisms'
-import { GetCOGLayer } from '../../lib/map/addGeoraster'
-import { oceanR } from '../../lib/map/jsColormaps'
+import { GetCOGLayer, GetTifLayer } from '../../lib/map/addGeoraster'
+import { colorScaleByName } from '../../lib/map/jsColormaps'
 import styles from './DataExplorationTypeOptions.module.css'
 import { defaultOpacity } from '../../lib/map/utils'
+import chroma from 'chroma-js'
 
 export function handleChangeOpacity(
   e: any,
@@ -60,16 +59,18 @@ export function handleGenerateTimeSeriesGraph(
   setActualLayer([subLayers[subLayer].url])
 }
 
-export function getPreviousOpacityValue(
-  content: string,
-  subLayer: string,
-  selectedLayers: any,
-) {
-  return selectedLayers[`${content}_${subLayer}`].opacity
+export function getPreviousOpacityValue(content: string, selectedLayers: any) {
+  return selectedLayers[content].opacity
 }
 
-export async function handleClickLegend(subLayers, subLayer, setLayerLegend) {
-  if (subLayers[subLayer].data_type === 'wms') {
+export async function handleClickLegend(
+  subLayers,
+  subLayer,
+  setLayerLegend,
+  content,
+  selectedLayers?,
+) {
+  if (subLayers[subLayer].dataType === 'WMS') {
     const newParams = subLayers[subLayer].params
     newParams.request = 'GetLegendGraphic'
     newParams.layer = newParams.layers
@@ -80,27 +81,90 @@ export async function handleClickLegend(subLayers, subLayer, setLayerLegend) {
       setLayerLegend({ layerName: subLayer, url })
     }
     await getURILegend(newParams)
-  } else if (subLayers[subLayer].data_type === 'MBTiles') {
+  } else if (subLayers[subLayer].dataType === 'MBTiles') {
     setLayerLegend({ layerName: subLayer, legend: [colors, eunis] })
-  } else if (subLayers[subLayer].data_type === 'COG') {
-    const getCOGLayer = new GetCOGLayer(subLayers[subLayer], subLayer, true)
-    await getCOGLayer.getStats().then((stats) => {
-      const minValue = stats.b1.percentile_2
-      const maxValue = stats.b1.percentile_98
-      const difValues = maxValue - minValue
-      const times = 30
-      const cogColors = []
-      const cogColorsValues = []
-      for (let i = 0; i < times; i++) {
-        cogColors.push(oceanR((1 / (times - 1)) * i))
-        cogColorsValues.push(minValue + (difValues / (times - 1)) * i)
-      }
-      setLayerLegend({
-        layerName: subLayer,
-        dataDescription: ['Depth', '(m)'],
-        legend: [cogColors, cogColorsValues],
-        dataType: subLayers[subLayer].data_type,
+  } else if (subLayers[subLayer].dataType === 'COG') {
+    let scale
+    if (!selectedLayers) {
+      const getCOGLayer = new GetCOGLayer(subLayers[subLayer], subLayer, true)
+      await getCOGLayer.getStats().then((stats) => {
+        const minValue = stats.b1.percentile_2.toFixed(4)
+        const maxValue = stats.b1.percentile_98.toFixed(4)
+        scale = [minValue, maxValue]
       })
+    } else {
+      scale = selectedLayers[`${content}_${subLayer}`].scale
+    }
+    const difValues = scale[1] - scale[0]
+    const times = 30
+    const cogColors = []
+    const cogColorsValues = []
+
+    const colorScale = colorScaleByName(
+      selectedLayers
+        ? selectedLayers[`${content}_${subLayer}`].colors
+        : subLayers[subLayer].colors
+        ? subLayers[subLayer].colors
+        : 'ocean_r',
+    )
+    for (let i = 0; i < times; i++) {
+      cogColors.push(colorScale((1 / (times - 1)) * i))
+      cogColorsValues.push(Number(scale[0]) + (difValues / (times - 1)) * i)
+    }
+    setLayerLegend({
+      layerName: subLayer,
+      layerInfo: subLayers[subLayer],
+      selectedLayersKey: `${content}_${subLayer}`,
+      scale,
+      dataDescription: subLayers[subLayer].dataDescription,
+      legend: [cogColors, cogColorsValues],
+      dataType: subLayers[subLayer].dataType,
+    })
+  } else if (subLayers[subLayer].dataType === 'GeoTIFF') {
+    let scale
+    if (!selectedLayers) {
+      if (subLayers[subLayer].scale) {
+        scale = subLayers[subLayer].scale
+      } else {
+        const tifData = new GetTifLayer(subLayers[subLayer].url)
+        await tifData.loadGeo()
+        scale = [tifData.stats[0].min, tifData.stats[0].max]
+      }
+    } else {
+      console.log(selectedLayers)
+      scale = selectedLayers[`${content}_${subLayer}`].scale
+    }
+
+    const difValues = scale[1] - scale[0]
+    const times = 30
+    const cogColors = []
+    const cogColorsValues = []
+    let scaleColor
+    const colors = selectedLayers
+      ? selectedLayers[`${content}_${subLayer}`].colors
+      : subLayers[subLayer].colors
+    if (typeof colors === 'string') {
+      scaleColor = colorScaleByName(colors)
+      for (let i = 0; i < times; i++) {
+        cogColors.push(scaleColor((1 / (times - 1)) * i))
+        cogColorsValues.push(Number(scale[0]) + (difValues / (times - 1)) * i)
+      }
+    } else {
+      scaleColor = chroma.scale(colors).domain(scale)
+      for (let i = 0; i < times; i++) {
+        const color = scaleColor((1 / (times - 1)) * i)
+        cogColors.push([color._rgb[0], color._rgb[1], color._rgb[2]])
+        cogColorsValues.push(Number(scale[0]) + (difValues / (times - 1)) * i)
+      }
+    }
+    setLayerLegend({
+      layerName: subLayer,
+      layerInfo: subLayers[subLayer],
+      selectedLayersKey: `${content}_${subLayer}`,
+      scale,
+      dataDescription: subLayers[subLayer].dataDescription,
+      legend: [cogColors, cogColorsValues],
+      dataType: subLayers[subLayer].dataType,
     })
   }
 }
@@ -184,6 +248,18 @@ export async function addMapLayer(
 ) {
   setLayerAction('add')
   const newSelectedLayer = layerInfo.dataInfo
+  if (newSelectedLayer.dataType === 'COG') {
+    const getCOGLayer = new GetCOGLayer(newSelectedLayer, undefined, true)
+    await getCOGLayer.getStats().then((stats) => {
+      const minValue = stats.b1.percentile_2
+      const maxValue = stats.b1.percentile_98
+      newSelectedLayer.scale = [minValue, maxValue]
+    })
+  } else if (newSelectedLayer.dataType === 'GeoTIFF') {
+    const tifData = new GetTifLayer(newSelectedLayer.url)
+    await tifData.loadGeo()
+    newSelectedLayer.scale = [tifData.stats[0].min, tifData.stats[0].max]
+  }
   newSelectedLayer.opacity = defaultOpacity
   newSelectedLayer.zoom = true
   setSelectedLayers({
@@ -205,6 +281,41 @@ export function removeMapLayer(
   })
 }
 
+export async function handleChangeMapLayerAndAddLegend(
+  e: any,
+  setActualLayer: any,
+  setOpacityIsClicked: any,
+  setActiveOpacity: any,
+  setLayerAction: any,
+  setSelectedLayers: any,
+  selectedLayers: any,
+  subLayers: any,
+  subLayer: any,
+  setLayerLegend: any,
+  layerLegend: any,
+  content: any,
+) {
+  if (
+    e.target.checked &&
+    !['Photo', 'GeoJSON'].includes(subLayers[subLayer].dataType)
+  ) {
+    handleClickLegend(subLayers, subLayer, setLayerLegend, content)
+  } else {
+    if (layerLegend.layerName === subLayer) {
+      setLayerLegend('')
+    }
+  }
+  await handleChangeMapLayer(
+    e,
+    setActualLayer,
+    setOpacityIsClicked,
+    setActiveOpacity,
+    setLayerAction,
+    setSelectedLayers,
+    selectedLayers,
+  )
+}
+
 export async function handleChangeMapLayer(
   e: any,
   setActualLayer: any,
@@ -213,11 +324,10 @@ export async function handleChangeMapLayer(
   setLayerAction: any,
   setSelectedLayers: any,
   selectedLayers: any,
-  setShowAnnotations?: any,
 ) {
   const layerInfo = JSON.parse(e.target.value)
   setActualLayer([layerInfo.subLayer])
-  if (layerInfo.dataInfo.data_type === 'Photo') {
+  if (layerInfo.dataInfo.dataType === 'Photo') {
     if (e.target.checked) {
       layerInfo.dataInfo.show = []
       layerInfo.dataInfo.photos.forEach((photo: any) => {
@@ -231,9 +341,6 @@ export async function handleChangeMapLayer(
         selectedLayers,
       )
     } else {
-      if (setShowAnnotations) {
-        setShowAnnotations(false)
-      }
       removeMapLayer(layerInfo, setLayerAction, setSelectedLayers)
     }
   } else {
@@ -259,6 +366,7 @@ interface DataExplorationTypeOptionsProps {
   setActiveOpacity: any
   setActualLayer: any
   subLayers: any
+  layerLegend: any
   setLayerLegend: any
   layerAction: any
   setLayerAction: any
@@ -278,6 +386,7 @@ export function DataExplorationTypeOptions({
   setActiveOpacity,
   setActualLayer,
   subLayers,
+  layerLegend,
   setLayerLegend,
   layerAction,
   setLayerAction,
@@ -292,8 +401,6 @@ export function DataExplorationTypeOptions({
     activeOpacity === `${content}_${subLayer}`,
   )
 
-  const [showAnnotations, setShowAnnotations] = useState<boolean>(false)
-
   return (
     <LayerTypeOptionsContainer>
       <div id="type-option">
@@ -303,7 +410,7 @@ export function DataExplorationTypeOptions({
         >
           <input
             onChange={(e: any) =>
-              handleChangeMapLayer(
+              handleChangeMapLayerAndAddLegend(
                 e,
                 setActualLayer,
                 setOpacityIsClicked,
@@ -311,7 +418,11 @@ export function DataExplorationTypeOptions({
                 setLayerAction,
                 setSelectedLayers,
                 selectedLayers,
-                setShowAnnotations,
+                subLayers,
+                subLayer,
+                setLayerLegend,
+                layerLegend,
+                content,
               )
             }
             value={JSON.stringify({
@@ -347,16 +458,22 @@ export function DataExplorationTypeOptions({
                 )
               }
             />
-            {!['Photo', 'GEOJSON'].includes(subLayers[subLayer].data_type) ? (
+            {!['Photo', 'GeoJSON'].includes(subLayers[subLayer].dataType) ? (
               <FontAwesomeIcon
                 icon={faList}
                 title="Show Legend"
                 onClick={() =>
-                  handleClickLegend(subLayers, subLayer, setLayerLegend)
+                  handleClickLegend(
+                    subLayers,
+                    subLayer,
+                    setLayerLegend,
+                    content,
+                    selectedLayers,
+                  )
                 }
               />
             ) : null}
-            {subLayers[subLayer].data_type === 'COG' ? (
+            {subLayers[subLayer].dataType === 'COG' ? (
               <FontAwesomeIcon
                 icon={faChartSimple}
                 title="Make a graph"
@@ -403,7 +520,7 @@ export function DataExplorationTypeOptions({
                 )
               }
             />
-            {!['Photo', 'GEOJSON'].includes(subLayers[subLayer].data_type) && (
+            {!['Photo'].includes(subLayers[subLayer].dataType) && (
               <FontAwesomeIcon
                 icon={faSliders}
                 title="Change Opacity"
@@ -415,36 +532,9 @@ export function DataExplorationTypeOptions({
                 <FontAwesomeIcon icon={faDownload} title="Download layer" />
               </a>
             )}
-            {/* ) : null} */}
-            {/* {subLayers[subLayer].data_type !== 'Photo' ? (
-              <FontAwesomeIcon
-                icon={faSliders}
-                title="Change Opacity"
-                onClick={handleClickSlider}
-              />
-            ) : (
-              <FontAwesomeIcon
-                icon={faSliders}
-                title="Select by Annotations"
-                onClick={handleClickAnnotations}
-              />
-            )} */}
           </div>
         ) : null}
       </div>
-      {showAnnotations && (
-        <Annotations
-          key={`${content}_${subLayer}`}
-          subLayer={subLayer}
-          content={content}
-          layerAction={layerAction}
-          setLayerAction={setLayerAction}
-          selectedLayers={selectedLayers}
-          setSelectedLayers={setSelectedLayers}
-          setActualLayer={setActualLayer}
-          organisms={organisms}
-        />
-      )}
       {opacityIsClicked &&
         verifyIfWasSelectedBefore(content, subLayer, selectedLayers) && (
           <input
@@ -452,7 +542,10 @@ export function DataExplorationTypeOptions({
             step={0.1}
             min={0}
             max={1}
-            value={getPreviousOpacityValue(content, subLayer, selectedLayers)}
+            value={getPreviousOpacityValue(
+              `${content}_${subLayer}`,
+              selectedLayers,
+            )}
             onChange={(e) =>
               handleChangeOpacity(
                 e,

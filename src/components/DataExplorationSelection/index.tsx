@@ -12,6 +12,7 @@ interface DataExplorationSelectionProps {
   setActualLayer: any
   layerAction: String
   setLayerAction: any
+  layerLegend: any
   setLayerLegend: any
   setInfoButtonBox?: any
   listLayers?: any
@@ -32,6 +33,7 @@ export function DataExplorationSelection({
   setActualLayer,
   layerAction,
   setLayerAction,
+  layerLegend,
   setLayerLegend,
   setInfoButtonBox,
   listLayers,
@@ -67,6 +69,7 @@ export function DataExplorationSelection({
             setActualLayer={setActualLayer}
             layerAction={layerAction}
             setLayerAction={setLayerAction}
+            layerLegend={layerLegend}
             setLayerLegend={setLayerLegend}
             setInfoButtonBox={setInfoButtonBox}
             setShowPhotos={setShowPhotos}

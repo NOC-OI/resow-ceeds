@@ -84,14 +84,22 @@ function MapHome1({
   selectedBaseLayer,
 }: MapProps) {
   const { setFlashMessage, setLoading } = useContextHandle()
-  const { actualLayerUpload, setActualLayerUpload } = useUploadDataHandle()
+  const {
+    actualLayerUpload,
+    setActualLayerUpload,
+    selectedLayersUpload,
+    actualLayerNowUpload,
+  } = useUploadDataHandle()
   const { drawRectangle, setRectangleLimits } = useDownloadManagementHandle()
   const [map, setMap] = useState<any>(null)
   const [mapCenter, setMapCenter] = useState<L.LatLng>(
     new L.LatLng(defaultView[0], defaultView[1]),
   )
   function bringLayerToFront(layer: any) {
-    layer.bringToFront()
+    try {
+      layer.bringToFront()
+      console.log(mapCenter)
+    } catch (error) {}
     // const frontLayers = [
     //   'Coastline',
     //   'Marine Conservation Zones',
@@ -115,7 +123,6 @@ function MapHome1({
       })
     }
   }, [map])
-
   async function changeMapDateLayers() {
     let layer: any
     map.eachLayer(async (mapLayer: any) => {
@@ -212,8 +219,12 @@ function MapHome1({
     })
   }
 
-  async function addLayerIntoMap() {
-    await generateSelectedLayer()
+  async function addLayerIntoMap(actual?) {
+    if (actual) {
+      await generateSelectedUploadedLayer('old')
+    } else {
+      await generateSelectedLayer()
+    }
     setLayerAction('')
   }
 
@@ -257,10 +268,10 @@ function MapHome1({
       const layerName = selectedLayers[actual]
       let layer: any
       let bounds
-      if (layerName.data_type === 'wms') {
+      if (layerName.dataType === 'WMS') {
         layer = await getWMSLayer(layerName, actual)
         bounds = defaultWMSBounds
-      } else if (layerName.data_type === 'COG') {
+      } else if (layerName.dataType === 'COG') {
         const getCOGLayer = new GetCOGLayer(layerName, actual, true)
         await getCOGLayer.getTile().then(function () {
           if (getCOGLayer.error) {
@@ -276,7 +287,7 @@ function MapHome1({
           // ]
           bounds = defaultWMSBounds
         })
-      } else if (layerName.data_type === 'MBTiles') {
+      } else if (layerName.dataType === 'MBTiles') {
         const getMBTilesLayer = new GetMBTiles(layerName, actual)
         await getMBTilesLayer.getLayer().then(async function () {
           layer = getMBTilesLayer.layer
@@ -297,7 +308,7 @@ function MapHome1({
             })
           }
         })
-      } else if (layerName.data_type === 'GTIFF') {
+      } else if (layerName.dataType === 'GeoTIFF') {
         const url = layerName.url.replace('actualDate', yearMonths[actualDate])
         const getTifLayer = new GetTifLayer(
           url,
@@ -311,14 +322,14 @@ function MapHome1({
           layer.options.date_range = layerName.date_range
           bounds = defaultWMSBounds
         })
-      } else if (layerName.data_type === 'arcgis') {
+      } else if (layerName.dataType === 'arcgis') {
         layer = esri.dynamicMapLayer({ url: layerName.url })
         layer.setLayers([1, 2, 3, 4, 5, 6, 7, 8, 12, 13, 14, 15])
         bounds = defaultWMSBounds
-      } else if (layerName.data_type === 'GEOJSON') {
-        layer = await generateGeoJsonLayer(layerName, actual, layer)
+      } else if (layerName.dataType === 'GeoJSON') {
+        layer = await generateGeoJSONLayer(layerName, actual, layer)
         bounds = defaultWMSBounds
-      } else if (layerName.data_type === 'Photo') {
+      } else if (layerName.dataType === 'Photo') {
         let markers: any = []
         const colorMarker = colorScale[Math.floor(Math.random() * 30)]
         const shuffledPhotos = reorderPhotos(
@@ -367,7 +378,7 @@ function MapHome1({
           const turflayer = createTurfLayer(actual, turfConvex)
           turflayer.addTo(map)
         }
-      } else if (layerName.data_type === 'Photo-Limits') {
+      } else if (layerName.dataType === 'Photo-Limits') {
         let markers: any = []
         layerName.photos.map(async (photo: any) => {
           markers = createTurfPoint(markers, photo.coordinates, 0.003)
@@ -375,17 +386,17 @@ function MapHome1({
         const turfConvex = turf.convex(turf.featureCollection(markers))
         layer = createTurfLayer(actual, turfConvex)
       }
-      if (layerName.data_type !== 'Photo') {
+      if (layerName.dataType !== 'Photo') {
         layer.options.attribution = actual
         map.addLayer(layer, true)
         layer && bringLayerToFront(layer)
-        if (layerName.data_type === 'COG' && layerName.get_value) {
+        if (layerName.dataType === 'COG' && layerName.get_value) {
           if (selectedLayers[actual]) {
             addGeoblazeValue(layerName, actual, true, null)
           }
         }
       }
-      if (layerName.data_type !== 'Photo') {
+      if (layerName.dataType !== 'Photo') {
         bounds = defaultWMSBounds
       }
       console.log(bounds)
@@ -394,10 +405,10 @@ function MapHome1({
     setLoading(false)
   }
 
-  async function generateUploadedGTIFFLayer() {
+  async function generateUploadedGeoTIFFLayer(actualLayerUpload) {
     const getTifLayer = new GetTifLayer(
-      actualLayerUpload.layer.data,
-      `uploaded-${actualLayerUpload.layer.name}`,
+      actualLayerUpload,
+      `uploaded_${actualLayerUpload.name}`,
       undefined,
       undefined,
       undefined,
@@ -405,49 +416,11 @@ function MapHome1({
     await getTifLayer.parseGeoSimple().then(function () {
       const layer = getTifLayer.layer
       layer.addTo(map)
-      setActualLayerUpload({
-        ...actualLayerUpload,
-        layer: { ...actualLayerUpload.layer, active: true },
-      })
     })
-
-    // const layer = L.geoJSON(actualLayerUpload.layer.data, {
-    //   pointToLayer: function (feature, latlng) {
-    //     return L.marker(latlng, {
-    //       icon: createIcon('/marker-icon.png', [25, 25]),
-    //     })
-    //   },
-    //   onEachFeature: function (feature, layer) {
-    //     layer.on({
-    //       click: () => {
-    //         setMapPopup({
-    //           'Uploaded Layer': feature.properties,
-    //         })
-    //       },
-    //     })
-    //   },
-    //   style: function () {
-    //     const color = colorScale[Math.floor(Math.random() * 30)]
-    //     const myStyle = {
-    //       color,
-    //       fillColor: color,
-    //       weight: 3,
-    //       opacity: defaultOpacity,
-    //       fillOpacity: defaultOpacity,
-    //     }
-    //     return myStyle
-    //   },
-    // })
-    // layer.options.attribution = `uploaded-${actualLayerUpload.layer.name}`
-    // layer.addTo(map)
-    // setActualLayerUpload({
-    //   ...actualLayerUpload,
-    //   layer: { ...actualLayerUpload.layer, active: true },
-    // })
   }
 
-  async function generateUploadedGeoJsonLayer() {
-    const layer = L.geoJSON(actualLayerUpload.layer.data, {
+  async function generateUploadedGeoJSONLayer(actualLayerUpload) {
+    const layer = L.geoJSON(actualLayerUpload.data, {
       pointToLayer: function (feature, latlng) {
         return L.marker(latlng, {
           icon: createIcon('/marker-icon.png', [25, 25]),
@@ -463,10 +436,10 @@ function MapHome1({
         })
       },
       style: function () {
-        const color = colorScale[Math.floor(Math.random() * 30)]
+        const color = actualLayerUpload.colors[0]
         const myStyle = {
           color,
-          fillColor: color,
+          fillColor: actualLayerUpload.colors[0],
           weight: 3,
           opacity: defaultOpacity,
           fillOpacity: defaultOpacity,
@@ -474,26 +447,48 @@ function MapHome1({
         return myStyle
       },
     })
-    layer.options.attribution = `uploaded-${actualLayerUpload.layer.name}`
+    layer.options.attribution = `uploaded_${actualLayerUpload.name}`
     layer.addTo(map)
-    setActualLayerUpload({
-      ...actualLayerUpload,
-      layer: { ...actualLayerUpload.layer, active: true },
-    })
   }
+
+  async function generateSelectedUploadedLayer(type: string) {
+    const layerName =
+      type === 'new'
+        ? actualLayerUpload
+        : selectedLayersUpload[actualLayerNowUpload[0]]
+    if (layerName.dataType === 'GeoJSON') {
+      generateUploadedGeoJSONLayer(layerName)
+    } else if (layerName.dataType === 'GeoTIFF') {
+      generateUploadedGeoTIFFLayer(layerName)
+    } else if (layerName.dataType === 'COG') {
+      console.log('TODO')
+    } else if (layerName.dataType === 'WMS') {
+      layerName.params = {
+        layers: layerName.data,
+        style: layerName.colors,
+      }
+      const layer = await getWMSLayer(layerName, `uploaded_${layerName.name}`)
+      layer.addTo(map)
+    }
+    setLoading(false)
+  }
+
   useEffect(() => {
-    if (Object.keys(actualLayerUpload.layer).length > 0) {
-      if (!actualLayerUpload.layer.active) {
-        if (actualLayerUpload.uploadFormat === 'GeoJSON') {
-          generateUploadedGeoJsonLayer()
-        } else if (actualLayerUpload.uploadFormat === 'GeoTIFF') {
-          generateUploadedGTIFFLayer()
-        }
+    if (actualLayerUpload.data) {
+      if (!actualLayerUpload.active) {
+        generateSelectedUploadedLayer('new')
+        setActualLayerUpload({
+          ...actualLayerUpload,
+          active: true,
+        })
       }
     }
   }, [actualLayerUpload])
 
-  async function generateGeoJsonLayer(layerName, actual, layer) {
+  async function generateGeoJSONLayer(layerName, actual, layer) {
+    const color = layerName.color
+      ? layerName.color
+      : colorScale[Math.floor(Math.random() * 30)]
     await fetch(layerName.url)
       .then((response) => response.json())
       .then((data) => {
@@ -519,7 +514,6 @@ function MapHome1({
             })
           },
           style: function () {
-            const color = colorScale[Math.floor(Math.random() * 30)]
             const myStyle = {
               color,
               fillColor: color,
@@ -555,13 +549,15 @@ function MapHome1({
     return layer
   }
 
-  function removeLayerFromMap(): void {
+  function removeLayerFromMap(actual?): void {
+    const layerToBeChanged = actual || actualLayer
     map.eachLayer(function (layer) {
-      if (actualLayer.includes(layer.options.attribution)) {
+      if (layerToBeChanged.includes(layer.options.attribution)) {
         map.removeLayer(layer)
         if (activePhoto.layerName === layer.options.attribution) {
           setActivePhoto('')
         }
+        setLayerAction('')
         setLayerAction('')
       }
     })
@@ -618,10 +614,14 @@ function MapHome1({
     })
   }
 
-  async function changeMapZoom() {
+  async function changeMapZoom(actual?) {
+    const layerToBeChanged = actual || actualLayer
+    const localSelectedLayers = actual ? selectedLayersUpload : selectedLayers
     map.eachLayer(function (layer: any) {
-      if (actualLayer.includes(layer.options.attribution)) {
-        if (selectedLayers[layer.options.attribution].data_type !== 'Photo') {
+      if (layerToBeChanged.includes(layer.options.attribution)) {
+        if (
+          localSelectedLayers[layer.options.attribution].dataType !== 'Photo'
+        ) {
           // const newBounds = [
           //   [layer.options.limits[3], layer.options.limits[0]],
           //   [layer.options.limits[1], layer.options.limits[2]],
@@ -642,17 +642,31 @@ function MapHome1({
     })
   }
 
-  function changeMapOpacity() {
+  function changeMapOpacity(actual?) {
+    const layerToBeChanged = actual || actualLayer
+    const localSelectedLayers = actual ? selectedLayersUpload : selectedLayers
     map.eachLayer(function (layer: any) {
-      if (actualLayer.includes(layer.options.attribution)) {
+      if (layerToBeChanged.includes(layer.options.attribution)) {
         if (!layer.options.dataType) {
           if (layer.options.opacity) {
-            layer.setOpacity(selectedLayers[layer.options.attribution].opacity)
+            layer.setOpacity(
+              localSelectedLayers[layer.options.attribution].opacity,
+            )
           } else {
             const newStyle = layer.options.style
             newStyle.fillOpacity =
-              selectedLayers[layer.options.attribution].opacity
+              localSelectedLayers[layer.options.attribution].opacity
+            newStyle.opacity =
+              localSelectedLayers[layer.options.attribution].opacity
             layer.setStyle(newStyle)
+            layer.eachLayer(function (subLayer: any) {
+              const newStyle = subLayer.options.style
+              newStyle.fillOpacity =
+                localSelectedLayers[layer.options.attribution].opacity
+              newStyle.opacity =
+                localSelectedLayers[layer.options.attribution].opacity
+              subLayer.setStyle(newStyle)
+            })
           }
         }
       }
@@ -714,6 +728,22 @@ function MapHome1({
     setLoading(false)
   }
 
+  async function changeMapColors(actual?) {
+    const layerToBeChanged = actual || actualLayer
+    map.eachLayer(async (mapLayer: any) => {
+      if (mapLayer.options.attribution === layerToBeChanged[0]) {
+        map.removeLayer(mapLayer)
+      }
+    })
+    if (actual) {
+      await generateSelectedUploadedLayer('old')
+    } else {
+      await generateSelectedLayer()
+    }
+    setLayerAction('')
+    setLoading(false)
+  }
+
   useEffect(() => {
     if (map) {
       map.closePopup()
@@ -724,6 +754,26 @@ function MapHome1({
       zoom: changeMapZoom,
       opacity: changeMapOpacity,
       'marker-changes': changeMapMarkerShow,
+      'update-colors': changeMapColors,
+    }
+    if (actionMap[layerAction]) {
+      setLoading(true)
+      actionMap[layerAction](actualLayerNowUpload)
+      setLayerAction('')
+    }
+  }, [selectedLayersUpload])
+
+  useEffect(() => {
+    if (map) {
+      map.closePopup()
+    }
+    const actionMap = {
+      remove: removeLayerFromMap,
+      add: addLayerIntoMap,
+      zoom: changeMapZoom,
+      opacity: changeMapOpacity,
+      'marker-changes': changeMapMarkerShow,
+      'update-colors': changeMapColors,
     }
     if (actionMap[layerAction]) {
       setLoading(true)
@@ -975,7 +1025,9 @@ function mapPropsAreEqual(prevMap: any, nextMap: any) {
     prevMap.rectangleLimits === nextMap.rectangleLimits &&
     prevMap.actualDate === nextMap.actualDate &&
     prevMap.selectedBaseLayer === nextMap.selectedBaseLayer &&
-    prevMap.actualLayerUpload === nextMap.actualLayerUpload
+    prevMap.actualLayerUpload === nextMap.actualLayerUpload &&
+    prevMap.selectedLayersUpload === nextMap.selectedLayersUpload &&
+    prevMap.layerAction === nextMap.layerAction
   )
 }
 

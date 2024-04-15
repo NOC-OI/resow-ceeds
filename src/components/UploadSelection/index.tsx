@@ -2,19 +2,22 @@
 // import { Info } from 'phosphor-react'
 import styles from '../DataExplorationSelection/DataExplorationSelection.module.css'
 import { LayerSelectionContainer } from '../DataExplorationSelection/styles'
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Button } from '@mui/material'
 import { useUploadDataHandle } from '../../lib/data/uploadDataManagement'
-import { CssTextField } from './styles'
 import parseGeoraster from 'georaster'
-import { allColorScales, colorScaleByName } from '../../lib/map/jsColormaps'
+import { colorScaleByName } from '../../lib/map/jsColormaps'
 import { LayersUploaded } from '../LayersUploaded'
-import { defaultOpacity } from '../../lib/map/utils'
+import { defaultOpacity, reprojectData } from '../../lib/map/utils'
 import chroma from 'chroma-js'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faRotateRight } from '@fortawesome/free-solid-svg-icons'
-import styles1 from './UploadSelection.module.css'
 import { handleClickLegend } from '../DataExplorationTypeOptions'
+import { UploadLayerWMS } from '../UploadLayerWMS'
+import { UploadLayerGeoJSONGeoTIFF } from '../UploadLayerGeoJSONGeoTIFF'
+import * as shapefile from 'shapefile'
+import { useContextHandle } from '../../lib/contextHandle'
+import { UploadLayerCOG } from '../UploadLayerCOG'
+import { UploadLayerCSV } from '../UploadLayerCSV'
+import Papa from 'papaparse'
 
 interface UploadSelectionProps {
   layerAction: any
@@ -37,7 +40,7 @@ export function UploadSelection({
   } = useUploadDataHandle()
   const [error, setError] = useState('')
   const errorTimeoutRef = useRef<number | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
+  const { setLoading } = useContextHandle()
 
   const [colorScale, setColorScale] = useState<string>('Custom')
   const [localUploadInfo, setLocalUploadInfo] = useState<any>({})
@@ -45,49 +48,12 @@ export function UploadSelection({
   const [layers, setLayers] = useState({})
   const [wmsSelectedLayer, setWmsSelectedLayer] = useState(null)
   const [selectedStyle, setSelectedStyle] = useState('')
-
-  function parseCapabilities(xml) {
-    const parser = new DOMParser()
-    const xmlDoc = parser.parseFromString(xml, 'text/xml')
-    const layers = {}
-    const layerNodes = xmlDoc.getElementsByTagName('Layer')
-    for (let i = 0; i < layerNodes.length; i++) {
-      const styles = []
-      const layerNode = layerNodes[i]
-      const layerName = layerNode.getElementsByTagName('Name')[0].textContent
-      const styleNodes = layerNode.getElementsByTagName('Style')
-      for (let j = 0; j < styleNodes.length; j++) {
-        const styleNode = styleNodes[j]
-        const styleName = styleNode.getElementsByTagName('Name')[0].textContent
-        styles.push(styleName)
-      }
-      layers[layerName] = styles
-    }
-    return layers
-  }
-  // Function to fetch WMS capabilities
-  const fetchCapabilities = async () => {
-    setIsLoading(true)
-    if (!localUploadInfo.url) {
-      setError('Please fill the URL field')
-      return
-    }
-    try {
-      const response = await fetch(
-        `${localUploadInfo.url}?service=WMS&request=GetCapabilities`,
-      )
-      const text = await response.text()
-      const layers = parseCapabilities(text)
-      setLayers(layers)
-      setWmsSelectedLayer(Object.keys(layers)[0])
-      setSelectedStyle(layers[Object.keys(layers)[0]][0])
-    } catch (error) {
-      setError(
-        'Error fetching capabilities: please check the URL and try again',
-      )
-    }
-    setIsLoading(false)
-  }
+  const [csvData, setCsvData] = useState<any>({
+    delimiter: ',',
+    header: false,
+    latLngColumnNames: ['lat', 'lng'],
+    latLngColumnNumbers: [0, 1],
+  })
 
   useEffect(() => {
     if (errorTimeoutRef.current !== null) {
@@ -111,6 +77,12 @@ export function UploadSelection({
     if (
       !actualLayerUpload.dataType ||
       Object.keys(localUploadInfo).length === 0
+    ) {
+      return true
+    }
+    if (
+      actualLayerUpload.dataType === 'Shapefile' &&
+      (!localUploadInfo.proj || !localUploadInfo.file)
     ) {
       return true
     }
@@ -164,6 +136,7 @@ export function UploadSelection({
           legend: [cogColors, cogColorsValues],
           dataType: finalActualLayerUpload.dataType,
         })
+        setLoading(false)
       })
     } else if (actualLayerUpload.dataType === 'GeoJSON') {
       const reader = new FileReader()
@@ -178,8 +151,34 @@ export function UploadSelection({
             colors: newActualLayerUpload.colors,
           }
         })
+        setLoading(false)
       }
       reader.readAsText(localUploadInfo.file)
+    } else if (actualLayerUpload.dataType === 'Shapefile') {
+      const reader = new FileReader()
+      reader.onload = async () => {
+        const data = await shapefile.read(reader.result)
+        try {
+          const reprojectedData = reprojectData(
+            data,
+            localUploadInfo.proj,
+            'EPSG:4326',
+          )
+          setActualLayerUpload((actualLayerUpload) => {
+            const newActualLayerUpload = { ...actualLayerUpload }
+            return {
+              dataType: newActualLayerUpload.dataType,
+              name: localUploadInfo.file.name,
+              data: reprojectedData,
+              colors: newActualLayerUpload.colors,
+            }
+          })
+        } catch (e) {
+          setError('Error on the data. Please check the shp and prj files')
+        }
+        setLoading(false)
+      }
+      reader.readAsArrayBuffer(localUploadInfo.file)
     } else if (actualLayerUpload.dataType === 'WMS') {
       const newActualLayerUpload = {
         dataType: actualLayerUpload.dataType,
@@ -204,23 +203,100 @@ export function UploadSelection({
         setLayerLegend,
         'uploaded',
       )
+      setLoading(false)
+    } else if (actualLayerUpload.dataType === 'COG') {
+      const nameOfLayer =
+        localUploadInfo.url.split('/')[
+          localUploadInfo.url.split('/').length - 1
+        ]
+      const newActualLayerUpload = {
+        dataType: actualLayerUpload.dataType,
+        name: nameOfLayer.length > 18 ? nameOfLayer.slice(0, 18) : nameOfLayer,
+        data: localUploadInfo.url,
+        colors: colorScale,
+      }
+      setActualLayerUpload(newActualLayerUpload)
+      const newListLayersUpload = { ...listLayersUpload }
+      newListLayersUpload[newActualLayerUpload.name] = {
+        ...newActualLayerUpload,
+        url: localUploadInfo.url,
+      }
+      handleClickLegend(
+        newListLayersUpload,
+        newActualLayerUpload.name,
+        setLayerLegend,
+        'uploaded',
+      )
+      setLoading(false)
+    } else if (actualLayerUpload.dataType === 'CSV') {
+      try {
+        Papa.parse(localUploadInfo.file, {
+          complete: function (results) {
+            console.log(results)
+            const latColumn = csvData.header
+              ? csvData.latLngColumnNames[0]
+              : csvData.latLngColumnNumbers[0]
+            const lngColumn = csvData.header
+              ? csvData.latLngColumnNames[1]
+              : csvData.latLngColumnNumbers[1]
+            const geojsonFeatures = results.data
+              .filter(
+                (row) => row[latColumn] && row[lngColumn], // Filter out rows without lat/long
+              )
+              .map((row) => ({
+                type: 'Feature',
+                properties: csvData.header ? row : { properties: row },
+                geometry: {
+                  type: 'Point',
+                  coordinates: [+row[lngColumn], +row[latColumn]],
+                },
+              }))
+
+            const geojsonData = {
+              type: 'FeatureCollection',
+              features: geojsonFeatures,
+            }
+            setActualLayerUpload((actualLayerUpload) => {
+              const newActualLayerUpload = { ...actualLayerUpload }
+              return {
+                dataType: newActualLayerUpload.dataType,
+                name: localUploadInfo.file.name,
+                data: geojsonData,
+              }
+            })
+            setLoading(false)
+
+            // Assuming you have a Leaflet map instance called 'map'
+            // const geojsonLayer = L.geoJSON(geojsonData).addTo(map)
+          },
+          delimiter: csvData.delimiter,
+          header: csvData.header,
+        })
+      } catch (error) {
+        setError('Error getting data. Check the format of the file')
+      }
+      setLoading(false)
     }
   }
   const handleSubmit = async () => {
     if (checkInputValue()) {
       setError('Please fill all the fields')
     } else {
+      setLoading(true)
       await handleUploadLayer(localUploadInfo)
     }
   }
 
-  function handleChangeWmsSelectedLayer(value) {
-    setWmsSelectedLayer(value)
-    setSelectedStyle(layers[value][0])
-  }
   const [labelText, setLabelText] = useState('Choose file')
+  const [labelPrjText, setLabelPrjText] = useState('Choose file')
+
   const handleChangeUploadFormat = (event) => {
-    setColorScale('Custom')
+    if (event.target.value === 'COG') {
+      setColorScale('Accent')
+    } else {
+      setColorScale('Custom')
+    }
+    setLocalUploadInfo({})
     setActualLayerUpload({
       dataType: event.target.value,
       colors: ['#0859fc', '#fd1317'],
@@ -242,17 +318,39 @@ export function UploadSelection({
     })
   }
 
-  const handleFileChange = (event) => {
+  const handleFileChange = (event, proj?) => {
     let fileName = event.target.files[0]
       ? event.target.files[0].name
       : 'Choose file'
     if (fileName !== 'Choose file') {
-      setLocalUploadInfo({ file: event.target.files[0] })
+      if (proj) {
+        if (fileName.endsWith('.prj')) {
+          const reader = new FileReader()
+          reader.onload = (event) => {
+            const prjText = event.target.result as string
+            setLocalUploadInfo((localUploadInfo) => {
+              return { ...localUploadInfo, proj: prjText }
+            })
+          }
+          reader.readAsText(event.target.files[0])
+          setError('')
+        } else {
+          setError('Please upload a .prj file')
+        }
+      } else {
+        setLocalUploadInfo((localUploadInfo) => {
+          return { ...localUploadInfo, file: event.target.files[0] }
+        })
+      }
       fileName = fileName.length > 18 ? fileName.slice(0, 18) + '...' : fileName
     } else {
       setLocalUploadInfo({})
     }
-    setLabelText(fileName)
+    if (proj) {
+      setLabelPrjText(fileName)
+    } else {
+      setLabelText(fileName)
+    }
   }
 
   return (
@@ -284,176 +382,43 @@ export function UploadSelection({
                 ))}
               </select>
             </div>
-            {['GeoJSON', 'GeoTIFF'].includes(actualLayerUpload.dataType) ? (
-              <div className="w-full">
-                <div className="flex justify-between w-full items-center">
-                  <p className="pt-4 text-md font-bold text-white mb-2 text-center">
-                    Upload File:
-                  </p>
-                  <div className="flex justify-center gap-6 items-center">
-                    <label
-                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                      htmlFor="file_input"
-                    >
-                      Upload file:
-                    </label>
-                    <input
-                      id="file_input"
-                      type="file"
-                      style={{ display: 'none' }}
-                      onChange={handleFileChange}
-                    />
-                    <label
-                      htmlFor="file_input"
-                      className="block w-full text-sm text-white rounded-lg cursor-pointer bg-black bg-opacity-50 hover:bg-opacity-80"
-                      style={{ padding: '10px', textAlign: 'center' }}
-                    >
-                      {labelText}
-                    </label>
-                  </div>
-                </div>
-                <div className="pt-4 flex justify-between w-full items-center">
-                  <p className="text-md font-bold text-white mb-2 text-center">
-                    {actualLayerUpload.dataType === 'GeoJSON'
-                      ? 'Geometry Colors:'
-                      : 'Color Scale:'}
-                  </p>
-                  <div className="flex flex-col items-center gap-1">
-                    {actualLayerUpload.dataType === 'GeoTIFF' && (
-                      <div className="flex justify-between items-center w-full">
-                        <select
-                          id="fileFormat-select"
-                          value={colorScale}
-                          onChange={(e) => setColorScale(e.target.value)}
-                          className="clickable bg-black border border-black bg-opacity-20 text-white text-sm rounded-lg  block w-max p-2 hover:bg-opacity-80"
-                        >
-                          <option
-                            className="!bg-black !bg-opacity-80 opacity-30 !text-white"
-                            value="Custom"
-                          >
-                            Custom
-                          </option>
-                          {allColorScales.map((allColorScale, index) => (
-                            <option
-                              className="!bg-black !bg-opacity-80 opacity-30 !text-white"
-                              value={allColorScale}
-                              key={index}
-                            >
-                              {allColorScale}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    )}
-                    {colorScale === 'Custom' && (
-                      <div className="flex justify-end items-center gap-1">
-                        <input
-                          type="color"
-                          className="p-1 block bg-black  bg-opacity-30 cursor-pointer rounded-lg disabled:opacity-50 disabled:pointer-events-none"
-                          id="hs-color-input"
-                          value={actualLayerUpload.colors[0]}
-                          onChange={(e) => handleColorChange(e, 0)}
-                          title="Choose your color"
-                        />
-                        {actualLayerUpload.dataType === 'GeoTIFF' && (
-                          <input
-                            type="color"
-                            className="p-1 block bg-black bg-opacity-30  cursor-pointer rounded-lg disabled:opacity-50 disabled:pointer-events-none"
-                            id="hs-color-input"
-                            value={actualLayerUpload.colors[1]}
-                            onChange={(e) => handleColorChange(e, 1)}
-                            title="Choose your color"
-                          />
-                        )}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
+            {['GeoJSON', 'GeoTIFF', 'Shapefile'].includes(
+              actualLayerUpload.dataType,
+            ) ? (
+              <UploadLayerGeoJSONGeoTIFF
+                handleFileChange={handleFileChange}
+                labelText={labelText}
+                labelPrjText={labelPrjText}
+                actualLayerUpload={actualLayerUpload}
+                colorScale={colorScale}
+                setColorScale={setColorScale}
+                handleColorChange={handleColorChange}
+              />
             ) : actualLayerUpload.dataType === 'WMS' ? (
-              <div className="flex flex-col items-center gap-3 w-full">
-                <div className="flex justify-center w-full items-center gap-2">
-                  <CssTextField
-                    id="wms-url"
-                    label="Url"
-                    type="text"
-                    name="url-wms"
-                    variant="standard"
-                    className="!w-full"
-                    InputLabelProps={{
-                      style: {
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        overflow: 'hidden',
-                        width: '100%',
-                        color: 'white',
-                        borderWidth: '10px',
-                        borderColor: 'white !important',
-                      },
-                    }}
-                    onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      setLocalUploadInfo({ url: e.target.value })
-                    }
-                    InputProps={{
-                      style: {
-                        color: 'white',
-                      },
-                    }}
-                  />
-                  <div
-                    onClick={() => fetchCapabilities()}
-                    className="!text-white !bg-black !rounded-lg opacity-50 hover:!opacity-70 p-2 cursor-pointer"
-                    title="See available layers"
-                  >
-                    <FontAwesomeIcon
-                      icon={faRotateRight}
-                      className={isLoading ? `${styles1.rotate}` : ''}
-                    />
-                  </div>
-                </div>
-                {Object.keys(layers).length > 0 && (
-                  <div className="flex flex-col items-center gap-3 w-full">
-                    <div className="flex justify-between items-center w-full">
-                      <select
-                        id="fileFormat-select"
-                        value={wmsSelectedLayer}
-                        onChange={(e) =>
-                          handleChangeWmsSelectedLayer(e.target.value)
-                        }
-                        className="clickable bg-black border border-black bg-opacity-20 text-white text-sm rounded-lg  block w-full p-2 hover:bg-opacity-80"
-                      >
-                        {Object.keys(layers).map((layer, index) => (
-                          <option
-                            className="!bg-black !bg-opacity-80 opacity-30 !text-white"
-                            value={layer}
-                            key={index}
-                          >
-                            {layer}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className="flex justify-between items-center w-full">
-                      <select
-                        id="fileFormat-select"
-                        value={selectedStyle}
-                        onChange={(e) => setSelectedStyle(e.target.value)}
-                        className="clickable bg-black border border-black bg-opacity-20 text-white text-sm rounded-lg  block w-full p-2 hover:bg-opacity-80"
-                      >
-                        {layers[wmsSelectedLayer].map((style, index) => (
-                          <option
-                            className="!bg-black !bg-opacity-80 opacity-30 !text-white"
-                            value={style}
-                            key={index}
-                          >
-                            {style}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-                )}
-              </div>
+              <UploadLayerWMS
+                localUploadInfo={localUploadInfo}
+                setLocalUploadInfo={setLocalUploadInfo}
+                selectedStyle={selectedStyle}
+                setSelectedStyle={setSelectedStyle}
+                layers={layers}
+                setLayers={setLayers}
+                wmsSelectedLayer={wmsSelectedLayer}
+                setWmsSelectedLayer={setWmsSelectedLayer}
+                setError={setError}
+              />
+            ) : actualLayerUpload.dataType === 'COG' ? (
+              <UploadLayerCOG
+                setLocalUploadInfo={setLocalUploadInfo}
+                colorScale={colorScale}
+                setColorScale={setColorScale}
+              />
+            ) : actualLayerUpload.dataType === 'CSV' ? (
+              <UploadLayerCSV
+                handleFileChange={handleFileChange}
+                labelText={labelText}
+                csvData={csvData}
+                setCsvData={setCsvData}
+              />
             ) : (
               <></>
             )}

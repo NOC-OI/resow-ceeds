@@ -128,6 +128,116 @@
       }
     }
   },
+  "Carbon Stocks": {
+    "icon": "",
+    "layerNames": {
+      "Dry Bulk Density": {
+        "url": [
+          "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/dry_bulk_density/channel_island_DBD.tif",
+          "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/dry_bulk_density/NI_fjord.tif",
+          "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/dry_bulk_density/outer_shelf.tif",
+          "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/dry_bulk_density/scottish_fjords.tif"
+        ],
+        "dataType": "COG",
+        "content": "Habitat suitability model for Zostera marina suitability (0-1) for Orkney Isles created using ensemble of GLM, GAM, RF, BRT, MARS, MaxENT methods. Presence data compiled from range of sources (see Bertelli et al., 2023) with environmental data as predictor variables from EMODNet and Copernicus. These variables include - Light (PAR) availability at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/), units Mol.phot.m-2.d-1, resolution ~0.3km2 , 1.1 x 0.7 km, 0.003°/10 arc seconds, 01 Jan2005 – 31 Dec 2009; Bathymetry (EMODnet Bathymetry and topography, http://www.emodnet.eu/emodnet-maps-catalogue) in metres below chart datum, resolution ~0.115km, 0.001°x 3.75 arc seconds, ~70m x 116m; January Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc) resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Salinity (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu, NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km, 2019-present hourly-Daily mean; Wave energy at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/) in N.m2.s-1, resolution ~0.3km,~342x195m; Energy at seabed due to currents (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/, Data from EU SeaMap (2016), Energy in the Celtic Sea and North Sea) in N.m2.s-1, resolution ~0.3km, ~342x195m; Slope, Calculated from bathymetry data with GIS software.",
+        "colors": "YlGn",
+        "scale": [
+          0,
+          1
+        ],
+        "protected": false,
+        "threeD": false
+      },
+      "IC Content": {
+        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/orkney/orkney_log_hsm_cog.tif",
+        "dataType": "COG",
+        "content": "Habitat suitability model for Zostera marina suitability (0-1) for Orkney Isles created using ensemble of GLM, GAM, RF, BRT, MARS, MaxENT methods. Presence data compiled from range of sources (see Bertelli et al., 2023) with environmental data as predictor variables from EMODNet and Copernicus. These variables include - Light (PAR) availability at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/), units Mol.phot.m-2.d-1, resolution ~0.3km2 , 1.1 x 0.7 km, 0.003°/10 arc seconds, 01 Jan2005 – 31 Dec 2009; Bathymetry (EMODnet Bathymetry and topography, http://www.emodnet.eu/emodnet-maps-catalogue) in metres below chart datum, resolution ~0.115km, 0.001°x 3.75 arc seconds, ~70m x 116m; January Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc) resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Salinity (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu, NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km, 2019-present hourly-Daily mean; Wave energy at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/) in N.m2.s-1, resolution ~0.3km,~342x195m; Energy at seabed due to currents (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/, Data from EU SeaMap (2016), Energy in the Celtic Sea and North Sea) in N.m2.s-1, resolution ~0.3km, ~342x195m; Slope, Calculated from bathymetry data with GIS software.",
+        "colors": "YlGn",
+        "scale": [
+          0,
+          1
+        ],
+        "protected": false,
+        "threeD": false
+      },
+      "IC Density": {
+        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/orkney/orkney_log_hsm_cog.tif",
+        "dataType": "COG",
+        "content": "Habitat suitability model for Zostera marina suitability (0-1) for Orkney Isles created using ensemble of GLM, GAM, RF, BRT, MARS, MaxENT methods. Presence data compiled from range of sources (see Bertelli et al., 2023) with environmental data as predictor variables from EMODNet and Copernicus. These variables include - Light (PAR) availability at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/), units Mol.phot.m-2.d-1, resolution ~0.3km2 , 1.1 x 0.7 km, 0.003°/10 arc seconds, 01 Jan2005 – 31 Dec 2009; Bathymetry (EMODnet Bathymetry and topography, http://www.emodnet.eu/emodnet-maps-catalogue) in metres below chart datum, resolution ~0.115km, 0.001°x 3.75 arc seconds, ~70m x 116m; January Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc) resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Salinity (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu, NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km, 2019-present hourly-Daily mean; Wave energy at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/) in N.m2.s-1, resolution ~0.3km,~342x195m; Energy at seabed due to currents (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/, Data from EU SeaMap (2016), Energy in the Celtic Sea and North Sea) in N.m2.s-1, resolution ~0.3km, ~342x195m; Slope, Calculated from bathymetry data with GIS software.",
+        "colors": "YlGn",
+        "scale": [
+          0,
+          1
+        ],
+        "protected": false,
+        "threeD": false
+      },
+      "OC Content": {
+        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/orkney/orkney_log_hsm_cog.tif",
+        "dataType": "COG",
+        "content": "Habitat suitability model for Zostera marina suitability (0-1) for Orkney Isles created using ensemble of GLM, GAM, RF, BRT, MARS, MaxENT methods. Presence data compiled from range of sources (see Bertelli et al., 2023) with environmental data as predictor variables from EMODNet and Copernicus. These variables include - Light (PAR) availability at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/), units Mol.phot.m-2.d-1, resolution ~0.3km2 , 1.1 x 0.7 km, 0.003°/10 arc seconds, 01 Jan2005 – 31 Dec 2009; Bathymetry (EMODnet Bathymetry and topography, http://www.emodnet.eu/emodnet-maps-catalogue) in metres below chart datum, resolution ~0.115km, 0.001°x 3.75 arc seconds, ~70m x 116m; January Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc) resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Salinity (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu, NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km, 2019-present hourly-Daily mean; Wave energy at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/) in N.m2.s-1, resolution ~0.3km,~342x195m; Energy at seabed due to currents (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/, Data from EU SeaMap (2016), Energy in the Celtic Sea and North Sea) in N.m2.s-1, resolution ~0.3km, ~342x195m; Slope, Calculated from bathymetry data with GIS software.",
+        "colors": "YlGn",
+        "scale": [
+          0,
+          1
+        ],
+        "protected": false,
+        "threeD": false
+      },
+      "OC Density": {
+        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/orkney/orkney_log_hsm_cog.tif",
+        "dataType": "COG",
+        "content": "Habitat suitability model for Zostera marina suitability (0-1) for Orkney Isles created using ensemble of GLM, GAM, RF, BRT, MARS, MaxENT methods. Presence data compiled from range of sources (see Bertelli et al., 2023) with environmental data as predictor variables from EMODNet and Copernicus. These variables include - Light (PAR) availability at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/), units Mol.phot.m-2.d-1, resolution ~0.3km2 , 1.1 x 0.7 km, 0.003°/10 arc seconds, 01 Jan2005 – 31 Dec 2009; Bathymetry (EMODnet Bathymetry and topography, http://www.emodnet.eu/emodnet-maps-catalogue) in metres below chart datum, resolution ~0.115km, 0.001°x 3.75 arc seconds, ~70m x 116m; January Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc) resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Salinity (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu, NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km, 2019-present hourly-Daily mean; Wave energy at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/) in N.m2.s-1, resolution ~0.3km,~342x195m; Energy at seabed due to currents (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/, Data from EU SeaMap (2016), Energy in the Celtic Sea and North Sea) in N.m2.s-1, resolution ~0.3km, ~342x195m; Slope, Calculated from bathymetry data with GIS software.",
+        "colors": "YlGn",
+        "scale": [
+          0,
+          1
+        ],
+        "protected": false,
+        "threeD": false
+      },
+      "Outlines": {
+        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/orkney/orkney_log_hsm_cog.tif",
+        "dataType": "COG",
+        "content": "Habitat suitability model for Zostera marina suitability (0-1) for Orkney Isles created using ensemble of GLM, GAM, RF, BRT, MARS, MaxENT methods. Presence data compiled from range of sources (see Bertelli et al., 2023) with environmental data as predictor variables from EMODNet and Copernicus. These variables include - Light (PAR) availability at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/), units Mol.phot.m-2.d-1, resolution ~0.3km2 , 1.1 x 0.7 km, 0.003°/10 arc seconds, 01 Jan2005 – 31 Dec 2009; Bathymetry (EMODnet Bathymetry and topography, http://www.emodnet.eu/emodnet-maps-catalogue) in metres below chart datum, resolution ~0.115km, 0.001°x 3.75 arc seconds, ~70m x 116m; January Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc) resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Salinity (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu, NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km, 2019-present hourly-Daily mean; Wave energy at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/) in N.m2.s-1, resolution ~0.3km,~342x195m; Energy at seabed due to currents (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/, Data from EU SeaMap (2016), Energy in the Celtic Sea and North Sea) in N.m2.s-1, resolution ~0.3km, ~342x195m; Slope, Calculated from bathymetry data with GIS software.",
+        "colors": "YlGn",
+        "scale": [
+          0,
+          1
+        ],
+        "protected": false,
+        "threeD": false
+      },
+      "Porosity": {
+        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/orkney/orkney_log_hsm_cog.tif",
+        "dataType": "COG",
+        "content": "Habitat suitability model for Zostera marina suitability (0-1) for Orkney Isles created using ensemble of GLM, GAM, RF, BRT, MARS, MaxENT methods. Presence data compiled from range of sources (see Bertelli et al., 2023) with environmental data as predictor variables from EMODNet and Copernicus. These variables include - Light (PAR) availability at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/), units Mol.phot.m-2.d-1, resolution ~0.3km2 , 1.1 x 0.7 km, 0.003°/10 arc seconds, 01 Jan2005 – 31 Dec 2009; Bathymetry (EMODnet Bathymetry and topography, http://www.emodnet.eu/emodnet-maps-catalogue) in metres below chart datum, resolution ~0.115km, 0.001°x 3.75 arc seconds, ~70m x 116m; January Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc) resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Salinity (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu, NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km, 2019-present hourly-Daily mean; Wave energy at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/) in N.m2.s-1, resolution ~0.3km,~342x195m; Energy at seabed due to currents (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/, Data from EU SeaMap (2016), Energy in the Celtic Sea and North Sea) in N.m2.s-1, resolution ~0.3km, ~342x195m; Slope, Calculated from bathymetry data with GIS software.",
+        "colors": "YlGn",
+        "scale": [
+          0,
+          1
+        ],
+        "protected": false,
+        "threeD": false
+      }
+    }
+  },
+  "Land Cover": {
+    "icon": "",
+    "layerNames": {
+      "IC Content": {
+        "url": "https://catalogue.ceh.ac.uk/maps/2ad19a50-b940-469e-a40d-17818b77020c",
+        "dataType": "wms",
+        "content": "Land Cover Map 2021 (LCM2021) is a suite of geospatial land cover datasets (raster and polygon) describing the UK land surface in 2021. These were produced at the UK Centre for Ecology & Hydrology by classifying satellite images from 2021.\n LCM2021 includes four geospatial datasets each for Great Britain and Northern Ireland:\n - 10 m Classified Pixel dataset, classified to create a single mosaic of national cover \n - Land Parcel datasets which are the result of intersecting the 10 m Classified Pixel dataset with the UKCEH Land Parcel Spatial Framework to generate land parcel attributes \n - 25 m Pixel Rasterised Land Parcel datasets: the result of rasterising the Land Parcel dataset into 25 m pixels \n - 1 km summary raster products, summarising dominant land cover class and percentage coverage of each land cover class \n LCM2021 is the ninth UK land cover map produced by UKCEH. Previous versions are LCM1990, 2000, 2007, 2015, 2017, 2018, 2019 and 2020.",
+        "protected": false,
+        "params": {
+          "layers": "WMS"
+        },
+        "download": "https://catalogue.ceh.ac.uk/documents/017313c6-954b-4343-8784-3d61aa6e44da",
+        "download_area": false
+      }
+    }
+  },
   "Marine Protected Areas": {
     "icon": "",
     "layerNames": {

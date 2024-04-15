@@ -131,7 +131,6 @@ export async function handleClickLegend(
         scale = [tifData.stats[0].min, tifData.stats[0].max]
       }
     } else {
-      console.log(selectedLayers)
       scale = selectedLayers[`${content}_${subLayer}`].scale
     }
 
@@ -249,12 +248,27 @@ export async function addMapLayer(
   setLayerAction('add')
   const newSelectedLayer = layerInfo.dataInfo
   if (newSelectedLayer.dataType === 'COG') {
-    const getCOGLayer = new GetCOGLayer(newSelectedLayer, undefined, true)
-    await getCOGLayer.getStats().then((stats) => {
-      const minValue = stats.b1.percentile_2
-      const maxValue = stats.b1.percentile_98
-      newSelectedLayer.scale = [minValue, maxValue]
-    })
+    if (typeof newSelectedLayer.url === 'string') {
+      const getCOGLayer = new GetCOGLayer(newSelectedLayer, undefined, true)
+      await getCOGLayer.getStats().then((stats) => {
+        const minValue = stats.b1.percentile_2
+        const maxValue = stats.b1.percentile_98
+        newSelectedLayer.scale = [minValue, maxValue]
+      })
+    } else {
+      const minValue = []
+      const maxValue = []
+      newSelectedLayer.url.forEach(async (individualUrl: any) => {
+        const individualLayer = { ...newSelectedLayer }
+        individualLayer.url = individualUrl
+        const getCOGLayer = new GetCOGLayer(individualLayer, undefined, true)
+        await getCOGLayer.getStats().then((stats) => {
+          minValue.push(stats.b1.percentile_2)
+          maxValue.push(stats.b1.percentile_98)
+        })
+        newSelectedLayer.scale = [Math.min(...minValue), Math.max(...maxValue)]
+      })
+    }
   } else if (newSelectedLayer.dataType === 'GeoTIFF') {
     const tifData = new GetTifLayer(newSelectedLayer.url)
     await tifData.loadGeo()

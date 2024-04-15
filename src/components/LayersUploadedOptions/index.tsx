@@ -72,7 +72,9 @@ export function LayersUploadedOptions({
   async function handleChangeMapLayerUpload(e: any, layerClass: string) {
     const layerInfo = listLayersUpload[layerClass]
     if (e.target.checked) {
-      if (!['Photo', 'GeoJSON'].includes(layerInfo.dataType)) {
+      if (
+        !['Photo', 'GeoJSON', 'CSV', 'Shapefile'].includes(layerInfo.dataType)
+      ) {
         handleLocalClickLegend(layerClass, layerInfo, 'uploaded')
       }
       await addMapLayerUpload(layerInfo, layerClass)
@@ -110,7 +112,7 @@ export function LayersUploadedOptions({
           `uploaded_${layerClass}`,
         ) && (
           <div id="layer-edit">
-            {!['Photo', 'GeoJSON'].includes(
+            {!['Photo', 'GeoJSON', 'CSV', 'Shapefile'].includes(
               selectedLayersUpload[`uploaded_${layerClass}`].dataType,
             ) ? (
               <FontAwesomeIcon
@@ -142,24 +144,28 @@ export function LayersUploadedOptions({
                 // className={getPolyline ? 'active' : ''}
               />
             ) : null}
-            <FontAwesomeIcon
-              icon={faMagnifyingGlass}
-              title="Zoom to the layer"
-              onClick={() =>
-                handleClickZoom(
-                  'uploaded',
-                  listLayersUpload,
-                  selectedLayersUpload[`uploaded_${layerClass}`].name,
-                  setActualLayerNowUpload,
-                  setOpacityIsClicked,
-                  opacityIsClicked,
-                  setLayerAction,
-                  selectedLayersUpload,
-                  setSelectedLayersUpload,
-                )
-              }
-            />
-            {!['Photo'].includes(
+            {!['CSV'].includes(
+              selectedLayersUpload[`uploaded_${layerClass}`].dataType,
+            ) && (
+              <FontAwesomeIcon
+                icon={faMagnifyingGlass}
+                title="Zoom to the layer"
+                onClick={() =>
+                  handleClickZoom(
+                    'uploaded',
+                    listLayersUpload,
+                    selectedLayersUpload[`uploaded_${layerClass}`].name,
+                    setActualLayerNowUpload,
+                    setOpacityIsClicked,
+                    opacityIsClicked,
+                    setLayerAction,
+                    selectedLayersUpload,
+                    setSelectedLayersUpload,
+                  )
+                }
+              />
+            )}
+            {!['Photo', 'CSV'].includes(
               selectedLayersUpload[`uploaded_${layerClass}`].dataType,
             ) && (
               <FontAwesomeIcon

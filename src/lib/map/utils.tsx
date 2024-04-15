@@ -91,6 +91,76 @@ export function reorderPhotos(
   return newList
 }
 
+export function reprojectGeometry(
+  geometry,
+  sourceProjection,
+  targetProjection,
+) {
+  if (geometry.type === 'Point') {
+    return {
+      type: 'Point',
+      coordinates: proj4(
+        sourceProjection,
+        targetProjection,
+        geometry.coordinates,
+      ),
+    }
+  } else if (geometry.type === 'LineString') {
+    return {
+      type: 'LineString',
+      coordinates: geometry.coordinates.map((coord) =>
+        proj4(sourceProjection, targetProjection, coord),
+      ),
+    }
+  } else if (geometry.type === 'Polygon') {
+    return {
+      type: 'Polygon',
+      coordinates: geometry.coordinates.map((ring) =>
+        ring.map((coord) => proj4(sourceProjection, targetProjection, coord)),
+      ),
+    }
+  } else if (geometry.type === 'MultiPoint') {
+    return {
+      type: 'MultiPoint',
+      coordinates: geometry.coordinates.map((coord) =>
+        proj4(sourceProjection, targetProjection, coord),
+      ),
+    }
+  } else if (geometry.type === 'MultiLineString') {
+    return {
+      type: 'MultiLineString',
+      coordinates: geometry.coordinates.map((line) =>
+        line.map((coord) => proj4(sourceProjection, targetProjection, coord)),
+      ),
+    }
+  } else if (geometry.type === 'MultiPolygon') {
+    return {
+      type: 'MultiPolygon',
+      coordinates: geometry.coordinates.map((polygon) =>
+        polygon.map((ring) =>
+          ring.map((coord) => proj4(sourceProjection, targetProjection, coord)),
+        ),
+      ),
+    }
+  } else {
+    return geometry
+  }
+}
+
+export function reprojectData(geojsonData, sourceProjection, targetProjection) {
+  return {
+    ...geojsonData,
+    features: geojsonData.features.map((feature) => ({
+      ...feature,
+      geometry: reprojectGeometry(
+        feature.geometry,
+        sourceProjection,
+        targetProjection,
+      ),
+    })),
+  }
+}
+
 export function createColor(colorScale: any, rgb: any = false, alpha: any = 1) {
   let color: any
   if (rgb) {

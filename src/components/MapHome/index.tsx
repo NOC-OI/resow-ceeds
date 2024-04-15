@@ -272,21 +272,44 @@ function MapHome1({
         layer = await getWMSLayer(layerName, actual)
         bounds = defaultWMSBounds
       } else if (layerName.dataType === 'COG') {
-        const getCOGLayer = new GetCOGLayer(layerName, actual, true)
-        await getCOGLayer.getTile().then(function () {
-          if (getCOGLayer.error) {
-            setFlashMessage({
-              messageType: 'error',
-              content: getCOGLayer.error,
-            })
-          }
-          layer = getCOGLayer.layer
-          // bounds = [
-          //   [getCOGLayer.bounds[3], getCOGLayer.bounds[0]],
-          //   [getCOGLayer.bounds[1], getCOGLayer.bounds[2]],
-          // ]
-          bounds = defaultWMSBounds
-        })
+        if (typeof layerName.url === 'string') {
+          const getCOGLayer = new GetCOGLayer(layerName, actual, true)
+          await getCOGLayer.getTile().then(function () {
+            if (getCOGLayer.error) {
+              setFlashMessage({
+                messageType: 'error',
+                content: getCOGLayer.error,
+              })
+            }
+            layer = getCOGLayer.layer
+            // bounds = [
+            //   [getCOGLayer.bounds[3], getCOGLayer.bounds[0]],
+            //   [getCOGLayer.bounds[1], getCOGLayer.bounds[2]],
+            // ]
+            bounds = defaultWMSBounds
+          })
+        } else {
+          layer = []
+          await layerName.url.forEach(async (individualUrl) => {
+            const newLayerName = { ...layerName }
+            newLayerName.url = individualUrl
+            const getCOGLayer = new GetCOGLayer(newLayerName, actual, true)
+            await getCOGLayer.getTile()
+            if (getCOGLayer.error) {
+              setFlashMessage({
+                messageType: 'error',
+                content: getCOGLayer.error,
+              })
+            }
+            layer.push(getCOGLayer.layer)
+            // bounds = [
+            //   [getCOGLayer.bounds[3], getCOGLayer.bounds[0]],
+            //   [getCOGLayer.bounds[1], getCOGLayer.bounds[2]],
+            // ]
+            bounds = defaultWMSBounds
+          })
+        }
+        console.log(layer, 'layer')
       } else if (layerName.dataType === 'MBTiles') {
         const getMBTilesLayer = new GetMBTiles(layerName, actual)
         await getMBTilesLayer.getLayer().then(async function () {
@@ -387,9 +410,18 @@ function MapHome1({
         layer = createTurfLayer(actual, turfConvex)
       }
       if (layerName.dataType !== 'Photo') {
-        layer.options.attribution = actual
-        map.addLayer(layer, true)
-        layer && bringLayerToFront(layer)
+        console.log(layer)
+        if (layer.length > 0) {
+          layer.forEach((individualLayer) => {
+            individualLayer.options.attribution = actual
+            map.addLayer(individualLayer, true)
+            individualLayer && bringLayerToFront(individualLayer)
+          })
+        } else {
+          layer.options.attribution = actual
+          map.addLayer(layer, true)
+          layer && bringLayerToFront(layer)
+        }
         if (layerName.dataType === 'COG' && layerName.get_value) {
           if (selectedLayers[actual]) {
             addGeoblazeValue(layerName, actual, true, null)
@@ -419,7 +451,29 @@ function MapHome1({
     })
   }
 
+  async function generateUploadedCOGLayer(actualLayerUpload) {
+    actualLayerUpload.url = actualLayerUpload.data
+    const getCOGLayer = new GetCOGLayer(
+      actualLayerUpload,
+      `uploaded_${actualLayerUpload.name}`,
+      2,
+      'COG',
+      actualLayerUpload.colors,
+    )
+    await getCOGLayer.getTile().then(function () {
+      if (getCOGLayer.error) {
+        setFlashMessage({
+          messageType: 'error',
+          content: getCOGLayer.error,
+        })
+      }
+      const layer = getCOGLayer.layer
+      layer.addTo(map)
+    })
+  }
+
   async function generateUploadedGeoJSONLayer(actualLayerUpload) {
+    console.log('actualLayerUpload', actualLayerUpload)
     const layer = L.geoJSON(actualLayerUpload.data, {
       pointToLayer: function (feature, latlng) {
         return L.marker(latlng, {
@@ -456,12 +510,12 @@ function MapHome1({
       type === 'new'
         ? actualLayerUpload
         : selectedLayersUpload[actualLayerNowUpload[0]]
-    if (layerName.dataType === 'GeoJSON') {
+    if (['GeoJSON', 'Shapefile', 'CSV'].includes(layerName.dataType)) {
       generateUploadedGeoJSONLayer(layerName)
     } else if (layerName.dataType === 'GeoTIFF') {
       generateUploadedGeoTIFFLayer(layerName)
     } else if (layerName.dataType === 'COG') {
-      console.log('TODO')
+      generateUploadedCOGLayer(layerName)
     } else if (layerName.dataType === 'WMS') {
       layerName.params = {
         layers: layerName.data,
@@ -654,18 +708,22 @@ function MapHome1({
             )
           } else {
             const newStyle = layer.options.style
-            newStyle.fillOpacity =
-              localSelectedLayers[layer.options.attribution].opacity
-            newStyle.opacity =
-              localSelectedLayers[layer.options.attribution].opacity
-            layer.setStyle(newStyle)
-            layer.eachLayer(function (subLayer: any) {
-              const newStyle = subLayer.options.style
+            if (newStyle) {
               newStyle.fillOpacity =
                 localSelectedLayers[layer.options.attribution].opacity
               newStyle.opacity =
                 localSelectedLayers[layer.options.attribution].opacity
-              subLayer.setStyle(newStyle)
+              layer.setStyle(newStyle)
+            }
+            layer.eachLayer(function (subLayer: any) {
+              const newStyle = subLayer.options.style
+              if (newStyle) {
+                newStyle.fillOpacity =
+                  localSelectedLayers[layer.options.attribution].opacity
+                newStyle.opacity =
+                  localSelectedLayers[layer.options.attribution].opacity
+                subLayer.setStyle(newStyle)
+              }
             })
           }
         }

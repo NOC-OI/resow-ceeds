@@ -22,7 +22,7 @@ export default defineConfig(({ command, mode }) => {
         env.YOUR_STRING_VARIABLE,
       ),
       'process.env.APP_USE_AVT': env.APP_USE_AVT,
-      global: {},
+      // global: {},
     },
     build: {
       chunkSizeWarningLimit: 3800,

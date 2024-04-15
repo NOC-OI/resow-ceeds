@@ -192,12 +192,11 @@ function ThreeDMap1({
 
   async function generateAddCOGLayer(layer, layers, layerName, actual, alpha) {
     const getCOGLayer = new GetCOGLayer(layerName, actual, 3)
-    await getCOGLayer.getTile().then(function () {
-      layer = getCOGLayer.layer
-      layer.alpha = alpha
-      layers.add(layer)
-      correctBaseWMSOrder(layers)
-    })
+    layer = await getCOGLayer.getTile()
+    layer.alpha = alpha
+    layers.add(layer)
+    correctBaseWMSOrder(layers)
+
     if (actual.split('_')[0] === 'Bathymetry') {
       if (cogLayer) {
         if (

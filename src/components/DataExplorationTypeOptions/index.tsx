@@ -86,12 +86,42 @@ export async function handleClickLegend(
   } else if (subLayers[subLayer].dataType === 'COG') {
     let scale
     if (!selectedLayers) {
-      const getCOGLayer = new GetCOGLayer(subLayers[subLayer], subLayer, true)
-      await getCOGLayer.getStats().then((stats) => {
-        const minValue = stats.b1.percentile_2.toFixed(4)
-        const maxValue = stats.b1.percentile_98.toFixed(4)
-        scale = [minValue, maxValue]
-      })
+      console.log(subLayers[subLayer].url)
+      if (typeof subLayers[subLayer].url === 'string') {
+        const getCOGLayer = new GetCOGLayer(subLayers[subLayer], subLayer, true)
+        await getCOGLayer.getStats().then((stats) => {
+          const minValue = stats.b1.percentile_2.toFixed(4)
+          const maxValue = stats.b1.percentile_98.toFixed(4)
+          scale = [minValue, maxValue]
+        })
+      } else {
+        let minValue
+        let maxValue
+        scale = await Promise.all(
+          await subLayers[subLayer].url.map(async (newUrl) => {
+            const newSubLayer = { ...subLayers[subLayer] }
+            newSubLayer.url = newUrl
+            const getCOGLayer = new GetCOGLayer(newSubLayer, subLayer, true)
+            const stats = await getCOGLayer.getStats()
+            if (minValue) {
+              if (minValue > stats.b1.percentile_2.toFixed(4)) {
+                minValue = stats.b1.percentile_2.toFixed(4)
+              }
+            } else {
+              minValue = stats.b1.percentile_2.toFixed(4)
+            }
+            if (maxValue) {
+              if (maxValue < stats.b1.percentile_98.toFixed(4)) {
+                maxValue = stats.b1.percentile_98.toFixed(4)
+              }
+            } else {
+              maxValue = stats.b1.percentile_98.toFixed(4)
+            }
+            return [minValue, maxValue]
+          }),
+        )
+        scale = scale[0]
+      }
     } else {
       scale = selectedLayers[`${content}_${subLayer}`].scale
     }

@@ -227,7 +227,7 @@
     "layerNames": {
       "IC Content": {
         "url": "https://catalogue.ceh.ac.uk/maps/2ad19a50-b940-469e-a40d-17818b77020c",
-        "dataType": "wms",
+        "dataType": "WMS",
         "content": "Land Cover Map 2021 (LCM2021) is a suite of geospatial land cover datasets (raster and polygon) describing the UK land surface in 2021. These were produced at the UK Centre for Ecology & Hydrology by classifying satellite images from 2021.\n LCM2021 includes four geospatial datasets each for Great Britain and Northern Ireland:\n - 10 m Classified Pixel dataset, classified to create a single mosaic of national cover \n - Land Parcel datasets which are the result of intersecting the 10 m Classified Pixel dataset with the UKCEH Land Parcel Spatial Framework to generate land parcel attributes \n - 25 m Pixel Rasterised Land Parcel datasets: the result of rasterising the Land Parcel dataset into 25 m pixels \n - 1 km summary raster products, summarising dominant land cover class and percentage coverage of each land cover class \n LCM2021 is the ninth UK land cover map produced by UKCEH. Previous versions are LCM1990, 2000, 2007, 2015, 2017, 2018, 2019 and 2020.",
         "protected": false,
         "params": {
@@ -243,7 +243,7 @@
     "layerNames": {
       "Special Areas of Conservation": {
         "url": "https://mpa-ows.jncc.gov.uk/mpa_mapper/wms",
-        "dataType": "wms",
+        "dataType": "WMS",
         "content": "This resource contains boundary, site and feature information for Special Areas of Conservation (SACs) with marine components in UK waters. Special Areas of Conservation (SACs) with 'marine components' protect habitat and/or species associated with the marine environment.\n Source: https://hub.jncc.gov.uk/assets/598a60db-9323-4781-b5a8-dcf0ca3b29f9",
         "protected": false,
         "params": {
@@ -254,7 +254,7 @@
       },
       "Marine Conservation Zones": {
         "url": "https://mpa-ows.jncc.gov.uk/mpa_mapper/wms",
-        "dataType": "wms",
+        "dataType": "WMS",
         "content": "This resource relates to a Web Map Service (WMS) layer showing Marine Conservation Zone (MCZ) boundaries in UK waters. It was last updated in May 2019. JNCC have compiled this dataset using data from JNCC, Natural England, Northern Ireland Environment Agency, Natural Resources Wales and the United Kingdom Hydrographic Office. Marine Conservation Zones are designated under the Marine and Coastal Access Act (2009) or Marine Act (Northern Ireland) 2013. They protect nationally important marine wildlife, habitats, geology and geomorphology.\n Source: https://hub.jncc.gov.uk/assets/e72853f4-08b9-4fc6-b677-e3476fdd786c",
         "protected": false,
         "params": {
@@ -302,7 +302,7 @@
     "layerNames": {
       "Seabed Habitats": {
         "url": "https://ows.emodnet-seabedhabitats.eu/geoserver/emodnet_view/wms",
-        "dataType": "wms",
+        "dataType": "WMS",
         "content": "Output of the 2021 EUSeaMap broad-scale predictive model, produced by EMODnet Seabed Habitats. \nThe extent of the mapped area includes the Mediterranean Sea, Black Sea, Baltic Sea, and areas of the North Eastern Atlantic extending from the Canary Islands in the south to the Barents Sea in the north. \nThe map was produced using a 'top-down' modelling approach using classified habitat descriptors to determine a final output habitat. \nHabitat descriptors differ per region but include: \n- Biological zone \n- Energy class \n- Oxygen regime \n- Salinity regime \n- Seabed substrate \n- Riverine input \nHabitat descriptors (excepting Substrate) are calculated using underlying physical data and thresholds derived from statistical analyses or expert judgement on known conditions. \nThe model is produced using R and Arc Model Builder (10.1). \nThe model was created using raster input layers with a cell size of 0.00104dd (roughly 100 metres). The model includes the sublittoral zone only; due to the high variability of the littoral zone, a lack of detailed substrate data and the resolution of the model, it is difficult to predict littoral habitats at this scale. \nEUSeaMap is classified into EUNIS 2019 level 3 (or more detailed levels where appropriate), EUNIS 2019 level 2 , EUNIS 2007-2011, the MSFD benthic broad habitat types, the HELCOM HUB classification in the Baltic, and the recently revised habitat classification in the Mediterranean. In the Black Sea, EUSeaMap is not classified into EUNIS 2007-2011 (due to inapplicability), but is classified according to a classification that was developed by EMODnet Seabed Habitats (Populus et a, 2017, and for a revised version Vasquez et al, 2020, See Online resources). \nReports that provide methods used for the classification of the predicted habitats into the new 2019 EUNIS classification, regional classifications, and MSFD BBHT (v.2017) are linked in Online Resources. \nA report on the methods used in the 2021 version of EUSeaMap (Vasquez et al., 2021) and reports on previous versions (v2016 and V2019) are linked in Online Resources.",
         "protected": false,
         "params": {
@@ -316,7 +316,7 @@
     "layerNames": {
       "UK Territorial Sea Limit": {
         "url": "https://mpa-ows.jncc.gov.uk/mpa_mapper/wms",
-        "dataType": "wms",
+        "dataType": "WMS",
         "content": "The limits and boundaries of the UK, UK Overseas Territories and UK Crown Dependencies are available from this website in accordance with Articles 16, 74 and 84 of the United Nations Convention on the Law of the Sea. Limits are calculated from the normal baseline (the low water line on the largest UKHO charts) and limits are maintained.",
         "protected": false,
         "params": {
@@ -325,7 +325,7 @@
       },
       "UK Continental Shelf and ZEE": {
         "url": "https://mpa-ows.jncc.gov.uk/mpa_mapper/wms",
-        "dataType": "wms",
+        "dataType": "WMS",
         "content": "The limits and boundaries of the UK, UK Overseas Territories and UK Crown Dependencies are available from this website in accordance with Articles 16, 74 and 84 of the United Nations Convention on the Law of the Sea. Limits are calculated from the normal baseline (the low water line on the largest UKHO charts) and limits are maintained.",
         "protected": false,
         "params": {
@@ -334,7 +334,7 @@
       },
       "UK Waters": {
         "url": "https://mpa-ows.jncc.gov.uk/mpa_mapper/wms",
-        "dataType": "wms",
+        "dataType": "WMS",
         "content": "This resource relates to Web Map Service (WMS) layers showing the UK country and Crown Dependency waters around the UK. They were last updated in March 2019. JNCC have compiled these layers using the following datasets from the United Kingdom Hydrographic Office: Channel Islands Maritime Limits, Isle of Man Maritime Limits, Northern Ireland Adjacent Waters Limit, Northern Ireland Adjacent Waters Limit, Scotland Adjacent Waters Limit, UK EEZ Limit, UK France TS EEZ Boundary, UK Territorial Sea Limit and Wales Adjacent Waters Limit. The layers are available to view on the JNCC MPA mapper and can also be accessed via our WMS: https://ows.jncc.gov.uk/mpa_mapper/wms . The component datasets are available to download from the UKHO: -https://data.admiralty.co.uk/portal/apps/sites/#/marine-data-portal/items?tags=law%20of%20the%20sea .",
         "protected": false,
         "params": {

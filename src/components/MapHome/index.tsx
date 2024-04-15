@@ -270,46 +270,74 @@ function MapHome1({
       let bounds
       if (layerName.dataType === 'WMS') {
         layer = await getWMSLayer(layerName, actual)
+        console.log('AAAAAAAAAA', layer)
         bounds = defaultWMSBounds
       } else if (layerName.dataType === 'COG') {
         if (typeof layerName.url === 'string') {
           const getCOGLayer = new GetCOGLayer(layerName, actual, true)
-          await getCOGLayer.getTile().then(function () {
-            if (getCOGLayer.error) {
-              setFlashMessage({
-                messageType: 'error',
-                content: getCOGLayer.error,
-              })
-            }
-            layer = getCOGLayer.layer
-            // bounds = [
-            //   [getCOGLayer.bounds[3], getCOGLayer.bounds[0]],
-            //   [getCOGLayer.bounds[1], getCOGLayer.bounds[2]],
-            // ]
-            bounds = defaultWMSBounds
-          })
+          layer = await getCOGLayer.getTile()
+          if (getCOGLayer.error) {
+            setFlashMessage({
+              messageType: 'error',
+              content: getCOGLayer.error,
+            })
+          }
+          // bounds = [
+          //   [getCOGLayer.bounds[3], getCOGLayer.bounds[0]],
+          //   [getCOGLayer.bounds[1], getCOGLayer.bounds[2]],
+          // ]
+          bounds = defaultWMSBounds
         } else {
-          layer = []
-          await layerName.url.forEach(async (individualUrl) => {
-            const newLayerName = { ...layerName }
-            newLayerName.url = individualUrl
-            const getCOGLayer = new GetCOGLayer(newLayerName, actual, true)
-            await getCOGLayer.getTile()
-            if (getCOGLayer.error) {
-              setFlashMessage({
-                messageType: 'error',
-                content: getCOGLayer.error,
-              })
-            }
-            layer.push(getCOGLayer.layer)
-            // bounds = [
-            //   [getCOGLayer.bounds[3], getCOGLayer.bounds[0]],
-            //   [getCOGLayer.bounds[1], getCOGLayer.bounds[2]],
-            // ]
-            bounds = defaultWMSBounds
-          })
+          let minValue
+          let maxValue
+          const stats = await Promise.all(
+            layerName.url.map(async (newUrl) => {
+              const newSubLayer = { ...layerName }
+              newSubLayer.url = newUrl
+              const getCOGLayer = new GetCOGLayer(newSubLayer, actual, true)
+              const stats = await getCOGLayer.getStats()
+              if (minValue) {
+                if (minValue > stats.b1.percentile_2.toFixed(4)) {
+                  minValue = stats.b1.percentile_2.toFixed(4)
+                }
+              } else {
+                minValue = stats.b1.percentile_2.toFixed(4)
+              }
+              if (maxValue) {
+                if (maxValue < stats.b1.percentile_98.toFixed(4)) {
+                  maxValue = stats.b1.percentile_98.toFixed(4)
+                }
+              } else {
+                maxValue = stats.b1.percentile_98.toFixed(4)
+              }
+              return { b1: { percentile_2: minValue, percentile_98: maxValue } }
+            }),
+          )
+          layer = await Promise.all(
+            layerName.url.map(async (individualUrl) => {
+              const newLayerName = { ...layerName }
+              newLayerName.scale = [
+                Number(stats[stats.length - 1].b1.percentile_2).toFixed(4),
+                Number(stats[stats.length - 1].b1.percentile_98).toFixed(4),
+              ]
+              newLayerName.url = individualUrl
+              const getCOGLayer = new GetCOGLayer(newLayerName, actual, true)
+
+              if (getCOGLayer.error) {
+                setFlashMessage({
+                  messageType: 'error',
+                  content: getCOGLayer.error,
+                })
+              }
+              // bounds = [
+              //   [getCOGLayer.bounds[3], getCOGLayer.bounds[0]],
+              //   [getCOGLayer.bounds[1], getCOGLayer.bounds[2]],
+              // ]
+              bounds = defaultWMSBounds
+              return await getCOGLayer.getTile(stats[stats.length - 1])
+            }),
+          )
         }
-        console.log(layer, 'layer')
       } else if (layerName.dataType === 'MBTiles') {
         const getMBTilesLayer = new GetMBTiles(layerName, actual)
         await getMBTilesLayer.getLayer().then(async function () {
@@ -410,14 +438,14 @@ function MapHome1({
         layer = createTurfLayer(actual, turfConvex)
       }
       if (layerName.dataType !== 'Photo') {
-        console.log(layer)
-        if (layer.length > 0) {
+        console.log('layer', layer)
+        try {
           layer.forEach((individualLayer) => {
             individualLayer.options.attribution = actual
             map.addLayer(individualLayer, true)
             individualLayer && bringLayerToFront(individualLayer)
           })
-        } else {
+        } catch {
           layer.options.attribution = actual
           map.addLayer(layer, true)
           layer && bringLayerToFront(layer)
@@ -460,16 +488,15 @@ function MapHome1({
       'COG',
       actualLayerUpload.colors,
     )
-    await getCOGLayer.getTile().then(function () {
-      if (getCOGLayer.error) {
-        setFlashMessage({
-          messageType: 'error',
-          content: getCOGLayer.error,
-        })
-      }
-      const layer = getCOGLayer.layer
-      layer.addTo(map)
-    })
+    const layer = await getCOGLayer.getTile()
+    layer.addTo(map)
+
+    if (getCOGLayer.error) {
+      setFlashMessage({
+        messageType: 'error',
+        content: getCOGLayer.error,
+      })
+    }
   }
 
   async function generateUploadedGeoJSONLayer(actualLayerUpload) {

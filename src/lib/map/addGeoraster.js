@@ -176,7 +176,7 @@ export class GetCOGLayer {
     })
   }
 
-  async getTile() {
+  async getTile(statsValue = undefined) {
     const [newUrl, isUrlEncoded] = getUrlTileServer(this.layerName, this.url)
 
     if (this.layerName.colors) {
@@ -190,8 +190,11 @@ export class GetCOGLayer {
     }
 
     this.bounds = cogInfo.bounds
-
-    this.stats = await this.getStats()
+    if (statsValue) {
+      this.stats = statsValue
+    } else {
+      this.stats = await this.getStats()
+    }
     if (this.stats === 500) {
       this.error = 'You do not have authorization to access this file'
       return
@@ -273,6 +276,7 @@ export class GetCOGLayer {
           this.bounds,
         )
       }
+      return this.layer
     }
   }
 }

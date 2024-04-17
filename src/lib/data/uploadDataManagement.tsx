@@ -32,17 +32,7 @@ interface UploadDataHandleProviderProps {
 export const UploadDataHandleProvider: React.FC<
   UploadDataHandleProviderProps
 > = ({ children }) => {
-  const uploadFormats = [
-    'GeoJSON',
-    'GeoTIFF',
-    'COG',
-    'NetCDF',
-    'Shapefile',
-    'CSV',
-    'KML',
-    'KMZ',
-    'WMS',
-  ]
+  const uploadFormats = ['GeoJSON', 'GeoTIFF', 'COG', 'Shapefile', 'CSV', 'WMS']
 
   const [actualLayerUpload, setActualLayerUpload] = useState<any>({
     dataType: 'GeoJSON',

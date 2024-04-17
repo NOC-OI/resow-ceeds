@@ -226,6 +226,7 @@ export class GetCOGLayer {
         bidx = [1, 2, 3]
       }
       const rescale = []
+      console.log('qqqqqqq', this.layerName)
       for (let i = 0; i < bands.length; i++) {
         const stats = this.stats[bands[i]]
         if (this.layerName.scale) {

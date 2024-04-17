@@ -14,8 +14,6 @@ export class GetTitilerData {
 
   async fetchData() {
     const TILE_SERVER_URL = process.env.VITE_TILE_SERVER_URL
-
-    this.url = `${this.url}`
     function linspace(start, stop, num, endpoint = true) {
       const div = endpoint ? num - 1 : num
       const step = (stop - start) / div
@@ -38,13 +36,36 @@ export class GetTitilerData {
           { unit: 'km' },
         )
 
-        const newUrl = `${TILE_SERVER_URL}cog/point/${longitudes[idx]},${
-          latitudes[idx]
-        }?url=${encodeURIComponent(this.url)}`
-        await axios.get(newUrl).then(async (r) => {
+        if (typeof this.url === 'object') {
+          let requestSucceeded = false
           this.dataGraph.distance[idx] = distance
-          this.dataGraph.value[idx] = r.data.values[0]
-        })
+          for (const url of this.url) {
+            const newUrl = `${TILE_SERVER_URL}cog/point/${longitudes[idx]},${
+              latitudes[idx]
+            }?url=${encodeURIComponent(url)}`
+
+            try {
+              const response = await axios.get(newUrl)
+              this.dataGraph.value[idx] = response.data.values[0]
+              requestSucceeded = true
+              break
+            } catch (error) {}
+          }
+          if (!requestSucceeded) {
+            this.dataGraph.value[idx] = -9999
+          }
+        } else {
+          const newUrl = `${TILE_SERVER_URL}cog/point/${longitudes[idx]},${
+            latitudes[idx]
+          }?url=${encodeURIComponent(this.url)}`
+          try {
+            const response = await axios.get(newUrl)
+            this.dataGraph.distance[idx] = distance
+            this.dataGraph.value[idx] = response.data.values[0]
+          } catch (error) {
+            this.dataGraph.value[idx] = -9999
+          }
+        }
       }),
     )
   }

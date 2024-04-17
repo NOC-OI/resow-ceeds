@@ -28,6 +28,7 @@ export function DataExplorationLegend({
   function handleClose() {
     setLayerLegend('')
   }
+
   const [colorScale, setColorScale] = useState<string>(
     layerLegend.layerInfo?.colors,
   )
@@ -39,6 +40,8 @@ export function DataExplorationLegend({
   ])
   const { setSelectedLayersUpload, setActualLayerNowUpload } =
     useUploadDataHandle()
+  const [wmsError, setWmsError] = useState(false)
+
   const [error, setError] = useState('')
   const errorTimeoutRef = useRef<number | null>(null)
   useEffect(() => {
@@ -59,6 +62,10 @@ export function DataExplorationLegend({
       }
     }
   }, [error])
+  useEffect(() => {
+    setColorScale(layerLegend.layerInfo?.colors)
+    setScaleLimits(layerLegend.scale)
+  }, [layerLegend])
   const handleColorChange = (event, index) => {
     setCustomColors((customColors) => {
       const newCustomColors = [...customColors]
@@ -168,7 +175,13 @@ export function DataExplorationLegend({
           <h1>{layerLegend.layerName}</h1>
           <div>
             {layerLegend.url ? (
-              <img src={layerLegend.url} />
+              wmsError ? (
+                <p>
+                  <strong>Legend not available</strong>
+                </p>
+              ) : (
+                <img src={layerLegend.url} onError={() => setWmsError(true)} />
+              )
             ) : layerLegend.dataType ? (
               <div className="flex flex-col justify-center items-center gap-2">
                 <ColorBar layerLegend={layerLegend} />

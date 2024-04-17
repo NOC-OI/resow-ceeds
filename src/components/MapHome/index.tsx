@@ -270,7 +270,6 @@ function MapHome1({
       let bounds
       if (layerName.dataType === 'WMS') {
         layer = await getWMSLayer(layerName, actual)
-        console.log('AAAAAAAAAA', layer)
         bounds = defaultWMSBounds
       } else if (layerName.dataType === 'COG') {
         if (typeof layerName.url === 'string') {
@@ -290,36 +289,43 @@ function MapHome1({
         } else {
           let minValue
           let maxValue
-          const stats = await Promise.all(
-            layerName.url.map(async (newUrl) => {
-              const newSubLayer = { ...layerName }
-              newSubLayer.url = newUrl
-              const getCOGLayer = new GetCOGLayer(newSubLayer, actual, true)
-              const stats = await getCOGLayer.getStats()
-              if (minValue) {
-                if (minValue > stats.b1.percentile_2.toFixed(4)) {
+          let stats
+          if (layerName.scale) {
+            stats = await Promise.all(
+              layerName.url.map(async (newUrl) => {
+                const newSubLayer = { ...layerName }
+                newSubLayer.url = newUrl
+                const getCOGLayer = new GetCOGLayer(newSubLayer, actual, true)
+                const stats = await getCOGLayer.getStats()
+                if (minValue) {
+                  if (minValue > stats.b1.percentile_2.toFixed(4)) {
+                    minValue = stats.b1.percentile_2.toFixed(4)
+                  }
+                } else {
                   minValue = stats.b1.percentile_2.toFixed(4)
                 }
-              } else {
-                minValue = stats.b1.percentile_2.toFixed(4)
-              }
-              if (maxValue) {
-                if (maxValue < stats.b1.percentile_98.toFixed(4)) {
+                if (maxValue) {
+                  if (maxValue < stats.b1.percentile_98.toFixed(4)) {
+                    maxValue = stats.b1.percentile_98.toFixed(4)
+                  }
+                } else {
                   maxValue = stats.b1.percentile_98.toFixed(4)
                 }
-              } else {
-                maxValue = stats.b1.percentile_98.toFixed(4)
-              }
-              return { b1: { percentile_2: minValue, percentile_98: maxValue } }
-            }),
-          )
+                return {
+                  b1: { percentile_2: minValue, percentile_98: maxValue },
+                }
+              }),
+            )
+          }
           layer = await Promise.all(
             layerName.url.map(async (individualUrl) => {
               const newLayerName = { ...layerName }
-              newLayerName.scale = [
-                Number(stats[stats.length - 1].b1.percentile_2).toFixed(4),
-                Number(stats[stats.length - 1].b1.percentile_98).toFixed(4),
-              ]
+              newLayerName.scale = newLayerName.scale
+                ? newLayerName.scale
+                : [
+                    Number(stats[stats.length - 1].b1.percentile_2).toFixed(4),
+                    Number(stats[stats.length - 1].b1.percentile_98).toFixed(4),
+                  ]
               newLayerName.url = individualUrl
               const getCOGLayer = new GetCOGLayer(newLayerName, actual, true)
 
@@ -334,7 +340,9 @@ function MapHome1({
               //   [getCOGLayer.bounds[1], getCOGLayer.bounds[2]],
               // ]
               bounds = defaultWMSBounds
-              return await getCOGLayer.getTile(stats[stats.length - 1])
+              return await getCOGLayer.getTile(
+                stats ? stats[stats.length - 1] : undefined,
+              )
             }),
           )
         }
@@ -438,7 +446,6 @@ function MapHome1({
         layer = createTurfLayer(actual, turfConvex)
       }
       if (layerName.dataType !== 'Photo') {
-        console.log('layer', layer)
         try {
           layer.forEach((individualLayer) => {
             individualLayer.options.attribution = actual
@@ -500,7 +507,6 @@ function MapHome1({
   }
 
   async function generateUploadedGeoJSONLayer(actualLayerUpload) {
-    console.log('actualLayerUpload', actualLayerUpload)
     const layer = L.geoJSON(actualLayerUpload.data, {
       pointToLayer: function (feature, latlng) {
         return L.marker(latlng, {

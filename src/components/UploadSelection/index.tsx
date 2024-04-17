@@ -232,7 +232,6 @@ export function UploadSelection({
       try {
         Papa.parse(localUploadInfo.file, {
           complete: function (results) {
-            console.log(results)
             const latColumn = csvData.header
               ? csvData.latLngColumnNames[0]
               : csvData.latLngColumnNumbers[0]

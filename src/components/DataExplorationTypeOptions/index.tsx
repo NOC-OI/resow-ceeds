@@ -86,7 +86,6 @@ export async function handleClickLegend(
   } else if (subLayers[subLayer].dataType === 'COG') {
     let scale
     if (!selectedLayers) {
-      console.log(subLayers[subLayer].url)
       if (typeof subLayers[subLayer].url === 'string') {
         const getCOGLayer = new GetCOGLayer(subLayers[subLayer], subLayer, true)
         await getCOGLayer.getStats().then((stats) => {
@@ -130,20 +129,27 @@ export async function handleClickLegend(
     const cogColors = []
     const cogColorsValues = []
 
-    const colorScale = colorScaleByName(
-      selectedLayers
-        ? selectedLayers[`${content}_${subLayer}`].colors
-        : subLayers[subLayer].colors
-        ? subLayers[subLayer].colors
-        : 'ocean_r',
-    )
+    // console.log('XXXXXXXX', selectedLayers[`${content}_${subLayer}`])
+    //   'colorScale',
+    //   selectedLayers
+    //     ? selectedLayers[`${content}_${subLayer}`].colors
+    //     : subLayers[subLayer].colors
+    //     ? subLayers[subLayer].colors
+    //     : 'ocean_r',
+    // )
+    const colorName = selectedLayers
+      ? selectedLayers[`${content}_${subLayer}`].colors
+      : subLayers[subLayer].colors
+      ? subLayers[subLayer].colors
+      : 'ocean_r'
+    const colorScale = colorScaleByName(colorName)
     for (let i = 0; i < times; i++) {
       cogColors.push(colorScale((1 / (times - 1)) * i))
       cogColorsValues.push(Number(scale[0]) + (difValues / (times - 1)) * i)
     }
     setLayerLegend({
       layerName: subLayer,
-      layerInfo: subLayers[subLayer],
+      layerInfo: { ...subLayers[subLayer], colors: colorName },
       selectedLayersKey: `${content}_${subLayer}`,
       scale,
       dataDescription: subLayers[subLayer].dataDescription,
@@ -299,6 +305,9 @@ export async function addMapLayer(
         newSelectedLayer.scale = [Math.min(...minValue), Math.max(...maxValue)]
       })
     }
+    newSelectedLayer.colors = newSelectedLayer.colors
+      ? newSelectedLayer.colors
+      : 'ocean_r'
   } else if (newSelectedLayer.dataType === 'GeoTIFF') {
     const tifData = new GetTifLayer(newSelectedLayer.url)
     await tifData.loadGeo()

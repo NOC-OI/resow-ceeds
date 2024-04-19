@@ -28,6 +28,16 @@ export class GetTitilerData {
     this.dataGraph = { distance: [], value: [] }
 
     const latLngIni = { latitude: latitudes[0], longitude: longitudes[0] }
+
+    let noDataUrl
+    if (typeof this.url === 'object') {
+      noDataUrl = this.url[0]
+    } else {
+      noDataUrl = this.url
+    }
+    const noDataValue = await axios
+      .get(`${TILE_SERVER_URL}cog/info/?url=${encodeURIComponent(noDataUrl)}`)
+      .then((r) => r.data.nodata_value)
     await Promise.all(
       latitudes.map(async (lat, idx) => {
         const distance = haversine(
@@ -35,7 +45,6 @@ export class GetTitilerData {
           { latitude: latitudes[idx], longitude: longitudes[idx] },
           { unit: 'km' },
         )
-
         if (typeof this.url === 'object') {
           let requestSucceeded = false
           this.dataGraph.distance[idx] = distance
@@ -46,13 +55,19 @@ export class GetTitilerData {
 
             try {
               const response = await axios.get(newUrl)
-              this.dataGraph.value[idx] = response.data.values[0]
-              requestSucceeded = true
+              if (response.data.values[0] === noDataValue) {
+                this.dataGraph.value[idx] = null
+              } else {
+                this.dataGraph.value[idx] = response.data.values[0]
+                this.dataGraph.distance[idx] = distance
+                requestSucceeded = true
+              }
               break
             } catch (error) {}
           }
           if (!requestSucceeded) {
-            this.dataGraph.value[idx] = -9999
+            this.dataGraph.value[idx] = null
+            this.dataGraph.distance[idx] = distance
           }
         } else {
           const newUrl = `${TILE_SERVER_URL}cog/point/${longitudes[idx]},${
@@ -60,10 +75,14 @@ export class GetTitilerData {
           }?url=${encodeURIComponent(this.url)}`
           try {
             const response = await axios.get(newUrl)
+            if (response.data.values[0] === noDataValue) {
+              this.dataGraph.value[idx] = null
+            } else {
+              this.dataGraph.value[idx] = response.data.values[0]
+            }
             this.dataGraph.distance[idx] = distance
-            this.dataGraph.value[idx] = response.data.values[0]
           } catch (error) {
-            this.dataGraph.value[idx] = -9999
+            this.dataGraph.value[idx] = null
           }
         }
       }),

@@ -41,8 +41,12 @@
         "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/uk_hsm/uk_hsm_cog.tif",
         "dataType": "COG",
         "content": "Habitat suitability model for Zostera marina suitability (0-1) for United Kingdon, Ireland and Channel Isles area created using ensemble of GLM, GAM, RF, BRT, MARS, MaxENT methods. Presence data compiled from range of sources (see Bertelli et al., 2023) with environmental data as predictor variables from EMODNet and Copernicus. These variables include - Light (PAR) availability at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/), units Mol.phot.m-2.d-1, resolution ~0.3km2 , 1.1 x 0.7 km, 0.003°/10 arc seconds, 01 Jan2005 – 31 Dec 2009; Bathymetry (EMODnet Bathymetry and topography, http://www.emodnet.eu/emodnet-maps-catalogue) in metres below chart datum, resolution ~0.115km, 0.001°x 3.75 arc seconds, ~70m x 116m; January Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc) resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Salinity (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu, NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km, 2019-present hourly-Daily mean; Wave energy at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/) in N.m2.s-1, resolution ~0.3km,~342x195m; Energy at seabed due to currents (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/, Data from EU SeaMap (2016), Energy in the Celtic Sea and North Sea) in N.m2.s-1, resolution ~0.3km, ~342x195m; Slope, Calculated from bathymetry data with GIS software.",
-        "colors": "YlGn",
+        "colors": "jet",
         "dataDescription": ["Suitability", "(Probability)"],
+        "scale": [
+          0,
+          1
+        ],
         "protected": false,
         "threeD": false,
         "download": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/studland/studland_hsm.tif",
@@ -52,9 +56,13 @@
         "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/ios/ios_log_hsm.tif",
         "dataType": "GeoTIFF",
         "content": "Habitat suitability model for Zostera marina suitability (0-1) for Isles of Scilly created using ensemble of GLM, GAM, RF, BRT, MARS, MaxENT methods. Presence data compiled from range of sources (see Bertelli et al., 2023) with environmental data as predictor variables from EMODNet and Copernicus. These variables include - Light (PAR) availability at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/), units Mol.phot.m-2.d-1, resolution ~0.3km2 , 1.1 x 0.7 km, 0.003°/10 arc seconds, 01 Jan2005 – 31 Dec 2009; Bathymetry (EMODnet Bathymetry and topography, http://www.emodnet.eu/emodnet-maps-catalogue) in metres below chart datum, resolution ~0.115km, 0.001°x 3.75 arc seconds, ~70m x 116m; January Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc) resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Salinity (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu, NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km, 2019-present hourly-Daily mean; Wave energy at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/) in N.m2.s-1, resolution ~0.3km,~342x195m; Energy at seabed due to currents (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/, Data from EU SeaMap (2016), Energy in the Celtic Sea and North Sea) in N.m2.s-1, resolution ~0.3km, ~342x195m; Slope, Calculated from bathymetry data with GIS software.",
-        "colors": "YlGn",
+        "colors": "jet",
+        "scale": [
+          0,
+          1
+        ],
         "dataDescription": ["Suitability", "(Probability)"],
-        "units": "m",
+        "units": "",
 
         "protected": false
       },
@@ -62,7 +70,7 @@
         "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/milford_haven/milford_haven_log_hsm.tif",
         "dataType": "GeoTIFF",
         "content": "Habitat suitability model for Zostera marina suitability (0-1) for Milford Haven created using ensemble of GLM, GAM, RF, BRT, MARS, MaxENT methods. Presence data compiled from range of sources (see Bertelli et al., 2023) with environmental data as predictor variables from EMODNet and Copernicus. These variables include - Light (PAR) availability at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/), units Mol.phot.m-2.d-1, resolution ~0.3km2 , 1.1 x 0.7 km, 0.003°/10 arc seconds, 01 Jan2005 – 31 Dec 2009; Bathymetry (EMODnet Bathymetry and topography, http://www.emodnet.eu/emodnet-maps-catalogue) in metres below chart datum, resolution ~0.115km, 0.001°x 3.75 arc seconds, ~70m x 116m; January Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc) resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Salinity (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu, NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km, 2019-present hourly-Daily mean; Wave energy at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/) in N.m2.s-1, resolution ~0.3km,~342x195m; Energy at seabed due to currents (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/, Data from EU SeaMap (2016), Energy in the Celtic Sea and North Sea) in N.m2.s-1, resolution ~0.3km, ~342x195m; Slope, Calculated from bathymetry data with GIS software.",
-        "colors": "YlGn",
+        "colors": "jet",
         "scale": [
           0,
           1
@@ -74,7 +82,7 @@
         "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/orkney/orkney_log_hsm_cog.tif",
         "dataType": "COG",
         "content": "Habitat suitability model for Zostera marina suitability (0-1) for Orkney Isles created using ensemble of GLM, GAM, RF, BRT, MARS, MaxENT methods. Presence data compiled from range of sources (see Bertelli et al., 2023) with environmental data as predictor variables from EMODNet and Copernicus. These variables include - Light (PAR) availability at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/), units Mol.phot.m-2.d-1, resolution ~0.3km2 , 1.1 x 0.7 km, 0.003°/10 arc seconds, 01 Jan2005 – 31 Dec 2009; Bathymetry (EMODnet Bathymetry and topography, http://www.emodnet.eu/emodnet-maps-catalogue) in metres below chart datum, resolution ~0.115km, 0.001°x 3.75 arc seconds, ~70m x 116m; January Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc) resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Salinity (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu, NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km, 2019-present hourly-Daily mean; Wave energy at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/) in N.m2.s-1, resolution ~0.3km,~342x195m; Energy at seabed due to currents (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/, Data from EU SeaMap (2016), Energy in the Celtic Sea and North Sea) in N.m2.s-1, resolution ~0.3km, ~342x195m; Slope, Calculated from bathymetry data with GIS software.",
-        "colors": "YlGn",
+        "colors": "jet",
         "scale": [
           0,
           1
@@ -86,7 +94,7 @@
         "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/porthdinllaen/porthdinllaen_log_hsm.tif",
         "dataType": "GeoTIFF",
         "content": "Habitat suitability model for Zostera marina suitability (0-1) for Porthdinllaen created using ensemble of GLM, GAM, RF, BRT, MARS, MaxENT methods. Presence data compiled from range of sources (see Bertelli et al., 2023) with environmental data as predictor variables from EMODNet and Copernicus. These variables include - Light (PAR) availability at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/), units Mol.phot.m-2.d-1, resolution ~0.3km2 , 1.1 x 0.7 km, 0.003°/10 arc seconds, 01 Jan2005 – 31 Dec 2009; Bathymetry (EMODnet Bathymetry and topography, http://www.emodnet.eu/emodnet-maps-catalogue) in metres below chart datum, resolution ~0.115km, 0.001°x 3.75 arc seconds, ~70m x 116m; January Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc) resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Salinity (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu, NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km, 2019-present hourly-Daily mean; Wave energy at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/) in N.m2.s-1, resolution ~0.3km,~342x195m; Energy at seabed due to currents (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/, Data from EU SeaMap (2016), Energy in the Celtic Sea and North Sea) in N.m2.s-1, resolution ~0.3km, ~342x195m; Slope, Calculated from bathymetry data with GIS software.",
-        "colors": "YlGn",
+        "colors": "jet",
         "scale": [
           0,
           1
@@ -98,7 +106,7 @@
         "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/solent/solent_log_hsm.tif",
         "dataType": "GeoTIFF",
         "content": "Habitat suitability model for Zostera marina suitability (0-1) for Solent area created using ensemble of GLM, GAM, RF, BRT, MARS, MaxENT methods. Presence data compiled from range of sources (see Bertelli et al., 2023) with environmental data as predictor variables from EMODNet and Copernicus. These variables include - Light (PAR) availability at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/), units Mol.phot.m-2.d-1, resolution ~0.3km2 , 1.1 x 0.7 km, 0.003°/10 arc seconds, 01 Jan2005 – 31 Dec 2009; Bathymetry (EMODnet Bathymetry and topography, http://www.emodnet.eu/emodnet-maps-catalogue) in metres below chart datum, resolution ~0.115km, 0.001°x 3.75 arc seconds, ~70m x 116m; January Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc) resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Salinity (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu, NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km, 2019-present hourly-Daily mean; Wave energy at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/) in N.m2.s-1, resolution ~0.3km,~342x195m; Energy at seabed due to currents (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/, Data from EU SeaMap (2016), Energy in the Celtic Sea and North Sea) in N.m2.s-1, resolution ~0.3km, ~342x195m; Slope, Calculated from bathymetry data with GIS software.",
-        "colors": "YlGn",
+        "colors": "jet",
         "scale": [
           0,
           1
@@ -110,7 +118,7 @@
         "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/studland/studland_hsm.tif",
         "dataType": "GeoTIFF",
         "content": "Habitat suitability model for Zostera marina suitability (0-1) for Studland Bay created using ensemble of GLM, GAM, RF, BRT, MARS, MaxENT methods. Presence data compiled from range of sources (see Bertelli et al., 2023) with environmental data as predictor variables from EMODNet and Copernicus. These variables include - Light (PAR) availability at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/), units Mol.phot.m-2.d-1, resolution ~0.3km2 , 1.1 x 0.7 km, 0.003°/10 arc seconds, 01 Jan2005 – 31 Dec 2009; Bathymetry (EMODnet Bathymetry and topography, http://www.emodnet.eu/emodnet-maps-catalogue) in metres below chart datum, resolution ~0.115km, 0.001°x 3.75 arc seconds, ~70m x 116m; January Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc) resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Salinity (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu, NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km, 2019-present hourly-Daily mean; Wave energy at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/) in N.m2.s-1, resolution ~0.3km,~342x195m; Energy at seabed due to currents (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/, Data from EU SeaMap (2016), Energy in the Celtic Sea and North Sea) in N.m2.s-1, resolution ~0.3km, ~342x195m; Slope, Calculated from bathymetry data with GIS software.",
-        "colors": "YlGn",
+        "colors": "jet",
         "scale": [
           0,
           1
@@ -273,32 +281,20 @@
     "icon": "fish",
     "layerNames": {
       "UK NSL": {
+        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/nsl/nsl/seagrass.fgb",
+        "dataType": "FGB",
+        "content": "Natural England and the Environment Agency have collaborated to produce a seagrass layer for English waters, which aims to provide a comprehensive geospatial dataset of surveys of both current and historical spatial seagrass. The layer identifies a current seagrass extent; using the best and most recent available evidence and agreed by both organisations. These datasets have been provided by NE and the EA, as well as a number of third parties. Details of these third parties can be found in the accompanying metadata file.",
+        "protected": false,
+        "colors": "#cf52d3"
+      },
+      "UK NSL Old": {
         "url": "https://imfe-pilot-mbtiles.noc.ac.uk/v1/tiles/mytiles2@1.0.0/{z}/{x}/{y}.mvt",
         "dataType": "MBTiles",
         "content": "Natural England and the Environment Agency have collaborated to produce a seagrass layer for English waters, which aims to provide a comprehensive geospatial dataset of surveys of both current and historical spatial seagrass. The layer identifies a current seagrass extent; using the best and most recent available evidence and agreed by both organisations. These datasets have been provided by NE and the EA, as well as a number of third parties. Details of these third parties can be found in the accompanying metadata file.",
-        "protected": false
-      },
-      "Scillies NSL": {
-        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/nsl/ios/Scillies_NSL.geojson",
-        "dataType": "GeoJSON",
-        "content": "Natural England and the Environment Agency have collaborated to produce a seagrass layer for English waters, which aims to provide a comprehensive geospatial dataset of surveys of both current and historical spatial seagrass. The layer identifies a current seagrass extent; using the best and most recent available evidence and agreed by both organisations. These datasets have been provided by NE and the EA, as well as a number of third parties. Details of these third parties can be found in the accompanying metadata file.",
         "protected": false,
-        "threeD": false
-      },
-      "Solent NSL": {
-        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/nsl/solent/Solent_NSL.geojson",
-        "dataType": "GeoJSON",
-        "content": "Natural England and the Environment Agency have collaborated to produce a seagrass layer for English waters, which aims to provide a comprehensive geospatial dataset of surveys of both current and historical spatial seagrass. The layer identifies a current seagrass extent; using the best and most recent available evidence and agreed by both organisations. These datasets have been provided by NE and the EA, as well as a number of third parties. Details of these third parties can be found in the accompanying metadata file.",
-        "protected": false,
-        "threeD": false
-      },
-      "Studland NSL": {
-        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/nsl/studland/Studland_NSL.geojson",
-        "dataType": "GeoJSON",
-        "content": "Natural England and the Environment Agency have collaborated to produce a seagrass layer for English waters, which aims to provide a comprehensive geospatial dataset of surveys of both current and historical spatial seagrass. The layer identifies a current seagrass extent; using the best and most recent available evidence and agreed by both organisations. These datasets have been provided by NE and the EA, as well as a number of third parties. Details of these third parties can be found in the accompanying metadata file.",
-        "protected": false,
-        "threeD": false
+        "colors": "#cf52d3"
       }
+
     }
   },
   "Seabed Habitats": {

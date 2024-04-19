@@ -1,6 +1,6 @@
 import 'leaflet/dist/leaflet'
 // import { protobuf } from '../MapHome/addVectorGridL'
-import { colors, eunis } from '../data/mbTilesEmodnetLegend'
+import { colors, eunis } from '../data/mbTilesLegend'
 import { protobuf } from './addVectorGridL'
 
 export class GetMBTiles {
@@ -15,23 +15,22 @@ export class GetMBTiles {
 
   async getLayer() {
     const MBTILES_SERVER = process.env.VITE_MBTILES_URL
-
     const vectorTileOptions = {
       interactive: true,
       vectorTileLayerStyles: {
-        all: function (properties, zoom) {
-          const eu = properties.EUNIScombD
-          let color = '#cf52d3'
+        output4326: function (properties, zoom) {
+          // const eu = this.layerName.colors
+          // let color = '#cf52d3'
 
-          eunis.forEach((t, idx) => {
-            if (eu === t) {
-              color = colors[idx]
-            }
-          })
+          // eunis.forEach((t, idx) => {
+          //   if (eu === t) {
+          //     color = colors[idx]
+          //   }
+          // })
           return {
             weight: 0,
-            color,
-            fillColor: color,
+            color: this.layerName.colors,
+            fillColor: this.layerName.colors,
             fillOpacity: 0.7,
             opacity: 0.7,
             fill: true,

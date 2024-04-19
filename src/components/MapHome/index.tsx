@@ -37,6 +37,7 @@ import {
 } from '../../lib/map/utils'
 import { useDownloadManagementHandle } from '../../lib/data/downloadManagement'
 import { useUploadDataHandle } from '../../lib/data/uploadDataManagement'
+import * as flatgeobuf from 'flatgeobuf'
 
 interface MapProps {
   selectedLayers: any
@@ -181,6 +182,12 @@ function MapHome1({
     }
   }, [selectedBaseLayer])
 
+  // if (map) {
+  //   map.eachLayer(function (mapLayer: any) {
+  //     console.log(mapLayer)
+  //   })
+  // }
+
   async function changeIcons(photo: any) {
     map.eachLayer(function (mapLayer: any) {
       if (mapLayer.options.dataType === 'marker') {
@@ -261,6 +268,45 @@ function MapHome1({
       }
       defineNewDepthValue(actual, layerName, latlng, coords, layer, setDepth)
     })
+  }
+
+  async function getFlatGeoBufData(layerName, actual) {
+    const response = await fetch(layerName.url)
+    const layers = []
+    for await (const data of flatgeobuf.geojson.deserialize(
+      response.body,
+      undefined,
+    )) {
+      const layer = L.geoJSON(data, {
+        pointToLayer: function (feature, latlng) {
+          return L.marker(latlng, {
+            icon: createIcon('/marker-icon.png', [25, 25]),
+          })
+        },
+        onEachFeature: function (feature, layer) {
+          layer.on({
+            click: () => {
+              setMapPopup({
+                [`${actual}`]: feature.properties,
+              })
+            },
+          })
+        },
+        style: function () {
+          const myStyle = {
+            color: layerName.colors,
+            fillColor: layerName.colors,
+            weight: 3,
+            opacity: defaultOpacity,
+            fillOpacity: defaultOpacity,
+          }
+          return myStyle
+        },
+      })
+      layer.options.attribution = actual
+      layers.push(layer)
+    }
+    return layers
   }
 
   async function generateSelectedLayer() {
@@ -367,6 +413,8 @@ function MapHome1({
             })
           }
         })
+      } else if (layerName.dataType === 'FGB') {
+        layer = await getFlatGeoBufData(layerName, actual)
       } else if (layerName.dataType === 'GeoTIFF') {
         const url = layerName.url.replace('actualDate', yearMonths[actualDate])
         const getTifLayer = new GetTifLayer(

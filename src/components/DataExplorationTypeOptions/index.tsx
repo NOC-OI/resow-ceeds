@@ -9,7 +9,6 @@ import {
   faSliders,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { colors, eunis } from '../../data/mbTilesEmodnetLegend'
 import { GetCOGLayer, GetTifLayer } from '../../lib/map/addGeoraster'
 import { colorScaleByName } from '../../lib/map/jsColormaps'
 import styles from './DataExplorationTypeOptions.module.css'
@@ -82,7 +81,16 @@ export async function handleClickLegend(
     }
     await getURILegend(newParams)
   } else if (subLayers[subLayer].dataType === 'MBTiles') {
-    setLayerLegend({ layerName: subLayer, legend: [colors, eunis] })
+    setLayerLegend({
+      layerName: subLayer,
+      legend: [[subLayers[subLayer].colors], [subLayer]],
+    })
+  } else if (subLayers[subLayer].dataType === 'FGB') {
+    console.log('legend', subLayers[subLayer].colors)
+    setLayerLegend({
+      layerName: subLayer,
+      legend: [[subLayers[subLayer].colors], [subLayer]],
+    })
   } else if (subLayers[subLayer].dataType === 'COG') {
     let scale
     if (!selectedLayers) {

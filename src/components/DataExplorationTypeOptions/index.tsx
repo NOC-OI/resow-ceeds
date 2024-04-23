@@ -86,7 +86,6 @@ export async function handleClickLegend(
       legend: [[subLayers[subLayer].colors], [subLayer]],
     })
   } else if (subLayers[subLayer].dataType === 'FGB') {
-    console.log('legend', subLayers[subLayer].colors)
     setLayerLegend({
       layerName: subLayer,
       legend: [[subLayers[subLayer].colors], [subLayer]],

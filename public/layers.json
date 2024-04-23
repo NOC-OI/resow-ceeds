@@ -144,7 +144,7 @@
       }
     }
   },
-  "Seagrass Extent - EO Data": {
+  "Seagrass extent from satellite data": {
     "icon": "",
     "layerNames": {
       "Isles of Scilly": {
@@ -364,10 +364,10 @@
       }
     }
   },
-  "Seagrass Layer": {
+  "Seagrass extent  from in-situ surveys": {
     "icon": "fish",
     "layerNames": {
-      "UK National Seagrass Layer": {
+      "National Seagrass Layer": {
         "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/nsl/nsl/seagrass.fgb",
         "dataType": "FGB",
         "content": "Natural England and the Environment Agency have collaborated to produce a seagrass layer for English waters, which aims to provide a comprehensive geospatial dataset of surveys of both current and historical spatial seagrass. The layer identifies a current seagrass extent; using the best and most recent available evidence and agreed by both organisations. These datasets have been provided by NE and the EA, as well as a number of third parties. Details of these third parties can be found in the accompanying metadata file.",

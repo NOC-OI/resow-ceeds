@@ -324,24 +324,49 @@
       }
     }
   },
-  "National Seagrass Layer": {
+  "Coastline": {
+    "icon": "",
+    "layerNames": {
+      "Coastline": {
+        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/coast/coastline/coastline.fgb",
+        "dataType": "FGB",
+        "content": "This dataset represents the coastline of Great Britain, including England, Scotland, and Wales.",
+        "protected": false,
+        "colors": "#252525"
+      },
+      "Coast Polygons": {
+        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/coast/coast_polygons/coast_polygons.geojson",
+        "dataType": "GeoJSON",
+        "content": "This dataset represents the coastline of Great Britain, including England, Scotland, and Wales.",
+        "protected": false,
+        "colors": "#68a063"
+      },
+      "Land Polygons": {
+        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/coast/land_polygons/land_polygons.fgb",
+        "dataType": "FGB",
+        "content": "This dataset represents the coastline of Great Britain, including England, Scotland, and Wales.",
+        "protected": false,
+        "colors": "#cf52d3"
+      }
+    }
+  },
+  "Seagrass Layer": {
     "icon": "fish",
     "layerNames": {
-      "UK NSL": {
+      "UK National Seagrass Layer": {
         "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/nsl/nsl/seagrass.fgb",
         "dataType": "FGB",
         "content": "Natural England and the Environment Agency have collaborated to produce a seagrass layer for English waters, which aims to provide a comprehensive geospatial dataset of surveys of both current and historical spatial seagrass. The layer identifies a current seagrass extent; using the best and most recent available evidence and agreed by both organisations. These datasets have been provided by NE and the EA, as well as a number of third parties. Details of these third parties can be found in the accompanying metadata file.",
         "protected": false,
         "colors": "#cf52d3"
       },
-      "UK NSL Old": {
-        "url": "https://imfe-pilot-mbtiles.noc.ac.uk/v1/tiles/mytiles2@1.0.0/{z}/{x}/{y}.mvt",
-        "dataType": "MBTiles",
-        "content": "Natural England and the Environment Agency have collaborated to produce a seagrass layer for English waters, which aims to provide a comprehensive geospatial dataset of surveys of both current and historical spatial seagrass. The layer identifies a current seagrass extent; using the best and most recent available evidence and agreed by both organisations. These datasets have been provided by NE and the EA, as well as a number of third parties. Details of these third parties can be found in the accompanying metadata file.",
+      "Natural Resource Wales": {
+        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/nsl/nwr/natural_resource_wales.geojson",
+        "dataType": "GeoJSON",
+        "content": "Under the Environment (Wales) Act (2016), Section 7 requires biodiversity lists to be produced. These lists include types of habitats which are of 'Principle Importance' for the purpose of maintain and enhancing biodiversity in relation to Wales. This list supersedes the duty in Section 42 of the NERC Act 2006. In addition to this marine habitats can be protected under the OSPAR Convention, which has established a list of 'threatened and/or declining species and habitats' in the North-East Atlantic. This spatial dataset details the extent and location of those marine habitats classed of 'Principle Importance' under Section 7 and are regarded as 'threatened or declining' under OSPAR in Wales. Habitat Seagrass Beds.",
         "protected": false,
         "colors": "#cf52d3"
       }
-
     }
   },
   "Seabed Habitats": {

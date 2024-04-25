@@ -147,45 +147,53 @@
   "Seagrass extent from satellite data": {
     "icon": "",
     "layerNames": {
+      "Fleet Lagoon": {
+        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/remote_sensing/remote_sensing/Fleet_lagoon_seagrass_from_EO.geojson",
+        "dataType": "GeoJSON",
+        "content": "This dataset contains the results of remote sensing mapping using random forest classification of Sentinel-2 satellite data.",
+        "protected": false,
+        "download_area": true
+      },
       "Isles of Scilly": {
         "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/remote_sensing/remote_sensing/Isles_of_Scilly_seagrass_from_EO.geojson",
         "dataType": "GeoJSON",
-        "content": "This dataset contains the results of remote sensing mapping using random forest classification of Sentinel-2 satellie data.",
+        "content": "This dataset contains the results of remote sensing mapping using random forest classification of Sentinel-2 satellite data.",
         "protected": false,
         "download_area": true
       },
       "Loch Craignish": {
         "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/remote_sensing/remote_sensing/LochCraignish_seagrass_from_EO.geojson",
         "dataType": "GeoJSON",
-        "content": "This dataset contains the results of remote sensing mapping using random forest classification of Sentinel-2 satellie data.",
+        "content": "This dataset contains the results of remote sensing mapping using random forest classification of Sentinel-2 satellite data.",
         "protected": false,
         "download_area": true
       },
-      "Fleet Lagoon": {
-        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/remote_sensing/remote_sensing/Fleet_lagoon_seagrass_from_EO.geojson",
+      "Milford Haven": {
+        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/remote_sensing/remote_sensing/MilfordHaven_seagrass_from_EO.geojson",
         "dataType": "GeoJSON",
-        "content": "This dataset contains the results of remote sensing mapping using random forest classification of Sentinel-2 satellie data.",
+        "content": "This dataset contains the results of remote sensing mapping using random forest classification of Sentinel-2 satellite data.",
         "protected": false,
         "download_area": true
       },
+
       "Solent": {
         "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/remote_sensing/remote_sensing/Solent_seagrass_from_EO.geojson",
         "dataType": "GeoJSON",
-        "content": "This dataset contains the results of remote sensing mapping using random forest classification of Sentinel-2 satellie data.",
+        "content": "This dataset contains the results of remote sensing mapping using random forest classification of Sentinel-2 satellite data.",
         "protected": false,
         "download_area": true
       },
       "Studland": {
         "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/remote_sensing/remote_sensing/Studland_seagrass_from_EO.geojson",
         "dataType": "GeoJSON",
-        "content": "This dataset contains the results of remote sensing mapping using random forest classification of Sentinel-2 satellie data.",
+        "content": "This dataset contains the results of remote sensing mapping using random forest classification of Sentinel-2 satellite data.",
         "protected": false,
         "download_area": true
       },
       "Weymouth": {
         "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/remote_sensing/remote_sensing/Weymouth_seagrass_from_EO.geojson",
         "dataType": "GeoJSON",
-        "content": "This dataset contains the results of remote sensing mapping using random forest classification of Sentinel-2 satellie data.",
+        "content": "This dataset contains the results of remote sensing mapping using random forest classification of Sentinel-2 satellite data.",
         "protected": false,
         "download_area": true
       }
@@ -380,6 +388,15 @@
         "content": "Under the Environment (Wales) Act (2016), Section 7 requires biodiversity lists to be produced. These lists include types of habitats which are of 'Principle Importance' for the purpose of maintain and enhancing biodiversity in relation to Wales. This list supersedes the duty in Section 42 of the NERC Act 2006. In addition to this marine habitats can be protected under the OSPAR Convention, which has established a list of 'threatened and/or declining species and habitats' in the North-East Atlantic. This spatial dataset details the extent and location of those marine habitats classed of 'Principle Importance' under Section 7 and are regarded as 'threatened or declining' under OSPAR in Wales. Habitat Seagrass Beds.",
         "protected": false,
         "colors": "#cf52d3"
+      },
+      "Scottish Seagrass Layer": {
+        "url": "https://ogc.nature.scot/geoserver/gems/ows",
+        "dataType": "WMS",
+        "content": "XXXXXXXXXXXXXXX",
+        "protected": false,
+        "params": {
+          "layers": "seagrass_beds_polygons"
+        }
       }
     }
   },

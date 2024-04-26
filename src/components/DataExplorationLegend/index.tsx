@@ -186,6 +186,7 @@ export function DataExplorationLegend({
               <div className="flex flex-col justify-center items-center gap-2">
                 <ColorBar layerLegend={layerLegend} />
                 <Button
+                  id="edit-layer-colors-button"
                   onClick={() => setEditLayerColors(!editLayerColors)}
                   variant="contained"
                   className="!w-full !text-white !bg-black !rounded-lg opacity-50 hover:!opacity-70 flex justify-center items-center gap-2 clickable"

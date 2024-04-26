@@ -16,6 +16,7 @@ export function MapPopup({ mapPopup, setMapPopup }: MapPopupProps) {
   }
   const nodeRef = useRef(null)
   const title = Object.keys(mapPopup)[0]
+  const dataType = mapPopup.type
   const content = mapPopup[title]
   return (
     <Draggable nodeRef={nodeRef} cancel=".clickable">
@@ -30,22 +31,26 @@ export function MapPopup({ mapPopup, setMapPopup }: MapPopupProps) {
         <div className="font-bold text-center pb-3">
           {title.replace('_', ': ')}
         </div>
-        {Object.keys(content).map((key) => {
-          return (
-            <div className="flex pb-2 gap-1 justify-between" key={key}>
-              <div>
-                <strong>{key === 'filename' ? 'More Info:' : key}</strong>:
+        {dataType === 'html' ? (
+          <div dangerouslySetInnerHTML={{ __html: content }}></div>
+        ) : (
+          Object.keys(content).map((key) => {
+            return (
+              <div className="flex pb-2 gap-1 justify-between" key={key}>
+                <div>
+                  <strong>{key === 'filename' ? 'More Info:' : key}</strong>:
+                </div>
+                {key === 'filename' ? (
+                  <a href={`${content[key]}`} target="_blank">
+                    Click Here
+                  </a>
+                ) : (
+                  <div>{content[key]}</div>
+                )}
               </div>
-              {key === 'filename' ? (
-                <a href={`${content[key]}`} target="_blank">
-                  Click Here
-                </a>
-              ) : (
-                <div>{content[key]}</div>
-              )}
-            </div>
-          )
-        })}
+            )
+          })
+        )}
       </InfoButtonBoxContainer>
     </Draggable>
   )

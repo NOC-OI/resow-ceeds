@@ -93,13 +93,12 @@ function MapHome1({
   } = useUploadDataHandle()
   const { drawRectangle, setRectangleLimits } = useDownloadManagementHandle()
   const [map, setMap] = useState<any>(null)
-  const [mapCenter, setMapCenter] = useState<L.LatLng>(
-    new L.LatLng(defaultView[0], defaultView[1]),
-  )
+  // const [mapCenter, setMapCenter] = useState<L.LatLng>(
+  //   new L.LatLng(defaultView[0], defaultView[1]),
+  // )
   function bringLayerToFront(layer: any) {
     try {
       layer.bringToFront()
-      console.log(mapCenter)
     } catch (error) {}
     // const frontLayers = [
     //   'Coastline',
@@ -117,7 +116,7 @@ function MapHome1({
     if (map) {
       map.on('moveend', function () {
         setMapBounds(map.getBounds())
-        setMapCenter(map.getCenter())
+        // setMapCenter(map.getCenter())
       })
       map.on('mousemove', (e: { latlng: unknown }) => {
         setPosition(e.latlng)
@@ -159,7 +158,7 @@ function MapHome1({
     if (map) {
       map.on('moveend', function () {
         setMapBounds(map.getBounds())
-        setMapCenter(map.getCenter())
+        // setMapCenter(map.getCenter())
       })
     }
   }, [map])
@@ -313,10 +312,10 @@ function MapHome1({
     actualLayer.forEach(async (actual) => {
       const layerName = selectedLayers[actual]
       let layer: any
-      let bounds
+      // let bounds
       if (layerName.dataType === 'WMS') {
         layer = await getWMSLayer(layerName, actual)
-        bounds = defaultWMSBounds
+        // bounds = defaultWMSBounds
       } else if (layerName.dataType === 'COG') {
         if (typeof layerName.url === 'string') {
           const getCOGLayer = new GetCOGLayer(layerName, actual, true)
@@ -331,7 +330,7 @@ function MapHome1({
           //   [getCOGLayer.bounds[3], getCOGLayer.bounds[0]],
           //   [getCOGLayer.bounds[1], getCOGLayer.bounds[2]],
           // ]
-          bounds = defaultWMSBounds
+          // bounds = defaultWMSBounds
         } else {
           let minValue
           let maxValue
@@ -385,7 +384,7 @@ function MapHome1({
               //   [getCOGLayer.bounds[3], getCOGLayer.bounds[0]],
               //   [getCOGLayer.bounds[1], getCOGLayer.bounds[2]],
               // ]
-              bounds = defaultWMSBounds
+              // bounds = defaultWMSBounds
               return await getCOGLayer.getTile(
                 stats ? stats[stats.length - 1] : undefined,
               )
@@ -427,15 +426,15 @@ function MapHome1({
         await getTifLayer.parseGeo().then(function () {
           layer = getTifLayer.layer
           layer.options.date_range = layerName.date_range
-          bounds = defaultWMSBounds
+          // bounds = defaultWMSBounds
         })
       } else if (layerName.dataType === 'arcgis') {
         layer = esri.dynamicMapLayer({ url: layerName.url })
         layer.setLayers([1, 2, 3, 4, 5, 6, 7, 8, 12, 13, 14, 15])
-        bounds = defaultWMSBounds
+        // bounds = defaultWMSBounds
       } else if (layerName.dataType === 'GeoJSON') {
         layer = await generateGeoJSONLayer(layerName, actual, layer)
-        bounds = defaultWMSBounds
+        // bounds = defaultWMSBounds
       } else if (layerName.dataType === 'Photo') {
         let markers: any = []
         const colorMarker = colorScale[Math.floor(Math.random() * 30)]
@@ -476,11 +475,11 @@ function MapHome1({
           }
         })
         const turfConvex = turf.convex(turf.featureCollection(markers))
-        const turfBbox = turf.bbox(turfConvex)
-        bounds = [
-          [turfBbox[1] - 0.05, turfBbox[0] - 0.35],
-          [turfBbox[3] + 0.05, turfBbox[2] + 0.15],
-        ]
+        // const turfBbox = turf.bbox(turfConvex)
+        // bounds = [
+        //   [turfBbox[1] - 0.05, turfBbox[0] - 0.35],
+        //   [turfBbox[3] + 0.05, turfBbox[2] + 0.15],
+        // ]
         if (layerName.plotLimits && turfConvex) {
           const turflayer = createTurfLayer(actual, turfConvex)
           turflayer.addTo(map)
@@ -512,9 +511,9 @@ function MapHome1({
         }
       }
       if (layerName.dataType !== 'Photo') {
-        bounds = defaultWMSBounds
+        // bounds = defaultWMSBounds
       }
-      console.log(bounds)
+      // console.log(bounds)
       // map.fitBounds(bounds)
     })
     setLoading(false)
@@ -679,7 +678,7 @@ function MapHome1({
     if (layerName.params.style) {
       params.style = layerName.params.style
     }
-    const layer = callBetterWMS(layerName.url, params)
+    const layer = callBetterWMS(layerName.url, params, setMapPopup, actual)
     layer.setOpacity(defaultOpacity)
     return layer
   }

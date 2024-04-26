@@ -41,6 +41,7 @@ export function PrintSelection({ setPrintBox }: PrintSelectionProps) {
     'Map Pop Up Box': ['mappopup-box', '1'],
     'Graph Box': ['graph-box', '1'],
     'Bottom Right Box': ['infobox-container', '1'],
+    'edit button': ['edit-layer-colors-button', '0'],
   }
 
   const [removedIds, setRemovedIds] = useState(removableIds)
@@ -98,37 +99,42 @@ export function PrintSelection({ setPrintBox }: PrintSelectionProps) {
         <div className="font-bold text-center pb-3 text-xl">Export Image</div>
         <div className="font-semibold text-center text-md">Filter area</div>
         <div className="pb-2 flex flex-col !justify-start">
-          {Object.keys(removableIds).map((removableId) => (
-            <>
-              <div></div>
-              <LayerTypeOptionsContainer key={removableId}>
-                <div></div>
-                <div id="type-option" className="flex justify-start">
-                  <label
-                    htmlFor={removableId}
-                    title={`Remove/add the ${removableId} from the image`}
-                  >
-                    <input
-                      id={removableId}
-                      onChange={(e) => handleChangeRemovableId(e, removableId)}
-                      className={styles.chk}
-                      type="checkbox"
-                      checked={verifyIfItIsSelected(removableId)}
-                      name={removableId}
-                    />
-                    <label
-                      htmlFor={removableId}
-                      className={`${styles.switch}`}
-                      title={`Remove/add the ${removableId} from the image`}
-                    >
-                      <span className={styles.slider}></span>
-                    </label>
-                    <p>{removableId}</p>
-                  </label>
-                </div>
-              </LayerTypeOptionsContainer>
-            </>
-          ))}
+          {Object.keys(removableIds).map(
+            (removableId) =>
+              removableId !== 'edit button' && (
+                <span key={removableId}>
+                  <div></div>
+                  <LayerTypeOptionsContainer key={removableId}>
+                    <div></div>
+                    <div id="type-option" className="flex justify-start">
+                      <label
+                        htmlFor={removableId}
+                        title={`Remove/add the ${removableId} from the image`}
+                      >
+                        <input
+                          id={removableId}
+                          onChange={(e) =>
+                            handleChangeRemovableId(e, removableId)
+                          }
+                          className={styles.chk}
+                          type="checkbox"
+                          checked={verifyIfItIsSelected(removableId)}
+                          name={removableId}
+                        />
+                        <label
+                          htmlFor={removableId}
+                          className={`${styles.switch}`}
+                          title={`Remove/add the ${removableId} from the image`}
+                        >
+                          <span className={styles.slider}></span>
+                        </label>
+                        <p>{removableId}</p>
+                      </label>
+                    </div>
+                  </LayerTypeOptionsContainer>
+                </span>
+              ),
+          )}
           <div className="py-4 flex flex-col justify-between items-center gap-4">
             <div className="font-semibold text-center text-md">
               Logo Position

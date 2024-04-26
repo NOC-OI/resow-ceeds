@@ -166,7 +166,7 @@ export class GetCOGLayer {
   }
 
   createLeafletLayer(tileUrl, actualLayer, stats, url, bounds) {
-    return L.tileLayer(tileUrl, {
+    const layer = L.tileLayer(tileUrl, {
       opacity: defaultOpacity,
       maxZoom: defaultMaxZoom,
       attribution: actualLayer,
@@ -174,6 +174,7 @@ export class GetCOGLayer {
       url,
       limits: bounds,
     })
+    return layer
   }
 
   async getTile(statsValue = undefined) {

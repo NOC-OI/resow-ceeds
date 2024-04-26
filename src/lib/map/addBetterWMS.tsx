@@ -1,7 +1,13 @@
-import $ from 'jquery'
 import * as L from 'leaflet'
 
 const BetterWMS = L.TileLayer.WMS.extend({
+  initialize: function (url, options, setMapPopup, actual) {
+    // @ts-ignore
+    L.TileLayer.WMS.prototype.initialize.call(this, url, options)
+    this.setMapPopup = setMapPopup
+    this.actual = actual
+  },
+
   onAdd: function (map) {
     L.TileLayer.WMS.prototype.onAdd.call(this, map)
     map.on('click', this.getFeatureInfo, this)
@@ -14,18 +20,21 @@ const BetterWMS = L.TileLayer.WMS.extend({
 
   getFeatureInfo: function (evt) {
     const url = this.getFeatureInfoUrl(evt.latlng)
-    const showResults = L.Util.bind(this.showGetFeatureInfo, this)
 
-    $.ajax({
-      url,
-      success: function (data, status, xhr) {
+    fetch(url)
+      .then((response) => {
+        if (!response.ok) throw new Error('Network response was not ok')
+        return response.text()
+      })
+      .then((data) => {
         const err = typeof data === 'string' ? null : data
-        showResults(err, evt.latlng, data)
-      },
-      error: function (xhr, status, error) {
-        showResults(error)
-      },
-    })
+        this.showGetFeatureInfo(err, data)
+      })
+      .catch((error) => {
+        console.log(error)
+        // console.log(error)
+        // this.showGetFeatureInfo(error)
+      })
   },
 
   getFeatureInfoUrl: function (latlng) {
@@ -48,7 +57,7 @@ const BetterWMS = L.TileLayer.WMS.extend({
       width: size.x,
       layers: this.wmsParams.layers,
       query_layers: this.wmsParams.layers,
-      info_format: 'text/html',
+      info_format: 'application/json',
       opacity: 0.7,
     }
 
@@ -59,24 +68,42 @@ const BetterWMS = L.TileLayer.WMS.extend({
     return newUrl
   },
 
-  showGetFeatureInfo: function (err, latlng, content) {
+  showGetFeatureInfo: function (err, content) {
+    function verifyContent(content) {
+      if (content === null || !content.features) {
+        return false
+      }
+      if (!content.features.length) {
+        return false
+      }
+      if (!content.features[0].properties) {
+        return false
+      }
+      return true
+    }
     if (err) {
       return
     }
-    let verifyContent = content.split('body')[1]
-    verifyContent = verifyContent.replace(/(\r|\n|\s|>|<)/g, '')
-    verifyContent = verifyContent.replace('/', '')
-    const newContent = content
-    if (verifyContent) {
-      L.popup({ maxWidth: 200 })
-        .setLatLng(latlng)
-        .setContent(newContent)
-        .openOn(this._map)
+
+    let newContent
+    try {
+      newContent = JSON.parse(content)
+    } catch (e) {
+      return
+    }
+    const contentOk = verifyContent(newContent)
+
+    if (contentOk) {
+      const properties = newContent.features[0].properties
+      this.setMapPopup({
+        [`${this.actual}`]: properties,
+      })
     }
   },
 })
 
-export const callBetterWMS = (url, params) => {
-  const layer = new BetterWMS(url, params)
+export const callBetterWMS = (url, params, setMapPopup, actual) => {
+  // @ts-ignore
+  const layer = new BetterWMS(url, params, setMapPopup, actual)
   return layer
 }

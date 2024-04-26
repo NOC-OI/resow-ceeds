@@ -117,7 +117,21 @@ export function PrintSelectionArea() {
             const finalDataUrl = selectionCanvas.toDataURL('image/png')
             const link = document.createElement('a')
             link.href = finalDataUrl
-            link.download = 'output_image.png'
+            const date = new Date()
+            const timestamp =
+              date.getFullYear() +
+              '-' +
+              (date.getMonth() + 1).toString().padStart(2, '0') +
+              '-' +
+              date.getDate().toString().padStart(2, '0') +
+              '_' +
+              date.getHours().toString().padStart(2, '0') +
+              '-' +
+              date.getMinutes().toString().padStart(2, '0') +
+              '-' +
+              date.getSeconds().toString().padStart(2, '0')
+
+            link.download = 'ceeds_' + timestamp + '.png'
             document.body.appendChild(link)
             link.click()
             document.body.removeChild(link)

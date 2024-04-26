@@ -12,7 +12,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { GetCOGLayer, GetTifLayer } from '../../lib/map/addGeoraster'
 import { colorScaleByName } from '../../lib/map/jsColormaps'
 import styles from './DataExplorationTypeOptions.module.css'
-import { defaultOpacity } from '../../lib/map/utils'
+import { colorScale, defaultOpacity } from '../../lib/map/utils'
 import chroma from 'chroma-js'
 
 export function handleChangeOpacity(
@@ -79,7 +79,6 @@ export async function handleClickLegend(
       let responseUrl = response.url.replace('layers=', 'layer=')
       responseUrl = responseUrl.replace('amp;', '')
       responseUrl = responseUrl + '&SERVICE=wms'
-      console.log(responseUrl)
       const url = `${responseUrl}&format=image/png`
       setLayerLegend({ layerName: subLayer, url })
     }
@@ -90,6 +89,11 @@ export async function handleClickLegend(
       legend: [[subLayers[subLayer].colors], [subLayer]],
     })
   } else if (subLayers[subLayer].dataType === 'FGB') {
+    setLayerLegend({
+      layerName: subLayer,
+      legend: [[subLayers[subLayer].colors], [subLayer]],
+    })
+  } else if (subLayers[subLayer].dataType === 'GeoJSON') {
     setLayerLegend({
       layerName: subLayer,
       legend: [[subLayers[subLayer].colors], [subLayer]],
@@ -359,10 +363,13 @@ export async function handleChangeMapLayerAndAddLegend(
   layerLegend: any,
   content: any,
 ) {
-  if (
-    e.target.checked &&
-    !['Photo', 'GeoJSON'].includes(subLayers[subLayer].dataType)
-  ) {
+  const color = subLayers[subLayer].colors
+    ? subLayers[subLayer].colors
+    : colorScale[Math.floor(Math.random() * 30)]
+  if (e.target.checked && !['Photo'].includes(subLayers[subLayer].dataType)) {
+    if (subLayers[subLayer].dataType === 'GeoJSON') {
+      subLayers[subLayer].colors = color
+    }
     handleClickLegend(subLayers, subLayer, setLayerLegend, content)
   } else {
     if (layerLegend.layerName === subLayer) {
@@ -377,6 +384,7 @@ export async function handleChangeMapLayerAndAddLegend(
     setLayerAction,
     setSelectedLayers,
     selectedLayers,
+    color,
   )
 }
 
@@ -388,8 +396,12 @@ export async function handleChangeMapLayer(
   setLayerAction: any,
   setSelectedLayers: any,
   selectedLayers: any,
+  color?: any,
 ) {
   const layerInfo = JSON.parse(e.target.value)
+  if (color) {
+    layerInfo.dataInfo.color = color
+  }
   setActualLayer([layerInfo.subLayer])
   if (layerInfo.dataInfo.dataType === 'Photo') {
     if (e.target.checked) {
@@ -522,7 +534,7 @@ export function DataExplorationTypeOptions({
                 )
               }
             />
-            {!['Photo', 'GeoJSON'].includes(subLayers[subLayer].dataType) ? (
+            {!['Photo'].includes(subLayers[subLayer].dataType) ? (
               <FontAwesomeIcon
                 icon={faList}
                 title="Show Legend"

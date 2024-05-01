@@ -343,6 +343,46 @@
         },
         "download": "https://hub.jncc.gov.uk/assets/e72853f4-08b9-4fc6-b677-e3476fdd786c",
         "download_area": false
+      },
+      "Ramsar": {
+        "url": "https://rsis.ramsar.org/geoserver/wms",
+        "dataType": "WMS",
+        "content": "This resource relates to a Web Map Service (WMS) layer showing Marine Conservation Zone (MCZ) boundaries in UK waters. It was last updated in May 2019. JNCC have compiled this dataset using data from JNCC, Natural England, Northern Ireland Environment Agency, Natural Resources Wales and the United Kingdom Hydrographic Office. Marine Conservation Zones are designated under the Marine and Coastal Access Act (2009) or Marine Act (Northern Ireland) 2013. They protect nationally important marine wildlife, habitats, geology and geomorphology.\n Source: https://hub.jncc.gov.uk/assets/e72853f4-08b9-4fc6-b677-e3476fdd786c",
+        "protected": false,
+        "params": {
+          "layers": "ramsar_sdi:features_published"
+        },
+        "download_area": false
+      },
+      "Sites of Special Scientific Interest (England)": {
+        "url": "https://environment.data.gov.uk/spatialdata/sites-of-special-scientific-interest-england/wms",
+        "dataType": "WMS",
+        "content": "A Site of Special Scientific Interest (SSSI) is the land notified as an SSSI under the Wildlife and Countryside Act (1981).\n A Site of Special Scientific Interest (SSSI) is the land notified as an SSSI under the Wildlife and Countryside Act (1981), as amended. Sites notified under the 1949 Act only are not included in the Data set.\n SSSI are the finest sites for wildlife and natural features in England, supporting many characteristic, rare and endangered species, habitats and natural features.\n The data does Not include 'proposed' sites.\n Boundaries are generally mapped against Ordnance Survey MasterMap Topography Layer.\n Full metadata can be viewed on data.gov.uk.",
+        "protected": false,
+        "download_area": false,
+        "params": {
+          "layers": "Sites_of_Special_Scientific_Interest_England"
+        }  
+      },
+      "Sites of Special Scientific Interest (Scotland)": {
+        "url": "https://ogc.nature.scot/geoserver/protectedareas/wms",
+        "dataType": "WMS",
+        "content": "Sites of Special Scientific Interest (SSSI) are those areas of land and water (to the seaward limits of local authority areas or MLWS) that Scottish Natural Heritage (SNH) considers to best represent our natural heritage - its diversity of plants, animals and habitats, rocks and landforms, or a combinations of such natural features. This is a Web Mapping Service (WMS) that contains the locations of SSSI's in Scotland.",
+        "protected": false,
+        "download_area": false,
+        "params": {
+          "layers": "sssi"
+        }  
+      },
+      "Sites of Special Scientific Interest (Wales)": {
+        "url": "https://datamap.gov.wales/geoserver/ows",
+        "dataType": "WMS",
+        "content": "This spatial dataset contains the boundaries of Sites of Special Scientific Interest (SSSIs) in Wales. SSSIs cover a wide range of habitats from small fens, bogs and riverside meadows to sand dunes, woodlands and vast tracks of uplands. Most are in private ownership, although some are owned and managed by local wildlife trusts, or other voluntary conservation bodies. Notification of an SSSI under the Wildlife and Countryside Act 1981 has since been amended by the Countryside and Rights of Way Act 2001, which brought about numerous changes in the way SSSI are notified managed and protected. In order to ensure consistent, favourable long-term management of these sites, Natural Resources Wales (NRW) with landowners have prepared management plans for all SSSI in Wales. Local planning authorities are required to consult NRW before allowing any development to proceed that may affect an SSSI. Water, gas and electricity companies must also do the same. SSSIs have been designated over a number of years, from 1949 to the present day, and are on-going.",
+        "protected": false,
+        "download_area": false,
+        "params": {
+          "layers": "inspire-nrw:NRW_SSSI"
+        }  
       }
     }
   },

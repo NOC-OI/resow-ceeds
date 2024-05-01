@@ -22,16 +22,36 @@ export const GlobalStyle = createGlobalStyle`
   body, input, textarea, button{
     font-family: 'Roboto', sans-serif;
     font-weight: 400;
-    font-size: 1rem;
+    /* font-size: 1rem; */
+  }
+  @media (max-width: 640px){
+    html{
+      font-size: 75% !important;
+    }
   }
   @media (max-width: 768px){
     html{
-      font-size: 70%;
+      font-size: 80% !important;
+    }
+  }
+  @media (max-width: 1024px){
+    html{
+      font-size: 85% !important;
+    }
+  }
+  @media (max-width: 1280px){
+    html{
+      font-size: 90% !important;
+    }
+  }
+  @media (max-width: 1536px){
+    html{
+      font-size: 95% !important;
     }
   }
   @media (max-width: 1700px){
     html{
-      font-size: 90%;
+      font-size: 100% !important;
     }
   }
 

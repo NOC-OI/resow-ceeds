@@ -2,6 +2,42 @@ import { createGlobalStyle } from 'styled-components'
 
 export const GlobalStyle = createGlobalStyle`
 
+  @media (min-width: 100px){
+    html{
+      font-size: 70%;
+    }
+  }
+  
+  @media (min-width: 640px){
+    html{
+      font-size: 75%;
+    }
+  }
+  @media (min-width: 768px){
+    html{
+      font-size: 80%;
+    }
+  }
+  @media (min-width: 1024px){
+    html{
+      font-size: 85%;
+    }
+  }
+  @media (min-width: 1280px){
+    html{
+      font-size: 90%;
+    }
+  }
+  @media (min-width: 1536px){
+    html{
+      font-size: 95%;
+    }
+  }
+  @media (min-width: 1700px){
+    html{
+      font-size: 100%;
+    }
+  }
   @tailwind base;
   @tailwind components;
   @tailwind utilities;
@@ -24,36 +60,5 @@ export const GlobalStyle = createGlobalStyle`
     font-weight: 400;
     /* font-size: 1rem; */
   }
-  @media (max-width: 640px){
-    html{
-      font-size: 75% !important;
-    }
-  }
-  @media (max-width: 768px){
-    html{
-      font-size: 80% !important;
-    }
-  }
-  @media (max-width: 1024px){
-    html{
-      font-size: 85% !important;
-    }
-  }
-  @media (max-width: 1280px){
-    html{
-      font-size: 90% !important;
-    }
-  }
-  @media (max-width: 1536px){
-    html{
-      font-size: 95% !important;
-    }
-  }
-  @media (max-width: 1700px){
-    html{
-      font-size: 100% !important;
-    }
-  }
-
 
 `

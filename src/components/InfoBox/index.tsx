@@ -95,7 +95,7 @@ export function InfoBox({
           </div>
         </div>
       </div>
-      <div className="flex justify-center items-center">
+      <div className="flex justify-center items-center sm:hidden">
         <DimensionsToogle />
       </div>
     </InfoBoxContainer>

@@ -22,12 +22,14 @@ interface DownloadSelectionProps {
   selectedLayers: any
   setSelectedLayers: any
   listLayers: any
+  setDownloadPopup: any
 }
 
 export function DownloadSelection({
   selectedLayers,
   setSelectedLayers,
   listLayers,
+  setDownloadPopup,
 }: DownloadSelectionProps) {
   const { setFlashMessage } = useContextHandle()
   const {
@@ -354,18 +356,21 @@ export function DownloadSelection({
                                 <p>{baseLayer}</p>
                               </label>
                               <div id="layer-edit">
-                                <a
-                                  href={
-                                    listLayers[layerClass].layerNames[baseLayer]
-                                      .download
+                                <div
+                                  onClick={() =>
+                                    setDownloadPopup({
+                                      [`${layerClass}_${baseLayer}`]:
+                                        listLayers[layerClass].layerNames[
+                                          baseLayer
+                                        ].download,
+                                    })
                                   }
-                                  target="_blank"
                                 >
                                   <FontAwesomeIcon
                                     icon={faDownload}
                                     title="Download layer"
                                   />
-                                </a>
+                                </div>
                               </div>
                             </div>
                           </LayerTypeOptionsContainer>

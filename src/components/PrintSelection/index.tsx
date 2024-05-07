@@ -82,6 +82,8 @@ export function PrintSelection({ setPrintBox }: PrintSelectionProps) {
       window.removeEventListener('keydown', handleKeyDown)
     }
   }, [setCanSelect])
+  const rout = window.location.pathname
+
   return (
     <Draggable nodeRef={nodeRef} cancel=".clickable">
       <InfoButtonBoxContainer
@@ -97,92 +99,100 @@ export function PrintSelection({ setPrintBox }: PrintSelectionProps) {
           />
         </div>
         <div className="font-bold text-center pb-3 text-xl">Export Image</div>
-        <div className="font-semibold text-center text-md">Filter area</div>
-        <div className="pb-2 flex flex-col !justify-start">
-          {Object.keys(removableIds).map(
-            (removableId) =>
-              removableId !== 'edit button' && (
-                <span key={removableId}>
-                  <div></div>
-                  <LayerTypeOptionsContainer
-                    key={removableId}
-                    className="clickable"
-                  >
-                    <div></div>
-                    <div id="type-option" className="flex justify-start">
-                      <label
-                        htmlFor={removableId}
-                        title={`Remove/add the ${removableId} from the image`}
+        {rout === '/3d' ? (
+          <p className="text-sm text-white text-center">
+            This feature is not available in 3D mode
+          </p>
+        ) : (
+          <>
+            <div className="font-semibold text-center text-md">Filter area</div>
+            <div className="pb-2 flex flex-col !justify-start">
+              {Object.keys(removableIds).map(
+                (removableId) =>
+                  removableId !== 'edit button' && (
+                    <span key={removableId}>
+                      <div></div>
+                      <LayerTypeOptionsContainer
+                        key={removableId}
+                        className="clickable"
                       >
-                        <input
-                          id={removableId}
-                          onChange={(e) =>
-                            handleChangeRemovableId(e, removableId)
-                          }
-                          className={styles.chk}
-                          type="checkbox"
-                          checked={verifyIfItIsSelected(removableId)}
-                          name={removableId}
-                        />
-                        <label
-                          htmlFor={removableId}
-                          className={`${styles.switch}`}
-                          title={`Remove/add the ${removableId} from the image`}
-                        >
-                          <span className={styles.slider}></span>
-                        </label>
-                        <p>{removableId}</p>
-                      </label>
-                    </div>
-                  </LayerTypeOptionsContainer>
-                </span>
-              ),
-          )}
-          <div className="py-4 flex flex-col justify-between items-center gap-4">
-            <div className="font-semibold text-center text-md">
-              Logo Position
+                        <div></div>
+                        <div id="type-option" className="flex justify-start">
+                          <label
+                            htmlFor={removableId}
+                            title={`Remove/add the ${removableId} from the image`}
+                          >
+                            <input
+                              id={removableId}
+                              onChange={(e) =>
+                                handleChangeRemovableId(e, removableId)
+                              }
+                              className={styles.chk}
+                              type="checkbox"
+                              checked={verifyIfItIsSelected(removableId)}
+                              name={removableId}
+                            />
+                            <label
+                              htmlFor={removableId}
+                              className={`${styles.switch}`}
+                              title={`Remove/add the ${removableId} from the image`}
+                            >
+                              <span className={styles.slider}></span>
+                            </label>
+                            <p>{removableId}</p>
+                          </label>
+                        </div>
+                      </LayerTypeOptionsContainer>
+                    </span>
+                  ),
+              )}
+              <div className="py-4 flex flex-col justify-between items-center gap-4">
+                <div className="font-semibold text-center text-md">
+                  Logo Position
+                </div>
+                <select
+                  id="cycle-select"
+                  value={logoPosition}
+                  onChange={(e) => setLogoPosition(e.target.value)}
+                  className="clickable bg-black border border-black bg-opacity-20 text-white text-sm rounded-lg  block w-max p-2 "
+                >
+                  <option
+                    className="!bg-black !bg-opacity-80 opacity-30 !text-white"
+                    value="bottom-right"
+                  >
+                    Bottom-Right
+                  </option>
+                  <option
+                    className="!bg-black !bg-opacity-80 !text-white"
+                    value="bottom-left"
+                  >
+                    Bottom-Left
+                  </option>
+                  <option
+                    className="!bg-black !bg-opacity-80 !text-white"
+                    value="top-right"
+                  >
+                    Top-Right
+                  </option>
+                  <option
+                    className="!bg-black !bg-opacity-80 !text-white hover:!bg-opacity-100 hover:!bg-black"
+                    value="top-left"
+                  >
+                    Top-Left
+                  </option>
+                </select>
+              </div>
+              <Button
+                onClick={toggleCanSelect}
+                disabled={canSelect}
+                variant="contained"
+                className="!w-full !text-white !bg-black !rounded-lg opacity-60 hover:!opacity-80 clickable"
+              >
+                Select Area
+              </Button>
             </div>
-            <select
-              id="cycle-select"
-              value={logoPosition}
-              onChange={(e) => setLogoPosition(e.target.value)}
-              className="clickable bg-black border border-black bg-opacity-20 text-white text-sm rounded-lg  block w-max p-2 "
-            >
-              <option
-                className="!bg-black !bg-opacity-80 opacity-30 !text-white"
-                value="bottom-right"
-              >
-                Bottom-Right
-              </option>
-              <option
-                className="!bg-black !bg-opacity-80 !text-white"
-                value="bottom-left"
-              >
-                Bottom-Left
-              </option>
-              <option
-                className="!bg-black !bg-opacity-80 !text-white"
-                value="top-right"
-              >
-                Top-Right
-              </option>
-              <option
-                className="!bg-black !bg-opacity-80 !text-white hover:!bg-opacity-100 hover:!bg-black"
-                value="top-left"
-              >
-                Top-Left
-              </option>
-            </select>
-          </div>
-          <Button
-            onClick={toggleCanSelect}
-            disabled={canSelect}
-            variant="contained"
-            className="!w-full !text-white !bg-black !rounded-lg opacity-60 hover:!opacity-80 clickable"
-          >
-            Select Area
-          </Button>
-        </div>
+          </>
+        )}
       </InfoButtonBoxContainer>
     </Draggable>
   )

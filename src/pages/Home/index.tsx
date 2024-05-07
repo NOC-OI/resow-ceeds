@@ -20,6 +20,7 @@ import { usePrintPageHandle } from '../../lib/data/printPageManagement'
 import { PrintSelectionArea } from '../../components/PrintSelectionArea'
 import { UploadDataHandleProvider } from '../../lib/data/uploadDataManagement'
 import { DownloadPopup } from '../../components/DownloadPopup'
+import { DimensionsToogle } from '../../components/DimensionsToogle'
 
 export function Home() {
   const [selectedSidebarOption, setSelectedSidebarOption] = useState<string>('')
@@ -121,6 +122,9 @@ export function Home() {
               setPrintBox={setPrintBox}
               setDownloadPopup={setDownloadPopup}
             />
+            <div className="hidden sm:block z-[9999]">
+              <DimensionsToogle />
+            </div>
             {graphData ? (
               <GraphBox
                 graphData={graphData}

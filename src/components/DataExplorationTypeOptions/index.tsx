@@ -78,16 +78,16 @@ export async function handleClickLegend(
     newParams.request = 'GetLegendGraphic'
     newParams.layer = newParams.layers
     async function getURILegend(newParams: any) {
-      const responseUrl = await getLegendCapabilities(
+      let responseUrl = await getLegendCapabilities(
         subLayers[subLayer].url,
         newParams.layers,
       )
-      // const layerUrl = `${subLayers[subLayer].url}?`
-      // const response = await fetch(layerUrl + new URLSearchParams(newParams))
-      // let responseUrl = response.url.replace('layers=', 'layer=')
-      // responseUrl = responseUrl.replace('amp;', '')
-      // responseUrl = responseUrl + '&SERVICE=wms'
-      // const url = `${responseUrl}&format=image/png`
+      if (!responseUrl) {
+        responseUrl = `${subLayers[subLayer].url}?request=${newParams.request}&layer=${newParams.layer}`
+        responseUrl = responseUrl.replace('layers=', 'layer=')
+        responseUrl = responseUrl.replace('amp;', '')
+        responseUrl = responseUrl + '&SERVICE=wms&format=image/png'
+      }
       setLayerLegend({ layerName: subLayer, url: responseUrl })
     }
     await getURILegend(newParams)

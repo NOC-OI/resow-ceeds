@@ -227,6 +227,7 @@ export function SideSelection({
               selectedLayers={selectedLayers}
               setSelectedLayers={setSelectedLayers}
               listLayers={listLayers}
+              setDownloadPopup={setDownloadPopup}
             />
           )}
           {selectedSidebarOption === 'Upload' && (

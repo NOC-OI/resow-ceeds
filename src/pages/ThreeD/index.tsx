@@ -18,6 +18,7 @@ import { usePrintPageHandle } from '../../lib/data/printPageManagement'
 import { PrintSelectionArea } from '../../components/PrintSelectionArea'
 import { bathymetryUrl, getGeorasterLayer } from '../../lib/map/utils'
 import { DownloadPopup } from '../../components/DownloadPopup'
+import { DimensionsToogle } from '../../components/DimensionsToogle'
 
 export function ThreeD() {
   const [selectedSidebarOption, setSelectedSidebarOption] = useState<string>('')
@@ -96,6 +97,9 @@ export function ThreeD() {
               setThreeD={setThreeD}
               setDownloadPopup={setDownloadPopup}
             />
+            <div className="hidden sm:block z-[9999]">
+              <DimensionsToogle />
+            </div>
             {layerLegend ? (
               <DataExplorationLegend
                 layerLegend={layerLegend}

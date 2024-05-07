@@ -275,8 +275,10 @@ export function parseCapabilities(xml) {
 
 export async function getLegendCapabilities(url: string, layer: string) {
   try {
-    const response = await fetch(`${url}?service=WMS&request=GetCapabilities`)
+    const newUrl = `${url}?service=WMS&request=GetCapabilities`
+    const response = await fetch(newUrl)
     const text = await response.text()
+
     const layers = parseCapabilities(text)
     const legendUrl = layers[layer][1][0].replace('amp;', '')
     return legendUrl

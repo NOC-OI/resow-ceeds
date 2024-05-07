@@ -173,7 +173,7 @@ export function ThreeDDataExplorationTypeOptions({
                 }
               />
             ) : null}
-            {['COG'].includes(subLayers[subLayer].dataType) && (
+            {content === 'Bathymetry' && (
               <FontAwesomeIcon
                 icon={faCube}
                 title="Add 3D terrain to the Map"

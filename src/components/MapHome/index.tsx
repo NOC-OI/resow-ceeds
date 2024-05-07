@@ -22,6 +22,7 @@ import {
   bathymetryUrl,
   colorScale,
   createColor,
+  createDivIcon,
   createIcon,
   createTurfPoint,
   defaultBaseLayer,
@@ -629,7 +630,7 @@ function MapHome1({
         layer = L.geoJSON(data, {
           pointToLayer: function (feature, latlng) {
             return L.marker(latlng, {
-              icon: createIcon('/marker-icon.png', [25, 25]),
+              icon: createDivIcon(color, [25, 25]),
             })
           },
           onEachFeature: function (feature, layer) {
@@ -1043,38 +1044,38 @@ function MapHome1({
     }
   }, [clickPoint])
 
-  async function addInitialLayers() {
-    const layerNames = [
-      [
-        {
-          url: 'https://mpa-ows.jncc.gov.uk/mpa_mapper/wms',
-          params: {
-            layers: 'sac_mc_full',
-          },
-        },
-        'Marine Protected Areas_Special Areas of Conservation',
-      ],
-      [
-        {
-          url: 'https://mpa-ows.jncc.gov.uk/mpa_mapper/wms',
-          params: {
-            layers: 'mcz',
-          },
-        },
-        'Marine Protected Areas_Marine Conservation Zones',
-      ],
-    ]
-    layerNames.forEach(async (layerName) => {
-      const layer = await getWMSLayer(layerName[0], layerName[1])
-      map.addLayer(layer)
-    })
-  }
+  // async function addInitialLayers() {
+  //   const layerNames = [
+  //     [
+  //       {
+  //         url: 'https://mpa-ows.jncc.gov.uk/mpa_mapper/wms',
+  //         params: {
+  //           layers: 'sac_mc_full',
+  //         },
+  //       },
+  //       'Marine Protected Areas_Special Areas of Conservation',
+  //     ],
+  //     [
+  //       {
+  //         url: 'https://mpa-ows.jncc.gov.uk/mpa_mapper/wms',
+  //         params: {
+  //           layers: 'mcz',
+  //         },
+  //       },
+  //       'Marine Protected Areas_Marine Conservation Zones',
+  //     ],
+  //   ]
+  //   layerNames.forEach(async (layerName) => {
+  //     const layer = await getWMSLayer(layerName[0], layerName[1])
+  //     map.addLayer(layer)
+  //   })
+  // }
 
-  useEffect(() => {
-    if (map) {
-      addInitialLayers()
-    }
-  }, [map])
+  // useEffect(() => {
+  //   if (map) {
+  //     addInitialLayers()
+  //   }
+  // }, [map])
 
   useEffect(() => {
     if (map) {

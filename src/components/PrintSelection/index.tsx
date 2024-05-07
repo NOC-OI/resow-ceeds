@@ -104,7 +104,10 @@ export function PrintSelection({ setPrintBox }: PrintSelectionProps) {
               removableId !== 'edit button' && (
                 <span key={removableId}>
                   <div></div>
-                  <LayerTypeOptionsContainer key={removableId}>
+                  <LayerTypeOptionsContainer
+                    key={removableId}
+                    className="clickable"
+                  >
                     <div></div>
                     <div id="type-option" className="flex justify-start">
                       <label
@@ -175,7 +178,7 @@ export function PrintSelection({ setPrintBox }: PrintSelectionProps) {
             onClick={toggleCanSelect}
             disabled={canSelect}
             variant="contained"
-            className="!w-full !text-white !bg-black !rounded-lg opacity-60 hover:!opacity-80"
+            className="!w-full !text-white !bg-black !rounded-lg opacity-60 hover:!opacity-80 clickable"
           >
             Select Area
           </Button>

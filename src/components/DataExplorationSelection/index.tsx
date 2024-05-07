@@ -24,6 +24,7 @@ interface DataExplorationSelectionProps {
   showSuitability?: any
   selectedBaseLayer: any
   setSelectedBaseLayer: any
+  setDownloadPopup?: any
 }
 
 export function DataExplorationSelection({
@@ -44,6 +45,7 @@ export function DataExplorationSelection({
   showSuitability,
   selectedBaseLayer,
   setSelectedBaseLayer,
+  setDownloadPopup,
 }: DataExplorationSelectionProps) {
   // function handleClickLayerInfo(title: String, content: string) {
   //   setInfoButtonBox({
@@ -77,6 +79,7 @@ export function DataExplorationSelection({
             setGetPolyline={setGetPolyline}
             setClickPoint={setClickPoint}
             listLayers={listLayers}
+            setDownloadPopup={setDownloadPopup}
           />
         ))}
       </LayerTypes>

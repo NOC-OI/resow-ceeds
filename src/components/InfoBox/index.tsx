@@ -1,4 +1,7 @@
 import { InfoBoxContainer } from './styles'
+import { DimensionsToogle } from '../DimensionsToogle'
+import { defineNewDepthValue } from '../../lib/map/utils'
+import { useEffect } from 'react'
 
 interface keyable {
   [key: string]: any
@@ -7,9 +10,16 @@ interface keyable {
 interface InfoBoxProps {
   position: null | keyable
   depth: keyable
+  batLayer?: any
+  setDepth?: any
 }
 
-export function InfoBox({ position = null, depth = {} }: InfoBoxProps) {
+export function InfoBox({
+  position = null,
+  depth = {},
+  batLayer,
+  setDepth,
+}: InfoBoxProps) {
   let lat
   let lng
   if (position === null) {
@@ -46,6 +56,13 @@ export function InfoBox({ position = null, depth = {} }: InfoBoxProps) {
     ).padStart(2, '0')
     lng = `${lngDegrees}°${lngMinutes}'${lngSeconds}${lngSignal}`
   }
+
+  useEffect(() => {
+    if (batLayer && position) {
+      defineNewDepthValue('_Depth', {}, position, null, batLayer, setDepth)
+    }
+  }, [position, batLayer])
+
   return (
     <InfoBoxContainer id="infobox-container">
       <h1 className="text-[1.5rem] leading-6 text-center pb-2">CEEDS</h1>
@@ -53,7 +70,7 @@ export function InfoBox({ position = null, depth = {} }: InfoBoxProps) {
         <div className="">
           <img src="favicon.png" className="h-20" />
         </div>
-        <div className="w-32 flex flex-col gap-1">
+        <div className="w-32 hidden sm:flex sm:flex-col gap-1">
           <div className="flex align-middle justify-between text-[1rem] leading-6">
             <p>Lat:</p>
             <span>{lat}</span>
@@ -77,6 +94,9 @@ export function InfoBox({ position = null, depth = {} }: InfoBoxProps) {
             )}
           </div>
         </div>
+      </div>
+      <div className="flex justify-center items-center">
+        <DimensionsToogle />
       </div>
     </InfoBoxContainer>
   )

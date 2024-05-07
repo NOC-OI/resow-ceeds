@@ -9,8 +9,6 @@ import {
   faSquarePlus,
   faTrash,
 } from '@fortawesome/free-solid-svg-icons'
-import { Icon } from '@iconify/react'
-import { useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
 import { DataExplorationSelection } from '../DataExplorationSelection'
 import { ThreeDDataExplorationSelection } from '../ThreeDDataExplorationSelection'
@@ -40,10 +38,11 @@ interface SideSelectionProps {
   setClickPoint?: any
   threeD?: any
   setThreeD?: any
-  selectedBaseLayer: any
-  setSelectedBaseLayer: any
+  selectedBaseLayer?: any
+  setSelectedBaseLayer?: any
   printBox: any
   setPrintBox: any
+  setDownloadPopup: any
 }
 
 export function SideSelection({
@@ -71,23 +70,16 @@ export function SideSelection({
   setSelectedBaseLayer,
   printBox,
   setPrintBox,
+  setDownloadPopup,
 }: SideSelectionProps) {
-  const navigate = useNavigate()
   const { loading } = useContextHandle()
   const { setSelectedLayersUpload } = useUploadDataHandle()
   async function handleShowSelection(e: any) {
-    if (
-      window.location.pathname === '/3d' ||
-      window.location.pathname.slice(0, 7) === '/photos'
-    ) {
-      navigate('/')
+    const oldSelectedSidebarOption = selectedSidebarOption
+    if (oldSelectedSidebarOption === e.currentTarget.id) {
+      setSelectedSidebarOption('')
     } else {
-      const oldSelectedSidebarOption = selectedSidebarOption
-      if (oldSelectedSidebarOption === e.currentTarget.id) {
-        setSelectedSidebarOption('')
-      } else {
-        setSelectedSidebarOption(e.currentTarget.id)
-      }
+      setSelectedSidebarOption(e.currentTarget.id)
     }
   }
 
@@ -123,28 +115,29 @@ export function SideSelection({
     setActualLayer(Object.keys(selectedLayers))
     setSelectedLayers({})
     setSelectedLayersUpload({})
+    setLayerLegend('')
     setLayerAction('remove')
   }
 
-  function handleGoToBathymetry() {
-    if (window.location.pathname !== '/3d') {
-      navigate('/3d')
-    } else {
-      setSelectedSidebarOption((selectedSidebarOption: string) =>
-        selectedSidebarOption ? '' : '3D',
-      )
-    }
-  }
+  // function handleGoToBathymetry() {
+  //   if (window.location.pathname !== '/3d') {
+  //     navigate('/3d')
+  //   } else {
+  //     setSelectedSidebarOption((selectedSidebarOption: string) =>
+  //       selectedSidebarOption ? '' : '3D',
+  //     )
+  //   }
+  // }
+  const rout = window.location.pathname
 
   function handleToogleFullPagePopup() {
     setShowPopup((showPopup: any) => !showPopup)
   }
-  // const rout = window.location.pathname
 
   return (
     <div id="side-selection">
       <SideSelectionContainer className={loading ? 'pointer-events-none' : ''}>
-        <div className="flex gap-6">
+        <div className="flex gap-6 pl-2 pr-2">
           <SideSelectionLink
             title={'Data Exploration'}
             onClick={handleShowSelection}
@@ -181,14 +174,6 @@ export function SideSelection({
           >
             <FontAwesomeIcon icon={faCamera} />
           </SideSelectionLink>
-          <SideSelectionLink
-            title={'3D Data Exploration'}
-            onClick={handleGoToBathymetry}
-            id={'3D Data Exploration'}
-            className={selectedSidebarOption === '3D' ? styles.active : ''}
-          >
-            <Icon icon="bi:badge-3d-fill" />
-          </SideSelectionLink>
           <SideSelectionLink title={'Clean map'} onClick={handleEraseLayers}>
             <FontAwesomeIcon icon={faTrash} />
           </SideSelectionLink>
@@ -200,41 +185,43 @@ export function SideSelection({
           </SideSelectionLink>
         </div>
         <div>
-          {selectedSidebarOption === 'Data Exploration' && (
-            <DataExplorationSelection
-              selectedLayers={selectedLayers}
-              setSelectedLayers={setSelectedLayers}
-              actualLayer={actualLayer}
-              setActualLayer={setActualLayer}
-              layerAction={layerAction}
-              setLayerAction={setLayerAction}
-              layerLegend={layerLegend}
-              setLayerLegend={setLayerLegend}
-              setInfoButtonBox={setInfoButtonBox}
-              listLayers={listLayers}
-              setShowPhotos={setShowPhotos}
-              getPolyline={getPolyline}
-              setGetPolyline={setGetPolyline}
-              setClickPoint={setClickPoint}
-              selectedBaseLayer={selectedBaseLayer}
-              setSelectedBaseLayer={setSelectedBaseLayer}
-            />
-          )}
-          {selectedSidebarOption === '3D' && (
-            <ThreeDDataExplorationSelection
-              selectedLayers={selectedLayers}
-              setSelectedLayers={setSelectedLayers}
-              setActualLayer={setActualLayer}
-              layerAction={layerAction}
-              setLayerAction={setLayerAction}
-              setLayerLegend={setLayerLegend}
-              setInfoButtonBox={setInfoButtonBox}
-              listLayers={listLayers}
-              threeD={threeD}
-              setThreeD={setThreeD}
-              showSuitability={false}
-            />
-          )}
+          {selectedSidebarOption === 'Data Exploration' &&
+            (rout === '/' ? (
+              <DataExplorationSelection
+                selectedLayers={selectedLayers}
+                setSelectedLayers={setSelectedLayers}
+                actualLayer={actualLayer}
+                setActualLayer={setActualLayer}
+                layerAction={layerAction}
+                setLayerAction={setLayerAction}
+                layerLegend={layerLegend}
+                setLayerLegend={setLayerLegend}
+                setInfoButtonBox={setInfoButtonBox}
+                listLayers={listLayers}
+                setShowPhotos={setShowPhotos}
+                getPolyline={getPolyline}
+                setGetPolyline={setGetPolyline}
+                setClickPoint={setClickPoint}
+                selectedBaseLayer={selectedBaseLayer}
+                setSelectedBaseLayer={setSelectedBaseLayer}
+                setDownloadPopup={setDownloadPopup}
+              />
+            ) : rout === '/3d' ? (
+              <ThreeDDataExplorationSelection
+                selectedLayers={selectedLayers}
+                setSelectedLayers={setSelectedLayers}
+                setActualLayer={setActualLayer}
+                layerAction={layerAction}
+                setLayerAction={setLayerAction}
+                layerLegend={layerLegend}
+                setLayerLegend={setLayerLegend}
+                setInfoButtonBox={setInfoButtonBox}
+                listLayers={listLayers}
+                threeD={threeD}
+                setThreeD={setThreeD}
+                setDownloadPopup={setDownloadPopup}
+              />
+            ) : null)}
           {selectedSidebarOption === 'Download' && (
             <DownloadSelection
               selectedLayers={selectedLayers}

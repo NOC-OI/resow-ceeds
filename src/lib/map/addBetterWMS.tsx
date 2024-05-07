@@ -30,11 +30,7 @@ const BetterWMS = L.TileLayer.WMS.extend({
         const err = typeof data === 'string' ? null : data
         this.showGetFeatureInfo(err, data)
       })
-      .catch((error) => {
-        console.log(error)
-        // console.log(error)
-        // this.showGetFeatureInfo(error)
-      })
+      .catch(() => {})
   },
 
   getFeatureInfoUrl: function (latlng) {

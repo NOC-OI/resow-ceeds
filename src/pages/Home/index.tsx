@@ -19,6 +19,7 @@ import { PrintSelection } from '../../components/PrintSelection'
 import { usePrintPageHandle } from '../../lib/data/printPageManagement'
 import { PrintSelectionArea } from '../../components/PrintSelectionArea'
 import { UploadDataHandleProvider } from '../../lib/data/uploadDataManagement'
+import { DownloadPopup } from '../../components/DownloadPopup'
 
 export function Home() {
   const [selectedSidebarOption, setSelectedSidebarOption] = useState<string>('')
@@ -63,6 +64,7 @@ export function Home() {
   const [clickPoint, setClickPoint] = useState(false)
 
   const [mapPopup, setMapPopup] = useState({})
+  const [downloadPopup, setDownloadPopup] = useState({})
 
   const fetchData = async () => {
     const rout = window.location.pathname
@@ -71,17 +73,17 @@ export function Home() {
       setListLayers((listLayers: any) =>
         listLayers.lenght > 0 ? listLayers : getLayers.data,
       )
-      setSelectedLayers({
-        ...selectedLayers,
-        'Marine Protected Areas_Special Areas of Conservation':
-          getLayers.data['Marine Protected Areas'].layerNames[
-            'Special Areas of Conservation'
-          ],
-        'Marine Protected Areas_Marine Conservation Zones':
-          getLayers.data['Marine Protected Areas'].layerNames[
-            'Marine Conservation Zones'
-          ],
-      })
+      // setSelectedLayers({
+      //   ...selectedLayers,
+      //   'Marine Protected Areas_Special Areas of Conservation':
+      //     getLayers.data['Marine Protected Areas'].layerNames[
+      //       'Special Areas of Conservation'
+      //     ],
+      //   'Marine Protected Areas_Marine Conservation Zones':
+      //     getLayers.data['Marine Protected Areas'].layerNames[
+      //       'Marine Conservation Zones'
+      //     ],
+      // })
       setLoading(false)
     })
   }
@@ -117,6 +119,7 @@ export function Home() {
               setSelectedBaseLayer={setSelectedBaseLayer}
               printBox={printBox}
               setPrintBox={setPrintBox}
+              setDownloadPopup={setDownloadPopup}
             />
             {graphData ? (
               <GraphBox
@@ -160,6 +163,12 @@ export function Home() {
             ) : null}
             {Object.keys(mapPopup).length !== 0 ? (
               <MapPopup mapPopup={mapPopup} setMapPopup={setMapPopup} />
+            ) : null}
+            {Object.keys(downloadPopup).length !== 0 ? (
+              <DownloadPopup
+                downloadPopup={downloadPopup}
+                setDownloadPopup={setDownloadPopup}
+              />
             ) : null}
           </SideBar>
           <BottomBar>

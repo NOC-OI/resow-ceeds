@@ -159,6 +159,12 @@ export function DataExplorationLegend({
     }
   }
 
+  useEffect(() => {
+    if (layerLegend.url) {
+      setEditLayerColors(false)
+    }
+  }, [layerLegend])
+
   const nodeRef = useRef(null)
   return (
     <Draggable nodeRef={nodeRef} cancel=".clickable">

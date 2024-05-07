@@ -17,12 +17,14 @@ interface ThreeDDataExplorationTypeProps {
   setActualLayer: any
   layerAction: String
   setLayerAction: any
+  layerLegend: any
   setLayerLegend: any
   setInfoButtonBox?: any
   isLogged?: any
   threeD: any
   setThreeD: any
   listLayers: any
+  setDownloadPopup?: any
 }
 
 export function ThreeDDataExplorationType({
@@ -33,12 +35,14 @@ export function ThreeDDataExplorationType({
   setActualLayer,
   layerAction,
   setLayerAction,
+  layerLegend,
   setLayerLegend,
   setInfoButtonBox,
   isLogged,
   threeD,
   setThreeD,
   listLayers,
+  setDownloadPopup,
 }: ThreeDDataExplorationTypeProps) {
   const [subLayers, setSubLayers] = useState<keyable>({})
 
@@ -106,6 +110,7 @@ export function ThreeDDataExplorationType({
                 setActiveOpacity={setActiveOpacity}
                 setActualLayer={setActualLayer}
                 subLayers={subLayers}
+                layerLegend={layerLegend}
                 setLayerLegend={setLayerLegend}
                 layerAction={layerAction}
                 setLayerAction={setLayerAction}
@@ -115,6 +120,7 @@ export function ThreeDDataExplorationType({
                 isLogged={isLogged}
                 threeD={threeD}
                 setThreeD={setThreeD}
+                setDownloadPopup={setDownloadPopup}
               />
             )
           } else {

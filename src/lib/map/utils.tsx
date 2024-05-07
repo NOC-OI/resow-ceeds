@@ -222,6 +222,23 @@ export function createIcon(url: string, size: [number, number]) {
   })
 }
 
+export function createDivIcon(color: string, size: [number, number]) {
+  const lighterColor = chroma(color).brighten(1).hex()
+  const darkerColor = chroma(color).darken(2).hex()
+  return L.divIcon({
+    className: 'bg-transparent',
+    html:
+      "<div style='background: radial-gradient(circle, " +
+      lighterColor +
+      ' 10%, ' +
+      color +
+      ' 60%); box-shadow: 0 4px 8px 0 ' +
+      darkerColor +
+      ", 0 6px 20px 0 rgba(0, 0, 0, 0.19); width: 24px; height: 24px; border-radius: 50%; background-color: transparent;'></div>",
+    iconSize: size,
+  })
+}
+
 export function convertProjection(
   source: string,
   dest: string,
@@ -230,11 +247,76 @@ export function convertProjection(
   return proj4(source, dest).forward([point[0], point[1]])
 }
 
+export function parseCapabilities(xml) {
+  const parser = new DOMParser()
+  const xmlDoc = parser.parseFromString(xml, 'text/xml')
+  const layers = {}
+  const layerNodes = xmlDoc.getElementsByTagName('Layer')
+  for (let i = 0; i < layerNodes.length; i++) {
+    const styles = []
+    const legends = []
+    const layerNode = layerNodes[i]
+    const layerName = layerNode.getElementsByTagName('Name')[0].textContent
+    const styleNodes = layerNode.getElementsByTagName('Style')
+    for (let j = 0; j < styleNodes.length; j++) {
+      const styleNode = styleNodes[j]
+      const styleName = styleNode.getElementsByTagName('Name')[0].textContent
+      const legendName = styleNode.getElementsByTagName('LegendURL')[0]
+      const onlineResource = legendName
+        .getElementsByTagName('OnlineResource')[0]
+        .getAttribute('xlink:href')
+      legends.push(onlineResource)
+      styles.push(styleName)
+    }
+    layers[layerName] = [styles, legends]
+  }
+  return layers
+}
+
+export async function getLegendCapabilities(url: string, layer: string) {
+  try {
+    const response = await fetch(`${url}?service=WMS&request=GetCapabilities`)
+    const text = await response.text()
+    const layers = parseCapabilities(text)
+    const legendUrl = layers[layer][1][0].replace('amp;', '')
+    return legendUrl
+  } catch (error) {
+    return ''
+  }
+}
+
 export function createMarker(
   position: [number, number],
   options: MarkerOptions,
 ) {
   return L.marker([position[0], position[1]], options)
+}
+
+export function createSvgIcon(color: string) {
+  const lighterColor = chroma(color).brighten(1).hex()
+  const darkerColor = chroma(color).darken(2).hex()
+  return (
+    <svg width="24px" height="24px" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="grad1" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+          <stop
+            offset="10%"
+            style={{ stopColor: darkerColor, stopOpacity: 1 }}
+          />
+          <stop
+            offset="10%"
+            style={{ stopColor: lighterColor, stopOpacity: 1 }}
+          />
+        </radialGradient>
+        <filter id="f1" x="-50%" y="-50%" width="200%" height="200%">
+          <feOffset result="offOut" in="SourceGraphic" dx="0" dy="2" />
+          <feGaussianBlur result="blurOut" in="offOut" stdDeviation="2" />
+          <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
+        </filter>
+      </defs>
+      <circle cx="12" cy="12" r="10" fill="url(#grad1)" filter="url(#f1)" />
+    </svg>
+  )
 }
 
 export const activeIcon = L.icon({
@@ -274,11 +356,12 @@ export async function defineNewDepthValue(
     coords,
     layer,
   )
-  function getDepthValue() {
+  async function getDepthValue() {
     return getGeoblazeValue.getGeoblaze().then(function () {
       return getGeoblazeValue.dep
     })
   }
+
   const dep = await getDepthValue()
   const depthName = actual.split('_')[1]
   if (dep) {

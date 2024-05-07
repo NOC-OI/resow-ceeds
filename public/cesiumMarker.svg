@@ -1,0 +1,14 @@
+<svg width="24px" height="24px" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="grad1" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+      <stop offset="10%" style="stop-color:#6f51ff; stop-opacity:1" />
+      <stop offset="60%" style="stop-color:#2323dc; stop-opacity:1" />
+    </radialGradient>
+    <filter id="f1" x="-50%" y="-50%" width="200%" height="200%">
+      <feOffset result="offOut" in="SourceGraphic" dx="0" dy="2" />
+      <feGaussianBlur result="blurOut" in="offOut" stdDeviation="2" />
+      <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
+    </filter>
+  </defs>
+  <circle cx="12" cy="12" r="10" fill="url(#grad1)" filter="url(#f1)" />
+</svg>

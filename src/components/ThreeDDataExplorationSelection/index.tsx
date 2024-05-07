@@ -11,13 +11,14 @@ interface ThreeDDataExplorationSelectionProps {
   setActualLayer: any
   layerAction: String
   setLayerAction: any
+  layerLegend: any
   setLayerLegend: any
   setInfoButtonBox?: any
   listLayers?: any
   isLogged?: any
   threeD: any
   setThreeD: any
-  showSuitability: any
+  setDownloadPopup?: any
 }
 
 export function ThreeDDataExplorationSelection({
@@ -26,62 +27,38 @@ export function ThreeDDataExplorationSelection({
   setActualLayer,
   layerAction,
   setLayerAction,
+  layerLegend,
   setLayerLegend,
   setInfoButtonBox,
   listLayers,
   isLogged,
   threeD,
   setThreeD,
-  showSuitability,
+  setDownloadPopup,
 }: ThreeDDataExplorationSelectionProps) {
   return (
     <LayerSelectionContainer>
       <LayerTypes>
-        {Object.keys(listLayers).map((layerClass: any) => {
-          if (showSuitability) {
-            if (layerClass === 'Suitability') {
-              return (
-                <ThreeDDataExplorationType
-                  key={layerClass}
-                  content={layerClass}
-                  childs={listLayers[layerClass].layerNames}
-                  selectedLayers={selectedLayers}
-                  setSelectedLayers={setSelectedLayers}
-                  setActualLayer={setActualLayer}
-                  layerAction={layerAction}
-                  setLayerAction={setLayerAction}
-                  setLayerLegend={setLayerLegend}
-                  setInfoButtonBox={setInfoButtonBox}
-                  isLogged={isLogged}
-                  threeD={threeD}
-                  setThreeD={setThreeD}
-                  listLayers={listLayers}
-                />
-              )
-            } else {
-              return null
-            }
-          } else {
-            return (
-              <ThreeDDataExplorationType
-                key={layerClass}
-                content={layerClass}
-                childs={listLayers[layerClass].layerNames}
-                selectedLayers={selectedLayers}
-                setSelectedLayers={setSelectedLayers}
-                setActualLayer={setActualLayer}
-                layerAction={layerAction}
-                setLayerAction={setLayerAction}
-                setLayerLegend={setLayerLegend}
-                setInfoButtonBox={setInfoButtonBox}
-                isLogged={isLogged}
-                threeD={threeD}
-                setThreeD={setThreeD}
-                listLayers={listLayers}
-              />
-            )
-          }
-        })}
+        {Object.keys(listLayers).map((layerClass: any) => (
+          <ThreeDDataExplorationType
+            key={layerClass}
+            content={layerClass}
+            childs={listLayers[layerClass].layerNames}
+            selectedLayers={selectedLayers}
+            setSelectedLayers={setSelectedLayers}
+            setActualLayer={setActualLayer}
+            layerAction={layerAction}
+            setLayerAction={setLayerAction}
+            layerLegend={layerLegend}
+            setLayerLegend={setLayerLegend}
+            setInfoButtonBox={setInfoButtonBox}
+            isLogged={isLogged}
+            threeD={threeD}
+            setThreeD={setThreeD}
+            listLayers={listLayers}
+            setDownloadPopup={setDownloadPopup}
+          />
+        ))}
       </LayerTypes>
     </LayerSelectionContainer>
   )

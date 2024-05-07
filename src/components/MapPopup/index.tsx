@@ -36,7 +36,10 @@ export function MapPopup({ mapPopup, setMapPopup }: MapPopupProps) {
         ) : (
           Object.keys(content).map((key) => {
             return (
-              <div className="flex pb-2 gap-1 justify-between" key={key}>
+              <div
+                className="text-xs flex pb-2 gap-1 justify-between"
+                key={key}
+              >
                 <div>
                   <strong>{key === 'filename' ? 'More Info:' : key}</strong>:
                 </div>

@@ -7,34 +7,46 @@ import { FullPagePopup } from '../../components/FullPagePopup'
 import { InfoButtonBox } from '../../components/InfoButtonBox'
 import { DataExplorationLegend } from '../../components/DataExplorationLegend'
 import { GetLayers } from '../../data/loadLayers'
-import { Loading } from '../../components/Loading'
 import { RangeSelection } from '../../components/RangeSelection'
 import { yearMonths } from '../../data/yearMonths'
-import { defaultBaseLayer } from '../../lib/map/utils'
+import { DownloadManagementHandleProvider } from '../../lib/data/downloadManagement'
+import { UploadDataHandleProvider } from '../../lib/data/uploadDataManagement'
+import { PrintSelection } from '../../components/PrintSelection'
+import { InfoBox } from '../../components/InfoBox'
+import { useContextHandle } from '../../lib/contextHandle'
+import { usePrintPageHandle } from '../../lib/data/printPageManagement'
+import { PrintSelectionArea } from '../../components/PrintSelectionArea'
+import { bathymetryUrl, getGeorasterLayer } from '../../lib/map/utils'
+import { DownloadPopup } from '../../components/DownloadPopup'
 
 export function ThreeD() {
-  const [selectedSidebarOption, setSelectedSidebarOption] =
-    useState<string>('3D')
+  const [selectedSidebarOption, setSelectedSidebarOption] = useState<string>('')
+  const { setLoading } = useContextHandle()
+  const { canSelect } = usePrintPageHandle()
   const [threeD, setThreeD] = useState(null)
+  const [depth, setDepth] = useState({})
+  const [position, setPosition] = useState(null)
   const [actualDate, setActualDate] = useState(yearMonths.indexOf('2021-05'))
-  const [printBox, setPrintBox] = useState(false)
 
   const [selectedLayers, setSelectedLayers] = useState<Object>({})
 
   const [actualLayer, setActualLayer] = useState<string[]>([''])
-  const [selectedBaseLayer, setSelectedBaseLayer] = useState(defaultBaseLayer)
 
   const [layerAction, setLayerAction] = useState('')
-  const [loading, setLoading] = useState(true)
 
   const [layerLegend, setLayerLegend] = useState('')
+
+  const [printBox, setPrintBox] = useState(false)
+
   const [infoButtonBox, setInfoButtonBox] = useState({})
+
+  const [showRange, setShowRange] = useState(false)
 
   const [listLayers, setListLayers] = useState([])
 
   const [showPopup, setShowPopup] = useState(false)
   // const [activePhoto, setActivePhoto] = useState('')
-  const [showRange, setShowRange] = useState(false)
+  const [downloadPopup, setDownloadPopup] = useState({})
 
   const fetchData = async () => {
     const rout = window.location.pathname
@@ -46,72 +58,101 @@ export function ThreeD() {
       setLoading(false)
     })
   }
-
+  const [batLayer, setBatLayer] = useState(null)
+  useEffect(() => {
+    async function fetchLayer() {
+      const layer = await getGeorasterLayer(bathymetryUrl)
+      setBatLayer(layer)
+    }
+    fetchLayer()
+  }, [bathymetryUrl])
   useEffect(() => {
     fetchData()
   }, [])
 
   return (
-    <ThreeDContainer>
-      <SideBar>
-        <SideSelection
-          selectedSidebarOption={selectedSidebarOption}
-          setSelectedSidebarOption={setSelectedSidebarOption}
-          selectedLayers={selectedLayers}
-          setSelectedLayers={setSelectedLayers}
-          setActualLayer={setActualLayer}
-          setLayerAction={setLayerAction}
-          setShowPopup={setShowPopup}
-          actualLayer={actualLayer}
-          layerAction={layerAction}
-          layerLegend={layerLegend}
-          setLayerLegend={setLayerLegend}
-          setInfoButtonBox={setInfoButtonBox}
-          listLayers={listLayers}
-          setShowRange={setShowRange}
-          selectedBaseLayer={selectedBaseLayer}
-          setSelectedBaseLayer={setSelectedBaseLayer}
-          printBox={printBox}
-          setPrintBox={setPrintBox}
-        />
-        {layerLegend ? (
-          <DataExplorationLegend
-            layerLegend={layerLegend}
-            setLayerLegend={setLayerLegend}
-            setSelectedLayers={setSelectedLayers}
-            setLayerAction={setLayerAction}
-            setActualLayer={setActualLayer}
-          />
-        ) : null}
-        {Object.keys(infoButtonBox).length !== 0 ? (
-          <InfoButtonBox
-            infoButtonBox={infoButtonBox}
-            setInfoButtonBox={setInfoButtonBox}
-          />
-        ) : null}
-      </SideBar>
-      <BottomBar>
-        {showRange ? (
-          <RangeSelection
-            actualDate={actualDate}
-            setActualDate={setActualDate}
-            setLayerAction={setLayerAction}
-            setActualLayer={setActualLayer}
+    <DownloadManagementHandleProvider>
+      <UploadDataHandleProvider>
+        <ThreeDContainer>
+          <SideBar>
+            <SideSelection
+              selectedSidebarOption={selectedSidebarOption}
+              setSelectedSidebarOption={setSelectedSidebarOption}
+              selectedLayers={selectedLayers}
+              setSelectedLayers={setSelectedLayers}
+              setActualLayer={setActualLayer}
+              setLayerAction={setLayerAction}
+              setShowPopup={setShowPopup}
+              actualLayer={actualLayer}
+              layerAction={layerAction}
+              layerLegend={layerLegend}
+              setLayerLegend={setLayerLegend}
+              setInfoButtonBox={setInfoButtonBox}
+              listLayers={listLayers}
+              setShowRange={setShowRange}
+              printBox={printBox}
+              setPrintBox={setPrintBox}
+              threeD={threeD}
+              setThreeD={setThreeD}
+              setDownloadPopup={setDownloadPopup}
+            />
+            {layerLegend ? (
+              <DataExplorationLegend
+                layerLegend={layerLegend}
+                setLayerLegend={setLayerLegend}
+                setSelectedLayers={setSelectedLayers}
+                setLayerAction={setLayerAction}
+                setActualLayer={setActualLayer}
+              />
+            ) : null}
+            {Object.keys(infoButtonBox).length !== 0 ? (
+              <InfoButtonBox
+                infoButtonBox={infoButtonBox}
+                setInfoButtonBox={setInfoButtonBox}
+              />
+            ) : null}
+            {printBox ? <PrintSelection setPrintBox={setPrintBox} /> : null}
+            {Object.keys(downloadPopup).length !== 0 ? (
+              <DownloadPopup
+                downloadPopup={downloadPopup}
+                setDownloadPopup={setDownloadPopup}
+              />
+            ) : null}
+          </SideBar>
+          <BottomBar>
+            {showRange ? (
+              <RangeSelection
+                actualDate={actualDate}
+                setActualDate={setActualDate}
+                setLayerAction={setLayerAction}
+                setActualLayer={setActualLayer}
+                selectedLayers={selectedLayers}
+              />
+            ) : null}
+          </BottomBar>
+          <ThreeDMap
             selectedLayers={selectedLayers}
+            actualLayer={actualLayer}
+            layerAction={layerAction}
+            setLayerAction={setLayerAction}
+            listLayers={listLayers}
+            threeD={threeD}
+            actualDate={actualDate}
+            setPosition={setPosition}
+            setDepth={setDepth}
+            position={position}
           />
-        ) : null}
-      </BottomBar>
-      <ThreeDMap
-        selectedLayers={selectedLayers}
-        actualLayer={actualLayer}
-        layerAction={layerAction}
-        setLayerAction={setLayerAction}
-        listLayers={listLayers}
-        threeD={threeD}
-        actualDate={actualDate}
-      />
-      {showPopup && <FullPagePopup setShowPopup={setShowPopup} />}
-      {loading ? <Loading /> : null}
-    </ThreeDContainer>
+          <InfoBox
+            position={position}
+            depth={depth}
+            batLayer={batLayer}
+            setDepth={setDepth}
+          />
+
+          {showPopup && <FullPagePopup setShowPopup={setShowPopup} />}
+          {canSelect ? <PrintSelectionArea /> : null}
+        </ThreeDContainer>
+      </UploadDataHandleProvider>
+    </DownloadManagementHandleProvider>
   )
 }

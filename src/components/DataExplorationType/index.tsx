@@ -26,6 +26,7 @@ interface DataExplorationTypeProps {
   setShowRange?: any
   setClickPoint: any
   listLayers: any
+  setDownloadPopup?: any
 }
 
 export function DataExplorationType({
@@ -45,6 +46,7 @@ export function DataExplorationType({
   setGetPolyline,
   setClickPoint,
   listLayers,
+  setDownloadPopup,
 }: DataExplorationTypeProps) {
   const [subLayers, setSubLayers] = useState<keyable>({})
 
@@ -119,6 +121,7 @@ export function DataExplorationType({
               getPolyline={getPolyline}
               setGetPolyline={setGetPolyline}
               setClickPoint={setClickPoint}
+              setDownloadPopup={setDownloadPopup}
             />
           )
         })}

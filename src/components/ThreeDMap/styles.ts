@@ -1,12 +1,17 @@
 import styled from 'styled-components'
 
-export const ResiumContainer = styled.div`
-  /* div:first-child {
-    div:first-child {
-      height: 500px;
-    }
-  } */
-`
+const isDevelopment = process.env.VITE_ENV === 'development'
+
+export const ResiumContainer = isDevelopment
+  ? styled.div`
+      div:first-child {
+        div:first-child {
+          height: 400px;
+        }
+      }
+    `
+  : styled.div``
+
 export const ZoomGroup = styled.div`
   background: #303336;
   border: 1px solid #444;

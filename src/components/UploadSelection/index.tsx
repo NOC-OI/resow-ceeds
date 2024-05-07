@@ -279,7 +279,7 @@ export function UploadSelection({
   }
   const handleSubmit = async () => {
     if (checkInputValue()) {
-      setError('Please fill all the fields')
+      setError('Please check the fields')
     } else {
       setLoading(true)
       await handleUploadLayer(localUploadInfo)
@@ -341,7 +341,7 @@ export function UploadSelection({
           return { ...localUploadInfo, file: event.target.files[0] }
         })
       }
-      fileName = fileName.length > 18 ? fileName.slice(0, 18) + '...' : fileName
+      fileName = fileName.length > 12 ? fileName.slice(0, 9) + '...' : fileName
     } else {
       setLocalUploadInfo({})
     }
@@ -352,6 +352,8 @@ export function UploadSelection({
     }
   }
 
+  const rout = window.location.pathname
+
   return (
     <LayerSelectionContainer className={styles.fade_in}>
       <div className={styles.fade_in}>
@@ -359,88 +361,98 @@ export function UploadSelection({
           <p className="text-lg font-bold text-white mb-2 text-center">
             Upload Layers
           </p>
-          <div className="flex flex-col px-12 items-center">
-            <div className="flex justify-between items-center w-full">
-              <p className="pt-4 text-md font-bold text-white mb-2 text-center">
-                Data format:
-              </p>
-              <select
-                id="fileFormat-select"
-                value={actualLayerUpload.dataType}
-                onChange={(e) => handleChangeUploadFormat(e)}
-                className="clickable bg-black border border-black bg-opacity-20 text-white text-sm rounded-lg  block w-max p-2 hover:bg-opacity-80"
-              >
-                {uploadFormats.map((uploadFormat, index) => (
-                  <option
-                    className="!bg-black !bg-opacity-80 opacity-30 !text-white"
-                    value={uploadFormat}
-                    key={index}
-                  >
-                    {uploadFormat}
-                  </option>
-                ))}
-              </select>
+          {rout === '/3d' ? (
+            <p className="text-sm text-white text-center">
+              This feature is not available in 3D mode
+            </p>
+          ) : (
+            <div className="flex flex-col px-12 items-center">
+              <div className="flex justify-between items-center w-full">
+                <p className="pt-4 text-md font-bold text-white mb-2 text-center">
+                  Data format:
+                </p>
+                <select
+                  id="fileFormat-select"
+                  value={actualLayerUpload.dataType}
+                  onChange={(e) => handleChangeUploadFormat(e)}
+                  className="clickable bg-black border border-black bg-opacity-20 text-white text-sm rounded-lg  block w-max p-2 hover:bg-opacity-80"
+                >
+                  {uploadFormats.map((uploadFormat, index) => (
+                    <option
+                      className="!bg-black !bg-opacity-80 opacity-30 !text-white"
+                      value={uploadFormat}
+                      key={index}
+                    >
+                      {uploadFormat}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              {['GeoJSON', 'GeoTIFF', 'Shapefile'].includes(
+                actualLayerUpload.dataType,
+              ) ? (
+                <UploadLayerGeoJSONGeoTIFF
+                  handleFileChange={handleFileChange}
+                  labelText={labelText}
+                  labelPrjText={labelPrjText}
+                  actualLayerUpload={actualLayerUpload}
+                  colorScale={colorScale}
+                  setColorScale={setColorScale}
+                  handleColorChange={handleColorChange}
+                />
+              ) : actualLayerUpload.dataType === 'WMS' ? (
+                <UploadLayerWMS
+                  localUploadInfo={localUploadInfo}
+                  setLocalUploadInfo={setLocalUploadInfo}
+                  selectedStyle={selectedStyle}
+                  setSelectedStyle={setSelectedStyle}
+                  layers={layers}
+                  setLayers={setLayers}
+                  wmsSelectedLayer={wmsSelectedLayer}
+                  setWmsSelectedLayer={setWmsSelectedLayer}
+                  setError={setError}
+                />
+              ) : actualLayerUpload.dataType === 'COG' ? (
+                <UploadLayerCOG
+                  setLocalUploadInfo={setLocalUploadInfo}
+                  colorScale={colorScale}
+                  setColorScale={setColorScale}
+                />
+              ) : actualLayerUpload.dataType === 'CSV' ? (
+                <UploadLayerCSV
+                  handleFileChange={handleFileChange}
+                  labelText={labelText}
+                  csvData={csvData}
+                  setCsvData={setCsvData}
+                />
+              ) : (
+                <></>
+              )}
             </div>
-            {['GeoJSON', 'GeoTIFF', 'Shapefile'].includes(
-              actualLayerUpload.dataType,
-            ) ? (
-              <UploadLayerGeoJSONGeoTIFF
-                handleFileChange={handleFileChange}
-                labelText={labelText}
-                labelPrjText={labelPrjText}
-                actualLayerUpload={actualLayerUpload}
-                colorScale={colorScale}
-                setColorScale={setColorScale}
-                handleColorChange={handleColorChange}
-              />
-            ) : actualLayerUpload.dataType === 'WMS' ? (
-              <UploadLayerWMS
-                localUploadInfo={localUploadInfo}
-                setLocalUploadInfo={setLocalUploadInfo}
-                selectedStyle={selectedStyle}
-                setSelectedStyle={setSelectedStyle}
-                layers={layers}
-                setLayers={setLayers}
-                wmsSelectedLayer={wmsSelectedLayer}
-                setWmsSelectedLayer={setWmsSelectedLayer}
-                setError={setError}
-              />
-            ) : actualLayerUpload.dataType === 'COG' ? (
-              <UploadLayerCOG
-                setLocalUploadInfo={setLocalUploadInfo}
-                colorScale={colorScale}
-                setColorScale={setColorScale}
-              />
-            ) : actualLayerUpload.dataType === 'CSV' ? (
-              <UploadLayerCSV
-                handleFileChange={handleFileChange}
-                labelText={labelText}
-                csvData={csvData}
-                setCsvData={setCsvData}
-              />
-            ) : (
-              <></>
-            )}
-          </div>
+          )}
         </div>
       </div>
-      <div className="text-red-500 text-sm mt-1">
-        {error ? <p>{error}</p> : <div className="pt-[18px]"></div>}
-      </div>
-      <Button
-        onClick={() => handleSubmit()}
-        variant="contained"
-        className="!w-full !text-white !bg-black !rounded-lg opacity-50 hover:!opacity-70"
-      >
-        Upload
-      </Button>
-      {Object.keys(listLayersUpload).length > 0 && (
-        <LayersUploaded
-          layerAction={layerAction}
-          setLayerAction={setLayerAction}
-          layerLegend={layerLegend}
-          setLayerLegend={setLayerLegend}
-        />
+      {rout === '/' && (
+        <>
+          <div className="text-red-500 text-sm mt-1">
+            {error ? <p>{error}</p> : <div className="pt-[18px]"></div>}
+          </div>
+          <Button
+            onClick={() => handleSubmit()}
+            variant="contained"
+            className="!w-full !text-white !bg-black !rounded-lg opacity-50 hover:!opacity-70"
+          >
+            Upload
+          </Button>
+          {Object.keys(listLayersUpload).length > 0 && (
+            <LayersUploaded
+              layerAction={layerAction}
+              setLayerAction={setLayerAction}
+              layerLegend={layerLegend}
+              setLayerLegend={setLayerLegend}
+            />
+          )}
+        </>
       )}
     </LayerSelectionContainer>
   )

@@ -3,6 +3,7 @@ import { CssTextField } from '../DownloadSelection/styles'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faRotateRight } from '@fortawesome/free-solid-svg-icons'
 import styles from './UploadLayerWMS.module.css'
+import { parseCapabilities } from '../../lib/map/utils'
 
 interface UploadLayerWMSProps {
   localUploadInfo: any
@@ -29,25 +30,6 @@ export function UploadLayerWMS({
 }: UploadLayerWMSProps) {
   const [isLoading, setIsLoading] = useState(false)
 
-  function parseCapabilities(xml) {
-    const parser = new DOMParser()
-    const xmlDoc = parser.parseFromString(xml, 'text/xml')
-    const layers = {}
-    const layerNodes = xmlDoc.getElementsByTagName('Layer')
-    for (let i = 0; i < layerNodes.length; i++) {
-      const styles = []
-      const layerNode = layerNodes[i]
-      const layerName = layerNode.getElementsByTagName('Name')[0].textContent
-      const styleNodes = layerNode.getElementsByTagName('Style')
-      for (let j = 0; j < styleNodes.length; j++) {
-        const styleNode = styleNodes[j]
-        const styleName = styleNode.getElementsByTagName('Name')[0].textContent
-        styles.push(styleName)
-      }
-      layers[layerName] = styles
-    }
-    return layers
-  }
   // Function to fetch WMS capabilities
   const fetchCapabilities = async () => {
     setIsLoading(true)
@@ -63,7 +45,7 @@ export function UploadLayerWMS({
       const layers = parseCapabilities(text)
       setLayers(layers)
       setWmsSelectedLayer(Object.keys(layers)[0])
-      setSelectedStyle(layers[Object.keys(layers)[0]][0])
+      setSelectedStyle(layers[Object.keys(layers)[0]][0][0])
     } catch (error) {
       setError(
         'Error fetching capabilities: please check the URL and try again',
@@ -74,7 +56,7 @@ export function UploadLayerWMS({
 
   function handleChangeWmsSelectedLayer(value) {
     setWmsSelectedLayer(value)
-    setSelectedStyle(layers[value][0])
+    setSelectedStyle(layers[value][0][0])
   }
   return (
     <div className="flex flex-col items-center gap-3 w-full">
@@ -144,7 +126,7 @@ export function UploadLayerWMS({
               onChange={(e) => setSelectedStyle(e.target.value)}
               className="clickable bg-black border border-black bg-opacity-20 text-white text-sm rounded-lg  block w-full p-2 hover:bg-opacity-80"
             >
-              {layers[wmsSelectedLayer].map((style, index) => (
+              {layers[wmsSelectedLayer][0].map((style, index) => (
                 <option
                   className="!bg-black !bg-opacity-80 opacity-30 !text-white"
                   value={style}

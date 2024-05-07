@@ -12,7 +12,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { GetCOGLayer, GetTifLayer } from '../../lib/map/addGeoraster'
 import { colorScaleByName } from '../../lib/map/jsColormaps'
 import styles from './DataExplorationTypeOptions.module.css'
-import { colorScale, defaultOpacity } from '../../lib/map/utils'
+import {
+  colorScale,
+  defaultOpacity,
+  getLegendCapabilities,
+} from '../../lib/map/utils'
 import chroma from 'chroma-js'
 
 export function handleChangeOpacity(
@@ -74,13 +78,17 @@ export async function handleClickLegend(
     newParams.request = 'GetLegendGraphic'
     newParams.layer = newParams.layers
     async function getURILegend(newParams: any) {
-      const layerUrl = `${subLayers[subLayer].url}?`
-      const response = await fetch(layerUrl + new URLSearchParams(newParams))
-      let responseUrl = response.url.replace('layers=', 'layer=')
-      responseUrl = responseUrl.replace('amp;', '')
-      responseUrl = responseUrl + '&SERVICE=wms'
-      const url = `${responseUrl}&format=image/png`
-      setLayerLegend({ layerName: subLayer, url })
+      const responseUrl = await getLegendCapabilities(
+        subLayers[subLayer].url,
+        newParams.layers,
+      )
+      // const layerUrl = `${subLayers[subLayer].url}?`
+      // const response = await fetch(layerUrl + new URLSearchParams(newParams))
+      // let responseUrl = response.url.replace('layers=', 'layer=')
+      // responseUrl = responseUrl.replace('amp;', '')
+      // responseUrl = responseUrl + '&SERVICE=wms'
+      // const url = `${responseUrl}&format=image/png`
+      setLayerLegend({ layerName: subLayer, url: responseUrl })
     }
     await getURILegend(newParams)
   } else if (subLayers[subLayer].dataType === 'MBTiles') {
@@ -453,6 +461,7 @@ interface DataExplorationTypeOptionsProps {
   setGetPolyline: any
   setShowRange?: any
   setClickPoint: any
+  setDownloadPopup?: any
 }
 
 export function DataExplorationTypeOptions({
@@ -472,6 +481,7 @@ export function DataExplorationTypeOptions({
   getPolyline,
   setGetPolyline,
   setClickPoint,
+  setDownloadPopup,
 }: DataExplorationTypeOptionsProps) {
   const [opacityIsClicked, setOpacityIsClicked] = useState(
     activeOpacity === `${content}_${subLayer}`,
@@ -604,9 +614,15 @@ export function DataExplorationTypeOptions({
               />
             )}
             {subLayers[subLayer].download && (
-              <a href={subLayers[subLayer].download} target="_blank">
+              <div
+                onClick={() =>
+                  setDownloadPopup({
+                    [`${content}_${subLayer}`]: subLayers[subLayer].download,
+                  })
+                }
+              >
                 <FontAwesomeIcon icon={faDownload} title="Download layer" />
-              </a>
+              </div>
             )}
           </div>
         ) : null}

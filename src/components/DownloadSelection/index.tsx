@@ -142,11 +142,12 @@ export function DownloadSelection({
     }
     return false
   }
+  const rout = window.location.pathname
 
   return (
     <LayerSelectionContainer className={styles.fade_in}>
       <div className={styles.fade_in}>
-        <div className="space-y-1 md:space-y-2 py-4 px-2">
+        <div className="space-y-1 md:space-y-2 py-4">
           <p className="text-lg font-bold text-white mb-2 text-center">
             Download Layers
           </p>
@@ -154,19 +155,21 @@ export function DownloadSelection({
             <p className="pt-2 text-md font-bold text-white mb-2 text-center">
               Area
             </p>
-            <div className="flex justify-center gap-6 items-center">
-              <ButtonIcon
-                title="Draw Area on Map"
-                className={`hover:shadow-whi hover:opacity-60 hover:shadow-sm shadow-black ${
-                  drawRectangle
-                    ? 'opacity-60 shadow-sm'
-                    : 'opacity-100 shadow-md'
-                }`}
-                onClick={() => setDrawRectangle(!drawRectangle)}
-              >
-                <HighlightAltIcon className="p-1 pb-0" />
-              </ButtonIcon>
-            </div>
+            {rout === '/' && (
+              <div className="flex justify-center gap-6 items-center">
+                <ButtonIcon
+                  title="Draw Area on Map"
+                  className={`hover:shadow-whi hover:opacity-60 hover:shadow-sm shadow-black ${
+                    drawRectangle
+                      ? 'opacity-60 shadow-sm'
+                      : 'opacity-100 shadow-md'
+                  }`}
+                  onClick={() => setDrawRectangle(!drawRectangle)}
+                >
+                  <HighlightAltIcon className="p-1 pb-0" />
+                </ButtonIcon>
+              </div>
+            )}
             <div className="flex flex-col justify-between items-center">
               <CssTextField
                 id="region-max-lat"
@@ -179,7 +182,7 @@ export function DownloadSelection({
                     textOverflow: 'ellipsis',
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',
-                    width: '100%',
+                    width: '90%',
                     color: 'white',
                     borderWidth: '10px',
                     borderColor: 'white !important',
@@ -207,7 +210,7 @@ export function DownloadSelection({
                       textOverflow: 'ellipsis',
                       whiteSpace: 'nowrap',
                       overflow: 'hidden',
-                      width: '100%',
+                      width: '90%',
                       color: 'white',
                       borderWidth: '10px',
                       borderColor: 'white !important',
@@ -234,7 +237,7 @@ export function DownloadSelection({
                       textOverflow: 'ellipsis',
                       whiteSpace: 'nowrap',
                       overflow: 'hidden',
-                      width: '100%',
+                      width: '90%',
                       color: 'white',
                       borderWidth: '10px',
                       borderColor: 'white !important',
@@ -262,7 +265,7 @@ export function DownloadSelection({
                     textOverflow: 'ellipsis',
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',
-                    width: '100%',
+                    width: '90%',
                     color: 'white',
                     borderWidth: '10px',
                     borderColor: 'white !important',

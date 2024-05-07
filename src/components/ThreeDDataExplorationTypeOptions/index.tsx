@@ -3,6 +3,7 @@ import { LayerTypeOptionsContainer } from '../DataExplorationTypeOptions/styles'
 import {
   faCircleInfo,
   faCube,
+  faDownload,
   faList,
   faLock,
   faMagnifyingGlass,
@@ -13,7 +14,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { getUser } from '../../lib/auth'
 import {
   getPreviousOpacityValue,
-  handleChangeMapLayer,
+  handleChangeMapLayerAndAddLegend,
   handleChangeOpacity,
   handleClickLayerInfo,
   handleClickLegend,
@@ -30,6 +31,7 @@ interface ThreeDDataExplorationTypeOptionsProps {
   setActiveOpacity: any
   setActualLayer: any
   subLayers: any
+  layerLegend: any
   setLayerLegend: any
   layerAction: any
   setLayerAction: any
@@ -39,6 +41,7 @@ interface ThreeDDataExplorationTypeOptionsProps {
   isLogged?: any
   threeD: any
   setThreeD: any
+  setDownloadPopup?: any
 }
 
 export function ThreeDDataExplorationTypeOptions({
@@ -48,6 +51,7 @@ export function ThreeDDataExplorationTypeOptions({
   setActiveOpacity,
   setActualLayer,
   subLayers,
+  layerLegend,
   setLayerLegend,
   layerAction,
   setLayerAction,
@@ -57,6 +61,7 @@ export function ThreeDDataExplorationTypeOptions({
   isLogged,
   threeD,
   setThreeD,
+  setDownloadPopup,
 }: ThreeDDataExplorationTypeOptionsProps) {
   const [opacityIsClicked, setOpacityIsClicked] = useState(
     activeOpacity === `${content}_${subLayer}`,
@@ -98,7 +103,7 @@ export function ThreeDDataExplorationTypeOptions({
           <input
             className={styles.chk}
             onChange={(e: any) =>
-              handleChangeMapLayer(
+              handleChangeMapLayerAndAddLegend(
                 e,
                 setActualLayer,
                 setOpacityIsClicked,
@@ -106,6 +111,11 @@ export function ThreeDDataExplorationTypeOptions({
                 setLayerAction,
                 setSelectedLayers,
                 selectedLayers,
+                subLayers,
+                subLayer,
+                setLayerLegend,
+                layerLegend,
+                content,
               )
             }
             value={JSON.stringify({
@@ -169,9 +179,7 @@ export function ThreeDDataExplorationTypeOptions({
                 title="Add 3D terrain to the Map"
                 onClick={handleAddTerrainLayer}
                 className={
-                  threeD?.subLayer === `${content}_${subLayer}`
-                    ? 'active'
-                    : 'aaa'
+                  threeD?.subLayer === `${content}_${subLayer}` ? 'active' : ''
                 }
               />
             )}
@@ -197,6 +205,17 @@ export function ThreeDDataExplorationTypeOptions({
               title="Change Opacity"
               onClick={() => handleClickSlider(setOpacityIsClicked)}
             />
+            {subLayers[subLayer].download && (
+              <div
+                onClick={() =>
+                  setDownloadPopup({
+                    [`${content}_${subLayer}`]: subLayers[subLayer].download,
+                  })
+                }
+              >
+                <FontAwesomeIcon icon={faDownload} title="Download layer" />
+              </div>
+            )}
           </div>
         ) : null}
       </div>

@@ -16,6 +16,7 @@ import { useContextHandle } from '../../lib/contextHandle'
 import { DownloadSelection } from '../DownloadSelection'
 import { UploadSelection } from '../UploadSelection'
 import { useUploadDataHandle } from '../../lib/data/uploadDataManagement'
+import { useDownloadManagementHandle } from '../../lib/data/downloadManagement'
 
 interface SideSelectionProps {
   selectedSidebarOption: any
@@ -74,6 +75,7 @@ export function SideSelection({
 }: SideSelectionProps) {
   const { loading } = useContextHandle()
   const { setSelectedLayersUpload } = useUploadDataHandle()
+  const { setDrawRectangle, setRectangleLimits } = useDownloadManagementHandle()
   async function handleShowSelection(e: any) {
     const oldSelectedSidebarOption = selectedSidebarOption
     if (oldSelectedSidebarOption === e.currentTarget.id) {
@@ -98,6 +100,10 @@ export function SideSelection({
       } else {
         setShowPhotos([])
       }
+    }
+    if (selectedSidebarOption !== 'Download') {
+      setRectangleLimits(null)
+      setDrawRectangle(false)
     }
   }, [selectedSidebarOption])
 

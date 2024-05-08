@@ -313,12 +313,11 @@ function MapHome1({
     actualLayer.forEach(async (actual) => {
       const layerName = selectedLayers[actual]
       let layer: any
-      // let bounds
       if (layerName.dataType === 'WMS') {
         layer = await getWMSLayer(layerName, actual)
-        // bounds = defaultWMSBounds
       } else if (layerName.dataType === 'COG') {
         if (typeof layerName.url === 'string') {
+          console.log('generate_layer', layerName)
           const getCOGLayer = new GetCOGLayer(layerName, actual, true)
           layer = await getCOGLayer.getTile()
           if (getCOGLayer.error) {
@@ -331,12 +330,11 @@ function MapHome1({
           //   [getCOGLayer.bounds[3], getCOGLayer.bounds[0]],
           //   [getCOGLayer.bounds[1], getCOGLayer.bounds[2]],
           // ]
-          // bounds = defaultWMSBounds
         } else {
           let minValue
           let maxValue
           let stats
-          if (layerName.scale) {
+          if (!layerName.scale) {
             stats = await Promise.all(
               layerName.url.map(async (newUrl) => {
                 const newSubLayer = { ...layerName }
@@ -385,7 +383,6 @@ function MapHome1({
               //   [getCOGLayer.bounds[3], getCOGLayer.bounds[0]],
               //   [getCOGLayer.bounds[1], getCOGLayer.bounds[2]],
               // ]
-              // bounds = defaultWMSBounds
               return await getCOGLayer.getTile(
                 stats ? stats[stats.length - 1] : undefined,
               )
@@ -427,15 +424,12 @@ function MapHome1({
         await getTifLayer.parseGeo().then(function () {
           layer = getTifLayer.layer
           layer.options.date_range = layerName.date_range
-          // bounds = defaultWMSBounds
         })
       } else if (layerName.dataType === 'arcgis') {
         layer = esri.dynamicMapLayer({ url: layerName.url })
         layer.setLayers([1, 2, 3, 4, 5, 6, 7, 8, 12, 13, 14, 15])
-        // bounds = defaultWMSBounds
       } else if (layerName.dataType === 'GeoJSON') {
         layer = await generateGeoJSONLayer(layerName, actual, layer)
-        // bounds = defaultWMSBounds
       } else if (layerName.dataType === 'Photo') {
         let markers: any = []
         const colorMarker = colorScale[Math.floor(Math.random() * 30)]
@@ -515,7 +509,13 @@ function MapHome1({
         // bounds = defaultWMSBounds
       }
       // console.log(bounds)
-      // map.fitBounds(bounds)
+      const bounds = layerName.bbox
+        ? [
+            [layerName.bbox[1] - 0.1, layerName.bbox[0] - 0.1],
+            [layerName.bbox[3] + 0.1, layerName.bbox[2] + 0.1],
+          ]
+        : defaultWMSBounds
+      map.fitBounds(bounds)
     })
     setLoading(false)
   }
@@ -757,13 +757,21 @@ function MapHome1({
         if (
           localSelectedLayers[layer.options.attribution].dataType !== 'Photo'
         ) {
-          // const newBounds = [
-          //   [layer.options.limits[3], layer.options.limits[0]],
-          //   [layer.options.limits[1], layer.options.limits[2]],
-          // ]
-          map.fitBounds(defaultWMSBounds)
+          const bounds = localSelectedLayers[layer.options.attribution].bbox
+            ? [
+                [
+                  localSelectedLayers[layer.options.attribution].bbox[1] - 0.1,
+                  localSelectedLayers[layer.options.attribution].bbox[0] - 0.1,
+                ],
+                [
+                  localSelectedLayers[layer.options.attribution].bbox[3] + 0.1,
+                  localSelectedLayers[layer.options.attribution].bbox[2] + 0.1,
+                ],
+              ]
+            : defaultWMSBounds
           bringLayerToFront(layer)
-          // map.fitBounds(newBounds)
+          console.log(bounds)
+          map.fitBounds(bounds)
         } else {
           if (!layer.options.dataType) {
             bringLayerToFront(layer)

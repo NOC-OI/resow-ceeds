@@ -3,7 +3,10 @@ import { faCircleXmark } from '@fortawesome/free-solid-svg-icons'
 import 'katex/dist/katex.min.css'
 import Draggable from 'react-draggable'
 import { useRef } from 'react'
-import { InfoButtonBoxContainer } from '../InfoButtonBox/styles'
+import {
+  InfoButtonBoxContainer,
+  InfoButtonBoxContent,
+} from '../InfoButtonBox/styles'
 
 interface MapPopupProps {
   mapPopup: any
@@ -28,32 +31,34 @@ export function MapPopup({ mapPopup, setMapPopup }: MapPopupProps) {
             className="clickable"
           />
         </div>
-        <div className="font-bold text-center pb-3">
-          {title.replace('_', ': ')}
-        </div>
-        {dataType === 'html' ? (
-          <div dangerouslySetInnerHTML={{ __html: content }}></div>
-        ) : (
-          Object.keys(content).map((key) => {
-            return (
-              <div
-                className="text-xs flex pb-2 gap-1 justify-between"
-                key={key}
-              >
-                <div>
-                  <strong>{key === 'filename' ? 'More Info:' : key}</strong>:
+        <InfoButtonBoxContent>
+          <div className="font-bold text-center pb-3">
+            {title.replace('_', ': ')}
+          </div>
+          {dataType === 'html' ? (
+            <div dangerouslySetInnerHTML={{ __html: content }}></div>
+          ) : (
+            Object.keys(content).map((key) => {
+              return (
+                <div
+                  className="text-xs flex pb-2 gap-1 justify-between"
+                  key={key}
+                >
+                  <div>
+                    <strong>{key === 'filename' ? 'More Info:' : key}</strong>:
+                  </div>
+                  {key === 'filename' ? (
+                    <a href={`${content[key]}`} target="_blank">
+                      Click Here
+                    </a>
+                  ) : (
+                    <div>{content[key]}</div>
+                  )}
                 </div>
-                {key === 'filename' ? (
-                  <a href={`${content[key]}`} target="_blank">
-                    Click Here
-                  </a>
-                ) : (
-                  <div>{content[key]}</div>
-                )}
-              </div>
-            )
-          })
-        )}
+              )
+            })
+          )}
+        </InfoButtonBoxContent>
       </InfoButtonBoxContainer>
     </Draggable>
   )

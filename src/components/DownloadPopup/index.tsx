@@ -43,7 +43,7 @@ export function DownloadPopup({
             className="clickable"
           />
         </div>
-        <div className="font-bold text-center">Download formats for layer</div>
+        <div className="font-bold text-center">Download Formats for Layer</div>
         <div className="text-center pb-5">{title.replace('_', ': ')}</div>
         {Object.keys(downloadPopup[title]).map((key) => {
           return (
@@ -53,13 +53,13 @@ export function DownloadPopup({
                   onClick={() => downloadFiles(downloadPopup[title][key])}
                   className="underline clickable cursor-pointer"
                 >
-                  <strong>{key === 'url' ? 'Extenal Link' : key}</strong>
+                  <strong>{key === 'url' ? 'Access Data Source' : key}</strong>
                 </div>
               ) : (
                 <a
                   href={downloadPopup[title][key]}
                   target="_blank"
-                  className="no-underline clickable cursor-pointer"
+                  className="no-underline clickable cursor-pointer capitalize"
                 >
                   <strong>{key === 'url' ? 'Extenal Link' : key}</strong>
                 </a>

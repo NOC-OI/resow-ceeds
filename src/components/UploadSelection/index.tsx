@@ -18,6 +18,7 @@ import { useContextHandle } from '../../lib/contextHandle'
 import { UploadLayerCOG } from '../UploadLayerCOG'
 import { UploadLayerCSV } from '../UploadLayerCSV'
 import Papa from 'papaparse'
+import { ConfirmationDialog } from '../ConfirmationDialog'
 
 interface UploadSelectionProps {
   layerAction: any
@@ -34,6 +35,7 @@ export function UploadSelection({
 }: UploadSelectionProps) {
   const {
     uploadFormats,
+    fileTypes,
     actualLayerUpload,
     setActualLayerUpload,
     listLayersUpload,
@@ -288,6 +290,8 @@ export function UploadSelection({
 
   const [labelText, setLabelText] = useState('Choose file')
   const [labelPrjText, setLabelPrjText] = useState('Choose file')
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [fileToUpload, setFileToUpload] = useState(null)
 
   const handleChangeUploadFormat = (event) => {
     if (event.target.value === 'COG') {
@@ -317,39 +321,88 @@ export function UploadSelection({
     })
   }
 
-  const handleFileChange = (event, proj?) => {
-    let fileName = event.target.files[0]
-      ? event.target.files[0].name
-      : 'Choose file'
-    if (fileName !== 'Choose file') {
-      if (proj) {
-        if (fileName.endsWith('.prj')) {
-          const reader = new FileReader()
-          reader.onload = (event) => {
-            const prjText = event.target.result as string
-            setLocalUploadInfo((localUploadInfo) => {
-              return { ...localUploadInfo, proj: prjText }
-            })
-          }
-          reader.readAsText(event.target.files[0])
-          setError('')
-        } else {
-          setError('Please upload a .prj file')
-        }
-      } else {
-        setLocalUploadInfo((localUploadInfo) => {
-          return { ...localUploadInfo, file: event.target.files[0] }
-        })
-      }
-      fileName = fileName.length > 12 ? fileName.slice(0, 9) + '...' : fileName
-    } else {
-      setLocalUploadInfo({})
+  function checkInputFile(file) {
+    const fileType = fileTypes[actualLayerUpload.dataType]
+    if (
+      fileType.mimeTypes.includes(file.type) ||
+      fileType.extensions.includes(file.name)
+    ) {
+      return true
     }
+    setError('Invalid file type')
+    return false
+  }
+
+  const handleFileChange = (event, proj?) => {
+    const file = event.target.files[0]
+    if (!file) {
+      setLabelText('Choose file')
+      return
+    }
+    if (!checkInputFile(file)) {
+      setLabelText('Choose file')
+      return
+    }
+    console.log(file)
+    const fileSize = file.size / 1024 / 1024
+    if (fileSize > 50) {
+      if (proj) {
+        setFileToUpload([file, proj])
+      } else {
+        setFileToUpload([file])
+      }
+      setIsModalOpen(true)
+    } else {
+      if (proj) {
+        uploadFile(file, proj)
+      } else {
+        uploadFile(file)
+      }
+    }
+  }
+
+  const uploadFile = (file, proj?) => {
+    let fileName = file.name
+    fileName = fileName.length > 12 ? fileName.slice(0, 9) + '...' : fileName
+    if (proj && !fileName.endsWith('.prj')) {
+      setError('Please upload a .prj file')
+      return
+    }
+
     if (proj) {
+      const reader = new FileReader()
+      reader.onload = (event) => {
+        const prjText = event.target.result as string
+        setLocalUploadInfo((localUploadInfo) => ({
+          ...localUploadInfo,
+          proj: prjText,
+          file,
+        }))
+      }
+      reader.readAsText(file)
       setLabelPrjText(fileName)
     } else {
+      setLocalUploadInfo((localUploadInfo) => ({
+        ...localUploadInfo,
+        file,
+      }))
       setLabelText(fileName)
     }
+  }
+
+  const handleConfirm = () => {
+    if (fileToUpload.length > 1) {
+      uploadFile(fileToUpload[0], fileToUpload[1])
+    } else {
+      uploadFile(fileToUpload[0])
+    }
+    setIsModalOpen(false)
+    setFileToUpload(null)
+  }
+
+  const handleClose = () => {
+    setIsModalOpen(false)
+    setFileToUpload(null)
   }
 
   const rout = window.location.pathname
@@ -453,6 +506,19 @@ export function UploadSelection({
             />
           )}
         </>
+      )}
+      {isModalOpen && (
+        <ConfirmationDialog
+          onClose={handleClose}
+          onConfirm={handleConfirm}
+          message={`The file size is ${(
+            (fileToUpload.length > 0 ? fileToUpload[0]?.size : 0) /
+            1024 /
+            1024
+          ).toFixed(
+            2,
+          )} MB. Your browser may freeze while uploading. Do you want to continue?`}
+        />
       )}
     </LayerSelectionContainer>
   )

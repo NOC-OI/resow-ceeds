@@ -26,7 +26,7 @@ export const DownloadManagementHandleProvider: React.FC<
   const [drawRectangle, setDrawRectangle] = useState(false)
   const [downloadInputValue, setDownloadInputValue] = useState({
     layers: [],
-    region: [49.1, -7.1, 59.1, 0.1],
+    region: [-7.1, 49.1, 0.1, 59.1],
   })
   // async function getLeaks() {
   //   await fetchApiGet('v1/leaks/', setLeakList, accessToken)

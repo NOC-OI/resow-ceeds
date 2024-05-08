@@ -10,13 +10,14 @@ import { CalcTypeContainer } from '../DataExplorationType/styles'
 import HighlightAltIcon from '@mui/icons-material/HighlightAlt'
 import { ButtonIcon, CssTextField } from './styles'
 import { LayerTypeOptionsContainer } from '../DataExplorationTypeOptions/styles'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useContextHandle } from '../../lib/contextHandle'
 import { useDownloadManagementHandle } from '../../lib/data/downloadManagement'
 import { Button } from '@mui/material'
-import styles1 from '../DataExplorationTypeOptions/DataExplorationTypeOptions.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDownload } from '@fortawesome/free-solid-svg-icons'
+import * as GeoTIFF from 'geotiff'
+import { GetTifLayer } from '../../lib/map/addGeoraster'
 
 interface DownloadSelectionProps {
   selectedLayers: any
@@ -36,12 +37,9 @@ export function DownloadSelection({
     drawRectangle,
     setDrawRectangle,
     rectangleLimits,
-    setRectangleLimits,
     downloadInputValue,
     setDownloadInputValue,
   } = useDownloadManagementHandle()
-  const [error, setError] = useState('')
-  const errorTimeoutRef = useRef<number | null>(null)
 
   const handleRegionInputChange = (index, newValue) => {
     setDownloadInputValue((prevInputValue) => {
@@ -51,41 +49,6 @@ export function DownloadSelection({
     })
   }
 
-  const handleLayersInputChange = (e, layerClass, baseLayer) => {
-    if (e.target.checked) {
-      setDownloadInputValue((prevInputValue) => {
-        const updatedLayers = [...prevInputValue.layers]
-        updatedLayers.push(`${layerClass}_${baseLayer}`)
-        return { ...prevInputValue, layers: updatedLayers }
-      })
-    } else {
-      setDownloadInputValue((prevInputValue) => {
-        let updatedLayers = [...prevInputValue.layers]
-        updatedLayers = updatedLayers.filter(
-          (item) => item !== `${layerClass}_${baseLayer}`,
-        )
-        return { ...prevInputValue, layers: updatedLayers }
-      })
-    }
-  }
-  useEffect(() => {
-    if (errorTimeoutRef.current !== null) {
-      clearTimeout(errorTimeoutRef.current)
-      errorTimeoutRef.current = null
-    }
-
-    if (error) {
-      errorTimeoutRef.current = window.setTimeout(() => {
-        setError('')
-      }, 5000)
-    }
-
-    return () => {
-      if (errorTimeoutRef.current !== null) {
-        clearTimeout(errorTimeoutRef.current)
-      }
-    }
-  }, [error])
   function checkInputValue() {
     if (
       downloadInputValue.region[0] === '' ||
@@ -99,11 +62,71 @@ export function DownloadSelection({
     // TODO: check if there are selected Layers
     return false
   }
-  const handleSubmit = async (event) => {
-    setRectangleLimits(null)
-    setDrawRectangle(false)
+
+  async function handleDownloadArea(layerName) {
     if (checkInputValue()) {
-      setError('Please fill all the fields')
+      setFlashMessage({
+        messageType: 'warning',
+        content: 'Please check your input values',
+      })
+      return
+    }
+    if (layerName.dataType === 'GeoTIFF') {
+      setFlashMessage({
+        messageType: 'warning',
+        content: 'GeoTIFF download is not available',
+      })
+      // const response = await fetch(layerName.url)
+      // const arrayBuffer = await response.arrayBuffer()
+      // const tiff = await GeoTIFF.fromArrayBuffer(arrayBuffer)
+      // const image = await tiff.getImage()
+      // const width = image.getWidth()
+      // const height = image.getHeight()
+
+      // const bbox = image.getBoundingBox()
+      // const scaleX = width / (bbox[2] - bbox[0])
+      // const scaleY = height / (bbox[3] - bbox[1])
+
+      // const xMin = Math.floor((downloadInputValue.region[0] - bbox[0]) * scaleX)
+      // const yMin = Math.floor((downloadInputValue.region[1] - bbox[1]) * scaleY) // latMax because origin is top-left
+      // const xMax = Math.ceil((downloadInputValue.region[2] - bbox[0]) * scaleX)
+      // const yMax = Math.ceil((downloadInputValue.region[3] - bbox[1]) * scaleY)
+      // const window = [xMin, yMin, xMax, yMax]
+      // const data = await image.readRasters({ window })
+
+      // // Create a new GeoTIFF file with clipped data (this part is conceptual)
+      // const clippedTiff = await createClippedGeoTIFF(data, window, image)
+
+      // // Save the file using file-saver
+      // import('file-saver').then((FileSaver) => {
+      //   const blob = new Blob([clippedTiff], { type: 'image/tiff' })
+      //   FileSaver.saveAs(blob, 'clipped-image.tiff')
+      // })
+
+      // console.log(image, bbox, scaleX, scaleY, width, height)
+      // console.log(xMin, yMin, xMax, yMax)
+      // console.log(data)
+
+      const getTifLayer = new GetTifLayer(
+        layerName.url,
+        undefined,
+        undefined,
+        undefined,
+        layerName,
+      )
+      console.log(downloadInputValue.region)
+      const pixels = await getTifLayer.clipGeo(downloadInputValue.region)
+      console.log(pixels)
+    } else if (layerName.dataType === 'GeoJSON') {
+      setFlashMessage({
+        messageType: 'warning',
+        content: 'GeoJSON download is not available',
+      })
+    } else if (layerName.dataType === 'FGB') {
+      setFlashMessage({
+        messageType: 'warning',
+        content: 'FGB download is not available',
+      })
     }
   }
 
@@ -118,10 +141,10 @@ export function DownloadSelection({
     if (rectangleLimits) {
       setDownloadInputValue((prevInputValue) => {
         const updatedRegion = [...prevInputValue.region]
-        updatedRegion[0] = rectangleLimits._southWest.lat.toFixed(4)
-        updatedRegion[1] = rectangleLimits._southWest.lng.toFixed(4)
-        updatedRegion[2] = rectangleLimits._northEast.lat.toFixed(4)
-        updatedRegion[3] = rectangleLimits._northEast.lng.toFixed(4)
+        updatedRegion[1] = rectangleLimits._southWest.lat.toFixed(4)
+        updatedRegion[0] = rectangleLimits._southWest.lng.toFixed(4)
+        updatedRegion[3] = rectangleLimits._northEast.lat.toFixed(4)
+        updatedRegion[2] = rectangleLimits._northEast.lng.toFixed(4)
         return { ...prevInputValue, region: updatedRegion }
       })
     }
@@ -135,15 +158,6 @@ export function DownloadSelection({
     }
   }, [drawRectangle])
 
-  function verifyIfItIsInDownloadList(layerClass: string, baseLayer: string) {
-    if (!listLayers[layerClass].layerNames[baseLayer].download_area) {
-      return false
-    }
-    if (downloadInputValue.layers.includes(`${layerClass}_${baseLayer}`)) {
-      return true
-    }
-    return false
-  }
   const rout = window.location.pathname
 
   return (
@@ -195,9 +209,9 @@ export function DownloadSelection({
                     color: 'white',
                   },
                 }}
-                value={downloadInputValue.region[2]}
+                value={downloadInputValue.region[3]}
                 onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  handleRegionInputChange(2, e.target.value)
+                  handleRegionInputChange(3, e.target.value)
                 }
               />
               <div className="flex gap-4 justify-center items-center border-white border-b-2">
@@ -223,9 +237,9 @@ export function DownloadSelection({
                       color: 'white',
                     },
                   }}
-                  value={downloadInputValue.region[1]}
+                  value={downloadInputValue.region[0]}
                   onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    handleRegionInputChange(1, e.target.value)
+                    handleRegionInputChange(0, e.target.value)
                   }
                 />
                 <CssTextField
@@ -250,9 +264,9 @@ export function DownloadSelection({
                       color: 'white',
                     },
                   }}
-                  value={downloadInputValue.region[3]}
+                  value={downloadInputValue.region[2]}
                   onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    handleRegionInputChange(3, e.target.value)
+                    handleRegionInputChange(2, e.target.value)
                   }
                 />
               </div>
@@ -278,9 +292,9 @@ export function DownloadSelection({
                     color: 'white',
                   },
                 }}
-                value={downloadInputValue.region[0]}
+                value={downloadInputValue.region[1]}
                 onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  handleRegionInputChange(0, e.target.value)
+                  handleRegionInputChange(1, e.target.value)
                 }
               />
             </div>
@@ -311,52 +325,32 @@ export function DownloadSelection({
                         ) && (
                           <LayerTypeOptionsContainer key={index}>
                             <div id="type-option">
-                              <label
-                                htmlFor={baseLayer}
-                                className={
-                                  !listLayers[layerClass].layerNames[baseLayer]
-                                    .download_area && '!cursor-not-allowed'
-                                }
-                                title="You can only download the entire layer"
-                              >
-                                <input
-                                  id={baseLayer}
-                                  onChange={(e) =>
-                                    handleLayersInputChange(
-                                      e,
-                                      layerClass,
-                                      baseLayer,
-                                    )
-                                  }
-                                  className={styles1.chk}
-                                  type="checkbox"
-                                  disabled={
-                                    !listLayers[layerClass].layerNames[
-                                      baseLayer
-                                    ].download_area
-                                  }
-                                  checked={verifyIfItIsInDownloadList(
-                                    layerClass,
-                                    baseLayer,
-                                  )}
-                                  name="baseLayer"
-                                  // checked={baseLayer.url === selectedBaseLayer.url}
-                                />
-                                <label
-                                  htmlFor={baseLayer}
-                                  className={`${styles1.switch} ${
-                                    !listLayers[layerClass].layerNames[
-                                      baseLayer
-                                    ].download_area && '!cursor-not-allowed'
-                                  }`}
-                                  title="You can only download the entire layer"
-                                >
-                                  <span className={styles1.slider}></span>
-                                </label>
-                                <p>{baseLayer}</p>
-                              </label>
+                              <p className="text-md">{baseLayer}</p>
                               <div id="layer-edit">
-                                <div
+                                {listLayers[layerClass].layerNames[baseLayer]
+                                  .download_area ? (
+                                  <Button
+                                    onClick={() =>
+                                      handleDownloadArea(
+                                        listLayers[layerClass].layerNames[
+                                          baseLayer
+                                        ],
+                                      )
+                                    }
+                                    variant="contained"
+                                    className="!w-full !text-white !bg-black !rounded-lg opacity-50 hover:!opacity-70 !text-xs"
+                                    title="Download Selected Area"
+                                  >
+                                    <FontAwesomeIcon
+                                      icon={faDownload}
+                                      className="pr-3"
+                                    />
+                                    Area
+                                  </Button>
+                                ) : (
+                                  <></>
+                                )}
+                                <Button
                                   onClick={() =>
                                     setDownloadPopup({
                                       [`${layerClass}_${baseLayer}`]:
@@ -365,12 +359,15 @@ export function DownloadSelection({
                                         ].download,
                                     })
                                   }
+                                  variant="contained"
+                                  className="!w-full !text-white !bg-black !rounded-lg opacity-50 hover:!opacity-70 !text-xs"
                                 >
                                   <FontAwesomeIcon
                                     icon={faDownload}
-                                    title="Download layer"
+                                    className="pr-3"
                                   />
-                                </div>
+                                  Layer
+                                </Button>
                               </div>
                             </div>
                           </LayerTypeOptionsContainer>
@@ -384,16 +381,6 @@ export function DownloadSelection({
           )
         })}
       </LayerTypes>
-      <div className="text-red-500 text-sm mt-1">
-        {error ? <p>{error}</p> : <div className="pt-[18px]"></div>}
-      </div>
-      <Button
-        onClick={(e) => handleSubmit(e)}
-        variant="contained"
-        className="!w-full !text-white !bg-black !rounded-lg opacity-50 hover:!opacity-70"
-      >
-        Download
-      </Button>
     </LayerSelectionContainer>
   )
 }

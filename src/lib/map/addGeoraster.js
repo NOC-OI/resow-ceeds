@@ -29,6 +29,14 @@ export class GetTifLayer {
     })
   }
 
+  async clipGeo(bbox) {
+    const georaster = await geoblaze.load(this.url)
+    console.log(georaster)
+    const bboxNumbers = bbox.map((x) => Number(x))
+    const pixels = await geoblaze.get(georaster, bboxNumbers)
+    return pixels
+  }
+
   async parseGeoSimple() {
     this.scale = this.url.scale
     const color = this.url.colors
@@ -248,6 +256,7 @@ export class GetCOGLayer {
         url: newUrl,
         encoded: isUrlEncoded,
       }
+
       const tileJson = await axios
         .get(`${TILE_SERVER_URL}cog/WebMercatorQuad/tilejson.json`, {
           params: args,

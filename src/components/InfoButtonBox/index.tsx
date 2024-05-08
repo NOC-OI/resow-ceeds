@@ -28,7 +28,7 @@ export function InfoButtonBox({
       <InfoButtonBoxContainer
         id="info-subsection"
         ref={nodeRef}
-        className="w-80"
+        className="w-[26rem]"
       >
         <div>
           <FontAwesomeIcon
@@ -45,7 +45,7 @@ export function InfoButtonBox({
             linkTarget={'_blank'}
           />
         </div>
-        <InfoButtonBoxContent className="content-center pb-2">
+        <InfoButtonBoxContent className="content-center pb-2 pt-3">
           <ReactMarkdown
             children={infoButtonBox.content}
             remarkPlugins={[remarkGfm, remarkMath, remarkBreaks]}
@@ -53,6 +53,15 @@ export function InfoButtonBox({
             linkTarget={'_blank'}
           />
         </InfoButtonBoxContent>
+        <div className="clickable p-1 flex justify-center items-center">
+          <a
+            href={infoButtonBox.metadata}
+            target="_blank"
+            className="clickable"
+          >
+            Link to metadata
+          </a>
+        </div>
       </InfoButtonBoxContainer>
     </Draggable>
   )

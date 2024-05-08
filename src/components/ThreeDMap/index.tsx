@@ -288,7 +288,7 @@ function ThreeDMap1({
           let minValue
           let maxValue
           let stats
-          if (layerName.scale) {
+          if (!layerName.scale) {
             stats = await Promise.all(
               layerName.url.map(async (newUrl) => {
                 const newSubLayer = { ...layerName }

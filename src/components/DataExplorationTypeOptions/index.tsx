@@ -110,39 +110,51 @@ export async function handleClickLegend(
     let scale
     if (!selectedLayers) {
       if (typeof subLayers[subLayer].url === 'string') {
-        const getCOGLayer = new GetCOGLayer(subLayers[subLayer], subLayer, true)
-        await getCOGLayer.getStats().then((stats) => {
-          const minValue = stats.b1.percentile_2.toFixed(4)
-          const maxValue = stats.b1.percentile_98.toFixed(4)
-          scale = [minValue, maxValue]
-        })
+        if (!subLayers[subLayer].scale) {
+          const getCOGLayer = new GetCOGLayer(
+            subLayers[subLayer],
+            subLayer,
+            true,
+          )
+          await getCOGLayer.getStats().then((stats) => {
+            const minValue = stats.b1.percentile_2.toFixed(4)
+            const maxValue = stats.b1.percentile_98.toFixed(4)
+            scale = [minValue, maxValue]
+          })
+        } else {
+          scale = subLayers[subLayer].scale
+        }
       } else {
         let minValue
         let maxValue
-        scale = await Promise.all(
-          await subLayers[subLayer].url.map(async (newUrl) => {
-            const newSubLayer = { ...subLayers[subLayer] }
-            newSubLayer.url = newUrl
-            const getCOGLayer = new GetCOGLayer(newSubLayer, subLayer, true)
-            const stats = await getCOGLayer.getStats()
-            if (minValue) {
-              if (minValue > stats.b1.percentile_2.toFixed(4)) {
+        if (subLayers[subLayer].scale) {
+          scale = subLayers[subLayer].scale
+        } else {
+          scale = await Promise.all(
+            await subLayers[subLayer].url.map(async (newUrl) => {
+              const newSubLayer = { ...subLayers[subLayer] }
+              newSubLayer.url = newUrl
+              const getCOGLayer = new GetCOGLayer(newSubLayer, subLayer, true)
+              const stats = await getCOGLayer.getStats()
+              if (minValue) {
+                if (minValue > stats.b1.percentile_2.toFixed(4)) {
+                  minValue = stats.b1.percentile_2.toFixed(4)
+                }
+              } else {
                 minValue = stats.b1.percentile_2.toFixed(4)
               }
-            } else {
-              minValue = stats.b1.percentile_2.toFixed(4)
-            }
-            if (maxValue) {
-              if (maxValue < stats.b1.percentile_98.toFixed(4)) {
+              if (maxValue) {
+                if (maxValue < stats.b1.percentile_98.toFixed(4)) {
+                  maxValue = stats.b1.percentile_98.toFixed(4)
+                }
+              } else {
                 maxValue = stats.b1.percentile_98.toFixed(4)
               }
-            } else {
-              maxValue = stats.b1.percentile_98.toFixed(4)
-            }
-            return [minValue, maxValue]
-          }),
-        )
-        scale = scale[0]
+              return [minValue, maxValue]
+            }),
+          )
+          scale = scale[0]
+        }
       }
     } else {
       scale = selectedLayers[`${content}_${subLayer}`].scale
@@ -244,6 +256,7 @@ export function handleClickLayerInfo(
   setInfoButtonBox({
     title: `${content} - ${subLayer}`,
     content: selectedLayers[`${content}_${subLayer}`].content,
+    metadata: selectedLayers[`${content}_${subLayer}`].download.metadata,
   })
 }
 
@@ -306,14 +319,17 @@ export async function addMapLayer(
 ) {
   setLayerAction('add')
   const newSelectedLayer = layerInfo.dataInfo
+  console.log('newSelectedLayer', newSelectedLayer)
   if (newSelectedLayer.dataType === 'COG') {
     if (typeof newSelectedLayer.url === 'string') {
-      const getCOGLayer = new GetCOGLayer(newSelectedLayer, undefined, true)
-      await getCOGLayer.getStats().then((stats) => {
-        const minValue = stats.b1.percentile_2
-        const maxValue = stats.b1.percentile_98
-        newSelectedLayer.scale = [minValue, maxValue]
-      })
+      if (!newSelectedLayer.scale) {
+        const getCOGLayer = new GetCOGLayer(newSelectedLayer, undefined, true)
+        await getCOGLayer.getStats().then((stats) => {
+          const minValue = stats.b1.percentile_2
+          const maxValue = stats.b1.percentile_98
+          newSelectedLayer.scale = [minValue, maxValue]
+        })
+      }
     } else {
       const minValue = []
       const maxValue = []

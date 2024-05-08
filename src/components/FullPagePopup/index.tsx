@@ -1,4 +1,8 @@
-import { faCircleXmark, faInfoCircle } from '@fortawesome/free-solid-svg-icons'
+import {
+  faCircleXmark,
+  faInfoCircle,
+  faList,
+} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { FullPagePopupContainer } from './styles'
 // import { GithubLogo } from 'phosphor-react'
@@ -48,7 +52,7 @@ export function FullPagePopup({ setShowPopup }: FullPagePopupProps) {
           </div>
         </div> */}
         <div className="p-4">
-          <div className="grid grid-cols-1 gap-1">
+          <div className="grid grid-cols-2 gap-1">
             <a
               href="https://resow.uk/"
               target="_blank"
@@ -57,14 +61,14 @@ export function FullPagePopup({ setShowPopup }: FullPagePopupProps) {
               <FontAwesomeIcon icon={faInfoCircle} />
               <p className="text-center text-sm font-bold">RESOW WEBSITE</p>
             </a>
-            {/* <a
-              href="https://radiantearth.github.io/stac-browser/#/external/pilot-imfe-o.s3-ext.jc.rl.ac.uk/haig-fras/stac/catalog.json?.language=en"
+            <a
+              href="https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/catalog.json"
               target="_blank"
               className="p-4 cursor-pointer"
             >
-              <FontAwesomeIcon icon={faCode} />
+              <FontAwesomeIcon icon={faList} />
               <p className="text-center text-sm font-bold">Data Catalog</p>
-            </a> */}
+            </a>
             {/* <a href="#" target="_blank" className="p-4 cursor-pointer">
               <GithubLogo size={42} />
               <p className="text-center text-sm font-bold">Codes</p>

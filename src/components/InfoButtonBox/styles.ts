@@ -7,8 +7,6 @@ export const InfoButtonBoxContainer = styled.div`
   background-color: rgba(17, 17, 17, 0.6);
   color: ${(props) => props.theme.white};
   z-index: 9999;
-  max-height: 90vh;
-  height: max-content;
   position: absolute;
   padding: 0.5rem;
   border-radius: 16px;
@@ -42,13 +40,13 @@ export const InfoButtonBoxContainer = styled.div`
 `
 
 export const InfoButtonBoxContent = styled.div`
-  max-height: calc(80vh - 3.5rem);
+  max-height: calc(90vh - 10rem);
   overflow-y: auto;
   overflow-x: hidden;
   p {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     line-height: 1.6;
     text-align: justify;
-    padding-bottom: 0.5rem;
+    padding-bottom: 0rem;
   }
 `

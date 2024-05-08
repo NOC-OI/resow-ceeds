@@ -11,6 +11,7 @@ import { defaultOpacity } from '../map/utils'
 
 interface UploadDataHandleContextType {
   uploadFormats: string[]
+  fileTypes: any
   actualLayerUpload: any
   setActualLayerUpload: (layer: any) => void
   selectedLayersUpload: any
@@ -33,6 +34,25 @@ export const UploadDataHandleProvider: React.FC<
   UploadDataHandleProviderProps
 > = ({ children }) => {
   const uploadFormats = ['GeoJSON', 'GeoTIFF', 'COG', 'Shapefile', 'CSV', 'WMS']
+
+  const fileTypes = {
+    GeoTIFF: {
+      mimeTypes: ['image/tiff'],
+      extensions: ['.tif', '.tiff'],
+    },
+    GeoJSON: {
+      mimeTypes: ['application/json'],
+      extensions: ['.json'],
+    },
+    CSV: {
+      mimeTypes: ['text/plain', 'text/csv'],
+      extensions: ['.txt', '.csv'],
+    },
+    Shapefile: {
+      mimeTypes: ['application/x-esri-shape', 'application/x-esri-crs'],
+      extensions: ['.shp', '.prj'],
+    },
+  }
 
   const [actualLayerUpload, setActualLayerUpload] = useState<any>({
     dataType: 'GeoJSON',
@@ -82,6 +102,7 @@ export const UploadDataHandleProvider: React.FC<
     <UploadDataHandleContext.Provider
       value={{
         uploadFormats,
+        fileTypes,
         actualLayerUpload,
         setActualLayerUpload,
         selectedLayersUpload,

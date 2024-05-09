@@ -10,7 +10,7 @@ interface keyable {
 }
 
 interface ThreeDDataExplorationTypeProps {
-  content: String
+  content: string
   childs: Object
   selectedLayers: keyable
   setSelectedLayers: any
@@ -95,6 +95,14 @@ export function ThreeDDataExplorationType({
                 />
               )
             ) : null}
+            {listLayers[`${content}`].ceeds && (
+              <div
+                className="flex justify-center items-center pl-2"
+                title="Layer produced by RESOW project"
+              >
+                <img src="favicon.png" className="h-3" />
+              </div>
+            )}
           </div>
         </header>
       </div>

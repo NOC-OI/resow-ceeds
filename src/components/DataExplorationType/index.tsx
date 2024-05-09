@@ -98,6 +98,14 @@ export function DataExplorationType({
             )}
           </span>
           <p>{content}</p>
+          {listLayers[`${content}`].ceeds && (
+            <div
+              className="flex justify-center items-center pl-2"
+              title="Layer produced by RESOW project"
+            >
+              <img src="favicon.png" className="h-3" />
+            </div>
+          )}
         </header>
       </div>
       <div className="flex flex-col gap-1 pt-1">

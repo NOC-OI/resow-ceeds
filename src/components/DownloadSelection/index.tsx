@@ -16,8 +16,8 @@ import { useDownloadManagementHandle } from '../../lib/data/downloadManagement'
 import { Button } from '@mui/material'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDownload } from '@fortawesome/free-solid-svg-icons'
-import * as GeoTIFF from 'geotiff'
 import { GetTifLayer } from '../../lib/map/addGeoraster'
+import * as turf from '@turf/turf'
 
 interface DownloadSelectionProps {
   selectedLayers: any
@@ -39,6 +39,7 @@ export function DownloadSelection({
     rectangleLimits,
     downloadInputValue,
     setDownloadInputValue,
+    downloadableLayers,
   } = useDownloadManagementHandle()
 
   const handleRegionInputChange = (index, newValue) => {
@@ -62,8 +63,135 @@ export function DownloadSelection({
     // TODO: check if there are selected Layers
     return false
   }
+  const dateTimeNow = new Date().toISOString().replace(/:/g, '-').slice(0, 19)
 
-  async function handleDownloadArea(layerName) {
+  async function clipAndDownloadGeoTIFF(layerInfo, layerName) {
+    const georaster = downloadableLayers[layerName]
+    console.log(georaster)
+    const getTifLayer = new GetTifLayer()
+    const values = await getTifLayer.clipGeo(
+      georaster,
+      downloadInputValue.region,
+    )
+    if (values[0].length === 0) {
+      setFlashMessage({
+        messageType: 'warning',
+        content: 'No data available in the selected area',
+      })
+    } else {
+      setFlashMessage({
+        messageType: 'info',
+        content: 'Generating and downloading data',
+      })
+
+      const nrows = values[0].length
+      const ncols = values[0][0].length
+      const xllcorner = Number(downloadInputValue.region[0])
+      const yllcorner = Number(downloadInputValue.region[1])
+      const cellsize = georaster.pixelHeight
+      const nodataValue = georaster.noDataValue
+      let header = `ncols ${ncols}\n`
+      header += `nrows ${nrows}\n`
+      header += `xllcorner ${xllcorner}\n`
+      header += `yllcorner ${yllcorner}\n`
+      header += `cellsize ${cellsize}\n`
+      header += `NODATA_value ${nodataValue}\n`
+
+      let body = ''
+      for (let i = 0; i < nrows; i++) {
+        for (let j = 0; j < ncols; j++) {
+          body += values[0][i][j] + ' '
+        }
+        body = body.trim() + '\n'
+      }
+
+      const ascContent = header + body
+      const blob = new Blob([ascContent], { type: 'text/plain' })
+
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', `${layerName}_${dateTimeNow}.asc`)
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+    }
+  }
+
+  async function clipAndDownloadGeoJSON(layerInfo, layerName) {
+    const geojsonData = downloadableLayers[layerName]
+    downloadGeoJSON(geojsonData, layerName)
+  }
+
+  async function downloadGeoJSON(data, layerName) {
+    const bbox = downloadInputValue.region.map((x) => Number(x))
+    const bboxPolygon = turf.bboxPolygon(bbox)
+    const clippedFeatures = data.features.filter((feature) => {
+      switch (feature.geometry.type) {
+        case 'Point': {
+          const point = turf.point(feature.geometry.coordinates)
+          return turf.booleanPointInPolygon(point, bboxPolygon)
+        }
+        case 'LineString': {
+          const line = turf.lineString(feature.geometry.coordinates)
+          const intersection = turf.lineIntersect(line, bboxPolygon)
+          return intersection.features.length > 0
+        }
+        case 'Polygon': {
+          console.log(feature)
+          const polygon = turf.polygon(feature.geometry.coordinates)
+          const intersection = turf.intersect(polygon, bboxPolygon)
+          return intersection !== null
+        }
+        case 'MultiPolygon': {
+          console.log(feature)
+          const multiPolygon = turf.multiPolygon(feature.geometry.coordinates)
+          const intersection = turf.intersect(multiPolygon, bboxPolygon)
+          return intersection !== null
+        }
+
+        default:
+          return false
+      }
+    })
+    if (clippedFeatures.length === 0) {
+      setFlashMessage({
+        messageType: 'warning',
+        content: 'No data available in the selected area',
+      })
+      return
+    }
+    setFlashMessage({
+      messageType: 'info',
+      content: 'Generating and downloading data',
+    })
+
+    const filteredGeoJSON = {
+      type: 'FeatureCollection',
+      features: clippedFeatures,
+    }
+
+    const dataStr =
+      'data:text/json;charset=utf-8,' +
+      encodeURIComponent(JSON.stringify(filteredGeoJSON))
+    const downloadAnchorNode = document.createElement('a')
+    downloadAnchorNode.setAttribute('href', dataStr)
+    downloadAnchorNode.setAttribute(
+      'download',
+      `${layerName}_${dateTimeNow}.geojson`,
+    )
+    document.body.appendChild(downloadAnchorNode)
+    downloadAnchorNode.click()
+    downloadAnchorNode.remove()
+  }
+
+  async function clipAndDownloadFGB(layerInfo, layerName) {
+    const fgbFile = downloadableLayers[layerName]
+    console.log(fgbFile)
+    downloadGeoJSON(fgbFile, layerName)
+  }
+
+  async function handleDownloadArea(layerInfo, layerName) {
     if (checkInputValue()) {
       setFlashMessage({
         messageType: 'warning',
@@ -71,62 +199,12 @@ export function DownloadSelection({
       })
       return
     }
-    if (layerName.dataType === 'GeoTIFF') {
-      setFlashMessage({
-        messageType: 'warning',
-        content: 'GeoTIFF download is not available',
-      })
-      // const response = await fetch(layerName.url)
-      // const arrayBuffer = await response.arrayBuffer()
-      // const tiff = await GeoTIFF.fromArrayBuffer(arrayBuffer)
-      // const image = await tiff.getImage()
-      // const width = image.getWidth()
-      // const height = image.getHeight()
-
-      // const bbox = image.getBoundingBox()
-      // const scaleX = width / (bbox[2] - bbox[0])
-      // const scaleY = height / (bbox[3] - bbox[1])
-
-      // const xMin = Math.floor((downloadInputValue.region[0] - bbox[0]) * scaleX)
-      // const yMin = Math.floor((downloadInputValue.region[1] - bbox[1]) * scaleY) // latMax because origin is top-left
-      // const xMax = Math.ceil((downloadInputValue.region[2] - bbox[0]) * scaleX)
-      // const yMax = Math.ceil((downloadInputValue.region[3] - bbox[1]) * scaleY)
-      // const window = [xMin, yMin, xMax, yMax]
-      // const data = await image.readRasters({ window })
-
-      // // Create a new GeoTIFF file with clipped data (this part is conceptual)
-      // const clippedTiff = await createClippedGeoTIFF(data, window, image)
-
-      // // Save the file using file-saver
-      // import('file-saver').then((FileSaver) => {
-      //   const blob = new Blob([clippedTiff], { type: 'image/tiff' })
-      //   FileSaver.saveAs(blob, 'clipped-image.tiff')
-      // })
-
-      // console.log(image, bbox, scaleX, scaleY, width, height)
-      // console.log(xMin, yMin, xMax, yMax)
-      // console.log(data)
-
-      const getTifLayer = new GetTifLayer(
-        layerName.url,
-        undefined,
-        undefined,
-        undefined,
-        layerName,
-      )
-      console.log(downloadInputValue.region)
-      const pixels = await getTifLayer.clipGeo(downloadInputValue.region)
-      console.log(pixels)
-    } else if (layerName.dataType === 'GeoJSON') {
-      setFlashMessage({
-        messageType: 'warning',
-        content: 'GeoJSON download is not available',
-      })
-    } else if (layerName.dataType === 'FGB') {
-      setFlashMessage({
-        messageType: 'warning',
-        content: 'FGB download is not available',
-      })
+    if (layerInfo.dataType === 'GeoTIFF') {
+      clipAndDownloadGeoTIFF(layerInfo, layerName)
+    } else if (layerInfo.dataType === 'GeoJSON') {
+      clipAndDownloadGeoJSON(layerInfo, layerName)
+    } else if (layerInfo.dataType === 'FGB') {
+      clipAndDownloadFGB(layerInfo, layerName)
     }
   }
 
@@ -335,6 +413,7 @@ export function DownloadSelection({
                                         listLayers[layerClass].layerNames[
                                           baseLayer
                                         ],
+                                        `${layerClass}_${baseLayer}`,
                                       )
                                     }
                                     variant="contained"

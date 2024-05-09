@@ -73,6 +73,7 @@ export async function handleClickLegend(
   content,
   selectedLayers?,
 ) {
+  const legendLayerName = `${content}_${subLayer}`
   if (subLayers[subLayer].dataType === 'WMS') {
     const newParams = subLayers[subLayer].params
     newParams.request = 'GetLegendGraphic'
@@ -88,23 +89,50 @@ export async function handleClickLegend(
         responseUrl = responseUrl.replace('amp;', '')
         responseUrl = responseUrl + '&SERVICE=wms&format=image/png'
       }
-      setLayerLegend({ layerName: subLayer, url: responseUrl })
+      setLayerLegend((layerLegend: any) => {
+        const newLayerLegend = { ...layerLegend }
+        delete newLayerLegend[legendLayerName]
+        newLayerLegend[legendLayerName] = {
+          layerName: legendLayerName,
+          url: responseUrl,
+        }
+        return newLayerLegend
+      })
     }
     await getURILegend(newParams)
   } else if (subLayers[subLayer].dataType === 'MBTiles') {
-    setLayerLegend({
-      layerName: subLayer,
-      legend: [[subLayers[subLayer].colors], [subLayer]],
+    setLayerLegend((layerLegend: any) => {
+      const newLayerLegend = { ...layerLegend }
+      delete newLayerLegend[legendLayerName]
+      newLayerLegend[legendLayerName] = {
+        layerName: legendLayerName,
+        legend: [[subLayers[subLayer].colors], [subLayer]],
+      }
+      return newLayerLegend
     })
   } else if (subLayers[subLayer].dataType === 'FGB') {
-    setLayerLegend({
-      layerName: subLayer,
-      legend: [[subLayers[subLayer].colors], [subLayer]],
+    setLayerLegend((layerLegend: any) => {
+      const newLayerLegend = { ...layerLegend }
+      delete newLayerLegend[subLayer]
+      newLayerLegend[subLayer] = {
+        layerName: subLayer,
+        legend: [[subLayers[subLayer].colors], [subLayer]],
+        dataType: subLayers[subLayer].dataType,
+        selectedLayersKey: `${content}_${subLayer}`,
+      }
+      return newLayerLegend
     })
   } else if (subLayers[subLayer].dataType === 'GeoJSON') {
-    setLayerLegend({
-      layerName: subLayer,
-      legend: [[subLayers[subLayer].colors], [subLayer]],
+    setLayerLegend((layerLegend: any) => {
+      const newLayerLegend = { ...layerLegend }
+      delete newLayerLegend[legendLayerName]
+      newLayerLegend[legendLayerName] = {
+        layerName: legendLayerName,
+        legend: [[subLayers[subLayer].colors], [subLayer]],
+        dataType: subLayers[subLayer].dataType,
+        selectedLayersKey: `${content}_${subLayer}`,
+      }
+      return newLayerLegend
     })
   } else if (subLayers[subLayer].dataType === 'COG') {
     let scale
@@ -163,15 +191,6 @@ export async function handleClickLegend(
     const times = 30
     const cogColors = []
     const cogColorsValues = []
-
-    // console.log('XXXXXXXX', selectedLayers[`${content}_${subLayer}`])
-    //   'colorScale',
-    //   selectedLayers
-    //     ? selectedLayers[`${content}_${subLayer}`].colors
-    //     : subLayers[subLayer].colors
-    //     ? subLayers[subLayer].colors
-    //     : 'ocean_r',
-    // )
     const colorName = selectedLayers
       ? selectedLayers[`${content}_${subLayer}`].colors
       : subLayers[subLayer].colors
@@ -182,14 +201,19 @@ export async function handleClickLegend(
       cogColors.push(colorScale((1 / (times - 1)) * i))
       cogColorsValues.push(Number(scale[0]) + (difValues / (times - 1)) * i)
     }
-    setLayerLegend({
-      layerName: subLayer,
-      layerInfo: { ...subLayers[subLayer], colors: colorName },
-      selectedLayersKey: `${content}_${subLayer}`,
-      scale,
-      dataDescription: subLayers[subLayer].dataDescription,
-      legend: [cogColors, cogColorsValues],
-      dataType: subLayers[subLayer].dataType,
+    setLayerLegend((layerLegend: any) => {
+      const newLayerLegend = { ...layerLegend }
+      delete newLayerLegend[legendLayerName]
+      newLayerLegend[legendLayerName] = {
+        layerName: legendLayerName,
+        layerInfo: { ...subLayers[subLayer], colors: colorName },
+        selectedLayersKey: `${content}_${subLayer}`,
+        scale,
+        dataDescription: subLayers[subLayer].dataDescription,
+        legend: [cogColors, cogColorsValues],
+        dataType: subLayers[subLayer].dataType,
+      }
+      return newLayerLegend
     })
   } else if (subLayers[subLayer].dataType === 'GeoTIFF') {
     let scale
@@ -227,14 +251,19 @@ export async function handleClickLegend(
         cogColorsValues.push(Number(scale[0]) + (difValues / (times - 1)) * i)
       }
     }
-    setLayerLegend({
-      layerName: subLayer,
-      layerInfo: subLayers[subLayer],
-      selectedLayersKey: `${content}_${subLayer}`,
-      scale,
-      dataDescription: subLayers[subLayer].dataDescription,
-      legend: [cogColors, cogColorsValues],
-      dataType: subLayers[subLayer].dataType,
+    setLayerLegend((layerLegend: any) => {
+      const newLayerLegend = { ...layerLegend }
+      delete newLayerLegend[legendLayerName]
+      newLayerLegend[legendLayerName] = {
+        layerName: legendLayerName,
+        layerInfo: subLayers[subLayer],
+        selectedLayersKey: `${content}_${subLayer}`,
+        scale,
+        dataDescription: subLayers[subLayer].dataDescription,
+        legend: [cogColors, cogColorsValues],
+        dataType: subLayers[subLayer].dataType,
+      }
+      return newLayerLegend
     })
   }
 }
@@ -319,7 +348,6 @@ export async function addMapLayer(
 ) {
   setLayerAction('add')
   const newSelectedLayer = layerInfo.dataInfo
-  console.log('newSelectedLayer', newSelectedLayer)
   if (newSelectedLayer.dataType === 'COG') {
     if (typeof newSelectedLayer.url === 'string') {
       if (!newSelectedLayer.scale) {
@@ -396,8 +424,13 @@ export async function handleChangeMapLayerAndAddLegend(
     }
     handleClickLegend(subLayers, subLayer, setLayerLegend, content)
   } else {
-    if (layerLegend.layerName === subLayer) {
-      setLayerLegend('')
+    const legendLayerName = `${content}_${subLayer}`
+    if (layerLegend[legendLayerName]) {
+      setLayerLegend((layerLegend: any) => {
+        const newLayerLegend = { ...layerLegend }
+        delete newLayerLegend[legendLayerName]
+        return newLayerLegend
+      })
     }
   }
   await handleChangeMapLayer(

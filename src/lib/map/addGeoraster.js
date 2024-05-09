@@ -20,18 +20,18 @@ export class GetTifLayer {
     this.resolution = resolution
     this.scale = scale
     this.layerName = layerName
+    this.georaster = null
   }
 
   async loadGeo() {
     await geoblaze.load(this.url).then(async (georaster) => {
       this.layer = georaster
+      this.georaster = georaster
       this.stats = await geoblaze.stats(georaster)
     })
   }
 
-  async clipGeo(bbox) {
-    const georaster = await geoblaze.load(this.url)
-    console.log(georaster)
+  async clipGeo(georaster, bbox) {
     const bboxNumbers = bbox.map((x) => Number(x))
     const pixels = await geoblaze.get(georaster, bboxNumbers)
     return pixels

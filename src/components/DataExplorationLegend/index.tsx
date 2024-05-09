@@ -12,6 +12,7 @@ import { useUploadDataHandle } from '../../lib/data/uploadDataManagement'
 
 interface LayerLegendProps {
   layerLegend: any
+  layerLegendName: string
   setLayerLegend: any
   setSelectedLayers: any
   setLayerAction: any
@@ -20,19 +21,26 @@ interface LayerLegendProps {
 
 export function DataExplorationLegend({
   layerLegend,
+  layerLegendName,
   setLayerLegend,
   setSelectedLayers,
   setLayerAction,
   setActualLayer,
 }: LayerLegendProps) {
   function handleClose() {
-    setLayerLegend('')
+    setLayerLegend((layerLegend) => {
+      const newLayerLegend = { ...layerLegend }
+      delete newLayerLegend[layerLegendName]
+      return newLayerLegend
+    })
   }
 
   const [colorScale, setColorScale] = useState<string>(
-    layerLegend.layerInfo?.colors,
+    layerLegend[layerLegendName].layerInfo?.colors,
   )
-  const [scaleLimits, setScaleLimits] = useState<any[]>(layerLegend.scale)
+  const [scaleLimits, setScaleLimits] = useState<any[]>(
+    layerLegend[layerLegendName].scale,
+  )
   const [editLayerColors, setEditLayerColors] = useState<boolean>(false)
   const [customColors, setCustomColors] = useState<string[]>([
     '#0859fc',
@@ -63,8 +71,8 @@ export function DataExplorationLegend({
     }
   }, [error])
   useEffect(() => {
-    setColorScale(layerLegend.layerInfo?.colors)
-    setScaleLimits(layerLegend.scale)
+    setColorScale(layerLegend[layerLegendName].layerInfo?.colors)
+    setScaleLimits(layerLegend[layerLegendName].scale)
   }, [layerLegend])
   const handleColorChange = (event, index) => {
     setCustomColors((customColors) => {
@@ -98,29 +106,37 @@ export function DataExplorationLegend({
   }
 
   const handleSubmit = async () => {
-    const setState = layerLegend.selectedLayersKey.startsWith('uploaded_')
-      ? setSelectedLayersUpload
-      : setSelectedLayers
-    const setActualLayerState = layerLegend.selectedLayersKey.startsWith(
+    const setState = layerLegend[layerLegendName].selectedLayersKey.startsWith(
       'uploaded_',
     )
+      ? setSelectedLayersUpload
+      : setSelectedLayers
+    const setActualLayerState = layerLegend[
+      layerLegendName
+    ].selectedLayersKey.startsWith('uploaded_')
       ? setActualLayerNowUpload
       : setActualLayer
-    if (checkInputValue()) {
-      setError('Please enter valid values')
-    } else {
-      setActualLayerState([layerLegend.selectedLayersKey])
-      setLayerAction('update-colors')
+    if (['COG', 'GeoTIFF'].includes(layerLegend[layerLegendName].dataType)) {
+      if (checkInputValue()) {
+        setError('Please enter valid values')
+        return
+      }
+    }
+    setActualLayerState([layerLegend[layerLegendName].selectedLayersKey])
+    setLayerAction('update-colors')
+    if (['COG', 'GeoTIFF'].includes(layerLegend[layerLegendName].dataType)) {
       setState((selectedLayers) => {
         const newSelectedLayers = { ...selectedLayers }
-        newSelectedLayers[layerLegend.selectedLayersKey] = {
-          ...newSelectedLayers[layerLegend.selectedLayersKey],
+        newSelectedLayers[layerLegend[layerLegendName].selectedLayersKey] = {
+          ...newSelectedLayers[layerLegend[layerLegendName].selectedLayersKey],
           colors: colorScale === 'Custom' ? customColors : colorScale,
           scale: scaleLimits,
         }
         return newSelectedLayers
       })
       setLayerLegend((layerLegend) => {
+        const newLayerLegend = { ...layerLegend }
+        delete newLayerLegend[layerLegendName]
         const difValues = scaleLimits[1] - scaleLimits[0]
         const times = 30
         const cogColors = []
@@ -145,8 +161,8 @@ export function DataExplorationLegend({
             )
           }
         }
-        return {
-          ...layerLegend,
+        newLayerLegend[layerLegendName] = {
+          ...layerLegend[layerLegendName],
           scale: scaleLimits,
           layerInfo: {
             ...layerLegend.layerInfo,
@@ -155,12 +171,33 @@ export function DataExplorationLegend({
           },
           legend: [cogColors, cogColorsValues],
         }
+        return newLayerLegend
+      })
+    } else {
+      setState((selectedLayers) => {
+        const newSelectedLayers = { ...selectedLayers }
+        newSelectedLayers[layerLegend[layerLegendName].selectedLayersKey] = {
+          ...newSelectedLayers[layerLegend[layerLegendName].selectedLayersKey],
+          color: customColors[0],
+          colors: customColors[0],
+          scale: scaleLimits,
+        }
+        return newSelectedLayers
+      })
+      setLayerLegend((layerLegend) => {
+        const newLayerLegend = { ...layerLegend }
+        delete newLayerLegend[layerLegendName]
+        newLayerLegend[layerLegendName] = {
+          ...layerLegend[layerLegendName],
+          legend: [[customColors[0]], layerLegend[layerLegendName].legend[1]],
+        }
+        return newLayerLegend
       })
     }
   }
 
   useEffect(() => {
-    if (layerLegend.url) {
+    if (layerLegend[layerLegendName].url) {
       setEditLayerColors(false)
     }
   }, [layerLegend])
@@ -178,19 +215,44 @@ export function DataExplorationLegend({
           />
         </div>
         <div>
-          <h1>{layerLegend.layerName}</h1>
+          <h1>LEGEND</h1>
+          <h1>{layerLegend[layerLegendName].layerName}</h1>
           <div>
-            {layerLegend.url ? (
-              wmsError ? (
+            {layerLegend[layerLegendName].url &&
+              (wmsError ? (
                 <p>
                   <strong>Legend not available</strong>
                 </p>
               ) : (
-                <img src={layerLegend.url} onError={() => setWmsError(true)} />
-              )
-            ) : layerLegend.dataType ? (
+                <img
+                  src={layerLegend[layerLegendName].url}
+                  onError={() => setWmsError(true)}
+                />
+              ))}
+            {['COG', 'GeoTIFF'].includes(
+              layerLegend[layerLegendName].dataType,
+            ) ? (
               <div className="flex flex-col justify-center items-center gap-2">
-                <ColorBar layerLegend={layerLegend} />
+                <ColorBar layerLegend={layerLegend[layerLegendName]} />
+              </div>
+            ) : (
+              layerLegend[layerLegendName].legend &&
+              layerLegend[layerLegendName].legend[0].map(
+                (color: any, idx: any) => {
+                  return (
+                    <div key={color} className="flex p-1">
+                      <div
+                        style={{ backgroundColor: color }}
+                        className="rounded w-4"
+                      ></div>
+                      <p>{layerLegend[layerLegendName].legend[1][idx]}</p>
+                    </div>
+                  )
+                },
+              )
+            )}
+            {layerLegend[layerLegendName].dataType && (
+              <div className="flex flex-col justify-center items-center gap-2">
                 <Button
                   id="edit-layer-colors-button"
                   onClick={() => setEditLayerColors(!editLayerColors)}
@@ -201,151 +263,167 @@ export function DataExplorationLegend({
                   <p>Edit Layer Colors</p>
                 </Button>
               </div>
-            ) : (
-              layerLegend.legend[0].map((color: any, idx: any) => {
-                return (
-                  <div key={color} className="flex p-1">
-                    <div
-                      style={{ backgroundColor: color }}
-                      className="rounded w-4"
-                    ></div>
-                    <p>{layerLegend.legend[1][idx]}</p>
-                  </div>
-                )
-              })
             )}
           </div>
         </div>
-        {editLayerColors && (
-          <div className="flex flex-col items-center gap-2">
-            <div className="pt-4 flex justify-left w-full items-center gap-2">
-              <p className="text-md font-bold text-white text-center">
-                Color Scale:
-              </p>
-              <div className="flex flex-col items-center gap-2">
-                <div className="flex justify-left items-center w-full">
-                  <select
-                    id="fileFormat-select"
-                    value={colorScale}
-                    onChange={(e) => setColorScale(e.target.value)}
-                    className="clickable bg-black border border-black bg-opacity-20 text-white text-sm rounded-lg  block w-max p-2 hover:bg-opacity-80"
-                  >
-                    {layerLegend.dataType !== 'COG' && (
-                      <option
-                        className="!bg-black !bg-opacity-80 opacity-30 !text-white clickable"
-                        value="Custom"
-                      >
-                        Custom
-                      </option>
+        {editLayerColors &&
+          (['COG', 'GeoTIFF'].includes(
+            layerLegend[layerLegendName].dataType,
+          ) ? (
+            <div className="flex flex-col items-center gap-2">
+              <div className="pt-4 flex justify-left w-full items-center gap-2">
+                <p className="text-md font-bold text-white text-center">
+                  Color Scale:
+                </p>
+                <div className="flex flex-col items-center gap-2">
+                  <div className="flex justify-left items-center w-full">
+                    <select
+                      id="fileFormat-select"
+                      value={colorScale}
+                      onChange={(e) => setColorScale(e.target.value)}
+                      className="clickable bg-black border border-black bg-opacity-20 text-white text-sm rounded-lg  block w-max p-2 hover:bg-opacity-80"
+                    >
+                      {layerLegend[layerLegendName].dataType !== 'COG' && (
+                        <option
+                          className="!bg-black !bg-opacity-80 opacity-30 !text-white clickable"
+                          value="Custom"
+                        >
+                          Custom
+                        </option>
+                      )}
+                      {allColorScales.map((allColorScale, index) => (
+                        <option
+                          className="!bg-black !bg-opacity-80 opacity-30 !text-white clickable"
+                          value={allColorScale}
+                          key={index}
+                        >
+                          {allColorScale}
+                        </option>
+                      ))}
+                    </select>
+                    {colorScale === 'Custom' && (
+                      <div className="pl-2 flex justify-start items-center gap-1">
+                        <input
+                          type="color"
+                          className="p-1 block bg-black  bg-opacity-30 cursor-pointer rounded-lg disabled:opacity-50 disabled:pointer-events-none clickable"
+                          id="hs-color-input"
+                          value={customColors[0]}
+                          onChange={(e) => handleColorChange(e, 0)}
+                          title="Choose your color"
+                        />
+                        <input
+                          type="color"
+                          className="p-1 block bg-black bg-opacity-30  cursor-pointer rounded-lg disabled:opacity-50 disabled:pointer-events-none clickable"
+                          id="hs-color-input"
+                          value={customColors[1]}
+                          onChange={(e) => handleColorChange(e, 1)}
+                          title="Choose your color"
+                        />
+                      </div>
                     )}
-                    {allColorScales.map((allColorScale, index) => (
-                      <option
-                        className="!bg-black !bg-opacity-80 opacity-30 !text-white clickable"
-                        value={allColorScale}
-                        key={index}
-                      >
-                        {allColorScale}
-                      </option>
-                    ))}
-                  </select>
-                  {colorScale === 'Custom' && (
-                    <div className="pl-2 flex justify-start items-center gap-1">
-                      <input
-                        type="color"
-                        className="p-1 block bg-black  bg-opacity-30 cursor-pointer rounded-lg disabled:opacity-50 disabled:pointer-events-none clickable"
-                        id="hs-color-input"
-                        value={customColors[0]}
-                        onChange={(e) => handleColorChange(e, 0)}
-                        title="Choose your color"
-                      />
-                      <input
-                        type="color"
-                        className="p-1 block bg-black bg-opacity-30  cursor-pointer rounded-lg disabled:opacity-50 disabled:pointer-events-none clickable"
-                        id="hs-color-input"
-                        value={customColors[1]}
-                        onChange={(e) => handleColorChange(e, 1)}
-                        title="Choose your color"
-                      />
-                    </div>
-                  )}
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="pt-4 flex justify-left w-full items-center gap-2">
-              <p className="text-md font-bold text-white text-center">
-                Color Limits:
-              </p>
-              <div className="flex gap-4 justify-center items-center border-white border-b-2">
-                <CssTextField
-                  id="min-color"
-                  label="Min Value"
-                  type="number"
-                  name="min_value"
-                  variant="standard"
-                  InputLabelProps={{
-                    style: {
-                      textOverflow: 'ellipsis',
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      width: '100%',
-                      color: 'white',
-                      borderWidth: '10px',
-                      borderColor: 'white !important',
-                    },
-                  }}
-                  className="clickable"
-                  InputProps={{
-                    style: {
-                      color: 'white',
-                    },
-                  }}
-                  value={isNaN(scaleLimits[0]) ? '' : scaleLimits[0]}
-                  onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    handleChangeScaleLimits(e, 0)
-                  }
-                />
-                <CssTextField
-                  id="max-color"
-                  label="Max Value"
-                  type="number"
-                  name="max_value"
-                  variant="standard"
-                  className="clickable"
-                  InputLabelProps={{
-                    style: {
-                      textOverflow: 'ellipsis',
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      width: '100%',
-                      color: 'white',
-                      borderWidth: '10px',
-                      borderColor: 'white !important',
-                    },
-                  }}
-                  InputProps={{
-                    style: {
-                      color: 'white',
-                    },
-                  }}
-                  value={isNaN(scaleLimits[1]) ? '' : scaleLimits[1]}
-                  onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    handleChangeScaleLimits(e, 1)
-                  }
-                />
+              <div className="pt-4 flex justify-left w-full items-center gap-2">
+                <p className="text-md font-bold text-white text-center">
+                  Color Limits:
+                </p>
+                <div className="flex gap-4 justify-center items-center border-white border-b-2">
+                  <CssTextField
+                    id="min-color"
+                    label="Min Value"
+                    type="number"
+                    name="min_value"
+                    variant="standard"
+                    InputLabelProps={{
+                      style: {
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        width: '100%',
+                        color: 'white',
+                        borderWidth: '10px',
+                        borderColor: 'white !important',
+                      },
+                    }}
+                    className="clickable"
+                    InputProps={{
+                      style: {
+                        color: 'white',
+                      },
+                    }}
+                    value={isNaN(scaleLimits[0]) ? '' : scaleLimits[0]}
+                    onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      handleChangeScaleLimits(e, 0)
+                    }
+                  />
+                  <CssTextField
+                    id="max-color"
+                    label="Max Value"
+                    type="number"
+                    name="max_value"
+                    variant="standard"
+                    className="clickable"
+                    InputLabelProps={{
+                      style: {
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        width: '100%',
+                        color: 'white',
+                        borderWidth: '10px',
+                        borderColor: 'white !important',
+                      },
+                    }}
+                    InputProps={{
+                      style: {
+                        color: 'white',
+                      },
+                    }}
+                    value={isNaN(scaleLimits[1]) ? '' : scaleLimits[1]}
+                    onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      handleChangeScaleLimits(e, 1)
+                    }
+                  />
+                </div>
               </div>
+              <div className="text-red-500 text-sm mt-1">
+                {error ? <p>{error}</p> : <div className="pt-[18px]"></div>}
+              </div>
+              <Button
+                onClick={() => handleSubmit()}
+                variant="contained"
+                className="!w-full !text-white !bg-black !rounded-lg opacity-50 hover:!opacity-70 clickable"
+              >
+                Update Layer
+              </Button>
             </div>
-            <div className="text-red-500 text-sm mt-1">
-              {error ? <p>{error}</p> : <div className="pt-[18px]"></div>}
+          ) : (
+            <div className="flex flex-col items-center gap-2">
+              <div className="pt-4 flex justify-left w-full items-center gap-2">
+                <p className="text-md font-bold text-white text-center">
+                  Color:
+                </p>
+                <div className="pl-2 flex justify-start items-center gap-1">
+                  <input
+                    type="color"
+                    className="p-1 block bg-black  bg-opacity-30 cursor-pointer rounded-lg disabled:opacity-50 disabled:pointer-events-none clickable"
+                    id="hs-color-input"
+                    value={customColors[0]}
+                    onChange={(e) => handleColorChange(e, 0)}
+                    title="Choose your color"
+                  />
+                </div>
+              </div>
+              <Button
+                onClick={() => handleSubmit()}
+                variant="contained"
+                className="!w-full !text-white !bg-black !rounded-lg opacity-50 hover:!opacity-70 clickable"
+              >
+                Update Layer
+              </Button>
             </div>
-            <Button
-              onClick={() => handleSubmit()}
-              variant="contained"
-              className="!w-full !text-white !bg-black !rounded-lg opacity-50 hover:!opacity-70 clickable"
-            >
-              Update Layer
-            </Button>
-          </div>
-        )}
+          ))}
       </LayerLegendContainer>
     </Draggable>
   )

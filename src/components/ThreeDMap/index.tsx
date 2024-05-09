@@ -18,7 +18,7 @@ import { ResiumContainer } from './styles'
 import React, { useEffect, useRef, useMemo, useState } from 'react'
 import * as Cesium from 'cesium'
 import { GetPhotoMarker } from '../../lib/map/addPhotoMarker'
-import { GetCOGLayer } from '../../lib/map/addGeoraster'
+import { GetCOGLayer, GetTifLayer } from '../../lib/map/addGeoraster'
 import {
   batOrder,
   cesiumHeading,
@@ -37,6 +37,7 @@ import { useContextHandle } from '../../lib/contextHandle'
 import * as flatgeobuf from 'flatgeobuf'
 import { cesiumMarker } from '../../assets/cesiumMarker'
 import chroma from 'chroma-js'
+import { useDownloadManagementHandle } from '../../lib/data/downloadManagement'
 
 Ion.defaultAccessToken = process.env.VITE_CESIUM_TOKEN
 
@@ -55,6 +56,7 @@ interface ThreeDMapProps {
   setDepth: any
   setPosition: any
   position: any
+  selectedSidebarOption: any
 }
 function ThreeDMap1({
   selectedLayers,
@@ -67,12 +69,16 @@ function ThreeDMap1({
   setDepth,
   setPosition,
   position,
+  selectedSidebarOption,
 }: ThreeDMapProps) {
   const ref = useRef<CesiumComponentRef<CesiumViewer>>(null)
 
   const { setFlashMessage, setLoading } = useContextHandle()
 
   const [cogLayer, setCogLayer] = useState('')
+
+  const { setDownloadableLayers, downloadInputValue } =
+    useDownloadManagementHandle()
 
   Cesium.Camera.DEFAULT_VIEW_RECTANGLE = cesiumStartCoordinates
 
@@ -157,6 +163,17 @@ function ThreeDMap1({
       turfLayer.attribution = actual
       turfLayer.originalColor = colorLimits
       turfLayer.name = layerNameType
+      await fetch(turfConvex)
+        .then((response) => response.json())
+        .then((data) => {
+          setDownloadableLayers((downloadableLayers) => {
+            return {
+              ...downloadableLayers,
+              [actual]: data,
+            }
+          })
+        })
+
       return turfLayer
     }
   }
@@ -170,16 +187,28 @@ function ThreeDMap1({
       strokeWidth: 3,
     }
     const response = await fetch(url)
+    const features = []
     for await (const data of flatgeobuf.geojson.deserialize(
       response.body,
       undefined,
     )) {
+      features.push(data)
       const dataSource: any = await Cesium.GeoJsonDataSource.load(data, myStyle)
       dataSource.attribution = actual
       dataSource.originalColor = colorLimits
       dataSource.name = actual
       layers.add(dataSource)
     }
+    const fgbFile = {
+      type: 'FeatureCollection',
+      features,
+    }
+    setDownloadableLayers((downloadableLayers) => {
+      return {
+        ...downloadableLayers,
+        [actual]: fgbFile,
+      }
+    })
   }
 
   function getWMSLayer(layerName: any, actual: any) {
@@ -223,6 +252,58 @@ function ThreeDMap1({
       }
     })
   }
+  function removeNormalLayerFromMap(name: string, layers?: any) {
+    if (!layers) {
+      layers = ref.current.cesiumElement.dataSources
+    }
+    layers._dataSources.forEach(function (layer: any) {
+      if (layer._name === name) {
+        layers.remove(layer)
+      }
+    })
+    layers._dataSources.forEach(function (layer: any) {
+      if (layer._name === name) {
+        layers.remove(layer)
+      }
+    })
+  }
+
+  useEffect(() => {
+    if (ref.current?.cesiumElement) {
+      removeNormalLayerFromMap('drawn')
+      setTimeout(() => {
+        addDownloadLimitsToMap()
+      }, 500)
+    }
+  }, [downloadInputValue])
+
+  function addDownloadLimitsToMap() {
+    const dataSource = new Cesium.CustomDataSource('drawn')
+    const layers = ref.current.cesiumElement.dataSources
+    const latlngs = [
+      Number(downloadInputValue.region[0]),
+      Number(downloadInputValue.region[1]),
+      Number(downloadInputValue.region[0]),
+      Number(downloadInputValue.region[3]),
+      Number(downloadInputValue.region[2]),
+      Number(downloadInputValue.region[3]),
+      Number(downloadInputValue.region[2]),
+      Number(downloadInputValue.region[1]),
+      Number(downloadInputValue.region[0]),
+      Number(downloadInputValue.region[1]),
+    ]
+    const color = new Cesium.Color(1, 0.2, 0.2, 0.5)
+    const polygon = {
+      hierarchy: Cesium.Cartesian3.fromDegreesArray(latlngs),
+      material: color,
+    }
+    const polylineEntity = new Cesium.Entity({
+      polygon,
+      name: 'drawn',
+    })
+    dataSource.entities.add(polylineEntity)
+    layers.add(dataSource)
+  }
 
   async function generateAddCOGLayer(
     layer,
@@ -245,6 +326,21 @@ function ThreeDMap1({
     layers.add(layer)
     correctBaseWMSOrder(layers)
 
+    const getTifLayer = new GetTifLayer(
+      layerName.url,
+      actual,
+      undefined,
+      undefined,
+      layerName,
+    )
+    await getTifLayer.loadGeo().then(function () {
+      setDownloadableLayers((downloadableLayers) => {
+        return {
+          ...downloadableLayers,
+          [actual]: getTifLayer.georaster,
+        }
+      })
+    })
     if (actual.split('_')[0] === 'Bathymetry') {
       if (cogLayer) {
         if (
@@ -257,6 +353,16 @@ function ThreeDMap1({
       }
     }
   }
+
+  useEffect(() => {
+    if (ref.current?.cesiumElement) {
+      if (selectedSidebarOption !== 'Download') {
+        removeNormalLayerFromMap('drawn')
+      } else {
+        addDownloadLimitsToMap()
+      }
+    }
+  }, [selectedSidebarOption])
 
   // if (ref.current) {
   //   console.log(ref.current.cesiumElement)
@@ -624,12 +730,14 @@ function ThreeDMap1({
         })
       }
     })
-    if (actual) {
-      console.log('')
-      // await generateSelectedUploadedLayer('old')
-    } else {
+    if (!actual) {
       await generateSelectedLayer()
     }
+    // if (actual) {
+    //   await generateSelectedUploadedLayer('old')
+    // } else {
+    //   await generateSelectedLayer()
+    // }
     setLayerAction('')
     setLoading(false)
   }
@@ -691,7 +799,8 @@ function mapPropsAreEqual(prevMap: any, nextMap: any) {
     prevMap.selectedLayers === nextMap.selectedLayers &&
     prevMap.threeD === nextMap.threeD &&
     prevMap.cogLayer === nextMap.cogLayer &&
-    prevMap.actualLayer === nextMap.actualLayer
+    prevMap.actualLayer === nextMap.actualLayer &&
+    prevMap.selectedSidebarOption === nextMap.selectedSidebarOption
   )
 }
 

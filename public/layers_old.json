@@ -50,7 +50,6 @@
   },
   "Case Study Areas": {
     "icon": "",
-    "ceeds": true,
     "layerNames": {
       "Summaries": {
         "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/case_study_areas/summaries/summary.geojson",
@@ -73,7 +72,6 @@
   },
   "Habitat Suitability (HSM)": {
     "icon": "",
-    "ceeds": true,
     "layerNames": {
       "UK": {
         "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/uk_hsm/uk_hsm_cog.tif",
@@ -302,7 +300,6 @@
   },
   "Seagrass extent from satellite data": {
     "icon": "",
-    "ceeds": true,
     "layerNames": {
       "Fleet Lagoon": {
         "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/remote_sensing/remote_sensing/Fleet_lagoon_seagrass_from_EO.geojson",
@@ -629,6 +626,7 @@
         ],
         "download_area": false
       }
+
     }
   },
   "Marine Protected Areas": {
@@ -748,8 +746,8 @@
         },
         "bbox": [
           -8.1618818588876,
-          54.01462342391226,
           -5.406230787767979,
+          54.01462342391226,
           55.313029439132656
         ],
         "colors": "#252525"
@@ -796,6 +794,68 @@
       }
     }
   },
+  "Coastline": {
+    "icon": "",
+    "layerNames": {
+      "Coastline": {
+        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/coast/coastline/coastline.fgb",
+        "dataType": "FGB",
+        "content": "This dataset represents the coastline of Great Britain, including England, Scotland, and Wales.",
+        "protected": false,
+        "colors": "#252525",
+        "download_area": true,
+        "download": {
+          "FlatGeoBuf": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/coast/coastline/coastline.fgb",
+          "Shapefile": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/coast/coast-lines.zip",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Coastline/Coastline/Coastline/Coastline.json"
+        },
+        "bbox": [
+          -8.65000717567987,
+          1.7635456859319478,
+          49.86468453360139,
+          60.86076643216307
+        ]
+      },
+      "Coast Polygons": {
+        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/coast/coast_polygons/coast_polygons.geojson",
+        "dataType": "GeoJSON",
+        "content": "This dataset represents the coastline of Great Britain, including England, Scotland, and Wales.",
+        "protected": false,
+        "colors": "#68a063",
+        "download_area": true,
+        "download": {
+          "GeoJSON": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/coast/coast_polygons/coast_polygons.geojson",
+          "Shapefile": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/coast/coast-polygons.zip",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Coastline/Coastline/Coast%20Polygons/Coast%20Polygons.json"
+        },
+        "bbox": [
+          -8.747688706006347,
+          49.82254020890136,
+          1.909518909625645,
+          60.89954933601512
+        ]
+      },
+      "Land Polygons": {
+        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/coast/land_polygons/land_polygons.fgb",
+        "dataType": "FGB",
+        "content": "This dataset represents the coastline of Great Britain, including England, Scotland, and Wales.",
+        "protected": false,
+        "colors": "#cf52d3",
+        "download_area": true,
+        "download": {
+          "FlatGeoBuf": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/coast/land_polygons/land_polygons.fgb",
+          "Shapefile": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/coast/land-polygons.zip",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Coastline/Coastline/Land%20Polygons/Land%20Polygons.json"
+        },
+        "bbox": [
+          -8.65000717567987,
+          1.7635456859319478,
+          49.86468453360139,
+          60.86076643216307
+        ]
+      }
+    }
+  },
   "Seagrass extent from in-situ surveys": {
     "icon": "fish",
     "layerNames": {
@@ -808,8 +868,8 @@
         "download_area": true,
         "bbox": [
           -6.356516986753225,
-          49.916095855740444,
           1.260547677842559,
+          49.916095855740444,
           55.69188998604591
         ],
         "download": {

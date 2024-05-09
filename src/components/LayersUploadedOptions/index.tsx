@@ -79,8 +79,12 @@ export function LayersUploadedOptions({
       }
       await addMapLayerUpload(layerInfo, layerClass)
     } else {
-      if (layerLegend.layerName === layerClass) {
-        setLayerLegend('')
+      if (layerLegend[layerClass]) {
+        setLayerLegend((layerLegend: any) => {
+          const newLayerLegend = { ...layerLegend }
+          delete newLayerLegend[layerClass]
+          return newLayerLegend
+        })
       }
       removeMapLayerUpload(layerClass)
     }
@@ -106,7 +110,11 @@ export function LayersUploadedOptions({
           >
             <span className={styles1.slider}></span>
           </label>
-          <p>{`${layerClass}`}</p>
+          <p>
+            {layerClass.length > 30
+              ? layerClass.slice(0, 27) + '...'
+              : layerClass}
+          </p>
         </label>
         {Object.keys(selectedLayersUpload).includes(
           `uploaded_${layerClass}`,

@@ -129,14 +129,19 @@ export function UploadSelection({
             )
           }
         }
-        setLayerLegend({
-          layerName: localUploadInfo.file.name,
-          layerInfo: finalActualLayerUpload,
-          selectedLayersKey: `uploaded_${localUploadInfo.file.name}`,
-          scale,
-          dataDescription: '',
-          legend: [cogColors, cogColorsValues],
-          dataType: finalActualLayerUpload.dataType,
+        setLayerLegend((layerLegend: any) => {
+          const newLayerLegend = { ...layerLegend }
+          delete newLayerLegend[localUploadInfo.file.name]
+          newLayerLegend[localUploadInfo.file.name] = {
+            layerName: localUploadInfo.file.name,
+            layerInfo: finalActualLayerUpload,
+            selectedLayersKey: `uploaded_${localUploadInfo.file.name}`,
+            scale,
+            dataDescription: '',
+            legend: [cogColors, cogColorsValues],
+            dataType: finalActualLayerUpload.dataType,
+          }
+          return newLayerLegend
         })
         setLoading(false)
       })
@@ -343,7 +348,6 @@ export function UploadSelection({
       setLabelText('Choose file')
       return
     }
-    console.log(file)
     const fileSize = file.size / 1024 / 1024
     if (fileSize > 50) {
       if (proj) {

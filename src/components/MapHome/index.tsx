@@ -92,7 +92,12 @@ function MapHome1({
     selectedLayersUpload,
     actualLayerNowUpload,
   } = useUploadDataHandle()
-  const { drawRectangle, setRectangleLimits } = useDownloadManagementHandle()
+  const {
+    drawRectangle,
+    setRectangleLimits,
+    setDownloadableLayers,
+    downloadInputValue,
+  } = useDownloadManagementHandle()
   const [map, setMap] = useState<any>(null)
   // const [mapCenter, setMapCenter] = useState<L.LatLng>(
   //   new L.LatLng(defaultView[0], defaultView[1]),
@@ -273,10 +278,12 @@ function MapHome1({
   async function getFlatGeoBufData(layerName, actual) {
     const response = await fetch(layerName.url)
     const layers = []
+    const features = []
     for await (const data of flatgeobuf.geojson.deserialize(
       response.body,
       undefined,
     )) {
+      features.push(data)
       const layer = L.geoJSON(data, {
         pointToLayer: function (feature, latlng) {
           return L.marker(latlng, {
@@ -304,12 +311,25 @@ function MapHome1({
         },
       })
       layer.options.attribution = actual
+      layer.addTo(map)
+      bringLayerToFront(layer)
       layers.push(layer)
     }
+    const fgbFile = {
+      type: 'FeatureCollection',
+      features,
+    }
+    setDownloadableLayers((downloadableLayers) => {
+      return {
+        ...downloadableLayers,
+        [actual]: fgbFile,
+      }
+    })
     return layers
   }
 
   async function generateSelectedLayer() {
+    console.log('generateSelectedLayer', selectedLayers[actualLayer[0]])
     actualLayer.forEach(async (actual) => {
       const layerName = selectedLayers[actual]
       let layer: any
@@ -317,7 +337,6 @@ function MapHome1({
         layer = await getWMSLayer(layerName, actual)
       } else if (layerName.dataType === 'COG') {
         if (typeof layerName.url === 'string') {
-          console.log('generate_layer', layerName)
           const getCOGLayer = new GetCOGLayer(layerName, actual, true)
           layer = await getCOGLayer.getTile()
           if (getCOGLayer.error) {
@@ -424,6 +443,12 @@ function MapHome1({
         await getTifLayer.parseGeo().then(function () {
           layer = getTifLayer.layer
           layer.options.date_range = layerName.date_range
+          setDownloadableLayers((downloadableLayers) => {
+            return {
+              ...downloadableLayers,
+              [actual]: getTifLayer.georaster,
+            }
+          })
         })
       } else if (layerName.dataType === 'arcgis') {
         layer = esri.dynamicMapLayer({ url: layerName.url })
@@ -487,7 +512,7 @@ function MapHome1({
         const turfConvex = turf.convex(turf.featureCollection(markers))
         layer = createTurfLayer(actual, turfConvex)
       }
-      if (layerName.dataType !== 'Photo') {
+      if (!['Photo', 'FGB'].includes(layerName.dataType)) {
         try {
           layer.forEach((individualLayer) => {
             individualLayer.options.attribution = actual
@@ -505,10 +530,6 @@ function MapHome1({
           }
         }
       }
-      if (layerName.dataType !== 'Photo') {
-        // bounds = defaultWMSBounds
-      }
-      // console.log(bounds)
       const bounds = layerName.bbox
         ? [
             [layerName.bbox[1] - 0.1, layerName.bbox[0] - 0.1],
@@ -659,6 +680,12 @@ function MapHome1({
             return myStyle
           },
         })
+        setDownloadableLayers((downloadableLayers) => {
+          return {
+            ...downloadableLayers,
+            [actual]: data,
+          }
+        })
       })
       .catch((error) => console.error('Error:', error))
     return layer
@@ -689,6 +716,13 @@ function MapHome1({
     map.eachLayer(function (layer) {
       if (layerToBeChanged.includes(layer.options.attribution)) {
         map.removeLayer(layer)
+        if (!actual) {
+          setDownloadableLayers((downloadableLayers) => {
+            const newDownloadableLayers = { ...downloadableLayers }
+            delete newDownloadableLayers[layer.options.attribution]
+            return newDownloadableLayers
+          })
+        }
         if (activePhoto.layerName === layer.options.attribution) {
           setActivePhoto('')
         }
@@ -709,10 +743,42 @@ function MapHome1({
     fetchLayer()
   }, [bathymetryUrl])
 
+  function addDownloadLimitsToMap() {
+    const latlngs = [
+      [downloadInputValue.region[1], downloadInputValue.region[0]],
+      [downloadInputValue.region[3], downloadInputValue.region[0]],
+      [downloadInputValue.region[3], downloadInputValue.region[2]],
+      [downloadInputValue.region[1], downloadInputValue.region[2]],
+    ]
+    const layer = L.polygon(latlngs, {
+      attribution: 'drawn',
+      color: 'red',
+      fill: true,
+      fillColor: null,
+      fillOpacity: 0.2,
+      opacity: 0.5,
+      stroke: true,
+      weight: 4,
+    })
+    layer.options.attribution = 'drawn'
+    map.addLayer(layer)
+  }
+
+  useEffect(() => {
+    if (map) {
+      removeNormalLayerFromMap('drawn')
+      setTimeout(() => {
+        addDownloadLimitsToMap()
+      }, 500)
+    }
+  }, [downloadInputValue])
+
   useEffect(() => {
     if (map) {
       if (selectedSidebarOption !== 'Download') {
         removeNormalLayerFromMap('drawn')
+      } else {
+        addDownloadLimitsToMap()
       }
     }
   }, [selectedSidebarOption])
@@ -770,7 +836,6 @@ function MapHome1({
               ]
             : defaultWMSBounds
           bringLayerToFront(layer)
-          console.log(bounds)
           map.fitBounds(bounds)
         } else {
           if (!layer.options.dataType) {

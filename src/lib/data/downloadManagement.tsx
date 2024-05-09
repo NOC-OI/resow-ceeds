@@ -9,6 +9,8 @@ interface DownloadManagementHandleContextType {
   setRectangleLimits: any
   downloadInputValue: any
   setDownloadInputValue: any
+  downloadableLayers: any
+  setDownloadableLayers: any
 }
 const DownloadManagementHandleContext = createContext<
   DownloadManagementHandleContextType | undefined
@@ -28,6 +30,8 @@ export const DownloadManagementHandleProvider: React.FC<
     layers: [],
     region: [-7.1, 49.1, 0.1, 59.1],
   })
+
+  const [downloadableLayers, setDownloadableLayers] = useState<Object>({})
   // async function getLeaks() {
   //   await fetchApiGet('v1/leaks/', setLeakList, accessToken)
   // }
@@ -40,6 +44,8 @@ export const DownloadManagementHandleProvider: React.FC<
         setRectangleLimits,
         downloadInputValue,
         setDownloadInputValue,
+        downloadableLayers,
+        setDownloadableLayers,
       }}
     >
       {children}

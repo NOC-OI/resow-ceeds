@@ -35,7 +35,7 @@ export function ThreeD() {
 
   const [layerAction, setLayerAction] = useState('')
 
-  const [layerLegend, setLayerLegend] = useState('')
+  const [layerLegend, setLayerLegend] = useState({})
 
   const [printBox, setPrintBox] = useState(false)
 
@@ -70,7 +70,6 @@ export function ThreeD() {
   useEffect(() => {
     fetchData()
   }, [])
-
   return (
     <DownloadManagementHandleProvider>
       <UploadDataHandleProvider>
@@ -100,15 +99,17 @@ export function ThreeD() {
             <div className="hidden sm:block z-[9999]">
               <DimensionsToogle />
             </div>
-            {layerLegend ? (
+            {Object.keys(layerLegend).map((legend) => (
               <DataExplorationLegend
+                key={legend}
                 layerLegend={layerLegend}
+                layerLegendName={legend}
                 setLayerLegend={setLayerLegend}
                 setSelectedLayers={setSelectedLayers}
                 setLayerAction={setLayerAction}
                 setActualLayer={setActualLayer}
               />
-            ) : null}
+            ))}
             {Object.keys(infoButtonBox).length !== 0 ? (
               <InfoButtonBox
                 infoButtonBox={infoButtonBox}
@@ -145,6 +146,7 @@ export function ThreeD() {
             setPosition={setPosition}
             setDepth={setDepth}
             position={position}
+            selectedSidebarOption={selectedSidebarOption}
           />
           <InfoBox
             position={position}

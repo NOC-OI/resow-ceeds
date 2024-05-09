@@ -43,7 +43,7 @@ export function Home() {
   const [showPhotos, setShowPhotos] = useState<object[]>([])
   const [selectedBaseLayer, setSelectedBaseLayer] = useState(defaultBaseLayer)
 
-  const [layerLegend, setLayerLegend] = useState('')
+  const [layerLegend, setLayerLegend] = useState({})
   const [printBox, setPrintBox] = useState(false)
 
   const [infoButtonBox, setInfoButtonBox] = useState({})
@@ -60,7 +60,7 @@ export function Home() {
 
   const [listLayers, setListLayers] = useState([])
 
-  const [showPopup, setShowPopup] = useState(false)
+  const [showPopup, setShowPopup] = useState(true)
 
   const [clickPoint, setClickPoint] = useState(false)
 
@@ -135,15 +135,17 @@ export function Home() {
                 selectedLayers={selectedLayers}
               />
             ) : null}
-            {layerLegend ? (
+            {Object.keys(layerLegend).map((legend) => (
               <DataExplorationLegend
+                key={legend}
                 layerLegend={layerLegend}
+                layerLegendName={legend}
                 setLayerLegend={setLayerLegend}
                 setSelectedLayers={setSelectedLayers}
                 setLayerAction={setLayerAction}
                 setActualLayer={setActualLayer}
               />
-            ) : null}
+            ))}
             {printBox ? <PrintSelection setPrintBox={setPrintBox} /> : null}
             {calculationValue && (
               <CalculationValue

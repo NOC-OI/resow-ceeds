@@ -41,8 +41,8 @@ export const UploadDataHandleProvider: React.FC<
       extensions: ['.tif', '.tiff'],
     },
     GeoJSON: {
-      mimeTypes: ['application/json'],
-      extensions: ['.json'],
+      mimeTypes: ['application/json', 'application/geo+json'],
+      extensions: ['.json', '.geojson'],
     },
     CSV: {
       mimeTypes: ['text/plain', 'text/csv'],

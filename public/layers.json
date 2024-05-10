@@ -873,12 +873,6 @@
           "url": "https://emodnet.ec.europa.eu/en/seabed-habitats",
           "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Seabed%20Habitats/Seabed%20Habitats/EUSeaMap%202021/EUSeaMap%202021.json"
         },
-        "bbox": [
-          -90,
-          -180,
-          90,
-          180
-        ],
         "download_area": false
       }
     }

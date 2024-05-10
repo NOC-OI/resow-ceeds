@@ -67,7 +67,6 @@ export function DownloadSelection({
 
   async function clipAndDownloadGeoTIFF(layerInfo, layerName) {
     const georaster = downloadableLayers[layerName]
-    console.log(georaster)
     const getTifLayer = new GetTifLayer()
     const values = await getTifLayer.clipGeo(
       georaster,
@@ -138,13 +137,11 @@ export function DownloadSelection({
           return intersection.features.length > 0
         }
         case 'Polygon': {
-          console.log(feature)
           const polygon = turf.polygon(feature.geometry.coordinates)
           const intersection = turf.intersect(polygon, bboxPolygon)
           return intersection !== null
         }
         case 'MultiPolygon': {
-          console.log(feature)
           const multiPolygon = turf.multiPolygon(feature.geometry.coordinates)
           const intersection = turf.intersect(multiPolygon, bboxPolygon)
           return intersection !== null
@@ -187,7 +184,6 @@ export function DownloadSelection({
 
   async function clipAndDownloadFGB(layerInfo, layerName) {
     const fgbFile = downloadableLayers[layerName]
-    console.log(fgbFile)
     downloadGeoJSON(fgbFile, layerName)
   }
 

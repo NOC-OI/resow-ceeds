@@ -67,7 +67,7 @@ export function InfoBox({
     <InfoBoxContainer id="infobox-container">
       <h1 className="text-[1.5rem] leading-6 text-center pb-2">CEEDS</h1>
       <div className="flex justify-between items-center gap-2">
-        <div className="">
+        <div className="pl-1 sm:pl-0">
           <img src="favicon.png" className="h-20" />
         </div>
         <div className="w-32 hidden sm:flex sm:flex-col gap-1">

@@ -54,11 +54,17 @@ export function GraphBox({
         })
       }
     }
+    Object.keys(selectedLayers).forEach((key) => {
+      if (selectedLayers[key].url === actualLayer[0]) {
+        setLayer({ layerName: key, layerInfo: selectedLayers[key] })
+      }
+    })
     fetchData()
   }, [])
 
-  const nodeRef = useRef(null)
+  const [layer, setLayer] = useState<any>({})
 
+  const nodeRef = useRef(null)
   const [yearStart, monthStart] = yearMonths[0].split('-')
   const [yearEnd, monthEnd] = yearMonths[yearMonths.length - 1].split('-')
 
@@ -76,7 +82,11 @@ export function GraphBox({
             className="clickable"
           />
         </div>
-        <div className="font-bold text-center pb-3">Graph</div>
+        <div className="font-bold text-center pb-3">
+          {Object.keys(layer).length > 0
+            ? layer.layerName.replace('_', ': ')
+            : 'Graph'}
+        </div>
         <InfoButtonBoxContent>
           {!data ? (
             <div>
@@ -128,7 +138,7 @@ export function GraphBox({
                   fixedrange: false,
                   hoverformat: '.0f',
                   title: {
-                    text: '',
+                    text: `${layer.layerInfo.dataDescription[0]} ${layer.layerInfo.dataDescription[1]}`,
                     font: {
                       color: 'white', // Set the y-axis title color to white
                     },

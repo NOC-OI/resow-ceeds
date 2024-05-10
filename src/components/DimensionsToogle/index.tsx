@@ -15,7 +15,7 @@ export function DimensionsToogle() {
   return (
     <div
       id="dimensions_toogle"
-      className="text-[1rem] z-[9999] font-extrabold leading-6 uppercase pl-3 pt-3 cursor-pointer"
+      className="text-[1rem] z-[9999] font-extrabold leading-6 uppercase pl-0 sm:pl-3 pt-3 cursor-pointer"
     >
       <label className={`${styles.switch} relative cursor-pointer`}>
         <input

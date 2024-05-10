@@ -329,7 +329,6 @@ function MapHome1({
   }
 
   async function generateSelectedLayer() {
-    console.log('generateSelectedLayer', selectedLayers[actualLayer[0]])
     actualLayer.forEach(async (actual) => {
       const layerName = selectedLayers[actual]
       let layer: any

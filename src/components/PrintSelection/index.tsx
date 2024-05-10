@@ -19,6 +19,10 @@ export function PrintSelection({ setPrintBox }: PrintSelectionProps) {
       const element = document.getElementById(removedIds[key][0])
       if (element) element.style.opacity = '1'
     })
+    hiddenIds.forEach((hiddenId) => {
+      const element = document.getElementById(hiddenId)
+      if (element) element.style.display = 'flex'
+    })
     setCanSelect(false)
     setPrintBox(false)
   }
@@ -27,11 +31,13 @@ export function PrintSelection({ setPrintBox }: PrintSelectionProps) {
     usePrintPageHandle()
   const { setFlashMessage } = useContextHandle()
   const toggleCanSelect = () => {
-    setFlashMessage({
-      messageType: 'warning',
-      content: 'Select the area to be printed',
-      duration: 3000,
-    })
+    if (!isMobile) {
+      setFlashMessage({
+        messageType: 'warning',
+        content: 'Select the area to be printed',
+        duration: 3000,
+      })
+    }
     setCanSelect(!canSelect)
   }
   const removableIds = {
@@ -41,8 +47,12 @@ export function PrintSelection({ setPrintBox }: PrintSelectionProps) {
     'Map Pop Up Box': ['mappopup-box', '1'],
     'Graph Box': ['graph-box', '1'],
     'Bottom Right Box': ['infobox-container', '1'],
-    'edit button': ['edit-layer-colors-button', '0'],
   }
+  const hiddenIds = [
+    'edit-layer-colors-button',
+    'edit-layer-colors-options1',
+    'edit-layer-colors-options2',
+  ]
 
   const [removedIds, setRemovedIds] = useState(removableIds)
 
@@ -65,7 +75,25 @@ export function PrintSelection({ setPrintBox }: PrintSelectionProps) {
       const element = document.getElementById(removedIds[key][0])
       if (element) element.style.opacity = removedIds[key][1]
     })
+    hiddenIds.forEach((hiddenId) => {
+      const element = document.getElementById(hiddenId)
+      if (element) element.style.display = 'none'
+    })
   }, [removedIds])
+
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
+
+  useEffect(() => {
+    function handleResize() {
+      setIsMobile(window.innerWidth < 768)
+    }
+
+    window.addEventListener('resize', handleResize)
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -109,7 +137,9 @@ export function PrintSelection({ setPrintBox }: PrintSelectionProps) {
             <div className="pb-2 flex flex-col !justify-start">
               {Object.keys(removableIds).map(
                 (removableId) =>
-                  removableId !== 'edit button' && (
+                  !['edit button', 'edit options1', 'edit options2'].includes(
+                    removableId,
+                  ) && (
                     <span key={removableId}>
                       <div></div>
                       <LayerTypeOptionsContainer
@@ -188,7 +218,7 @@ export function PrintSelection({ setPrintBox }: PrintSelectionProps) {
                 variant="contained"
                 className="!w-full !text-white !bg-black !rounded-lg opacity-60 hover:!opacity-80 clickable"
               >
-                Select Area
+                {isMobile ? 'Capture a screenshot' : 'Select Area'}
               </Button>
             </div>
           </>

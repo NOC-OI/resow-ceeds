@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { useContextHandle } from '../../lib/contextHandle'
 import { usePrintPageHandle } from '../../lib/data/printPageManagement'
 import domToImageMore from 'dom-to-image-more'
@@ -157,16 +158,38 @@ export function PrintSelectionArea() {
       })
   }
 
-  const getSelectionBoxStyle = () => ({
-    position: 'absolute' as 'absolute',
-    border: '2px dashed #000',
-    backgroundColor: 'rgba(0, 0, 255, 0.2)',
-    left: `${selectionBox.left}px`,
-    top: `${selectionBox.top}px`,
-    width: `${selectionBox.width}px`,
-    height: `${selectionBox.height}px`,
-    display: selectionBox.visible ? 'block' : 'none',
-  })
+  const finalizeSelection = () => {
+    const box = isMobile
+      ? {
+          left: 0,
+          top: 0,
+          width: window.innerWidth,
+          height: window.innerHeight,
+        }
+      : selectionBox
+    setSelectionBox((prev) => ({ ...prev, visible: false }))
+    captureSelectedArea(box)
+  }
+
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
+
+  useEffect(() => {
+    function handleResize() {
+      setIsMobile(window.innerWidth < 768)
+    }
+
+    window.addEventListener('resize', handleResize)
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (isMobile && canSelect) {
+      finalizeSelection()
+    }
+  }, [isMobile, canSelect])
 
   return (
     <div
@@ -177,7 +200,20 @@ export function PrintSelectionArea() {
       onMouseUp={handleMouseUp}
       onMouseMove={handleMouseMove}
     >
-      {canSelect && <div style={getSelectionBoxStyle()}></div>}
+      {canSelect && (
+        <div
+          style={{
+            position: 'absolute',
+            border: '2px dashed #000',
+            backgroundColor: 'rgba(0, 0, 255, 0.2)',
+            left: `${selectionBox.left}px`,
+            top: `${selectionBox.top}px`,
+            width: `${selectionBox.width}px`,
+            height: `${selectionBox.height}px`,
+            display: selectionBox.visible ? 'block' : 'none',
+          }}
+        ></div>
+      )}
     </div>
   )
 }

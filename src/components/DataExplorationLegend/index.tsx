@@ -270,7 +270,10 @@ export function DataExplorationLegend({
           (['COG', 'GeoTIFF'].includes(
             layerLegend[layerLegendName].dataType,
           ) ? (
-            <div className="flex flex-col items-center gap-2">
+            <div
+              className="flex flex-col items-center gap-2"
+              id="edit-layer-colors-options1"
+            >
               <div className="pt-4 flex justify-left w-full items-center gap-2">
                 <p className="text-md font-bold text-white text-center">
                   Color Scale:
@@ -399,7 +402,10 @@ export function DataExplorationLegend({
               </Button>
             </div>
           ) : (
-            <div className="flex flex-col items-center gap-2">
+            <div
+              className="flex flex-col items-center gap-2"
+              id="edit-layer-colors-options2"
+            >
               <div className="pt-4 flex justify-left w-full items-center gap-2">
                 <p className="text-md font-bold text-white text-center">
                   Color:

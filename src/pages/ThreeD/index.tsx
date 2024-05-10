@@ -19,8 +19,45 @@ import { PrintSelectionArea } from '../../components/PrintSelectionArea'
 import { bathymetryUrl, getGeorasterLayer } from '../../lib/map/utils'
 import { DownloadPopup } from '../../components/DownloadPopup'
 import { DimensionsToogle } from '../../components/DimensionsToogle'
+import Joyride from 'react-joyride'
 
 export function ThreeD() {
+  const steps = [
+    {
+      target: '#data_exploration',
+      content: 'Here you can explore the layers',
+    },
+    {
+      target: '#Download',
+      content: 'Here you can select areas and download data',
+    },
+    {
+      target: '#Upload',
+      content: 'Here you can upload data',
+    },
+    {
+      target: '#Print',
+      content: 'Here you can select areas of the map and save as images',
+    },
+    {
+      target: '#clean_map',
+      content: 'Here you remove all layers from the map',
+    },
+    {
+      target: '#dimensions_toogle',
+      content: 'Here you can switch between 2D and 3D map',
+    },
+  ]
+
+  const [showTutorial, setShowTutorial] = useState(false)
+  const handleJoyrideCallback = (data) => {
+    const { status } = data
+    const finishedStatus = 'finished'
+    const skippedStatus = 'skipped'
+    if (status === finishedStatus || status === skippedStatus) {
+      setShowTutorial(false)
+    }
+  }
   const [selectedSidebarOption, setSelectedSidebarOption] = useState<string>('')
   const { setLoading } = useContextHandle()
   const { canSelect } = usePrintPageHandle()
@@ -29,7 +66,7 @@ export function ThreeD() {
   const [position, setPosition] = useState(null)
   const [actualDate, setActualDate] = useState(yearMonths.indexOf('2021-05'))
 
-  const [selectedLayers, setSelectedLayers] = useState<Object>({})
+  const [selectedLayers, setSelectedLayers] = useState<any>({})
 
   const [actualLayer, setActualLayer] = useState<string[]>([''])
 
@@ -74,6 +111,28 @@ export function ThreeD() {
     <DownloadManagementHandleProvider>
       <UploadDataHandleProvider>
         <ThreeDContainer>
+          {showTutorial && (
+            <Joyride
+              steps={steps}
+              callback={handleJoyrideCallback}
+              styles={{
+                options: {
+                  zIndex: 99999,
+                  arrowColor: 'rgba(17,17,17,0.7)',
+                  backgroundColor: 'rgba(17,17,17,0.7)',
+                  overlayColor: 'rgba(92, 174, 171, .3)',
+                  primaryColor: 'rgb(212, 149, 17)',
+                  textColor: '#fff',
+                },
+                // spotlight: {
+                //   backgroundColor: 'transparent',
+                // },
+              }}
+              continuous={true}
+              showSkipButton={true}
+              showProgress={true}
+            />
+          )}
           <SideBar>
             <SideSelection
               selectedSidebarOption={selectedSidebarOption}
@@ -154,8 +213,12 @@ export function ThreeD() {
             batLayer={batLayer}
             setDepth={setDepth}
           />
-
-          {showPopup && <FullPagePopup setShowPopup={setShowPopup} />}
+          {showPopup && (
+            <FullPagePopup
+              setShowPopup={setShowPopup}
+              setShowTutorial={setShowTutorial}
+            />
+          )}
           {canSelect ? <PrintSelectionArea /> : null}
         </ThreeDContainer>
       </UploadDataHandleProvider>

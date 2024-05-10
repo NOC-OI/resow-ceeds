@@ -77,7 +77,7 @@ function ThreeDMap1({
 
   const [cogLayer, setCogLayer] = useState('')
 
-  const { setDownloadableLayers, downloadInputValue } =
+  const { downloadableLayers, setDownloadableLayers, downloadInputValue } =
     useDownloadManagementHandle()
 
   Cesium.Camera.DEFAULT_VIEW_RECTANGLE = cesiumStartCoordinates
@@ -130,10 +130,10 @@ function ThreeDMap1({
     layerNameType,
     layerName?: any,
   ) {
+    const randomScale = Math.floor(Math.random() * 100)
     const colorLimits = layerName?.color
       ? layerName.color
-      : colorScale[Math.floor(Math.random() * 30)]
-
+      : colorScale[randomScale]
     const colorRgb = chroma(colorLimits).rgb()
     const colorCesium = new Cesium.Color(
       colorRgb[0] / 255,
@@ -161,7 +161,7 @@ function ThreeDMap1({
         }
       })
       turfLayer.attribution = actual
-      turfLayer.originalColor = colorLimits
+      turfLayer.originalColor = colorCesium
       turfLayer.name = layerNameType
       await fetch(turfConvex)
         .then((response) => response.json())
@@ -178,15 +178,25 @@ function ThreeDMap1({
     }
   }
 
-  async function createFGBLayer(actual, url, layers) {
-    const colorLimits = createColor(colorScale, true, 0.3)
-
+  async function createFGBLayer(actual, layerName, layers) {
+    const randomScale = Math.floor(Math.random() * 100)
+    const colorLimits = layerName?.color
+      ? layerName.color
+      : colorScale[randomScale]
+    const colorRgb = chroma(colorLimits).rgb()
+    const colorCesium = new Cesium.Color(
+      colorRgb[0] / 255,
+      colorRgb[1] / 255,
+      colorRgb[2] / 255,
+      0.3,
+    )
     const myStyle = {
-      stroke: colorLimits,
-      fill: colorLimits,
+      stroke: colorCesium,
+      fill: colorCesium,
       strokeWidth: 3,
     }
-    const response = await fetch(url)
+
+    const response = await fetch(layerName.url)
     const features = []
     for await (const data of flatgeobuf.geojson.deserialize(
       response.body,
@@ -195,7 +205,7 @@ function ThreeDMap1({
       features.push(data)
       const dataSource: any = await Cesium.GeoJsonDataSource.load(data, myStyle)
       dataSource.attribution = actual
-      dataSource.originalColor = colorLimits
+      dataSource.originalColor = colorCesium
       dataSource.name = actual
       layers.add(dataSource)
     }
@@ -270,10 +280,12 @@ function ThreeDMap1({
 
   useEffect(() => {
     if (ref.current?.cesiumElement) {
-      removeNormalLayerFromMap('drawn')
-      setTimeout(() => {
-        addDownloadLimitsToMap()
-      }, 500)
+      if (selectedSidebarOption === 'Download') {
+        removeNormalLayerFromMap('drawn')
+        setTimeout(() => {
+          addDownloadLimitsToMap()
+        }, 500)
+      }
     }
   }, [downloadInputValue])
 
@@ -466,7 +478,7 @@ function ThreeDMap1({
         layers.add(geoJsonLayer)
       } else if (layerName.dataType === 'FGB') {
         layers = ref.current.cesiumElement.dataSources
-        createFGBLayer(actual, layerName.url, layers)
+        createFGBLayer(actual, layerName, layers)
       } else if (layerName.dataType === 'Photo') {
         ref.current.cesiumElement.infoBox.frame.removeAttribute('sandbox')
         ref.current.cesiumElement.infoBox.frame.src = 'about:blank'
@@ -548,19 +560,7 @@ function ThreeDMap1({
           }
         }
       } else if (['GeoJSON', 'FGB'].includes(layerName.dataType)) {
-        function removeMatchingLayers() {
-          layers = ref.current.cesiumElement.dataSources
-          let found = false
-          layers._dataSources.slice().forEach(function (layer: any) {
-            // Use slice to copy the array to avoid modification issues
-            if (actualLayer.includes(layer.attribution)) {
-              layers.remove(layer)
-              found = true // Set found to true if at least one layer is removed
-            }
-          })
-          return found
-        }
-        while (removeMatchingLayers()) {
+        while (removeMatchingLayersDataSources(layers)) {
           /* empty */
         }
         setLayerAction('')
@@ -618,6 +618,18 @@ function ThreeDMap1({
     }
   }, [threeD])
 
+  function removeMatchingLayersDataSources(layers) {
+    layers = ref.current.cesiumElement.dataSources
+    let found = false
+    layers._dataSources.slice().forEach(function (layer: any) {
+      if (actualLayer.includes(layer.attribution)) {
+        layers.remove(layer)
+        found = true
+      }
+    })
+    return found
+  }
+
   function changeMapOpacity() {
     let layers: any
     actualLayer.forEach(async (actual) => {
@@ -659,8 +671,22 @@ function ThreeDMap1({
             }
           }
         })
+      } else if (['GeoJSON', 'FGB'].includes(layerName.dataType)) {
+        layers = ref.current.cesiumElement.dataSources
+        layers._dataSources.slice().forEach(function (layer: any) {
+          if ([actual].includes(layer.attribution)) {
+            const color = layer.originalColor
+            color.alpha = Number(selectedLayers[layer.attribution].opacity)
+            if (color.alpha > 0.99) {
+              color.alpha = 0.99
+            }
+            layer.entities.values.forEach((entity) => {
+              entity.polygon.material = new Cesium.ColorMaterialProperty(color)
+            })
+            layer.originalColor = color
+          }
+        })
       }
-
       setLayerAction('')
     })
     setLoading(false)
@@ -671,7 +697,7 @@ function ThreeDMap1({
     actualLayer.forEach(async (actual) => {
       const splitActual = actual.split('_')
       const layerName = listLayers[splitActual[0]].layerNames[splitActual[1]]
-      if (layerName.dataType === 'WMS' || layerName.dataType === 'COG') {
+      if (['WMS', 'COG', 'GeoTIFF'].includes(layerName.dataType)) {
         layers = ref.current.cesiumElement.scene.imageryLayers
         layers?._layers.forEach(function (layer: any) {
           if ([actual].includes(layer.attribution)) {
@@ -690,18 +716,87 @@ function ThreeDMap1({
                 selectedLayers[layer.attribution].opacity,
               )
             }
-            ref.current.cesiumElement.camera.flyTo({
-              destination: cesiumStartCoordinates,
-            })
+            if (layerName.bbox) {
+              ref.current.cesiumElement.camera.flyTo({
+                destination: Cesium.Rectangle.fromDegrees(
+                  layerName.bbox[0],
+                  layerName.bbox[1],
+                  layerName.bbox[2],
+                  layerName.bbox[3],
+                ),
+              })
+            } else {
+              ref.current.cesiumElement.camera.flyTo({
+                destination: cesiumStartCoordinates,
+              })
+            }
             setLayerAction('')
           }
         })
+      } else if (['GeoJSON', 'FGB'].includes(layerName.dataType)) {
+        layers = ref.current.cesiumElement.dataSources
+        let originalColor: any
+        layers._dataSources.slice().forEach(function (layer: any) {
+          if (actualLayer.includes(layer.attribution)) {
+            originalColor = layer.originalColor
+          }
+        })
+        while (removeMatchingLayersDataSources(layers)) {
+          /* empty */
+        }
+        const myStyle = {
+          stroke: originalColor,
+          fill: originalColor,
+          strokeWidth: 3,
+        }
+        if (layerName.dataType === 'GeoJSON') {
+          const dataSource: any = await Cesium.GeoJsonDataSource.load(
+            layerName.url,
+            myStyle,
+          )
+          dataSource.attribution = actual
+          dataSource.originalColor = originalColor
+          dataSource.name = actual
+          layers.add(dataSource)
+        } else {
+          if (downloadableLayers[actual]) {
+            downloadableLayers[actual].features.forEach(async (data) => {
+              const dataSource: any = await Cesium.GeoJsonDataSource.load(
+                data,
+                myStyle,
+              )
+              dataSource.attribution = actual
+              dataSource.originalColor = originalColor
+              dataSource.name = actual
+              layers.add(dataSource)
+            })
+          }
+        }
+        if (layerName.bbox) {
+          ref.current.cesiumElement.camera.flyTo({
+            destination: Cesium.Rectangle.fromDegrees(
+              layerName.bbox[0],
+              layerName.bbox[1],
+              layerName.bbox[2],
+              layerName.bbox[3],
+            ),
+          })
+        } else {
+          ref.current.cesiumElement.camera.flyTo({
+            destination: cesiumStartCoordinates,
+          })
+        }
+        setLayerAction('')
       }
     })
     setLoading(false)
   }
 
   async function changeMapColors(actual?) {
+    setFlashMessage({
+      messageType: 'info',
+      content: 'Changing layer colors. This may take a while.',
+    })
     const layerToBeChanged = actual || actualLayer
     layerToBeChanged.forEach(async (actual) => {
       const splitActual = actual.split('_')
@@ -714,39 +809,75 @@ function ThreeDMap1({
             layers.remove(layer)
           }
         })
+        await generateSelectedLayer()
       } else if (['GeoJSON', 'FGB'].includes(layerName.dataType)) {
-        function removeMatchingLayers() {
-          layers = ref.current.cesiumElement.dataSources
-          let found = false
-          layers._dataSources.slice().forEach(function (layer: any) {
-            // Use slice to copy the array to avoid modification issues
-            if (actualLayer.includes(layer.attribution)) {
-              layers.remove(layer)
-              found = true // Set found to true if at least one layer is removed
-            }
-          })
-          return found
-        }
-        while (removeMatchingLayers()) {
-          /* empty */
-        }
-      } else if (layerName.dataType === 'Photo') {
         layers = ref.current.cesiumElement.dataSources
-        layers._dataSources.forEach(function (layer: any) {
-          if (actualLayer.includes(layer.attribution)) {
-            layers.remove(layer)
-          }
-        })
-        layers._dataSources.forEach(function (layer: any) {
-          if (actualLayer.includes(layer.attribution)) {
-            layers.remove(layer)
+        layers._dataSources.slice().forEach(function (layer: any) {
+          if ([actual].includes(layer.attribution)) {
+            const color = layer.originalColor
+            color.alpha = Number(selectedLayers[layer.attribution].opacity)
+            if (color.alpha > 0.99) {
+              color.alpha = 0.99
+            }
+            const colorRgb = chroma(
+              selectedLayers[layer.attribution].colors,
+            ).rgb()
+            const colorCesium = new Cesium.Color(
+              colorRgb[0] / 255,
+              colorRgb[1] / 255,
+              colorRgb[2] / 255,
+              color.alpha,
+            )
+            const colorCesiumStroke = new Cesium.Color(
+              colorRgb[0] / 255,
+              colorRgb[1] / 255,
+              colorRgb[2] / 255,
+              0.99,
+            )
+            layer.entities.values.forEach((entity) => {
+              entity.polygon.material = new Cesium.ColorMaterialProperty(
+                colorCesium,
+              )
+              entity.polygon.outline = true
+              entity.polygon.outlineColor = new Cesium.ColorMaterialProperty(
+                colorCesiumStroke,
+              )
+              entity.polygon.outlineWidth = 3
+              // entity.billboard.color = colorCesium
+            })
+            layer.originalColor = colorCesium
           }
         })
       }
+      // } else if (['GeoJSON', 'FGB'].includes(layerName.dataType)) {
+      //   function removeMatchingLayers() {
+      //     layers = ref.current.cesiumElement.dataSources
+      //     let found = false
+      //     layers._dataSources.slice().forEach(function (layer: any) {
+      //       // Use slice to copy the array to avoid modification issues
+      //       if (actualLayer.includes(layer.attribution)) {
+      //         layers.remove(layer)
+      //         found = true // Set found to true if at least one layer is removed
+      //       }
+      //     })
+      //     return found
+      //   }
+      //   while (removeMatchingLayers()) {
+      //     /* empty */
+      //   }
+      // } else if (layerName.dataType === 'Photo') {
+      //   layers = ref.current.cesiumElement.dataSources
+      //   layers._dataSources.forEach(function (layer: any) {
+      //     if (actualLayer.includes(layer.attribution)) {
+      //       layers.remove(layer)
+      //     }
+      //   })
+      //   layers._dataSources.forEach(function (layer: any) {
+      //     if (actualLayer.includes(layer.attribution)) {
+      //       layers.remove(layer)
+      //     }
+      //   })
     })
-    if (!actual) {
-      await generateSelectedLayer()
-    }
     // if (actual) {
     //   await generateSelectedUploadedLayer('old')
     // } else {

@@ -417,12 +417,13 @@ export async function handleChangeMapLayerAndAddLegend(
 ) {
   const color = subLayers[subLayer].colors
     ? subLayers[subLayer].colors
-    : colorScale[Math.floor(Math.random() * 30)]
+    : colorScale[Math.floor(Math.random() * 100)]
   if (e.target.checked && !['Photo'].includes(subLayers[subLayer].dataType)) {
+    const copySubLayers = { ...subLayers }
     if (subLayers[subLayer].dataType === 'GeoJSON') {
-      subLayers[subLayer].colors = color
+      copySubLayers[subLayer].colors = color
     }
-    handleClickLegend(subLayers, subLayer, setLayerLegend, content)
+    handleClickLegend(copySubLayers, subLayer, setLayerLegend, content)
   } else {
     const legendLayerName = `${content}_${subLayer}`
     if (layerLegend[legendLayerName]) {

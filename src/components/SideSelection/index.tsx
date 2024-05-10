@@ -87,7 +87,7 @@ export function SideSelection({
 
   useEffect(() => {
     if (window.location.pathname !== '/3d') {
-      if (selectedSidebarOption === 'Data Exploration') {
+      if (selectedSidebarOption === 'data_exploration') {
         const photoList: any[] = []
         Object.keys(selectedLayers).forEach((layer: string) => {
           if (selectedLayers[layer].dataType === 'Photo') {
@@ -147,10 +147,11 @@ export function SideSelection({
           <SideSelectionLink
             title={'Data Exploration'}
             onClick={handleShowSelection}
-            id={'Data Exploration'}
+            id={'data_exploration'}
             className={
-              selectedSidebarOption === 'Data Exploration' ? styles.active : ''
+              selectedSidebarOption === 'data_exploration' ? styles.active : ''
             }
+            // id="data_exploration"
           >
             <FontAwesomeIcon icon={faLayerGroup} />
           </SideSelectionLink>
@@ -180,7 +181,11 @@ export function SideSelection({
           >
             <FontAwesomeIcon icon={faCamera} />
           </SideSelectionLink>
-          <SideSelectionLink title={'Clean map'} onClick={handleEraseLayers}>
+          <SideSelectionLink
+            title={'Clean map'}
+            id="clean_map"
+            onClick={handleEraseLayers}
+          >
             <FontAwesomeIcon icon={faTrash} />
           </SideSelectionLink>
           <SideSelectionLink title={'Information about the application'}>
@@ -191,7 +196,7 @@ export function SideSelection({
           </SideSelectionLink>
         </div>
         <div>
-          {selectedSidebarOption === 'Data Exploration' &&
+          {selectedSidebarOption === 'data_exploration' &&
             (rout === '/' ? (
               <DataExplorationSelection
                 selectedLayers={selectedLayers}

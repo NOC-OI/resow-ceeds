@@ -86,6 +86,13 @@
   --text-color: #856404;
 }
 
+.toast.info {
+  --background-color: #fff3cd;
+  --border-color: #ffeeba;
+  --text-color: #856404;
+}
+
+
 .toast-enter {
   opacity: 0;
 }

@@ -20,6 +20,7 @@ export function FlashMessages({
   const ToastClassNames = {
     [styles.error]: flashMessage.messageType === 'error',
     [styles.warning]: flashMessage.messageType === 'warning',
+    [styles.info]: flashMessage.messageType === 'info',
     [styles.success]: flashMessage.messageType === 'success',
     [styles.bleft]: position === 'bleft',
     [styles.bright]: position === 'bright',

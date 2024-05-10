@@ -13,7 +13,7 @@ export interface keyable {
 export const colorScale = chroma
   .scale(['#f00', '#0f0', '#00f', 'gray'])
   .mode('hsl')
-  .colors(30)
+  .colors(100)
 
 export const batOrder = ['Shipborne', 'EMODNET', 'GEBCO']
 

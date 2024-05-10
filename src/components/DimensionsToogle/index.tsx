@@ -13,7 +13,10 @@ export function DimensionsToogle() {
   }
   const rout = window.location.pathname
   return (
-    <div className="text-[1rem] z-[9999] font-extrabold leading-6 uppercase pl-3 pt-3 cursor-pointer">
+    <div
+      id="dimensions_toogle"
+      className="text-[1rem] z-[9999] font-extrabold leading-6 uppercase pl-3 pt-3 cursor-pointer"
+    >
       <label className={`${styles.switch} relative cursor-pointer`}>
         <input
           type="checkbox"

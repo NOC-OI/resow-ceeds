@@ -6,6 +6,7 @@ import {
   faCircleQuestion,
   faDownload,
   faLayerGroup,
+  faSquareCheck,
   faSquarePlus,
   faTrash,
 } from '@fortawesome/free-solid-svg-icons'
@@ -17,6 +18,7 @@ import { DownloadSelection } from '../DownloadSelection'
 import { UploadSelection } from '../UploadSelection'
 import { useUploadDataHandle } from '../../lib/data/uploadDataManagement'
 import { useDownloadManagementHandle } from '../../lib/data/downloadManagement'
+import { SelectedLayersTab } from '../SelectedLayersTab'
 
 interface SideSelectionProps {
   selectedSidebarOption: any
@@ -143,7 +145,7 @@ export function SideSelection({
   return (
     <div id="side-selection">
       <SideSelectionContainer className={loading ? 'pointer-events-none' : ''}>
-        <div className="flex gap-6 pl-2 pr-2">
+        <div className="flex gap-3 md:gap-6 pl-2 pr-2">
           <SideSelectionLink
             title={'Data Exploration'}
             onClick={handleShowSelection}
@@ -154,6 +156,17 @@ export function SideSelection({
             // id="data_exploration"
           >
             <FontAwesomeIcon icon={faLayerGroup} />
+          </SideSelectionLink>
+          <SideSelectionLink
+            title={'Selected Layers'}
+            onClick={handleShowSelection}
+            id={'selected_layers'}
+            className={
+              selectedSidebarOption === 'selected_layers' ? styles.active : ''
+            }
+            // id="data_exploration"
+          >
+            <FontAwesomeIcon icon={faSquareCheck} />
           </SideSelectionLink>
           <SideSelectionLink
             title={'Download'}
@@ -233,6 +246,24 @@ export function SideSelection({
                 setDownloadPopup={setDownloadPopup}
               />
             ) : null)}
+          {selectedSidebarOption === 'selected_layers' && (
+            <SelectedLayersTab
+              selectedLayers={selectedLayers}
+              setSelectedLayers={setSelectedLayers}
+              actualLayer={actualLayer}
+              setActualLayer={setActualLayer}
+              layerAction={layerAction}
+              setLayerAction={setLayerAction}
+              layerLegend={layerLegend}
+              setLayerLegend={setLayerLegend}
+              setInfoButtonBox={setInfoButtonBox}
+              listLayers={listLayers}
+              getPolyline={getPolyline}
+              setGetPolyline={setGetPolyline}
+              setClickPoint={setClickPoint}
+              setDownloadPopup={setDownloadPopup}
+            />
+          )}
           {selectedSidebarOption === 'Download' && (
             <DownloadSelection
               selectedLayers={selectedLayers}

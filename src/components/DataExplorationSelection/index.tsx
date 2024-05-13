@@ -6,11 +6,11 @@ import styles from './DataExplorationSelection.module.css'
 import { BaseLayerSwitcher } from '../BaseLayerSwitcher'
 
 interface DataExplorationSelectionProps {
-  selectedLayers: Object
+  selectedLayers: object
   setSelectedLayers: any
   actualLayer: string[]
   setActualLayer: any
-  layerAction: String
+  layerAction: string
   setLayerAction: any
   layerLegend: any
   setLayerLegend: any

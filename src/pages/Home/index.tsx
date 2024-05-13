@@ -27,27 +27,31 @@ export function Home() {
   const steps = [
     {
       target: '#data_exploration',
-      content: 'Here you can explore the layers',
+      content: 'Explore various layers of data here.',
+    },
+    {
+      target: '#selected_layers',
+      content: 'Interact and manage your selected data layers in this area.',
     },
     {
       target: '#Download',
-      content: 'Here you can select areas and download data',
+      content: 'Select specific areas to download the data you need.',
     },
     {
       target: '#Upload',
-      content: 'Here you can upload data',
+      content: 'Upload your data files here.',
     },
     {
       target: '#Print',
-      content: 'Here you can select areas of the map and save as images',
+      content: 'Choose map areas to save and export as images.',
     },
     {
       target: '#clean_map',
-      content: 'Here you remove all layers from the map',
+      content: 'Remove all active layers from the map with this option.',
     },
     {
       target: '#dimensions_toogle',
-      content: 'Here you can switch between 2D and 3D map',
+      content: 'Toggle this switch to view the map in either 2D or 3D.',
     },
   ]
 

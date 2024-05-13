@@ -8,7 +8,10 @@ export const ColorBarContainer = styled.div`
 `
 
 export const ColorBarItem = styled.div`
-  padding: 0.375rem;
+  padding-left: 0.1rem;
+  padding-right: 0.1rem;
+  padding-bottom: 0.375rem;
+  padding-top: 0.375rem;
   p {
     opacity: 0;
     color: rbga(0, 0, 0, 0);

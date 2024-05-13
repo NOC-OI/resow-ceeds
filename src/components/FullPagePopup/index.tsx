@@ -60,11 +60,11 @@ export function FullPagePopup({
             title="Feedback Form"
           >
             <FontAwesomeIcon icon={faClipboardQuestion} className="" />
-            <p className="text-center text-md font-bold">Feedback Form</p>
+            <p className="text-center text-md font-bold">Feedback Survey</p>
           </a>
 
           <p className="text-center font-bold text-xl text-red-500 uppercase">
-            This is a beta version of the tool and we welcome your feedback.
+            This is a beta version of the tool and we welcome your feedback
           </p>
         </div>
         {/* <div className="p-4">
@@ -95,7 +95,7 @@ export function FullPagePopup({
               title="Resow Website"
             >
               <FontAwesomeIcon icon={faInfoCircle} />
-              <p className="text-center text-sm font-bold">RESOW WEBSITE</p>
+              <p className="text-center text-sm font-bold">RESOW Website</p>
             </a>
             <div
               onClick={() => handleTutorial()}

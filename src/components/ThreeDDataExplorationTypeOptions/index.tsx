@@ -27,8 +27,6 @@ import styles from '../DataExplorationTypeOptions/DataExplorationTypeOptions.mod
 interface ThreeDDataExplorationTypeOptionsProps {
   content: any
   subLayer: any
-  activeOpacity: any
-  setActiveOpacity: any
   setActualLayer: any
   subLayers: any
   layerLegend: any
@@ -47,8 +45,6 @@ interface ThreeDDataExplorationTypeOptionsProps {
 export function ThreeDDataExplorationTypeOptions({
   content,
   subLayer,
-  activeOpacity,
-  setActiveOpacity,
   setActualLayer,
   subLayers,
   layerLegend,
@@ -63,9 +59,7 @@ export function ThreeDDataExplorationTypeOptions({
   setThreeD,
   setDownloadPopup,
 }: ThreeDDataExplorationTypeOptionsProps) {
-  const [opacityIsClicked, setOpacityIsClicked] = useState(
-    activeOpacity === `${content}_${subLayer}`,
-  )
+  const [opacityIsClicked, setOpacityIsClicked] = useState(false)
 
   let user: any | null = null
   if (isLogged) {
@@ -107,7 +101,6 @@ export function ThreeDDataExplorationTypeOptions({
                 e,
                 setActualLayer,
                 setOpacityIsClicked,
-                setActiveOpacity,
                 setLayerAction,
                 setSelectedLayers,
                 selectedLayers,
@@ -192,8 +185,6 @@ export function ThreeDDataExplorationTypeOptions({
                   subLayers,
                   subLayer,
                   setActualLayer,
-                  setActiveOpacity,
-                  opacityIsClicked,
                   setLayerAction,
                   selectedLayers,
                   setSelectedLayers,
@@ -238,7 +229,6 @@ export function ThreeDDataExplorationTypeOptions({
                 content,
                 subLayer,
                 subLayers,
-                setActiveOpacity,
                 setActualLayer,
               )
             }

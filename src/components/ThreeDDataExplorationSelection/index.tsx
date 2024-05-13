@@ -6,10 +6,10 @@ import {
 import { ThreeDDataExplorationType } from '../ThreeDDataExplorationType'
 
 interface ThreeDDataExplorationSelectionProps {
-  selectedLayers: Object
+  selectedLayers: object
   setSelectedLayers: any
   setActualLayer: any
-  layerAction: String
+  layerAction: string
   setLayerAction: any
   layerLegend: any
   setLayerLegend: any

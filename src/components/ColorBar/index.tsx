@@ -30,7 +30,7 @@ export function ColorBar({ layerLegend }: ColorBarProps) {
               backgroundColor: `rgb(${value[0]},${value[1]},${value[2]})`,
             }}
           >
-            <p>=</p>
+            <p className="">=</p>
           </ColorBarItem>
         ))}
       </div>

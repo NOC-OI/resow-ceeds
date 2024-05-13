@@ -51,6 +51,7 @@ export const GlobalStyle = createGlobalStyle`
     height: 100vh;
     width: 100vw;
     overflow-y: hidden;
+    overflow-x: hidden;
     color: ${(props) => props.theme.black};
     -webkit-font-smoothing: antialiased;
   }

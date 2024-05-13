@@ -30,9 +30,9 @@ export default defineConfig(({ command, mode }) => {
       rollupOptions: {
         onwarn(warning: any, warn: any) {
           if (warning.code === 'MODULE_LEVEL_DIRECTIVE') {
-            return;
+            return
           }
-          warn(warning);
+          warn(warning)
         },
       },
     },

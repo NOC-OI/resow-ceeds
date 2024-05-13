@@ -375,86 +375,90 @@ export function DownloadSelection({
           </div>
         </div>
       </div>
-      <LayerSelectionTitle>
-        <h1>Layers Selected</h1>
-      </LayerSelectionTitle>
+      <p className="text-lg font-bold text-white mb-2 text-center">
+        Selected Layers
+      </p>
       <LayerTypes>
-        {Object.keys(listLayers).map((layerClass: any) => {
-          return (
-            Object.keys(selectedLayers).some((element) =>
-              element.split('_')[0].includes(layerClass),
-            ) && (
-              <CalcTypeContainer key={layerClass}>
-                <div>
-                  <header id="general-types" style={{ color: 'white' }}>
-                    <p>{layerClass}</p>
-                  </header>
-                </div>
-                <div className="flex flex-col gap-1 pt-1">
-                  {Object.keys(listLayers[layerClass].layerNames).map(
-                    (baseLayer, index) => {
-                      return (
-                        Object.keys(selectedLayers).some((element) =>
-                          element.split('_')[1].includes(baseLayer),
-                        ) && (
-                          <LayerTypeOptionsContainer key={index}>
-                            <div id="type-option">
-                              <p className="text-md">{baseLayer}</p>
-                              <div id="layer-edit">
-                                {listLayers[layerClass].layerNames[baseLayer]
-                                  .download_area ? (
+        {Object.keys(selectedLayers).length === 0 ? (
+          <p className="text-sm text-white text-center">No layers selected</p>
+        ) : (
+          Object.keys(listLayers).map((layerClass: any) => {
+            return (
+              Object.keys(selectedLayers).some((element) =>
+                element.split('_')[0].includes(layerClass),
+              ) && (
+                <CalcTypeContainer key={layerClass}>
+                  <div>
+                    <header id="general-types" style={{ color: 'white' }}>
+                      <p>{layerClass}</p>
+                    </header>
+                  </div>
+                  <div className="flex flex-col gap-1 pt-1">
+                    {Object.keys(listLayers[layerClass].layerNames).map(
+                      (baseLayer, index) => {
+                        return (
+                          Object.keys(selectedLayers).some((element) =>
+                            element.split('_')[1].includes(baseLayer),
+                          ) && (
+                            <LayerTypeOptionsContainer key={index}>
+                              <div id="type-option">
+                                <p className="text-md">{baseLayer}</p>
+                                <div id="layer-edit">
+                                  {listLayers[layerClass].layerNames[baseLayer]
+                                    .download_area ? (
+                                    <Button
+                                      onClick={() =>
+                                        handleDownloadArea(
+                                          listLayers[layerClass].layerNames[
+                                            baseLayer
+                                          ],
+                                          `${layerClass}_${baseLayer}`,
+                                        )
+                                      }
+                                      variant="contained"
+                                      className="!w-full !text-white !bg-black !rounded-lg opacity-50 hover:!opacity-70 !text-xs"
+                                      title="Download Selected Area"
+                                    >
+                                      <FontAwesomeIcon
+                                        icon={faDownload}
+                                        className="pr-3"
+                                      />
+                                      Area
+                                    </Button>
+                                  ) : (
+                                    <></>
+                                  )}
                                   <Button
                                     onClick={() =>
-                                      handleDownloadArea(
-                                        listLayers[layerClass].layerNames[
-                                          baseLayer
-                                        ],
-                                        `${layerClass}_${baseLayer}`,
-                                      )
+                                      setDownloadPopup({
+                                        [`${layerClass}_${baseLayer}`]:
+                                          listLayers[layerClass].layerNames[
+                                            baseLayer
+                                          ].download,
+                                      })
                                     }
                                     variant="contained"
                                     className="!w-full !text-white !bg-black !rounded-lg opacity-50 hover:!opacity-70 !text-xs"
-                                    title="Download Selected Area"
                                   >
                                     <FontAwesomeIcon
                                       icon={faDownload}
                                       className="pr-3"
                                     />
-                                    Area
+                                    Layer
                                   </Button>
-                                ) : (
-                                  <></>
-                                )}
-                                <Button
-                                  onClick={() =>
-                                    setDownloadPopup({
-                                      [`${layerClass}_${baseLayer}`]:
-                                        listLayers[layerClass].layerNames[
-                                          baseLayer
-                                        ].download,
-                                    })
-                                  }
-                                  variant="contained"
-                                  className="!w-full !text-white !bg-black !rounded-lg opacity-50 hover:!opacity-70 !text-xs"
-                                >
-                                  <FontAwesomeIcon
-                                    icon={faDownload}
-                                    className="pr-3"
-                                  />
-                                  Layer
-                                </Button>
+                                </div>
                               </div>
-                            </div>
-                          </LayerTypeOptionsContainer>
+                            </LayerTypeOptionsContainer>
+                          )
                         )
-                      )
-                    },
-                  )}
-                </div>
-              </CalcTypeContainer>
+                      },
+                    )}
+                  </div>
+                </CalcTypeContainer>
+              )
             )
-          )
-        })}
+          })
+        )}
       </LayerTypes>
     </LayerSelectionContainer>
   )

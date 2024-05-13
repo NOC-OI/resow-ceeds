@@ -9,7 +9,11 @@ export default {
     './App.tsx',
   ],
   theme: {
-    extend: {},
+    extend: {
+      boxShadow: {
+        custom: '1px 4px 10px rgba(255, 255, 255, 0.2)',
+      },
+    },
   },
   plugins: [],
 }

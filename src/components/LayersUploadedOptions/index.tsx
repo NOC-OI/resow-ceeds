@@ -164,8 +164,6 @@ export function LayersUploadedOptions({
                     listLayersUpload,
                     selectedLayersUpload[`uploaded_${layerClass}`].name,
                     setActualLayerNowUpload,
-                    setOpacityIsClicked,
-                    opacityIsClicked,
                     setLayerAction,
                     selectedLayersUpload,
                     setSelectedLayersUpload,
@@ -206,7 +204,6 @@ export function LayersUploadedOptions({
                 'uploaded',
                 selectedLayersUpload[`uploaded_${layerClass}`].name,
                 listLayersUpload,
-                setOpacityIsClicked,
                 setActualLayerNowUpload,
               )
             }

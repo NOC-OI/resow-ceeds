@@ -9,13 +9,13 @@ interface keyable {
 }
 
 interface DataExplorationTypeProps {
-  content: String
-  childs: Object
+  content: string
+  childs: object
   selectedLayers: keyable
   setSelectedLayers: any
   actualLayer: string[]
   setActualLayer: any
-  layerAction: String
+  layerAction: string
   setLayerAction: any
   layerLegend: any
   setLayerLegend: any
@@ -49,8 +49,6 @@ export function DataExplorationType({
   setDownloadPopup,
 }: DataExplorationTypeProps) {
   const [subLayers, setSubLayers] = useState<keyable>({})
-
-  const [activeOpacity, setActiveOpacity] = useState(null)
 
   const [isActive, setIsActive] = useState(false)
 
@@ -115,8 +113,6 @@ export function DataExplorationType({
               key={`${content}_${subLayer}`}
               subLayer={subLayer}
               content={content}
-              activeOpacity={activeOpacity}
-              setActiveOpacity={setActiveOpacity}
               setActualLayer={setActualLayer}
               subLayers={subLayers}
               layerLegend={layerLegend}

@@ -16,12 +16,20 @@ interface PrintSelectionProps {
 export function PrintSelection({ setPrintBox }: PrintSelectionProps) {
   function handleClose() {
     Object.keys(removableIds).forEach((key) => {
-      const element = document.getElementById(removedIds[key][0])
-      if (element) element.style.opacity = '1'
+      const elements = document.querySelectorAll(`#${removedIds[key][0]}`)
+      if (elements.length > 0) {
+        elements.forEach((element: any) => {
+          element.style.opacity = '1'
+        })
+      }
     })
     hiddenIds.forEach((hiddenId) => {
-      const element = document.getElementById(hiddenId)
-      if (element) element.style.display = 'flex'
+      const elements = document.querySelectorAll(`#${hiddenId}`)
+      if (elements.length > 0) {
+        elements.forEach((element: any) => {
+          element.style.display = 'flex'
+        })
+      }
     })
     setCanSelect(false)
     setPrintBox(false)
@@ -71,13 +79,21 @@ export function PrintSelection({ setPrintBox }: PrintSelectionProps) {
     return removedIds[key][1] === '1'
   }
   useEffect(() => {
-    Object.keys(removedIds).forEach((key) => {
-      const element = document.getElementById(removedIds[key][0])
-      if (element) element.style.opacity = removedIds[key][1]
+    Object.keys(removableIds).forEach((key) => {
+      const elements = document.querySelectorAll(`#${removedIds[key][0]}`)
+      if (elements.length > 0) {
+        elements.forEach((element: any) => {
+          element.style.opacity = removedIds[key][1]
+        })
+      }
     })
     hiddenIds.forEach((hiddenId) => {
-      const element = document.getElementById(hiddenId)
-      if (element) element.style.display = 'none'
+      const elements = document.querySelectorAll(`#${hiddenId}`)
+      if (elements.length > 0) {
+        elements.forEach((element: any) => {
+          element.style.display = 'none'
+        })
+      }
     })
   }, [removedIds])
 

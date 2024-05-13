@@ -26,7 +26,6 @@ export function handleChangeOpacity(
   content,
   subLayer,
   subLayers,
-  setActiveOpacity,
   setActualLayer,
 ) {
   function changeMapOpacity(layerInfo: any, opacity: number) {
@@ -36,8 +35,17 @@ export function handleChangeOpacity(
     newSelectedLayer.zoom = true
     setSelectedLayers((selectedLayers: any) => {
       const copy = { ...selectedLayers }
+      newSelectedLayer.order = copy[layerInfo.subLayer].order
       delete copy[layerInfo.subLayer]
-      return { [layerInfo.subLayer]: newSelectedLayer, ...copy }
+      const newSelectedLayers: any = {
+        [layerInfo.subLayer]: newSelectedLayer,
+        ...copy,
+      }
+      const sortedArray = Object.entries(newSelectedLayers).sort(
+        (a: any, b: any) => b[1].order - a[1].order,
+      )
+      const sortedObj = Object.fromEntries(sortedArray)
+      return sortedObj
     })
   }
 
@@ -47,7 +55,6 @@ export function handleChangeOpacity(
       dataInfo: subLayers[subLayer],
     }),
   )
-  setActiveOpacity(layerInfo.subLayer)
   setActualLayer([layerInfo.subLayer])
   changeMapOpacity(layerInfo, e.target.value)
 }
@@ -294,8 +301,6 @@ export function handleClickZoom(
   subLayers,
   subLayer,
   setActualLayer,
-  setActiveOpacity,
-  opacityIsClicked,
   setLayerAction,
   selectedLayers,
   setSelectedLayers,
@@ -306,7 +311,6 @@ export function handleClickZoom(
       dataInfo: subLayers[subLayer],
     }),
   )
-  setActiveOpacity(opacityIsClicked ? layerInfo.subLayer : null)
   setActualLayer([layerInfo.subLayer])
   changeMapZoom(layerInfo, setLayerAction, selectedLayers, setSelectedLayers)
 }
@@ -333,10 +337,25 @@ export function changeMapZoom(
 ) {
   setLayerAction('zoom')
   const newSelectedLayer = selectedLayers[layerInfo.subLayer]
+  let order = 0
+  Object.keys(selectedLayers).forEach((key) => {
+    if (selectedLayers[key].order > order) {
+      order = selectedLayers[key].order
+    }
+  })
+  newSelectedLayer.order = order + 1
   setSelectedLayers((selectedLayers: any) => {
     const copy = { ...selectedLayers }
     delete copy[layerInfo.subLayer]
-    return { [layerInfo.subLayer]: newSelectedLayer, ...copy }
+    const newSelectedLayers: any = {
+      [layerInfo.subLayer]: newSelectedLayer,
+      ...copy,
+    }
+    const sortedArray = Object.entries(newSelectedLayers).sort(
+      (a: any, b: any) => b[1].order - a[1].order,
+    )
+    const sortedObj = Object.fromEntries(sortedArray)
+    return sortedObj
   })
 }
 
@@ -382,9 +401,23 @@ export async function addMapLayer(
   }
   newSelectedLayer.opacity = defaultOpacity
   newSelectedLayer.zoom = true
-  setSelectedLayers({
-    ...selectedLayers,
-    [layerInfo.subLayer]: newSelectedLayer,
+  let order = 0
+  Object.keys(selectedLayers).forEach((key) => {
+    if (selectedLayers[key].order > order) {
+      order = selectedLayers[key].order
+    }
+  })
+  newSelectedLayer.order = order + 1
+  setSelectedLayers((selectedLayers: any) => {
+    const newSelectedLayers: any = {
+      [layerInfo.subLayer]: newSelectedLayer,
+      ...selectedLayers,
+    }
+    const sortedArray = Object.entries(newSelectedLayers).sort(
+      (a: any, b: any) => b[1].order - a[1].order,
+    )
+    const sortedObj = Object.fromEntries(sortedArray)
+    return sortedObj
   })
 }
 
@@ -405,7 +438,6 @@ export async function handleChangeMapLayerAndAddLegend(
   e: any,
   setActualLayer: any,
   setOpacityIsClicked: any,
-  setActiveOpacity: any,
   setLayerAction: any,
   setSelectedLayers: any,
   selectedLayers: any,
@@ -438,7 +470,6 @@ export async function handleChangeMapLayerAndAddLegend(
     e,
     setActualLayer,
     setOpacityIsClicked,
-    setActiveOpacity,
     setLayerAction,
     setSelectedLayers,
     selectedLayers,
@@ -450,7 +481,6 @@ export async function handleChangeMapLayer(
   e: any,
   setActualLayer: any,
   setOpacityIsClicked: any,
-  setActiveOpacity: any,
   setLayerAction: any,
   setSelectedLayers: any,
   selectedLayers: any,
@@ -475,6 +505,7 @@ export async function handleChangeMapLayer(
         selectedLayers,
       )
     } else {
+      setOpacityIsClicked(false)
       removeMapLayer(layerInfo, setLayerAction, setSelectedLayers)
     }
   } else {
@@ -487,7 +518,6 @@ export async function handleChangeMapLayer(
       )
     } else {
       setOpacityIsClicked(false)
-      setActiveOpacity(null)
       removeMapLayer(layerInfo, setLayerAction, setSelectedLayers)
     }
   }
@@ -496,8 +526,6 @@ export async function handleChangeMapLayer(
 interface DataExplorationTypeOptionsProps {
   content: any
   subLayer: any
-  activeOpacity: any
-  setActiveOpacity: any
   setActualLayer: any
   subLayers: any
   layerLegend: any
@@ -517,8 +545,6 @@ interface DataExplorationTypeOptionsProps {
 export function DataExplorationTypeOptions({
   content,
   subLayer,
-  activeOpacity,
-  setActiveOpacity,
   setActualLayer,
   subLayers,
   layerLegend,
@@ -533,9 +559,7 @@ export function DataExplorationTypeOptions({
   setClickPoint,
   setDownloadPopup,
 }: DataExplorationTypeOptionsProps) {
-  const [opacityIsClicked, setOpacityIsClicked] = useState(
-    activeOpacity === `${content}_${subLayer}`,
-  )
+  const [opacityIsClicked, setOpacityIsClicked] = useState(false)
 
   return (
     <LayerTypeOptionsContainer>
@@ -550,7 +574,6 @@ export function DataExplorationTypeOptions({
                 e,
                 setActualLayer,
                 setOpacityIsClicked,
-                setActiveOpacity,
                 setLayerAction,
                 setSelectedLayers,
                 selectedLayers,
@@ -648,8 +671,6 @@ export function DataExplorationTypeOptions({
                   subLayers,
                   subLayer,
                   setActualLayer,
-                  setActiveOpacity,
-                  opacityIsClicked,
                   setLayerAction,
                   selectedLayers,
                   setSelectedLayers,
@@ -696,7 +717,6 @@ export function DataExplorationTypeOptions({
                 content,
                 subLayer,
                 subLayers,
-                setActiveOpacity,
                 setActualLayer,
               )
             }

@@ -11,11 +11,11 @@ interface keyable {
 
 interface ThreeDDataExplorationTypeProps {
   content: string
-  childs: Object
+  childs: object
   selectedLayers: keyable
   setSelectedLayers: any
   setActualLayer: any
-  layerAction: String
+  layerAction: string
   setLayerAction: any
   layerLegend: any
   setLayerLegend: any
@@ -45,8 +45,6 @@ export function ThreeDDataExplorationType({
   setDownloadPopup,
 }: ThreeDDataExplorationTypeProps) {
   const [subLayers, setSubLayers] = useState<keyable>({})
-
-  const [activeOpacity, setActiveOpacity] = useState(null)
 
   const [isActive, setIsActive] = useState(false)
 
@@ -114,8 +112,6 @@ export function ThreeDDataExplorationType({
                 key={`${content}_${subLayer}`}
                 subLayer={subLayer}
                 content={content}
-                activeOpacity={activeOpacity}
-                setActiveOpacity={setActiveOpacity}
                 setActualLayer={setActualLayer}
                 subLayers={subLayers}
                 layerLegend={layerLegend}

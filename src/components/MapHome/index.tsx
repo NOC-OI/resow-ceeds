@@ -849,6 +849,22 @@ function MapHome1({
     })
   }
 
+  async function changeMapOrder() {
+    const sortedArray = Object.entries(selectedLayers)
+      .sort((a: any, b: any) => a[1].order - b[1].order)
+      .map((entry) => entry[0])
+
+    sortedArray.forEach((layer) => {
+      map.eachLayer(function (mapLayer: any) {
+        if (layer === mapLayer.options.attribution) {
+          bringLayerToFront(mapLayer)
+        }
+      })
+    })
+    setLayerAction('')
+    setLoading(false)
+  }
+
   function changeMapOpacity(actual?) {
     const layerToBeChanged = actual || actualLayer
     const localSelectedLayers = actual ? selectedLayersUpload : selectedLayers
@@ -983,6 +999,7 @@ function MapHome1({
       add: addLayerIntoMap,
       zoom: changeMapZoom,
       opacity: changeMapOpacity,
+      sort: changeMapOrder,
       'marker-changes': changeMapMarkerShow,
       'update-colors': changeMapColors,
     }

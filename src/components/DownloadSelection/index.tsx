@@ -72,6 +72,8 @@ export function DownloadSelection({
       georaster,
       downloadInputValue.region,
     )
+    console.log(downloadInputValue.region)
+    console.log(values)
     if (values[0].length === 0) {
       setFlashMessage({
         messageType: 'warning',

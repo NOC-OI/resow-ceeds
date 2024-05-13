@@ -6,11 +6,11 @@ import {
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons'
 import { useEffect, useRef, useState } from 'react'
 import { GetTitilerData } from '../../lib/map/getTitilerData'
-import { Loading } from '../Loading'
 import Plot from 'react-plotly.js'
 import Draggable from 'react-draggable'
 import { yearMonths } from '../../data/yearMonths'
 import { GetGeoblazeValuePoint } from '../../lib/map/getGeoblazeValue'
+import { useContextHandle } from '../../lib/contextHandle'
 
 interface GraphBoxProps {
   graphData: any
@@ -30,6 +30,7 @@ export function GraphBox({
   selectedLayers,
 }: GraphBoxProps) {
   const [data, setData] = useState<any>(null)
+  const { setLoading } = useContextHandle()
 
   function handleClose() {
     setGetPolyline(false)
@@ -38,6 +39,7 @@ export function GraphBox({
   }
 
   useEffect(() => {
+    setLoading(true)
     async function fetchData() {
       if (graphData.length === 1) {
         const getGeoblazeValue = new GetGeoblazeValuePoint(
@@ -59,7 +61,12 @@ export function GraphBox({
         setLayer({ layerName: key, layerInfo: selectedLayers[key] })
       }
     })
-    fetchData()
+    try {
+      fetchData()
+    } catch (error) {
+      console.log('Error fetching data: ', error)
+    }
+    setLoading(false)
   }, [])
 
   const [layer, setLayer] = useState<any>({})
@@ -90,8 +97,7 @@ export function GraphBox({
         <InfoButtonBoxContent>
           {!data ? (
             <div>
-              <p>Generating graph...</p>
-              <Loading />
+              <p className="!text-center">Generating graph...</p>
             </div>
           ) : (
             <Plot

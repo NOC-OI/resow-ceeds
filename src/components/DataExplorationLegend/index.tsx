@@ -9,6 +9,7 @@ import { Button } from '@mui/material'
 import { CssTextField } from '../DownloadSelection/styles'
 import chroma from 'chroma-js'
 import { useUploadDataHandle } from '../../lib/data/uploadDataManagement'
+import { useContextHandle } from '../../lib/contextHandle'
 
 interface LayerLegendProps {
   layerLegend: any
@@ -34,6 +35,7 @@ export function DataExplorationLegend({
       return newLayerLegend
     })
   }
+  const { setFlashMessage } = useContextHandle()
 
   const [colorScale, setColorScale] = useState<string>(
     layerLegend[layerLegendName].layerInfo?.colors,
@@ -119,6 +121,10 @@ export function DataExplorationLegend({
     if (['COG', 'GeoTIFF'].includes(layerLegend[layerLegendName].dataType)) {
       if (checkInputValue()) {
         setError('Please enter valid values')
+        setFlashMessage({
+          messageType: 'error',
+          content: 'Please enter valid values',
+        })
         return
       }
     }

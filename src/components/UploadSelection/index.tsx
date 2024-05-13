@@ -8,7 +8,11 @@ import { useUploadDataHandle } from '../../lib/data/uploadDataManagement'
 import parseGeoraster from 'georaster'
 import { colorScaleByName } from '../../lib/map/jsColormaps'
 import { LayersUploaded } from '../LayersUploaded'
-import { defaultOpacity, reprojectData } from '../../lib/map/utils'
+import {
+  TILE_SERVER_URL,
+  defaultOpacity,
+  reprojectData,
+} from '../../lib/map/utils'
 import chroma from 'chroma-js'
 import { handleClickLegend } from '../DataExplorationTypeOptions'
 import { UploadLayerWMS } from '../UploadLayerWMS'
@@ -19,6 +23,7 @@ import { UploadLayerCOG } from '../UploadLayerCOG'
 import { UploadLayerCSV } from '../UploadLayerCSV'
 import Papa from 'papaparse'
 import { ConfirmationDialog } from '../ConfirmationDialog'
+import axios from 'axios'
 
 interface UploadSelectionProps {
   layerAction: any
@@ -42,7 +47,7 @@ export function UploadSelection({
   } = useUploadDataHandle()
   const [error, setError] = useState('')
   const errorTimeoutRef = useRef<number | null>(null)
-  const { setLoading } = useContextHandle()
+  const { setLoading, setFlashMessage } = useContextHandle()
 
   const [colorScale, setColorScale] = useState<string>('Custom')
   const [localUploadInfo, setLocalUploadInfo] = useState<any>({})
@@ -91,81 +96,114 @@ export function UploadSelection({
     return false
   }
 
+  const checkCOGInput = async (localUploadInfo) => {
+    try {
+      await axios.get(
+        `${TILE_SERVER_URL}cog/info?url=${encodeURIComponent(
+          localUploadInfo.url,
+        )}&encoded=false`,
+      )
+      return true
+    } catch (error) {
+      return false
+    }
+  }
   const handleUploadLayer = async (localUploadInfo) => {
     if (actualLayerUpload.dataType === 'GeoTIFF') {
-      parseGeoraster(localUploadInfo.file).then((georaster) => {
-        const scale = [georaster.mins[0], georaster.maxs[0]]
-        const newActualLayerUpload = { ...actualLayerUpload }
-        const finalActualLayerUpload = {
-          dataType: newActualLayerUpload.dataType,
-          name: localUploadInfo.file.name,
-          data: georaster,
-          colors:
-            colorScale === 'Custom' ? newActualLayerUpload.colors : colorScale,
-          scale,
-          opacity: defaultOpacity,
-        }
-        setActualLayerUpload(finalActualLayerUpload)
-        const difValues = scale[1] - scale[0]
-        const times = 30
-        const cogColors = []
-        const cogColorsValues = []
-        let scaleColor
-        if (typeof finalActualLayerUpload.colors === 'string') {
-          scaleColor = colorScaleByName(finalActualLayerUpload.colors)
-          for (let i = 0; i < times; i++) {
-            cogColors.push(scaleColor((1 / (times - 1)) * i))
-            cogColorsValues.push(
-              Number(scale[0]) + (difValues / (times - 1)) * i,
-            )
-          }
-        } else {
-          scaleColor = chroma.scale(finalActualLayerUpload.colors).domain(scale)
-          for (let i = 0; i < times; i++) {
-            const color = scaleColor((1 / (times - 1)) * i)
-            cogColors.push([color._rgb[0], color._rgb[1], color._rgb[2]])
-            cogColorsValues.push(
-              Number(scale[0]) + (difValues / (times - 1)) * i,
-            )
-          }
-        }
-        setLayerLegend((layerLegend: any) => {
-          const newLayerLegend = { ...layerLegend }
-          delete newLayerLegend[localUploadInfo.file.name]
-          newLayerLegend[localUploadInfo.file.name] = {
-            layerName: localUploadInfo.file.name,
-            layerInfo: finalActualLayerUpload,
-            selectedLayersKey: `uploaded_${localUploadInfo.file.name}`,
+      try {
+        parseGeoraster(localUploadInfo.file).then((georaster) => {
+          const scale = [georaster.mins[0], georaster.maxs[0]]
+          const newActualLayerUpload = { ...actualLayerUpload }
+          const finalActualLayerUpload = {
+            dataType: newActualLayerUpload.dataType,
+            name: localUploadInfo.file.name,
+            data: georaster,
+            colors:
+              colorScale === 'Custom'
+                ? newActualLayerUpload.colors
+                : colorScale,
             scale,
-            dataDescription: '',
-            legend: [cogColors, cogColorsValues],
-            dataType: finalActualLayerUpload.dataType,
+            opacity: defaultOpacity,
           }
-          return newLayerLegend
+          setActualLayerUpload(finalActualLayerUpload)
+          const difValues = scale[1] - scale[0]
+          const times = 30
+          const cogColors = []
+          const cogColorsValues = []
+          let scaleColor
+          if (typeof finalActualLayerUpload.colors === 'string') {
+            scaleColor = colorScaleByName(finalActualLayerUpload.colors)
+            for (let i = 0; i < times; i++) {
+              cogColors.push(scaleColor((1 / (times - 1)) * i))
+              cogColorsValues.push(
+                Number(scale[0]) + (difValues / (times - 1)) * i,
+              )
+            }
+          } else {
+            scaleColor = chroma
+              .scale(finalActualLayerUpload.colors)
+              .domain(scale)
+            for (let i = 0; i < times; i++) {
+              const color = scaleColor((1 / (times - 1)) * i)
+              cogColors.push([color._rgb[0], color._rgb[1], color._rgb[2]])
+              cogColorsValues.push(
+                Number(scale[0]) + (difValues / (times - 1)) * i,
+              )
+            }
+          }
+          setLayerLegend((layerLegend: any) => {
+            const newLayerLegend = { ...layerLegend }
+            delete newLayerLegend[localUploadInfo.file.name]
+            newLayerLegend[localUploadInfo.file.name] = {
+              layerName: localUploadInfo.file.name,
+              layerInfo: finalActualLayerUpload,
+              selectedLayersKey: `uploaded_${localUploadInfo.file.name}`,
+              scale,
+              dataDescription: '',
+              legend: [cogColors, cogColorsValues],
+              dataType: finalActualLayerUpload.dataType,
+            }
+            return newLayerLegend
+          })
+          setLoading(false)
+        })
+      } catch (error) {
+        setError('Error on the data. Please check the GeoTIFF file')
+        setFlashMessage({
+          messageType: 'error',
+          content: 'Error on the data. Please check the GeoTIFF file',
         })
         setLoading(false)
-      })
+      }
     } else if (actualLayerUpload.dataType === 'GeoJSON') {
       const reader = new FileReader()
       reader.onload = async (e) => {
-        const data = JSON.parse(e.target.result.toString())
-        setActualLayerUpload((actualLayerUpload) => {
-          const newActualLayerUpload = { ...actualLayerUpload }
-          return {
-            dataType: newActualLayerUpload.dataType,
-            name: localUploadInfo.file.name,
-            data,
-            colors: newActualLayerUpload.colors,
-          }
-        })
+        try {
+          const data = JSON.parse(e.target.result.toString())
+          setActualLayerUpload((actualLayerUpload) => {
+            const newActualLayerUpload = { ...actualLayerUpload }
+            return {
+              dataType: newActualLayerUpload.dataType,
+              name: localUploadInfo.file.name,
+              data,
+              colors: newActualLayerUpload.colors,
+            }
+          })
+        } catch (e) {
+          setError('Error on the data. Please check the GeoJSON file')
+          setFlashMessage({
+            messageType: 'error',
+            content: 'Error on the data. Please check the GeoJSON file',
+          })
+        }
         setLoading(false)
       }
       reader.readAsText(localUploadInfo.file)
     } else if (actualLayerUpload.dataType === 'Shapefile') {
       const reader = new FileReader()
       reader.onload = async () => {
-        const data = await shapefile.read(reader.result)
         try {
+          const data = await shapefile.read(reader.result)
           const reprojectedData = reprojectData(
             data,
             localUploadInfo.proj,
@@ -181,7 +219,12 @@ export function UploadSelection({
             }
           })
         } catch (e) {
+          console.log(e)
           setError('Error on the data. Please check the shp and prj files')
+          setFlashMessage({
+            messageType: 'error',
+            content: 'Error on the data. Please check the shp and prj files',
+          })
         }
         setLoading(false)
       }
@@ -212,28 +255,38 @@ export function UploadSelection({
       )
       setLoading(false)
     } else if (actualLayerUpload.dataType === 'COG') {
-      const nameOfLayer =
-        localUploadInfo.url.split('/')[
-          localUploadInfo.url.split('/').length - 1
-        ]
-      const newActualLayerUpload = {
-        dataType: actualLayerUpload.dataType,
-        name: nameOfLayer.length > 18 ? nameOfLayer.slice(0, 18) : nameOfLayer,
-        data: localUploadInfo.url,
-        colors: colorScale,
+      const cogIsValid = await checkCOGInput(localUploadInfo)
+      if (cogIsValid) {
+        const nameOfLayer =
+          localUploadInfo.url.split('/')[
+            localUploadInfo.url.split('/').length - 1
+          ]
+        const newActualLayerUpload = {
+          dataType: actualLayerUpload.dataType,
+          name:
+            nameOfLayer.length > 18 ? nameOfLayer.slice(0, 18) : nameOfLayer,
+          data: localUploadInfo.url,
+          colors: colorScale,
+        }
+        setActualLayerUpload(newActualLayerUpload)
+        const newListLayersUpload = { ...listLayersUpload }
+        newListLayersUpload[newActualLayerUpload.name] = {
+          ...newActualLayerUpload,
+          url: localUploadInfo.url,
+        }
+        handleClickLegend(
+          newListLayersUpload,
+          newActualLayerUpload.name,
+          setLayerLegend,
+          'uploaded',
+        )
+      } else {
+        setError('Please check the url of the COG file')
+        setFlashMessage({
+          messageType: 'error',
+          content: 'Please check the url of the COG file',
+        })
       }
-      setActualLayerUpload(newActualLayerUpload)
-      const newListLayersUpload = { ...listLayersUpload }
-      newListLayersUpload[newActualLayerUpload.name] = {
-        ...newActualLayerUpload,
-        url: localUploadInfo.url,
-      }
-      handleClickLegend(
-        newListLayersUpload,
-        newActualLayerUpload.name,
-        setLayerLegend,
-        'uploaded',
-      )
       setLoading(false)
     } else if (actualLayerUpload.dataType === 'CSV') {
       try {
@@ -280,6 +333,10 @@ export function UploadSelection({
         })
       } catch (error) {
         setError('Error getting data. Check the format of the file')
+        setFlashMessage({
+          messageType: 'error',
+          content: 'Error getting data. Check the format of the file',
+        })
       }
       setLoading(false)
     }
@@ -287,6 +344,10 @@ export function UploadSelection({
   const handleSubmit = async () => {
     if (checkInputValue()) {
       setError('Please check the fields')
+      setFlashMessage({
+        messageType: 'error',
+        content: 'Please check the fields',
+      })
     } else {
       setLoading(true)
       await handleUploadLayer(localUploadInfo)
@@ -335,6 +396,10 @@ export function UploadSelection({
       return true
     }
     setError('Invalid file type')
+    setFlashMessage({
+      messageType: 'error',
+      content: 'Invalid file type',
+    })
     return false
   }
 
@@ -368,8 +433,12 @@ export function UploadSelection({
   const uploadFile = (file, proj?) => {
     let fileName = file.name
     fileName = fileName.length > 12 ? fileName.slice(0, 9) + '...' : fileName
-    if (proj && !fileName.endsWith('.prj')) {
+    if (proj && !file.name.endsWith('.prj')) {
       setError('Please upload a .prj file')
+      setFlashMessage({
+        messageType: 'error',
+        content: 'Please upload a .prj file',
+      })
       return
     }
 

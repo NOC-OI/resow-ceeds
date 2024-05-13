@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faRotateRight } from '@fortawesome/free-solid-svg-icons'
 import styles from './UploadLayerWMS.module.css'
 import { parseCapabilities } from '../../lib/map/utils'
+import { useContextHandle } from '../../lib/contextHandle'
 
 interface UploadLayerWMSProps {
   localUploadInfo: any
@@ -29,12 +30,17 @@ export function UploadLayerWMS({
   setError,
 }: UploadLayerWMSProps) {
   const [isLoading, setIsLoading] = useState(false)
+  const { setFlashMessage } = useContextHandle()
 
   // Function to fetch WMS capabilities
   const fetchCapabilities = async () => {
     setIsLoading(true)
     if (!localUploadInfo.url) {
       setError('Please fill the URL field')
+      setFlashMessage({
+        messageType: 'error',
+        content: 'Please fill the URL field',
+      })
       return
     }
     try {
@@ -50,6 +56,11 @@ export function UploadLayerWMS({
       setError(
         'Error fetching capabilities: please check the URL and try again',
       )
+      setFlashMessage({
+        messageType: 'error',
+        content:
+          'Error fetching capabilities: please check the URL and try again',
+      })
     }
     setIsLoading(false)
   }

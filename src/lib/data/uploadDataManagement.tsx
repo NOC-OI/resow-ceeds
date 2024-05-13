@@ -33,7 +33,7 @@ interface UploadDataHandleProviderProps {
 export const UploadDataHandleProvider: React.FC<
   UploadDataHandleProviderProps
 > = ({ children }) => {
-  const uploadFormats = ['GeoJSON', 'GeoTIFF', 'COG', 'Shapefile', 'CSV', 'WMS']
+  const uploadFormats = ['GeoJSON', 'GeoTIFF', 'COG', 'CSV', 'WMS']
 
   const fileTypes = {
     GeoTIFF: {

@@ -32,7 +32,7 @@ export function MapPopup({ mapPopup, setMapPopup }: MapPopupProps) {
           />
         </div>
         <InfoButtonBoxContent>
-          <div className="font-bold text-center pb-3">
+          <div className="font-bold text-center pb-3 !justify-center">
             {title.replace('_', ': ')}
           </div>
           {dataType === 'html' ? (
@@ -45,7 +45,7 @@ export function MapPopup({ mapPopup, setMapPopup }: MapPopupProps) {
                   key={key}
                 >
                   <div>
-                    <strong>{key === 'filename' ? 'More Info:' : key}</strong>:
+                    <strong>{key === 'filename' ? 'More Info' : key}</strong>:
                   </div>
                   {key === 'filename' ? (
                     <a href={`${content[key]}`} target="_blank">

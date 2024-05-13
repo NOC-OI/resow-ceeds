@@ -97,7 +97,9 @@ export function GraphBox({
         <InfoButtonBoxContent>
           {!data ? (
             <div>
-              <p className="!text-center">Generating graph...</p>
+              <p className="!text-center !justify-center">
+                Generating graph...
+              </p>
             </div>
           ) : (
             <Plot

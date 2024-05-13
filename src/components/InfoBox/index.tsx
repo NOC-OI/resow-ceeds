@@ -67,9 +67,9 @@ export function InfoBox({
     <InfoBoxContainer id="infobox-container">
       <h1 className="text-[1.5rem] leading-6 text-center pb-2">CEEDS</h1>
       <div className="flex justify-between items-center gap-2">
-        <div className="pl-1 sm:pl-0">
+        <a href="https://resow.uk/" target="_blank" className="pl-1 sm:pl-0">
           <img src="favicon.png" className="h-20" />
-        </div>
+        </a>
         <div className="w-32 hidden sm:flex sm:flex-col gap-1">
           <div className="flex align-middle justify-between text-[1rem] leading-6">
             <p>Lat:</p>

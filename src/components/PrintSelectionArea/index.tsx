@@ -150,11 +150,16 @@ export function PrintSelectionArea() {
         setFlashMessage({
           messageType: 'success',
           content: 'Image captured successfully!',
-          duration: 3000,
+          duration: 5000,
         })
       })
       .catch((error) => {
         console.error('dom-to-image-more error:', error)
+        setCanSelect(false)
+        setFlashMessage({
+          messageType: 'error',
+          content: 'Error capturing image, please try again.',
+        })
       })
   }
 

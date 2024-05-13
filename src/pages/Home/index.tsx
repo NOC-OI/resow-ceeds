@@ -185,7 +185,7 @@ export function Home() {
               setPrintBox={setPrintBox}
               setDownloadPopup={setDownloadPopup}
             />
-            <div className="hidden sm:block z-[9999]">
+            <div className="hidden sm:block z-[9999]" id="side-selection">
               <DimensionsToogle />
             </div>
             {graphData ? (

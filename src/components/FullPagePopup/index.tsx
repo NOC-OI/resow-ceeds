@@ -8,8 +8,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { FullPagePopupContainer } from './styles'
 import styles from './FullPagePopup.module.css'
-
-// import { GithubLogo } from 'phosphor-react'
+import { GithubLogo } from 'phosphor-react'
 
 interface FullPagePopupProps {
   setShowPopup: any
@@ -87,7 +86,7 @@ export function FullPagePopup({
           </div>
         </div> */}
         <div className="p-4">
-          <div className="grid grid-cols-3 gap-1">
+          <div className="grid grid-cols-4 gap-1">
             <a
               href="https://resow.uk/"
               target="_blank"
@@ -113,6 +112,15 @@ export function FullPagePopup({
             >
               <FontAwesomeIcon icon={faList} />
               <p className="text-center text-sm font-bold">Data Catalog</p>
+            </a>
+            <a
+              href="https://github.com/NOC-OI/resow-ceeds"
+              target="_blank"
+              className="p-4 cursor-pointer"
+              title="Code"
+            >
+              <GithubLogo size={32} />
+              <p className="text-center text-sm font-bold">Code</p>
             </a>
           </div>
         </div>

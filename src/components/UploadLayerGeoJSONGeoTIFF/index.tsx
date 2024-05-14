@@ -81,7 +81,7 @@ export function UploadLayerGeoJSONGeoTIFF({
       <div className="pt-4 flex justify-between w-full items-center">
         <p className="text-md font-bold text-white mb-2 text-center">
           {['GeoJSON', 'Shapefile'].includes(actualLayerUpload.dataType)
-            ? 'Geometry Colors:'
+            ? 'Geometry Color:'
             : 'Color Scale:'}
         </p>
         <div className="flex flex-col items-center gap-1">

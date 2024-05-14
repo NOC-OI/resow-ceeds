@@ -228,6 +228,7 @@ export function UploadSelection({
         }
         setLoading(false)
       }
+      console.log('file', localUploadInfo.file)
       reader.readAsArrayBuffer(localUploadInfo.file)
     } else if (actualLayerUpload.dataType === 'WMS') {
       const newActualLayerUpload = {

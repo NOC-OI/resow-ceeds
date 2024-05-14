@@ -1,0 +1,1011 @@
+{
+  "Bathymetry": {
+    "icon": "",
+    "layerNames": {
+      "EMODNET-2022": {
+        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/bathymetry/emodnet/emodnet_2022_uk.tif",
+        "dataType": "COG",
+        "content": "The 'EMODnet Digital Bathymetry (DTM)- 2022' is a multilayer bathymetric product for Europe’s sea basins covering: • the Greater North Sea, including the Kattegat and stretches of water such as Fair Isle, Cromarty, Forth, Forties,Dover, Wight, and Portland • the English Channel and Celtic Seas • Western Mediterranean, the Ionian Sea and the Central Mediterranean Sea • Iberian Coast and Bay of Biscay (Atlantic Ocean) • Adriatic Sea (Mediterranean) • Aegean - Levantine Sea (Mediterranean). • Madeira and Azores (Macaronesia) • Baltic Sea • Black Sea • Norwegian and Icelandic Seas • Canary Islands (Macaronesia) • Arctic region and Barentz Sea The DTM is based upon 21937 bathymetric survey data sets and Composite DTMs that have been gathered from 64 data providers from 28 countries riparian to European seas and beyond. Also Satellite Derived Bathymetry data products have been included fro Landsat 8 and Sentinel satellite images. Areas not covered by observations are completed by integrating GEBCO 2022 and IBCAO V4.\n Source: https://emodnet.ec.europa.eu/geonetwork/emodnet/eng/catalog.search#/metadata/ff3aff8a-cff1-44a3-a2c8-1910bf109f85",
+        "protected": false,
+        "dataDescription": [
+          "Depth",
+          "(m)"
+        ],
+        "assetId": "2453952",
+        "threeD": false,
+        "download": {
+          "GeoTIFF": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/bathymetry/emodnet/emodnet_2022_uk.tif",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Bathymetry/EMODNET/collection.json"
+        },
+        "bbox": [
+          -9.000000000012616,
+          47.999887816640324,
+          3.100668943151864,
+          60.30104166662717
+        ]
+      },
+      "GEBCO-2023": {
+        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/bathymetry/gebco/gebco_2023.tif",
+        "dataType": "COG",
+        "content": "GEBCO’s current gridded bathymetric data set, the GEBCO_2023 Grid, is a global terrain model for ocean and land, providing elevation data, in meters, on a 15 arc-second interval grid. It is accompanied by a Type Identifier (TID) Grid that gives information on the types of source data that the GEBCO_2023 Grid is based on.\n Source: https://www.gebco.net/data_and_products/gridded_bathymetry_data/",
+        "protected": false,
+        "dataDescription": [
+          "Depth",
+          "(m)"
+        ],
+        "assetId": "2182075",
+        "threeD": false,
+        "download": {
+          "GeoTIFF": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/bathymetry/gebco/gebco_2023.tif",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Bathymetry/GEBCO/collection.json"
+        },
+        "bbox": [
+          -180,
+          -90,
+          179.96586288941216,
+          90
+        ]
+      }
+    }
+  },
+  "Case Study Areas": {
+    "icon": "",
+    "layerNames": {
+      "Summaries": {
+        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/case_study_areas/summaries/summary.geojson",
+        "dataType": "GeoJSON",
+        "content": "The ReSOW project worked at seven case study areas spread throughout the UK. For each site, the project gathered data on carbon storage and fisheries, and conducted stakeholder surveys. This layer indicates the locations of case study areas and includes a summary narrative (with images) about each.",
+        "protected": false,
+        "threeD": false,
+        "download": {
+          "GeoJSON": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/case_study_areas/summaries/summary.geojson",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Case%20Study%20Areas/Case%20Study%20Areas/collection.json"
+        },
+        "bbox": [
+          -6.3007,
+          49.948,
+          -1.2534,
+          59.0262
+        ]
+      }
+    }
+  },
+  "Habitat Suitability (HSM)": {
+    "icon": "",
+    "layerNames": {
+      "UK": {
+        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/uk_hsm/uk_hsm_cog.tif",
+        "dataType": "COG",
+        "content": "Habitat suitability model for Zostera marina suitability (0-1) for United Kingdon, Ireland and Channel Isles area created using ensemble of GLM, GAM, RF, BRT, MARS, MaxENT methods. Presence data compiled from range of sources (see Bertelli et al., 2023) with environmental data as predictor variables from EMODNet and Copernicus. These variables include - Light (PAR) availability at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/), units Mol.phot.m-2.d-1, resolution ~0.3km2 , 1.1 x 0.7 km, 0.003°/10 arc seconds, 01 Jan2005 – 31 Dec 2009; Bathymetry (EMODnet Bathymetry and topography, http://www.emodnet.eu/emodnet-maps-catalogue) in metres below chart datum, resolution ~0.115km, 0.001°x 3.75 arc seconds, ~70m x 116m; January Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc) resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Salinity (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu, NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km, 2019-present hourly-Daily mean; Wave energy at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/) in N.m2.s-1, resolution ~0.3km,~342x195m; Energy at seabed due to currents (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/, Data from EU SeaMap (2016), Energy in the Celtic Sea and North Sea) in N.m2.s-1, resolution ~0.3km, ~342x195m; Slope, Calculated from bathymetry data with GIS software.",
+        "colors": "RdYlBu_r",
+        "dataDescription": [
+          "Suitability",
+          "(Probability)"
+        ],
+        "scale": [
+          0,
+          1
+        ],
+        "protected": false,
+        "threeD": false,
+        "download": {
+          "GeoTIFF": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/uk_hsm/uk_hsm_cog.tif",
+          "ASC": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/enuklogNEW1.asc",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Habitat%20Suitability%20%28HSM%29/Habitat%20Suitability%20%28HSM%29/collection.json"
+        },
+        "bbox": [
+          -10.809375113,
+          48.768750264,
+          1.9677082240000505,
+          60.83333360079558
+        ]
+      },
+      "Craignish": {
+        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/craignish/craignish_log_hsm.tif",
+        "dataType": "GeoTIFF",
+        "content": "Habitat suitability model for Zostera marina suitability (0-1) for Loch Craignish area created using ensemble of GLM, GAM, RF, BRT, MARS, MaxENT methods. Presence data compiled from range of sources (see Bertelli et al., 2023) with environmental data as predictor variables from EMODNet and Copernicus. These variables include - Bathymetry (EMODnet Bathymetry and topography, http://www.emodnet.eu/emodnet-maps-catalogue) in metres below chart datum, resolution ~0.115km, 0.001°x 3.75 arc seconds, ~70m x 116m; January Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km 2019-present hourly-Daily mean; August Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc) resolution 0.014° × 0.03°, ~1.4km x 3km 2019-present hourly-Daily mean; August Salinity (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu, NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km, 2019-present hourly-Daily mean; Wave energy at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/) in N.m2.s-1, resolution ~0.3km,~342x195m; Energy at seabed due to currents (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/, Data from EU SeaMap (2016), Energy in the Celtic Sea and North Sea) in N.m2.s-1, resolution ~0.3km, ~342x195m; Slope, Calculated from bathymetry data with GIS software. N.b. no PAR data was used as didn't reach presence data at time of production even after interpolation of 3 pixels.",
+        "colors": "RdYlBu_r",
+        "scale": [
+          0,
+          1
+        ],
+        "dataDescription": [
+          "Suitability",
+          "(Probability)"
+        ],
+        "units": "",
+        "download": {
+          "GeoTIFF": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/craignish/craignish_log_hsm.tif",
+          "ASC": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/encraiglog_clipped.asc",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Habitat%20Suitability%20%28HSM%29/Habitat%20Suitability%20%28HSM%29/collection.json"
+        },
+        "download_area": true,
+        "protected": false,
+        "bbox": [
+          -5.900586554,
+          55.768668078,
+          -5.438086553,
+          56.35720974593919
+        ]
+      },
+      "Isles of Scilly": {
+        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/ios/ios_log_hsm.tif",
+        "dataType": "GeoTIFF",
+        "content": "Habitat suitability model for Zostera marina suitability (0-1) for Isles of Scilly created using ensemble of GLM, GAM, RF, BRT, MARS, MaxENT methods. Presence data compiled from range of sources (see Bertelli et al., 2023) with environmental data as predictor variables from EMODNet and Copernicus. These variables include - Light (PAR) availability at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/), units Mol.phot.m-2.d-1, resolution ~0.3km2 , 1.1 x 0.7 km, 0.003°/10 arc seconds, 01 Jan2005 – 31 Dec 2009; Bathymetry (EMODnet Bathymetry and topography, http://www.emodnet.eu/emodnet-maps-catalogue) in metres below chart datum, resolution ~0.115km, 0.001°x 3.75 arc seconds, ~70m x 116m; January Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc) resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Salinity (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu, NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km, 2019-present hourly-Daily mean; Wave energy at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/) in N.m2.s-1, resolution ~0.3km,~342x195m; Energy at seabed due to currents (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/, Data from EU SeaMap (2016), Energy in the Celtic Sea and North Sea) in N.m2.s-1, resolution ~0.3km, ~342x195m; Slope, Calculated from bathymetry data with GIS software.",
+        "colors": "RdYlBu_r",
+        "scale": [
+          0,
+          1
+        ],
+        "dataDescription": [
+          "Suitability",
+          "(Probability)"
+        ],
+        "units": "",
+        "download": {
+          "GeoTIFF": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/ios/ios_log_hsm.tif",
+          "ASC": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/enioslogALL_clipped.asc",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Habitat%20Suitability%20%28HSM%29/Habitat%20Suitability%20%28HSM%29/collection.json"
+        },
+        "download_area": true,
+        "protected": false,
+        "bbox": [
+          -6.43229178,
+          49.859375263,
+          -6.238541780000001,
+          49.984375263
+        ]
+      },
+      "Milford Haven": {
+        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/milford_haven/milford_haven_log_hsm.tif",
+        "dataType": "GeoTIFF",
+        "content": "Habitat suitability model for Zostera marina suitability (0-1) for Milford Haven created using ensemble of GLM, GAM, RF, BRT, MARS, MaxENT methods. Presence data compiled from range of sources (see Bertelli et al., 2023) with environmental data as predictor variables from EMODNet and Copernicus. These variables include - Light (PAR) availability at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/), units Mol.phot.m-2.d-1, resolution ~0.3km2 , 1.1 x 0.7 km, 0.003°/10 arc seconds, 01 Jan2005 – 31 Dec 2009; Bathymetry (EMODnet Bathymetry and topography, http://www.emodnet.eu/emodnet-maps-catalogue) in metres below chart datum, resolution ~0.115km, 0.001°x 3.75 arc seconds, ~70m x 116m; January Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc) resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Salinity (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu, NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km, 2019-present hourly-Daily mean; Wave energy at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/) in N.m2.s-1, resolution ~0.3km,~342x195m; Energy at seabed due to currents (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/, Data from EU SeaMap (2016), Energy in the Celtic Sea and North Sea) in N.m2.s-1, resolution ~0.3km, ~342x195m; Slope, Calculated from bathymetry data with GIS software.",
+        "colors": "RdYlBu_r",
+        "scale": [
+          0,
+          1
+        ],
+        "dataDescription": [
+          "Suitability",
+          "(Probability)"
+        ],
+        "download": {
+          "GeoTIFF": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/milford_haven/milford_haven_log_hsm.tif",
+          "ASC": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/enMH_log2.asc",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Habitat%20Suitability%20%28HSM%29/Habitat%20Suitability%20%28HSM%29/collection.json"
+        },
+        "download_area": true,
+        "protected": false,
+        "bbox": [
+          -5.177726449,
+          51.658313012,
+          -4.798559781,
+          51.740604678956046
+        ],
+        "threeD": false
+      },
+      "Orkney": {
+        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/orkney/orkney_log_hsm.tif",
+        "dataType": "GeoTIFF",
+        "content": "Habitat suitability model for Zostera marina suitability (0-1) for Orkney Isles created using ensemble of GLM, GAM, RF, BRT, MARS, MaxENT methods. Presence data compiled from range of sources (see Bertelli et al., 2023) with environmental data as predictor variables from EMODNet and Copernicus. These variables include - Light (PAR) availability at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/), units Mol.phot.m-2.d-1, resolution ~0.3km2 , 1.1 x 0.7 km, 0.003°/10 arc seconds, 01 Jan2005 – 31 Dec 2009; Bathymetry (EMODnet Bathymetry and topography, http://www.emodnet.eu/emodnet-maps-catalogue) in metres below chart datum, resolution ~0.115km, 0.001°x 3.75 arc seconds, ~70m x 116m; January Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc) resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Salinity (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu, NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km, 2019-present hourly-Daily mean; Wave energy at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/) in N.m2.s-1, resolution ~0.3km,~342x195m; Energy at seabed due to currents (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/, Data from EU SeaMap (2016), Energy in the Celtic Sea and North Sea) in N.m2.s-1, resolution ~0.3km, ~342x195m; Slope, Calculated from bathymetry data with GIS software.",
+        "colors": "RdYlBu_r",
+        "scale": [
+          0,
+          1
+        ],
+        "dataDescription": [
+          "Suitability",
+          "(Probability)"
+        ],
+        "download": {
+          "GeoTIFF": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/milford_haven/orkney_log_hsm.tif",
+          "ASC": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/enorklog_clipped.asc",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Habitat%20Suitability%20%28HSM%29/Habitat%20Suitability%20%28HSM%29/collection.json"
+        },
+        "download_area": true,
+        "protected": false,
+        "threeD": false,
+        "bbox": [
+          -3.490625113,
+          58.70416693,
+          -2.22916678,
+          59.46354193
+        ]
+      },
+      "Porthdinllaen": {
+        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/porthdinllaen/porthdinllaen_log_hsm.tif",
+        "dataType": "GeoTIFF",
+        "content": "Habitat suitability model for Zostera marina suitability (0-1) for Porthdinllaen created using ensemble of GLM, GAM, RF, BRT, MARS, MaxENT methods. Presence data compiled from range of sources (see Bertelli et al., 2023) with environmental data as predictor variables from EMODNet and Copernicus. These variables include - Light (PAR) availability at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/), units Mol.phot.m-2.d-1, resolution ~0.3km2 , 1.1 x 0.7 km, 0.003°/10 arc seconds, 01 Jan2005 – 31 Dec 2009; Bathymetry (EMODnet Bathymetry and topography, http://www.emodnet.eu/emodnet-maps-catalogue) in metres below chart datum, resolution ~0.115km, 0.001°x 3.75 arc seconds, ~70m x 116m; January Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc) resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Salinity (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu, NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km, 2019-present hourly-Daily mean; Wave energy at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/) in N.m2.s-1, resolution ~0.3km,~342x195m; Energy at seabed due to currents (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/, Data from EU SeaMap (2016), Energy in the Celtic Sea and North Sea) in N.m2.s-1, resolution ~0.3km, ~342x195m; Slope, Calculated from bathymetry data with GIS software.",
+        "colors": "RdYlBu_r",
+        "scale": [
+          0,
+          1
+        ],
+        "dataDescription": [
+          "Suitability",
+          "(Probability)"
+        ],
+        "protected": false,
+        "threeD": false,
+        "download": {
+          "GeoTIFF": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/porthdinllaen/porthdinllaen_log_hsm.tif",
+          "ASC": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/enPDlog_clipped.asc",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Habitat%20Suitability%20%28HSM%29/Habitat%20Suitability%20%28HSM%29/collection.json"
+        },
+        "download_area": true,
+        "bbox": [
+          -4.578556304,
+          52.933132242,
+          -4.457722969999999,
+          52.98000724225862
+        ]
+      },
+      "Solent": {
+        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/solent/solent_log_hsm.tif",
+        "dataType": "GeoTIFF",
+        "content": "Habitat suitability model for Zostera marina suitability (0-1) for Solent area created using ensemble of GLM, GAM, RF, BRT, MARS, MaxENT methods. Presence data compiled from range of sources (see Bertelli et al., 2023) with environmental data as predictor variables from EMODNet and Copernicus. These variables include - Light (PAR) availability at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/), units Mol.phot.m-2.d-1, resolution ~0.3km2 , 1.1 x 0.7 km, 0.003°/10 arc seconds, 01 Jan2005 – 31 Dec 2009; Bathymetry (EMODnet Bathymetry and topography, http://www.emodnet.eu/emodnet-maps-catalogue) in metres below chart datum, resolution ~0.115km, 0.001°x 3.75 arc seconds, ~70m x 116m; January Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc) resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Salinity (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu, NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km, 2019-present hourly-Daily mean; Wave energy at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/) in N.m2.s-1, resolution ~0.3km,~342x195m; Energy at seabed due to currents (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/, Data from EU SeaMap (2016), Energy in the Celtic Sea and North Sea) in N.m2.s-1, resolution ~0.3km, ~342x195m; Slope, Calculated from bathymetry data with GIS software.",
+        "colors": "RdYlBu_r",
+        "scale": [
+          0,
+          1
+        ],
+        "dataDescription": [
+          "Suitability",
+          "(Probability)"
+        ],
+        "protected": false,
+        "threeD": false,
+        "download": {
+          "GeoTIFF": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/solent/solent_log_hsm.tif",
+          "ASC": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/ensollogALL_clipped.asc",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Habitat%20Suitability%20%28HSM%29/Habitat%20Suitability%20%28HSM%29/collection.json"
+        },
+        "download_area": true,
+        "bbox": [
+          -1.629735346,
+          50.647550968,
+          -0.7818186769999996,
+          50.86838430194103
+        ]
+      },
+      "Studland": {
+        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/studland/studland_hsm.tif",
+        "dataType": "GeoTIFF",
+        "content": "Habitat suitability model for Zostera marina suitability (0-1) for Studland Bay created using ensemble of GLM, GAM, RF, BRT, MARS, MaxENT methods. Presence data compiled from range of sources (see Bertelli et al., 2023) with environmental data as predictor variables from EMODNet and Copernicus. These variables include - Light (PAR) availability at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/), units Mol.phot.m-2.d-1, resolution ~0.3km2 , 1.1 x 0.7 km, 0.003°/10 arc seconds, 01 Jan2005 – 31 Dec 2009; Bathymetry (EMODnet Bathymetry and topography, http://www.emodnet.eu/emodnet-maps-catalogue) in metres below chart datum, resolution ~0.115km, 0.001°x 3.75 arc seconds, ~70m x 116m; January Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc) resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Salinity (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu, NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km, 2019-present hourly-Daily mean; Wave energy at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/) in N.m2.s-1, resolution ~0.3km,~342x195m; Energy at seabed due to currents (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/, Data from EU SeaMap (2016), Energy in the Celtic Sea and North Sea) in N.m2.s-1, resolution ~0.3km, ~342x195m; Slope, Calculated from bathymetry data with GIS software.",
+        "colors": "RdYlBu_r",
+        "scale": [
+          0,
+          1
+        ],
+        "dataDescription": [
+          "Suitability",
+          "(Probability)"
+        ],
+        "protected": false,
+        "threeD": false,
+        "download": {
+          "GeoTIFF": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/studland/studland_hsm.tif",
+          "ASC": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/enstud2.asc",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Habitat%20Suitability%20%28HSM%29/Habitat%20Suitability%20%28HSM%29/collection.json"
+        },
+        "download_area": true,
+        "bbox": [
+          -2.478656334,
+          50.544469014,
+          -1.8890729989999986,
+          50.77988568133215
+        ]
+      }
+    }
+  },
+  "Seagrass extent from satellite data": {
+    "icon": "",
+    "layerNames": {
+      "Fleet Lagoon": {
+        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/remote_sensing/remote_sensing/Fleet_lagoon_seagrass_from_EO.geojson",
+        "dataType": "GeoJSON",
+        "content": "This dataset contains the results of remote sensing mapping using random forest classification of Sentinel-2 satellite data.",
+        "protected": false,
+        "download": {
+          "GeoJSON": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/remote_sensing/remote_sensing/Fleet_lagoon_seagrass_from_EO.geojson",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Seagrass%20extent%20from%20satellite%20data/Seagrass%20extent%20from%20satellite%20data/collection.json"
+        },
+        "bbox": [
+          -2.608160887701242,
+          50.59905946481352,
+          -2.495810659120408,
+          50.65316469871835
+        ],
+        "download_area": true
+      },
+      "Isles of Scilly": {
+        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/remote_sensing/remote_sensing/Isles_of_Scilly_seagrass_from_EO.geojson",
+        "dataType": "GeoJSON",
+        "content": "This dataset contains the results of remote sensing mapping using random forest classification of Sentinel-2 satellite data.",
+        "protected": false,
+        "download": {
+          "GeoJSON": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/remote_sensing/remote_sensing/Isles_of_Scilly_seagrass_from_EO.geojson",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Seagrass%20extent%20from%20satellite%20data/Seagrass%20extent%20from%20satellite%20data/collection.json"
+        },
+        "bbox": [
+          -6.359731217954779,
+          49.905500451359664,
+          -6.247955739785865,
+          49.97108244348237
+        ],
+        "download_area": true
+      },
+      "Loch Craignish": {
+        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/remote_sensing/remote_sensing/LochCraignish_seagrass_from_EO.geojson",
+        "dataType": "GeoJSON",
+        "content": "This dataset contains the results of remote sensing mapping using random forest classification of Sentinel-2 satellite data.",
+        "protected": false,
+        "download": {
+          "GeoJSON": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/remote_sensing/remote_sensing/LochCraignish_seagrass_from_EO.geojson",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Seagrass%20extent%20from%20satellite%20data/Seagrass%20extent%20from%20satellite%20data/collection.json"
+        },
+        "bbox": [
+          -5.576568375606371,
+          56.15419374328269,
+          -5.52042465727467,
+          56.18850589614522
+        ],
+        "download_area": true
+      },
+      "Milford Haven": {
+        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/remote_sensing/remote_sensing/MilfordHaven_seagrass_from_EO.geojson",
+        "dataType": "GeoJSON",
+        "content": "This dataset contains the results of remote sensing mapping using random forest classification of Sentinel-2 satellite data.",
+        "protected": false,
+        "download": {
+          "GeoJSON": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/remote_sensing/remote_sensing/MilfordHaven_seagrass_fromEO.geojson",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Seagrass%20extent%20from%20satellite%20data/Seagrass%20extent%20from%20satellite%20data/collection.json"
+        },
+        "bbox": [
+          -5.177726449,
+          51.658313012,
+          -4.798559781,
+          51.740604678956046
+        ],
+        "download_area": true
+      },
+      "Solent": {
+        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/remote_sensing/remote_sensing/Solent_seagrass_from_EO.geojson",
+        "dataType": "GeoJSON",
+        "content": "This dataset contains the results of remote sensing mapping using random forest classification of Sentinel-2 satellite data.",
+        "protected": false,
+        "download": {
+          "GeoJSON": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/remote_sensing/remote_sensing/Solent_seagrass_from_EO.geojson",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Seagrass%20extent%20from%20satellite%20data/Seagrass%20extent%20from%20satellite%20data/collection.json"
+        },
+        "bbox": [
+          -1.540192622297193,
+          50.67846846265142,
+          -1.064872155359672,
+          50.80980586885223
+        ],
+        "download_area": true
+      },
+      "Studland": {
+        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/remote_sensing/remote_sensing/Studland_seagrass_from_EO.geojson",
+        "dataType": "GeoJSON",
+        "content": "This dataset contains the results of remote sensing mapping using random forest classification of Sentinel-2 satellite data.",
+        "protected": false,
+        "download": {
+          "GeoJSON": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/remote_sensing/remote_sensing/Studland_seagrass_from_EO.geojson",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Seagrass%20extent%20from%20satellite%20data/Seagrass%20extent%20from%20satellite%20data/collection.json"
+        },
+        "bbox": [
+          -1.952639995018592,
+          50.64019426722318,
+          -1.925425688500414,
+          50.70458707246841
+        ],
+        "download_area": true
+      },
+      "Weymouth": {
+        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/remote_sensing/remote_sensing/Weymouth_seagrass_from_EO.geojson",
+        "dataType": "GeoJSON",
+        "content": "This dataset contains the results of remote sensing mapping using random forest classification of Sentinel-2 satellite data.",
+        "protected": false,
+        "download": {
+          "GeoJSON": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/remote_sensing/remote_sensing/Weymouth_seagrass_from_EO.geojson",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Seagrass%20extent%20from%20satellite%20data/Seagrass%20extent%20from%20satellite%20data/collection.json"
+        },
+        "bbox": [
+          -2.462856483147274,
+          50.59213814570934,
+          -2.392389943163152,
+          50.635350153149965
+        ],
+        "download_area": true
+      }
+    }
+  },
+  "Carbon Stocks": {
+    "icon": "",
+    "layerNames": {
+      "Dry Bulk Density": {
+        "url": [
+          "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/dry_bulk_density/channel_island_DBD.tif",
+          "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/dry_bulk_density/NI_fjord.tif",
+          "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/dry_bulk_density/outer_shelf.tif",
+          "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/dry_bulk_density/scottish_fjords.tif"
+        ],
+        "dataType": "COG",
+        "content": "Spatial mapping of the sediment type and the carbon (C) stored in the top 10 cm of the sediments found across the seabed of the United Kingdom’s Exclusive Economic Zone (EEZ) and within the territorial waters of the Isle of Man and the Channel Islands.",
+        "colors": "nipy_spectral",
+        "dataDescription": [
+          "Dry Bulk Density",
+          "kg m-3"
+        ],
+        "protected": false,
+        "download": {
+          "GeoTIFF": [
+            "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/dry_bulk_density/channel_island_DBD.tif",
+            "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/dry_bulk_density/NI_fjord.tif",
+            "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/dry_bulk_density/outer_shelf.tif",
+            "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/dry_bulk_density/scottish_fjords.tif"
+          ],
+          "url": "https://data.marine.gov.scot/dataset/sediment-type-and-surficial-sedimentary-carbon-stocks-across-united-kingdom%E2%80%99s-exclusive",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Carbon%20Stocks/Dry%20Bulk%20Density/collection.json"
+        },
+        "threeD": false
+      },
+      "Inorganic Carbon Content": {
+        "url": [
+          "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/ic_content/outer_shelf.tif",
+          "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/ic_content/scottish_fjords.tif"
+        ],
+        "dataType": "COG",
+        "content": "Spatial mapping of the sediment type and the carbon (C) stored in the top 10 cm of the sediments found across the seabed of the United Kingdom’s Exclusive Economic Zone (EEZ) and within the territorial waters of the Isle of Man and the Channel Islands.",
+        "colors": "nipy_spectral",
+        "dataDescription": [
+          "IC Content",
+          "% wt."
+        ],
+        "download": {
+          "GeoTIFF": [
+            "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/ic_content/outer_shelf.tif",
+            "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/ic_content/scottish_fjords.tif"
+          ],
+          "url": "https://data.marine.gov.scot/dataset/sediment-type-and-surficial-sedimentary-carbon-stocks-across-united-kingdom%E2%80%99s-exclusive",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Carbon%20Stocks/Inorganic%20Carbon%20Content/collection.json"
+        },
+        "protected": false,
+        "threeD": false
+      },
+      "Inorganic Carbon Density": {
+        "url": [
+          "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/ic_density/coastal_inshore_zone.tif",
+          "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/ic_density/fjords.tif",
+          "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/ic_density/ic_shelf.tif"
+        ],
+        "dataType": "COG",
+        "content": "Spatial mapping of the sediment type and the carbon (C) stored in the top 10 cm of the sediments found across the seabed of the United Kingdom’s Exclusive Economic Zone (EEZ) and within the territorial waters of the Isle of Man and the Channel Islands.",
+        "colors": "nipy_spectral",
+        "dataDescription": [
+          "IC Density",
+          "kg IC m-2"
+        ],
+        "download": {
+          "GeoTIFF": [
+            "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/ic_density/coastal_inshore_zone.tif",
+            "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/ic_density/fjords.tif",
+            "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/ic_density/ic_shelf.tif"
+          ],
+          "url": "https://data.marine.gov.scot/dataset/sediment-type-and-surficial-sedimentary-carbon-stocks-across-united-kingdom%E2%80%99s-exclusive",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Carbon%20Stocks/Inorganic%20Carbon%20Density/collection.json"
+        },
+        "protected": false,
+        "threeD": false
+      },
+      "Organic Carbon Content": {
+        "url": [
+          "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/oc_content/channel_islands.tif",
+          "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/oc_content/ni_fjords.tif",
+          "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/oc_content/scottish_fjords.tif",
+          "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/oc_content/uk_outer_shelf.tif"
+        ],
+        "dataType": "COG",
+        "content": "Spatial mapping of the sediment type and the carbon (C) stored in the top 10 cm of the sediments found across the seabed of the United Kingdom’s Exclusive Economic Zone (EEZ) and within the territorial waters of the Isle of Man and the Channel Islands.",
+        "colors": "nipy_spectral",
+        "dataDescription": [
+          "OC Content",
+          "% wt."
+        ],
+        "protected": false,
+        "download": {
+          "GeoTIFF": [
+            "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/oc_content/channel_islands.tif",
+            "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/oc_content/ni_fjords.tif",
+            "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/oc_content/scottish_fjords.tif",
+            "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/oc_content/uk_outer_shelf.tif"
+          ],
+          "url": "https://data.marine.gov.scot/dataset/sediment-type-and-surficial-sedimentary-carbon-stocks-across-united-kingdom%E2%80%99s-exclusive",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Carbon%20Stocks/Organic%20Carbon%20Content/collection.json"
+        },
+        "threeD": false
+      },
+      "Organic Carbon Density": {
+        "url": [
+          "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/oc_density/ci_oc_density.tif",
+          "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/oc_density/northern_ireland_fjords.tif",
+          "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/oc_density/scottish_fjords.tif",
+          "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/oc_density/uk_outer_shelf.tif"
+        ],
+        "dataType": "COG",
+        "content": "Spatial mapping of the sediment type and the carbon (C) stored in the top 10 cm of the sediments found across the seabed of the United Kingdom’s Exclusive Economic Zone (EEZ) and within the territorial waters of the Isle of Man and the Channel Islands.",
+        "colors": "nipy_spectral",
+        "dataDescription": [
+          "OC Density",
+          "kg OC m-2"
+        ],
+        "protected": false,
+        "download": {
+          "GeoTIFF": [
+            "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/oc_density/ci_oc_density.tif",
+            "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/oc_density/northern_ireland_fjords.tif",
+            "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/oc_density/scottish_fjords.tif",
+            "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/oc_density/uk_outer_shelf.tif"
+          ],
+          "url": "https://data.marine.gov.scot/dataset/sediment-type-and-surficial-sedimentary-carbon-stocks-across-united-kingdom%E2%80%99s-exclusive",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Carbon%20Stocks/Organic%20Carbon%20Density/collection.json"
+        },
+        "threeD": false
+      },
+      "Porosity": {
+        "url": [
+          "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/porosity/channel_island_por.tif",
+          "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/porosity/ni_fjords.tif",
+          "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/porosity/scottish_fjords.tif",
+          "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/porosity/uk_outer_shelf.tif"
+        ],
+        "dataType": "COG",
+        "content": "Spatial mapping of the sediment type and the carbon (C) stored in the top 10 cm of the sediments found across the seabed of the United Kingdom’s Exclusive Economic Zone (EEZ) and within the territorial waters of the Isle of Man and the Channel Islands.",
+        "colors": "nipy_spectral",
+        "dataDescription": [
+          "Porosity",
+          "Phi"
+        ],
+        "download": {
+          "GeoTIFF": [
+            "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/porosity/channel_island_por.tif",
+            "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/porosity/ni_fjords.tif",
+            "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/porosity/scottish_fjords.tif",
+            "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/carbon_stocks/porosity/uk_outer_shelf.tif"
+          ],
+          "url": "https://data.marine.gov.scot/dataset/sediment-type-and-surficial-sedimentary-carbon-stocks-across-united-kingdom%E2%80%99s-exclusive",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Carbon%20Stocks/Porosity/collection.json"
+        },
+        "protected": false,
+        "threeD": false
+      }
+    }
+  },
+  "Land Cover Map (LCM)": {
+    "icon": "",
+    "layerNames": {
+      "GB LCM 2021": {
+        "url": "https://catalogue.ceh.ac.uk/maps/2ad19a50-b940-469e-a40d-17818b77020c",
+        "dataType": "WMS",
+        "content": "Land Cover Map 2021 (LCM2021) is a suite of geospatial land cover datasets (raster and polygon) describing the UK land surface in 2021. These were produced at the UK Centre for Ecology & Hydrology by classifying satellite images from 2021.\n LCM2021 includes four geospatial datasets each for Great Britain and Northern Ireland:\n - 10 m Classified Pixel dataset, classified to create a single mosaic of national cover \n - Land Parcel datasets which are the result of intersecting the 10 m Classified Pixel dataset with the UKCEH Land Parcel Spatial Framework to generate land parcel attributes \n - 25 m Pixel Rasterised Land Parcel datasets: the result of rasterising the Land Parcel dataset into 25 m pixels \n - 1 km summary raster products, summarising dominant land cover class and percentage coverage of each land cover class \n LCM2021 is the ninth UK land cover map produced by UKCEH. Previous versions are LCM1990, 2000, 2007, 2015, 2017, 2018, 2019 and 2020.",
+        "protected": false,
+        "params": {
+          "layers": "LC.10m.GB"
+        },
+        "download": {
+          "url": "https://catalogue.ceh.ac.uk/documents/017313c6-954b-4343-8784-3d61aa6e44da",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Land%20Cover%20Map%20%28LCM%29/LCM%202021/collection.json"
+        },
+        "bbox": [
+          -9.49714,
+          49.7668,
+          3.63202,
+          61.581
+        ],
+        "download_area": false
+      },
+      "NI LCM 2021": {
+        "url": "https://catalogue.ceh.ac.uk/maps/2ad19a50-b940-469e-a40d-17818b77020c",
+        "dataType": "WMS",
+        "content": "Land Cover Map 2021 (LCM2021) is a suite of geospatial land cover datasets (raster and polygon) describing the UK land surface in 2021. These were produced at the UK Centre for Ecology & Hydrology by classifying satellite images from 2021.\n LCM2021 includes four geospatial datasets each for Great Britain and Northern Ireland:\n - 10 m Classified Pixel dataset, classified to create a single mosaic of national cover \n - Land Parcel datasets which are the result of intersecting the 10 m Classified Pixel dataset with the UKCEH Land Parcel Spatial Framework to generate land parcel attributes \n - 25 m Pixel Rasterised Land Parcel datasets: the result of rasterising the Land Parcel dataset into 25 m pixels \n - 1 km summary raster products, summarising dominant land cover class and percentage coverage of each land cover class \n LCM2021 is the ninth UK land cover map produced by UKCEH. Previous versions are LCM1990, 2000, 2007, 2015, 2017, 2018, 2019 and 2020.",
+        "protected": false,
+        "params": {
+          "layers": "LC.10m.NI"
+        },
+        "download": {
+          "url": "https://catalogue.ceh.ac.uk/documents/017313c6-954b-4343-8784-3d61aa6e44da",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Land%20Cover%20Map%20%28LCM%29/LCM%202021/collection.json"
+        },
+        "bbox": [
+          -8.31921,
+          53.9109,
+          -4.81898,
+          55.746
+        ],
+        "download_area": false
+      }
+
+    }
+  },
+  "Marine Protected Areas": {
+    "icon": "",
+    "layerNames": {
+      "Special Areas of Conservation": {
+        "url": "https://mpa-ows.jncc.gov.uk/mpa_mapper/wms",
+        "dataType": "WMS",
+        "content": "This resource contains boundary, site and feature information for Special Areas of Conservation (SACs) with marine components in UK waters. Special Areas of Conservation (SACs) with 'marine components' protect habitat and/or species associated with the marine environment.\n Source: https://hub.jncc.gov.uk/assets/598a60db-9323-4781-b5a8-dcf0ca3b29f9",
+        "protected": false,
+        "params": {
+          "layers": "sac_mc_full"
+        },
+        "download": {
+          "url": "https://hub.jncc.gov.uk/assets/598a60db-9323-4781-b5a8-dcf0ca3b29f9",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Marine%20Protected%20Areas/Special%20Areas%20of%20Conservation/collection.json"
+        },
+        "bbox": [
+          -19.25,
+          49.849107,
+          3.249861,
+          60.808195
+        ],
+        "download_area": false
+      },
+      "Special Protection Areas": {
+        "url": "https://mpa-ows.jncc.gov.uk/mpa_mapper/wms",
+        "dataType": "WMS",
+        "content": "This resource contains boundary, site and feature information for Special Protection Areas (SPAs) with marine components in UK waters. A shapefile and spreadsheet are available for download.\n Special Protection Areas (SPAs) with 'marine components' protect bird species that are dependent on the marine environment for all or part of their lifecycle, where these species are found in association with intertidal or subtidal habitats within the site. More information on SPAs with marine components can be found on our website. SPAs with marine components are a subset of the UK's full suite of SPAs – data for all UK SPAs can also be downloaded from our website.\n JNCC collates boundary and attribute data on Special Protection Areas (SPAs) on behalf of the Country Nature Conservation Bodies (CNCBs) to create a dataset of inshore and offshore sites across the UK. The shapefile dataset contains site boundaries and associated site attribute information, including: site code, site name, site status, country and CP2 region. The spreadsheet dataset provides the same site attribute data as well as information on the sites' protected features (including species name and population type).",
+        "protected": false,
+        "params": {
+          "layers": "spa_mc_full"
+        },
+        "download": {
+          "url": "https://hub.jncc.gov.uk/assets/07078ed3-496d-432b-974e-1754b47536c7",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Marine%20Protected%20Areas/Special%20Protection%20Areas/collection.json"
+        },
+        "bbox": [
+          -8.717393,
+          50.078612,
+          2.303333,
+          60.879088
+        ],
+        "download_area": false
+      },
+      "Marine Conservation Zones": {
+        "url": "https://mpa-ows.jncc.gov.uk/mpa_mapper/wms",
+        "dataType": "WMS",
+        "content": "This resource relates to a Web Map Service (WMS) layer showing Marine Conservation Zone (MCZ) boundaries in UK waters. It was last updated in May 2019. JNCC have compiled this dataset using data from JNCC, Natural England, Northern Ireland Environment Agency, Natural Resources Wales and the United Kingdom Hydrographic Office. Marine Conservation Zones are designated under the Marine and Coastal Access Act (2009) or Marine Act (Northern Ireland) 2013. They protect nationally important marine wildlife, habitats, geology and geomorphology.\n Source: https://hub.jncc.gov.uk/assets/e72853f4-08b9-4fc6-b677-e3476fdd786c",
+        "protected": false,
+        "params": {
+          "layers": "mcz"
+        },
+        "download": {
+          "url": "https://hub.jncc.gov.uk/assets/e72853f4-08b9-4fc6-b677-e3476fdd786c",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Marine%20Protected%20Areas/Marine%20Conservation%20Zones/collection.json"
+        },
+        "bbox": [
+          -9.800056,
+          48.166667,
+          2.89477,
+          56.610819
+        ],
+        "download_area": false
+      },
+      "Ramsar": {
+        "url": "https://rsis.ramsar.org/geoserver/wms",
+        "dataType": "WMS",
+        "content": "The Ramsar Sites Information Service (RSIS) provides online information on wetlands that have been designated as internationally important. \n All Site information is provided by the Contracting Parties to the Convention. Responsibility for the accuracy and completeness of the data lies with the Administrative Authority of the Party that has added the Site to the List of Wetlands of International Importance.\n The Convention Secretariat provides open access to the RSIS and its data, to promote the conservation and wise use of wetlands. If you are interested in an overview of the Ramsar Sites network, or are looking for information on a specific Site, please visit the Explore Sites page.",
+        "protected": false,
+        "params": {
+          "layers": "ramsar_sdi:features_published"
+        },
+        "download": {
+          "url": "https://rsis.ramsar.org/ris-search/?f%5B0%5D=regionCountry_en_ss%3AEurope&pagetab=0",
+          "csv": "https://rsis.ramsar.org/geoserver/ramsar_sdi/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=ramsar_sdi:features_published&outputFormat=csv",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Marine%20Protected%20Areas/Ramsar%20Spatial%20Data%20Infrastructure%20%28SDI%29/collection.json"
+        },
+        "bbox": [
+          -90,
+          -180,
+          90,
+          180
+        ],
+        "download_area": false
+      },
+      "Sites of Special Scientific Interest (England)": {
+        "url": "https://environment.data.gov.uk/spatialdata/sites-of-special-scientific-interest-england/wms",
+        "dataType": "WMS",
+        "content": "A Site of Special Scientific Interest (SSSI) is the land notified as an SSSI under the Wildlife and Countryside Act (1981).\n A Site of Special Scientific Interest (SSSI) is the land notified as an SSSI under the Wildlife and Countryside Act (1981), as amended. Sites notified under the 1949 Act only are not included in the Data set.\n SSSI are the finest sites for wildlife and natural features in England, supporting many characteristic, rare and endangered species, habitats and natural features.\n The data does Not include 'proposed' sites.\n Boundaries are generally mapped against Ordnance Survey MasterMap Topography Layer.\n Full metadata can be viewed on data.gov.uk.",
+        "protected": false,
+        "download_area": false,
+        "download": {
+          "url": "https://naturalengland-defra.opendata.arcgis.com/datasets/Defra::sites-of-special-scientific-interest-units-england/about",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Marine%20Protected%20Areas/Sites%20of%20Special%20Scientific%20Interest%20%28SSSI%29/collection.json"
+        },
+        "bbox": [
+          -7.053840553627759,
+          49.86262197062069,
+          2.0581712684399815,
+          55.810663626083226
+        ],
+        "params": {
+          "layers": "Sites_of_Special_Scientific_Interest_England"
+        }
+      },
+      "Sites of Special Scientific Interest (NI)": {
+        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/mpa/sssi_ni/sssi_ni.fgb",
+        "dataType": "FGB",
+        "content": "Areas of Special Scientific Interest (ASSI) provide statutory protection for the best examples of Northern Ireland's flora, fauna, geological or physiographical features. In Irish Grid and British Grid format.",
+        "protected": false,
+        "download_area": true,
+        "download": {
+          "FlatGeoBuf": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/mpa/sssi_ni/sssi_ni.fgb",
+          "url": "https://admin.opendatani.gov.uk/dataset/areas-of-special-scientific-interest",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Marine%20Protected%20Areas/Sites%20of%20Special%20Scientific%20Interest%20%28SSSI%29/collection.json"
+        },
+        "bbox": [
+          -8.1618818588876,
+          -5.406230787767979,
+          54.01462342391226,
+          55.313029439132656
+        ],
+        "colors": "#252525"
+      },
+      "Sites of Special Scientific Interest (Scotland)": {
+        "url": "https://ogc.nature.scot/geoserver/protectedareas/wms",
+        "dataType": "WMS",
+        "content": "Sites of Special Scientific Interest (SSSI) are those areas of land and water (to the seaward limits of local authority areas or MLWS) that Scottish Natural Heritage (SNH) considers to best represent our natural heritage - its diversity of plants, animals and habitats, rocks and landforms, or a combinations of such natural features. This is a Web Mapping Service (WMS) that contains the locations of SSSI's in Scotland.",
+        "protected": false,
+        "download_area": false,
+        "params": {
+          "layers": "sssi"
+        },
+        "bbox": [
+          -14.641264352866896,
+          54.190988810237606,
+          -0.7552146016585961,
+          60.861057192191964
+        ],
+        "download": {
+          "url": "https://www.data.gov.uk/dataset/d64bf689-4ce8-465b-b00e-6a57dec94a22/site-of-special-scientific-interest-scotland#:~:text=Sites%20of%20Special%20Scientific%20Interest,or%20a%20combinations%20of%20such",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Marine%20Protected%20Areas/Sites%20of%20Special%20Scientific%20Interest%20%28SSSI%29/collection.json"
+        }
+      },
+      "Sites of Special Scientific Interest (Wales)": {
+        "url": "https://datamap.gov.wales/geoserver/ows",
+        "dataType": "WMS",
+        "content": "This spatial dataset contains the boundaries of Sites of Special Scientific Interest (SSSIs) in Wales. SSSIs cover a wide range of habitats from small fens, bogs and riverside meadows to sand dunes, woodlands and vast tracks of uplands. Most are in private ownership, although some are owned and managed by local wildlife trusts, or other voluntary conservation bodies. Notification of an SSSI under the Wildlife and Countryside Act 1981 has since been amended by the Countryside and Rights of Way Act 2001, which brought about numerous changes in the way SSSI are notified managed and protected. In order to ensure consistent, favourable long-term management of these sites, Natural Resources Wales (NRW) with landowners have prepared management plans for all SSSI in Wales. Local planning authorities are required to consult NRW before allowing any development to proceed that may affect an SSSI. Water, gas and electricity companies must also do the same. SSSIs have been designated over a number of years, from 1949 to the present day, and are on-going.",
+        "protected": false,
+        "download_area": false,
+        "download": {
+          "url": "https://datamap.gov.wales/layers/inspire-nrw:NRW_SSSI",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Marine%20Protected%20Areas/Sites%20of%20Special%20Scientific%20Interest%20%28SSSI%29/collection.json"
+        },
+        "bbox": [
+          5.61614098700005,
+          -1.46517601099993,
+          10.007355225,
+          36.8468900600001
+        ],
+        "params": {
+          "layers": "inspire-nrw:NRW_SSSI"
+        }
+      }
+    }
+  },
+  "Coastline": {
+    "icon": "",
+    "layerNames": {
+      "Coastline": {
+        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/coast/coastline/coastline.fgb",
+        "dataType": "FGB",
+        "content": "This dataset represents the coastline of Great Britain, including England, Scotland, and Wales.",
+        "protected": false,
+        "colors": "#252525",
+        "download_area": true,
+        "download": {
+          "FlatGeoBuf": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/coast/coastline/coastline.fgb",
+          "Shapefile": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/coast/coast-lines.zip",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Coastline/Coastline/Coastline/Coastline.json"
+        },
+        "bbox": [
+          -8.65000717567987,
+          1.7635456859319478,
+          49.86468453360139,
+          60.86076643216307
+        ]
+      },
+      "Coast Polygons": {
+        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/coast/coast_polygons/coast_polygons.geojson",
+        "dataType": "GeoJSON",
+        "content": "This dataset represents the coastline of Great Britain, including England, Scotland, and Wales.",
+        "protected": false,
+        "colors": "#68a063",
+        "download_area": true,
+        "download": {
+          "GeoJSON": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/coast/coast_polygons/coast_polygons.geojson",
+          "Shapefile": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/coast/coast-polygons.zip",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Coastline/Coastline/Coast%20Polygons/Coast%20Polygons.json"
+        },
+        "bbox": [
+          -8.747688706006347,
+          49.82254020890136,
+          1.909518909625645,
+          60.89954933601512
+        ]
+      },
+      "Land Polygons": {
+        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/coast/land_polygons/land_polygons.fgb",
+        "dataType": "FGB",
+        "content": "This dataset represents the coastline of Great Britain, including England, Scotland, and Wales.",
+        "protected": false,
+        "colors": "#cf52d3",
+        "download_area": true,
+        "download": {
+          "FlatGeoBuf": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/coast/land_polygons/land_polygons.fgb",
+          "Shapefile": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/coast/land-polygons.zip",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Coastline/Coastline/Land%20Polygons/Land%20Polygons.json"
+        },
+        "bbox": [
+          -8.65000717567987,
+          1.7635456859319478,
+          49.86468453360139,
+          60.86076643216307
+        ]
+      }
+    }
+  },
+  "Seagrass extent from in-situ surveys": {
+    "icon": "fish",
+    "layerNames": {
+      "National Seagrass Layer": {
+        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/nsl/nsl/seagrass.fgb",
+        "dataType": "FGB",
+        "content": "Natural England and the Environment Agency have collaborated to produce a seagrass layer for English waters, which aims to provide a comprehensive geospatial dataset of surveys of both current and historical spatial seagrass. The layer identifies a current seagrass extent; using the best and most recent available evidence and agreed by both organisations. These datasets have been provided by NE and the EA, as well as a number of third parties. Details of these third parties can be found in the accompanying metadata file.",
+        "protected": false,
+        "colors": "#cf52d3",
+        "download_area": true,
+        "bbox": [
+          -6.356516986753225,
+          1.260547677842559,
+          49.916095855740444,
+          55.69188998604591
+        ],
+        "download": {
+          "FlatGeoBuf": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/nsl/nsl/seagrass.fgb",
+          "url": "https://www.data.gov.uk/dataset/aa1787a7-71fb-4c44-bf27-7825f9c5ee64/national-seagrass-layer-england#:~:text=The%20layer%20identifies%20a%20current,a%20number%20of%20third%20parties.",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Seagrass%20extent%20from%20in-situ%20surveys/Seagrass%20extent%20from%20in-situ%20surveys/National%20Seagrass%20Layer/National%20Seagrass%20Layer.json"
+        }
+      },
+      "Natural Resource Wales": {
+        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/nsl/nwr/natural_resource_wales.geojson",
+        "dataType": "GeoJSON",
+        "content": "Under the Environment (Wales) Act (2016), Section 7 requires biodiversity lists to be produced. These lists include types of habitats which are of 'Principle Importance' for the purpose of maintain and enhancing biodiversity in relation to Wales. This list supersedes the duty in Section 42 of the NERC Act 2006. In addition to this marine habitats can be protected under the OSPAR Convention, which has established a list of 'threatened and/or declining species and habitats' in the North-East Atlantic. This spatial dataset details the extent and location of those marine habitats classed of 'Principle Importance' under Section 7 and are regarded as 'threatened or declining' under OSPAR in Wales. Habitat Seagrass Beds.",
+        "protected": false,
+        "colors": "#cf52d3",
+        "download_area": true,
+        "bbox": [
+          -5.280986931827257,
+          51.55728049457419,
+          -2.741318674366352,
+          53.295177705663
+        ],
+        "download": {
+          "GeoJSON": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/nsl/nwr/natural_resource_wales.geojson",
+          "url": "https://datamap.gov.wales/layergroups/inspire-nrw:MarineBAPOSPARHabitats",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Seagrass%20extent%20from%20in-situ%20surveys/Seagrass%20extent%20from%20in-situ%20surveys/Natural%20Resource%20Wales/Natural%20Resource%20Wales.json"
+        }
+      },
+      "Scottish Seagrass Layer": {
+        "url": "https://ogc.nature.scot/geoserver/gems/ows",
+        "dataType": "WMS",
+        "content": "NatureScot and Joint Nature Conservation Committee have collated data from various sources forming the Geodatabase of Marine features adjacent to Scotland (GeMS). This collation of species and habitat records provides information on the known recorded distribution of Scottish Priority Marine Features (PMFs), and Annex I habitats in the marine environment and is used as the core evidence base to support the Scottish Marine Protected Area (MPA) network.",
+        "protected": false,
+        "params": {
+          "layers": "seagrass_beds_polygons"
+        },
+        "bbox": [
+          -7.437583705999941,
+          54.908136315000036,
+          -2.474045796999974,
+          57.86599705900005
+        ],
+        "download": {
+          "url": "https://marine.gov.scot/maps/947",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Seagrass%20extent%20from%20in-situ%20surveys/Seagrass%20extent%20from%20in-situ%20surveys/Scottish%20Seagrass%20Layer/Scottish%20Seagrass%20Layer.json"
+        }
+      }
+    }
+  },
+  "Seabed Habitats": {
+    "icon": "area",
+    "layerNames": {
+      "EUSeaMap 2021": {
+        "url": "https://ows.emodnet-seabedhabitats.eu/geoserver/emodnet_view/wms",
+        "dataType": "WMS",
+        "content": "Output of the 2021 EUSeaMap broad-scale predictive model, produced by EMODnet Seabed Habitats. \nThe extent of the mapped area includes the Mediterranean Sea, Black Sea, Baltic Sea, and areas of the North Eastern Atlantic extending from the Canary Islands in the south to the Barents Sea in the north. \nThe map was produced using a 'top-down' modelling approach using classified habitat descriptors to determine a final output habitat. \nHabitat descriptors differ per region but include: \n- Biological zone \n- Energy class \n- Oxygen regime \n- Salinity regime \n- Seabed substrate \n- Riverine input \nHabitat descriptors (excepting Substrate) are calculated using underlying physical data and thresholds derived from statistical analyses or expert judgement on known conditions. \nThe model is produced using R and Arc Model Builder (10.1). \nThe model was created using raster input layers with a cell size of 0.00104dd (roughly 100 metres). The model includes the sublittoral zone only; due to the high variability of the littoral zone, a lack of detailed substrate data and the resolution of the model, it is difficult to predict littoral habitats at this scale. \nEUSeaMap is classified into EUNIS 2019 level 3 (or more detailed levels where appropriate), EUNIS 2019 level 2 , EUNIS 2007-2011, the MSFD benthic broad habitat types, the HELCOM HUB classification in the Baltic, and the recently revised habitat classification in the Mediterranean. In the Black Sea, EUSeaMap is not classified into EUNIS 2007-2011 (due to inapplicability), but is classified according to a classification that was developed by EMODnet Seabed Habitats (Populus et a, 2017, and for a revised version Vasquez et al, 2020, See Online resources). \nReports that provide methods used for the classification of the predicted habitats into the new 2019 EUNIS classification, regional classifications, and MSFD BBHT (v.2017) are linked in Online Resources. \nA report on the methods used in the 2021 version of EUSeaMap (Vasquez et al., 2021) and reports on previous versions (v2016 and V2019) are linked in Online Resources.",
+        "protected": false,
+        "params": {
+          "layers": "eusm2021_eunis2019_group"
+        },
+        "download": {
+          "url": "https://emodnet.ec.europa.eu/en/seabed-habitats",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Seabed%20Habitats/Seabed%20Habitats/EUSeaMap%202021/EUSeaMap%202021.json"
+        },
+        "bbox": [
+          -90,
+          -180,
+          90,
+          180
+        ],
+        "download_area": false
+      }
+    }
+  },
+  "Administrative Areas": {
+    "icon": "",
+    "layerNames": {
+      "UK Territorial Sea Limit": {
+        "url": "https://mpa-ows.jncc.gov.uk/mpa_mapper/wms",
+        "dataType": "WMS",
+        "content": "The limits and boundaries of the UK, UK Overseas Territories and UK Crown Dependencies are available from this website in accordance with Articles 16, 74 and 84 of the United Nations Convention on the Law of the Sea. Limits are calculated from the normal baseline (the low water line on the largest UKHO charts) and limits are maintained.",
+        "protected": false,
+        "params": {
+          "layers": "ukts"
+        },
+        "download": {
+          "url": "https://data.admiralty.co.uk/portal/apps/sites/#/marine-data-portal/items?tags=law%20of%20the%20sea",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Administrative%20Areas/UK%20Territorial%20Sea%20Limit/collection.json"
+        },
+        "bbox": [
+          -14.059375600329,
+          49.6621207002786,
+          2.13495899960011,
+          61.0602213998779
+        ],
+        "download_area": false
+      },
+      "UK Continental Shelf and EEZ": {
+        "url": "https://mpa-ows.jncc.gov.uk/mpa_mapper/wms",
+        "dataType": "WMS",
+        "content": "The limits and boundaries of the UK, UK Overseas Territories and UK Crown Dependencies are available from this website in accordance with Articles 16, 74 and 84 of the United Nations Convention on the Law of the Sea. Limits are calculated from the normal baseline (the low water line on the largest UKHO charts) and limits are maintained.",
+        "protected": false,
+        "params": {
+          "layers": "ukcs"
+        },
+        "download": {
+          "url": "https://data.admiralty.co.uk/portal/apps/sites/#/marine-data-portal/items?tags=law%20of%20the%20sea",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Administrative%20Areas/UK%20Continental%20Shelf%20and%20ZEE/collection.json"
+        },
+        "bbox": [
+          -25.135380099754027,
+          47.435405400498254,
+          3.39854719963252,
+          63.88706699979897
+        ],
+        "download_area": false
+      },
+      "UK Waters": {
+        "url": "https://mpa-ows.jncc.gov.uk/mpa_mapper/wms",
+        "dataType": "WMS",
+        "content": "This resource relates to Web Map Service (WMS) layers showing the UK country and Crown Dependency waters around the UK. They were last updated in March 2019. JNCC have compiled these layers using the following datasets from the United Kingdom Hydrographic Office: Channel Islands Maritime Limits, Isle of Man Maritime Limits, Northern Ireland Adjacent Waters Limit, Northern Ireland Adjacent Waters Limit, Scotland Adjacent Waters Limit, UK EEZ Limit, UK France TS EEZ Boundary, UK Territorial Sea Limit and Wales Adjacent Waters Limit. The layers are available to view on the JNCC MPA mapper and can also be accessed via our WMS: https://ows.jncc.gov.uk/mpa_mapper/wms . The component datasets are available to download from the UKHO: -https://data.admiralty.co.uk/portal/apps/sites/#/marine-data-portal/items?tags=law%20of%20the%20sea .",
+        "protected": false,
+        "params": {
+          "layers": "uk_countrywaters"
+        },
+        "download": {
+          "url": "https://data.admiralty.co.uk/portal/apps/sites/#/marine-data-portal/items?tags=law%20of%20the%20sea",
+          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Administrative%20Areas/UK%20Waters/collection.json"
+        },
+        "bbox": [
+          -25.135380099754027,
+          47.435405400498254,
+          3.39854719963252,
+          63.88706699979897
+        ],
+        "download_area": false
+      }
+    }
+  }
+}

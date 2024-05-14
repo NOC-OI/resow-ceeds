@@ -1,0 +1,36 @@
+# build-job:
+#   stage: build
+#   tags: 
+#     - shell
+#   script:
+#       - docker build -t docker-repo.bodc.me/oceaninfo/imfe-pilot/frontend:latest .
+#       # - docker image tag docker-repo.bodc.me/oceaninfo/imfe-pilot/frontend:latest uk-london-1.ocir.io/lrl8vbuxj1ma/frontend:latest
+
+build-job:
+  stage: build
+  tags: 
+    - shell
+  script:
+    - CONTAINER_NAME=$CI_REGISTRY/nocacuk/ocean-informatics/resow/frontend:latest
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - ./make_env.sh
+    - docker build -t $CONTAINER_NAME .
+
+deploy-job:
+  stage: deploy
+  tags:
+      - shell
+  rules: #only deploy on the master branch
+    - if: '$CI_COMMIT_BRANCH == "master"'
+  script:
+    - CONTAINER_NAME=$CI_REGISTRY/nocacuk/ocean-informatics/resow/frontend:latest
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY       
+    - docker push $CONTAINER_NAME
+    - ./make_env.sh
+    - eval "$(ssh-agent -s)"
+    - ssh-add /home/tobfer/.ssh/id_rsa_jasmin2
+    - ssh web "docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY"
+    - ssh web "docker pull $CONTAINER_NAME"
+    - ssh web "mkdir -p frontend"
+    - scp .env web:frontend/.env
+    - ssh web "cd frontend && docker ps -a | grep -q "frontend" && docker stop frontend && docker container rm frontend || echo && docker run -d -p 8080:80 --env-file ./.env --name frontend $CONTAINER_NAME"

@@ -322,7 +322,6 @@ export function UploadSelection({
             const kmlDom = new DOMParser().parseFromString(kmlText, 'text/xml')
             data = toGeoJSON.kml(kmlDom)
           }
-          console.log(data)
 
           setActualLayerUpload((actualLayerUpload) => {
             const newActualLayerUpload = { ...actualLayerUpload }
@@ -354,7 +353,6 @@ export function UploadSelection({
             'text/xml',
           )
           const data = toGeoJSON.kml(kmlDom)
-          console.log(data)
 
           setActualLayerUpload((actualLayerUpload) => {
             const newActualLayerUpload = { ...actualLayerUpload }

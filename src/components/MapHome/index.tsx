@@ -548,7 +548,6 @@ function MapHome1({
       undefined,
       undefined,
     )
-    console.log(actualLayerUpload)
     await getTifLayer.parseGeoSimple().then(function () {
       const layer = getTifLayer.layer
       layer.addTo(map)

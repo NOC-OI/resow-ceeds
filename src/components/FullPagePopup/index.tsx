@@ -29,7 +29,10 @@ export function FullPagePopup({
   }
   return (
     <FullPagePopupContainer>
-      <div className="p-5 text-center md:w-[40%]" onClick={handleClose}>
+      <div
+        className="p-5 text-center lg:w-[60%] md:w-[60%] xl:w-[50%] 2xl:w-[40%]"
+        onClick={handleClose}
+      >
         <FontAwesomeIcon icon={faCircleXmark} onClick={handleClose} />
         <div>
           <img src="logo.png" className="h-28" />
@@ -90,15 +93,18 @@ export function FullPagePopup({
             <a
               href="https://resow.uk/"
               target="_blank"
-              className="p-4 cursor-pointer"
+              className="p-4 cursor-pointer opacity-70 hover:opacity-100"
               title="Resow Website"
             >
-              <FontAwesomeIcon icon={faInfoCircle} />
-              <p className="text-center text-sm font-bold">RESOW Website</p>
+              <img src="favicon.png" className="h-8 pb-4" />
+              {/* <FontAwesomeIcon icon={faInfoCircle} /> */}
+              <p className="text-center text-sm font-bold !opacity-100">
+                RESOW
+              </p>
             </a>
             <div
               onClick={() => handleTutorial()}
-              className="p-4 cursor-pointer"
+              className="p-4 cursor-pointer hover:text-[#D49511]"
               title="Guided tour of the tool"
             >
               <FontAwesomeIcon icon={faBook} />

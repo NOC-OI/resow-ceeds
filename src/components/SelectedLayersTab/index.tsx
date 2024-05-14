@@ -161,25 +161,27 @@ export function SelectedLayersTab({
                 onDragOver={(e) => e.preventDefault()}
               >
                 <div className="flex gap-2">
-                  <div
-                    className="flex flex-col items-center justify-center p-0 !gap-3"
-                    style={{ color: '#D49511' }}
-                  >
-                    {index !== 0 && (
-                      <FontAwesomeIcon
-                        icon={faChevronUp}
-                        onClick={() => changeOrder('up', index)}
-                        className="!cursor-pointer"
-                      />
-                    )}
-                    {index !== Object.keys(selectedLayers).length - 1 && (
-                      <FontAwesomeIcon
-                        icon={faChevronDown}
-                        onClick={() => changeOrder('down', index)}
-                        className="!cursor-pointer"
-                      />
-                    )}
-                  </div>
+                  {rout !== '/3d' && (
+                    <div
+                      className="flex flex-col items-center justify-center p-0 !gap-3"
+                      style={{ color: '#D49511' }}
+                    >
+                      {index !== 0 && (
+                        <FontAwesomeIcon
+                          icon={faChevronUp}
+                          onClick={() => changeOrder('up', index)}
+                          className="!cursor-pointer"
+                        />
+                      )}
+                      {index !== Object.keys(selectedLayers).length - 1 && (
+                        <FontAwesomeIcon
+                          icon={faChevronDown}
+                          onClick={() => changeOrder('down', index)}
+                          className="!cursor-pointer"
+                        />
+                      )}
+                    </div>
+                  )}
                   <div className="flex-1">
                     <div
                       className={

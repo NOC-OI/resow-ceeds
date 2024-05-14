@@ -33,7 +33,17 @@ interface UploadDataHandleProviderProps {
 export const UploadDataHandleProvider: React.FC<
   UploadDataHandleProviderProps
 > = ({ children }) => {
-  const uploadFormats = ['GeoJSON', 'GeoTIFF', 'COG', 'CSV', 'WMS', 'Shapefile']
+  const uploadFormats = [
+    'ASC',
+    'CSV',
+    'COG',
+    'GeoJSON',
+    'GeoTIFF',
+    'KML',
+    'KMZ',
+    'Shapefile',
+    'WMS',
+  ]
 
   const fileTypes = {
     GeoTIFF: {
@@ -51,6 +61,18 @@ export const UploadDataHandleProvider: React.FC<
     Shapefile: {
       mimeTypes: ['application/x-esri-shape', 'application/x-esri-crs'],
       extensions: ['.shp', '.prj'],
+    },
+    ASC: {
+      mimeTypes: ['text/plain'],
+      extensions: ['.asc'],
+    },
+    KML: {
+      mimeTypes: ['application/vnd.google-earth.kml+xml'],
+      extensions: ['.kml'],
+    },
+    KMZ: {
+      mimeTypes: ['application/vnd.google-earth.kmz'],
+      extensions: ['.kmz'],
     },
   }
 

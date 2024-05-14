@@ -30,7 +30,7 @@ export function FullPagePopup({
   }
   return (
     <FullPagePopupContainer>
-      <div className="p-5 text-center md:w-[40%]">
+      <div className="p-5 text-center md:w-[40%]" onClick={handleClose}>
         <FontAwesomeIcon icon={faCircleXmark} onClick={handleClose} />
         <div>
           <img src="logo.png" className="h-28" />

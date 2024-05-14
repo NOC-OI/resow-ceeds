@@ -21,6 +21,8 @@ import {
 } from '../DataExplorationTypeOptions'
 import {
   faChartSimple,
+  faChevronDown,
+  faChevronUp,
   faCircleInfo,
   faDownload,
   faGripVertical,
@@ -111,6 +113,23 @@ export function SelectedLayersTab({
     setLayerAction('sort')
     setSelectedLayers(newSelectedLayers)
   }
+
+  function changeOrder(direction, index) {
+    const keys = Object.keys(selectedLayers)
+    const draggedItemContent = keys.splice(index, 1)[0]
+    if (direction === 'up') {
+      keys.splice(index - 1, 0, draggedItemContent)
+    } else {
+      keys.splice(index + 1, 0, draggedItemContent)
+    }
+    const newSelectedLayers = {}
+    keys.forEach((key, index) => {
+      newSelectedLayers[key] = selectedLayers[key]
+      newSelectedLayers[key].order = keys.length - index
+    })
+    setLayerAction('sort')
+    setSelectedLayers(newSelectedLayers)
+  }
   const dragItem = useRef<any>()
   const dragOverItem = useRef<any>()
   const rout = window.location.pathname
@@ -141,207 +160,242 @@ export function SelectedLayersTab({
                 onDragEnd={rout !== '/3d' ? handleSort : null}
                 onDragOver={(e) => e.preventDefault()}
               >
-                <div
-                  className={
-                    rout !== '/3d' ? '!cursor-move' : '!cursor-default'
-                  }
-                >
-                  <header
-                    id="general-types"
+                <div className="flex gap-2">
+                  <div
+                    className="flex flex-col items-center justify-center p-0 !gap-3"
                     style={{ color: '#D49511' }}
-                    className={
-                      rout !== '/3d' ? '!cursor-move' : '!cursor-default'
-                    }
                   >
-                    <span>
-                      <FontAwesomeIcon icon={faGripVertical} />
-                    </span>
-                    <p>{layer.split('_')[0]}</p>
-                  </header>
-                </div>
-                <div className="flex flex-col gap-1 pt-1">
-                  <LayerTypeOptionsContainer key={index}>
-                    <div id="type-option">
-                      <label
-                        key={`${layer.split('_')[0]}_${layer.split('_')[1]}`}
-                        htmlFor={`${layer.split('_')[0]}_${
-                          layer.split('_')[1]
-                        }`}
+                    {index !== 0 && (
+                      <FontAwesomeIcon
+                        icon={faChevronUp}
+                        onClick={() => changeOrder('up', index)}
+                        className="!cursor-pointer"
+                      />
+                    )}
+                    {index !== Object.keys(selectedLayers).length - 1 && (
+                      <FontAwesomeIcon
+                        icon={faChevronDown}
+                        onClick={() => changeOrder('down', index)}
+                        className="!cursor-pointer"
+                      />
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <div
+                      className={
+                        rout !== '/3d' ? '!cursor-move' : '!cursor-default'
+                      }
+                    >
+                      <header
+                        id="general-types"
+                        style={{ color: '#D49511' }}
+                        className={
+                          rout !== '/3d' ? '!cursor-move' : '!cursor-default'
+                        }
                       >
-                        <input
-                          onChange={(e: any) =>
-                            handleChangeMapLayerAndAddLegend(
-                              e,
-                              setActualLayer,
-                              setOpacityIsClicked,
-                              setLayerAction,
-                              setSelectedLayers,
-                              selectedLayers,
-                              listLayers[layer.split('_')[0]].layerNames,
-                              layer.split('_')[1],
-                              setLayerLegend,
-                              layerLegend,
-                              layer.split('_')[0],
-                            )
-                          }
-                          value={JSON.stringify({
-                            subLayer: `${layer.split('_')[0]}_${
-                              layer.split('_')[1]
-                            }`,
-                            dataInfo:
-                              listLayers[layer.split('_')[0]].layerNames[
+                        <span>
+                          <FontAwesomeIcon icon={faGripVertical} />
+                        </span>
+                        <p>{layer.split('_')[0]}</p>
+                      </header>
+                    </div>
+                    <div className="flex flex-col gap-1 pt-1">
+                      <LayerTypeOptionsContainer key={index}>
+                        <div id="type-option">
+                          <div className="flex items-center justify-start">
+                            <label
+                              key={`${layer.split('_')[0]}_${
                                 layer.split('_')[1]
-                              ],
-                          })}
-                          className={styles.chk}
-                          type="checkbox"
-                          checked={verifyIfWasSelectedBefore(
+                              }`}
+                              htmlFor={`${layer.split('_')[0]}_${
+                                layer.split('_')[1]
+                              }`}
+                            >
+                              <input
+                                onChange={(e: any) =>
+                                  handleChangeMapLayerAndAddLegend(
+                                    e,
+                                    setActualLayer,
+                                    setOpacityIsClicked,
+                                    setLayerAction,
+                                    setSelectedLayers,
+                                    selectedLayers,
+                                    listLayers[layer.split('_')[0]].layerNames,
+                                    layer.split('_')[1],
+                                    setLayerLegend,
+                                    layerLegend,
+                                    layer.split('_')[0],
+                                  )
+                                }
+                                value={JSON.stringify({
+                                  subLayer: `${layer.split('_')[0]}_${
+                                    layer.split('_')[1]
+                                  }`,
+                                  dataInfo:
+                                    listLayers[layer.split('_')[0]].layerNames[
+                                      layer.split('_')[1]
+                                    ],
+                                })}
+                                className={styles.chk}
+                                type="checkbox"
+                                checked={verifyIfWasSelectedBefore(
+                                  layer.split('_')[0],
+                                  layer.split('_')[1],
+                                  selectedLayers,
+                                )}
+                                id={`${layer}`}
+                              />
+                              <label
+                                htmlFor={`${layer}`}
+                                className={styles.switch}
+                              >
+                                <span className={styles.slider}></span>
+                              </label>
+                              <p>{layer.split('_')[1]}</p>
+                            </label>
+                          </div>
+                          <div id="layer-edit">
+                            <FontAwesomeIcon
+                              id="info-subsection-button"
+                              icon={faCircleInfo}
+                              title={'Show Layer Info'}
+                              onClick={() =>
+                                handleClickLayerInfo(
+                                  layer.split('_')[0],
+                                  layer.split('_')[1],
+                                  setInfoButtonBox,
+                                  selectedLayers,
+                                )
+                              }
+                            />
+                            {!['Photo'].includes(
+                              selectedLayers[layer].dataType,
+                            ) ? (
+                              <FontAwesomeIcon
+                                icon={faList}
+                                title="Show Legend"
+                                onClick={() =>
+                                  handleClickLegend(
+                                    listLayers[layer.split('_')[0]].layerNames,
+                                    layer.split('_')[1],
+                                    setLayerLegend,
+                                    layer.split('_')[0],
+                                    selectedLayers,
+                                  )
+                                }
+                              />
+                            ) : null}
+                            {selectedLayers[layer].dataType === 'COG' ? (
+                              <FontAwesomeIcon
+                                icon={faChartSimple}
+                                title="Make a graph"
+                                onClick={() =>
+                                  handleGenerateGraph(
+                                    setGetPolyline,
+                                    setActualLayer,
+                                    listLayers[layer.split('_')[0]].layerNames,
+                                    layer.split('_')[1],
+                                  )
+                                }
+                                className={getPolyline ? 'active' : ''}
+                              />
+                            ) : null}
+                            {selectedLayers[layer].date_range ? (
+                              <FontAwesomeIcon
+                                icon={faChartSimple}
+                                title="Make a graph"
+                                onClick={() =>
+                                  handleGenerateTimeSeriesGraph(
+                                    setClickPoint,
+                                    setActualLayer,
+                                    listLayers[layer.split('_')[0]].layerNames,
+                                    layer.split('_')[1],
+                                  )
+                                }
+                              />
+                            ) : null}
+
+                            <FontAwesomeIcon
+                              icon={faMagnifyingGlass}
+                              title="Zoom to the layer"
+                              onClick={() =>
+                                handleClickZoom(
+                                  layer.split('_')[0],
+                                  listLayers[layer.split('_')[0]].layerNames,
+                                  layer.split('_')[1],
+                                  setActualLayer,
+                                  setLayerAction,
+                                  selectedLayers,
+                                  setSelectedLayers,
+                                )
+                              }
+                            />
+                            {!['Photo'].includes(
+                              selectedLayers[layer].dataType,
+                            ) && (
+                              <FontAwesomeIcon
+                                icon={faSliders}
+                                title="Change Opacity"
+                                onClick={() =>
+                                  handleClickSliderLayersSelected(
+                                    setOpacityIsClicked,
+                                    layer,
+                                  )
+                                }
+                              />
+                            )}
+                            {listLayers[layer.split('_')[0]].layerNames[
+                              layer.split('_')[1]
+                            ].download && (
+                              <div
+                                onClick={() =>
+                                  setDownloadPopup({
+                                    [`${layer}`]:
+                                      listLayers[layer.split('_')[0]]
+                                        .layerNames[layer.split('_')[1]]
+                                        .download,
+                                  })
+                                }
+                              >
+                                <FontAwesomeIcon
+                                  icon={faDownload}
+                                  title="Download layer"
+                                />
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        {opacityIsClicked === layer &&
+                          verifyIfWasSelectedBefore(
                             layer.split('_')[0],
                             layer.split('_')[1],
                             selectedLayers,
-                          )}
-                          id={`${layer}`}
-                        />
-                        <label htmlFor={`${layer}`} className={styles.switch}>
-                          <span className={styles.slider}></span>
-                        </label>
-                        <p>{layer.split('_')[1]}</p>
-                      </label>
-                      <div id="layer-edit">
-                        <FontAwesomeIcon
-                          id="info-subsection-button"
-                          icon={faCircleInfo}
-                          title={'Show Layer Info'}
-                          onClick={() =>
-                            handleClickLayerInfo(
-                              layer.split('_')[0],
-                              layer.split('_')[1],
-                              setInfoButtonBox,
-                              selectedLayers,
-                            )
-                          }
-                        />
-                        {!['Photo'].includes(selectedLayers[layer].dataType) ? (
-                          <FontAwesomeIcon
-                            icon={faList}
-                            title="Show Legend"
-                            onClick={() =>
-                              handleClickLegend(
-                                listLayers[layer.split('_')[0]].layerNames,
-                                layer.split('_')[1],
-                                setLayerLegend,
-                                layer.split('_')[0],
-                                selectedLayers,
-                              )
-                            }
-                          />
-                        ) : null}
-                        {selectedLayers[layer].dataType === 'COG' ? (
-                          <FontAwesomeIcon
-                            icon={faChartSimple}
-                            title="Make a graph"
-                            onClick={() =>
-                              handleGenerateGraph(
-                                setGetPolyline,
-                                setActualLayer,
-                                listLayers[layer.split('_')[0]].layerNames,
-                                layer.split('_')[1],
-                              )
-                            }
-                            className={getPolyline ? 'active' : ''}
-                          />
-                        ) : null}
-                        {selectedLayers[layer].date_range ? (
-                          <FontAwesomeIcon
-                            icon={faChartSimple}
-                            title="Make a graph"
-                            onClick={() =>
-                              handleGenerateTimeSeriesGraph(
-                                setClickPoint,
-                                setActualLayer,
-                                listLayers[layer.split('_')[0]].layerNames,
-                                layer.split('_')[1],
-                              )
-                            }
-                          />
-                        ) : null}
-
-                        <FontAwesomeIcon
-                          icon={faMagnifyingGlass}
-                          title="Zoom to the layer"
-                          onClick={() =>
-                            handleClickZoom(
-                              layer.split('_')[0],
-                              listLayers[layer.split('_')[0]].layerNames,
-                              layer.split('_')[1],
-                              setActualLayer,
-                              setLayerAction,
-                              selectedLayers,
-                              setSelectedLayers,
-                            )
-                          }
-                        />
-                        {!['Photo'].includes(
-                          selectedLayers[layer].dataType,
-                        ) && (
-                          <FontAwesomeIcon
-                            icon={faSliders}
-                            title="Change Opacity"
-                            onClick={() =>
-                              handleClickSliderLayersSelected(
-                                setOpacityIsClicked,
+                          ) && (
+                            <input
+                              type="range"
+                              step={0.1}
+                              min={0}
+                              max={1}
+                              value={getPreviousOpacityValue(
                                 layer,
-                              )
-                            }
-                          />
-                        )}
-                        {listLayers[layer.split('_')[0]].layerNames[
-                          layer.split('_')[1]
-                        ].download && (
-                          <div
-                            onClick={() =>
-                              setDownloadPopup({
-                                [`${layer}`]:
-                                  listLayers[layer.split('_')[0]].layerNames[
-                                    layer.split('_')[1]
-                                  ].download,
-                              })
-                            }
-                          >
-                            <FontAwesomeIcon
-                              icon={faDownload}
-                              title="Download layer"
+                                selectedLayers,
+                              )}
+                              onChange={(e) =>
+                                handleChangeOpacity(
+                                  e,
+                                  setLayerAction,
+                                  setSelectedLayers,
+                                  layer.split('_')[0],
+                                  layer.split('_')[1],
+                                  listLayers[layer.split('_')[0]].layerNames,
+                                  setActualLayer,
+                                )
+                              }
                             />
-                          </div>
-                        )}
-                      </div>
+                          )}
+                      </LayerTypeOptionsContainer>
                     </div>
-                    {opacityIsClicked === layer &&
-                      verifyIfWasSelectedBefore(
-                        layer.split('_')[0],
-                        layer.split('_')[1],
-                        selectedLayers,
-                      ) && (
-                        <input
-                          type="range"
-                          step={0.1}
-                          min={0}
-                          max={1}
-                          value={getPreviousOpacityValue(layer, selectedLayers)}
-                          onChange={(e) =>
-                            handleChangeOpacity(
-                              e,
-                              setLayerAction,
-                              setSelectedLayers,
-                              layer.split('_')[0],
-                              layer.split('_')[1],
-                              listLayers[layer.split('_')[0]].layerNames,
-                              setActualLayer,
-                            )
-                          }
-                        />
-                      )}
-                  </LayerTypeOptionsContainer>
+                  </div>
                 </div>
               </div>
             ))

@@ -548,6 +548,7 @@ function MapHome1({
       undefined,
       undefined,
     )
+    console.log(actualLayerUpload)
     await getTifLayer.parseGeoSimple().then(function () {
       const layer = getTifLayer.layer
       layer.addTo(map)
@@ -611,9 +612,13 @@ function MapHome1({
       type === 'new'
         ? actualLayerUpload
         : selectedLayersUpload[actualLayerNowUpload[0]]
-    if (['GeoJSON', 'Shapefile', 'CSV'].includes(layerName.dataType)) {
+    if (
+      ['GeoJSON', 'Shapefile', 'CSV', 'KML', 'KMZ'].includes(layerName.dataType)
+    ) {
       generateUploadedGeoJSONLayer(layerName)
     } else if (layerName.dataType === 'GeoTIFF') {
+      generateUploadedGeoTIFFLayer(layerName)
+    } else if (layerName.dataType === 'ASC') {
       generateUploadedGeoTIFFLayer(layerName)
     } else if (layerName.dataType === 'COG') {
       generateUploadedCOGLayer(layerName)

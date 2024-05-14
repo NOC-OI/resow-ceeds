@@ -38,22 +38,29 @@ export function MapPopup({ mapPopup, setMapPopup }: MapPopupProps) {
           {dataType === 'html' ? (
             <div dangerouslySetInnerHTML={{ __html: content }}></div>
           ) : (
-            Object.keys(content).map((key) => {
+            Object.keys(content).map((key, index) => {
               return (
                 <div
                   className="text-xs flex pb-2 gap-1 justify-between"
-                  key={key}
+                  key={index}
                 >
-                  <div>
-                    <strong>{key === 'filename' ? 'More Info' : key}</strong>:
-                  </div>
-                  {key === 'filename' ? (
-                    <a href={`${content[key]}`} target="_blank">
-                      Click Here
-                    </a>
-                  ) : (
-                    <div>{content[key]}</div>
+                  {typeof content[key] !== 'object' && (
+                    <div>
+                      <strong>{key === 'filename' ? 'More Info' : key}</strong>:
+                    </div>
                   )}
+                  {typeof content[key] !== 'object' &&
+                    (key === 'filename' ? (
+                      <a
+                        href={`${content[key]}`}
+                        target="_blank"
+                        className="clickable"
+                      >
+                        Click Here
+                      </a>
+                    ) : (
+                      <div>{content[key]}</div>
+                    ))}
                 </div>
               )
             })

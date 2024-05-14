@@ -24,6 +24,8 @@ import { UploadLayerCSV } from '../UploadLayerCSV'
 import Papa from 'papaparse'
 import { ConfirmationDialog } from '../ConfirmationDialog'
 import axios from 'axios'
+import * as toGeoJSON from '@mapbox/togeojson'
+import JSZip from 'jszip'
 
 interface UploadSelectionProps {
   layerAction: any
@@ -175,11 +177,185 @@ export function UploadSelection({
         })
         setLoading(false)
       }
+    } else if (actualLayerUpload.dataType === 'ASC') {
+      const reader = new FileReader()
+      reader.onload = async (e) => {
+        try {
+          const content = e.target.result.toString()
+          const lines = content.split('\n')
+          const metadata: any = {}
+          const values = []
+          let parsingData = false
+          let yllCorner: any
+          let nRows: any
+          lines.forEach((line) => {
+            const parts = line.trim().split(/\s+/)
+            if (!parsingData) {
+              if (parts[0].toLowerCase() === 'nrows') {
+                nRows = parseInt(parts[1], 10)
+              } else if (parts[0].toLowerCase() === 'ncols') {
+                metadata.nCols = parseInt(parts[1], 10)
+              } else if (parts[0].toLowerCase() === 'xllcorner') {
+                metadata.xmin = parseFloat(parts[1])
+              } else if (parts[0].toLowerCase() === 'yllcorner') {
+                yllCorner = parseFloat(parts[1])
+              } else if (parts[0].toLowerCase() === 'cellsize') {
+                metadata.pixelWidth = parseFloat(parts[1])
+                metadata.pixelHeight = parseFloat(parts[1])
+              } else if (parts[0].toLowerCase() === 'nodata_value') {
+                metadata.noDataValue = parseFloat(parts[1])
+              } else if (parts.length === metadata.nCols) {
+                parsingData = true
+                const row = parts.map(Number)
+                values.push(row)
+              }
+            } else {
+              const row = parts.map(Number)
+              values.push(row)
+            }
+          })
+          metadata.projection = 4326
+          metadata.ymax = yllCorner + nRows * metadata.pixelWidth
+          const georaster = await parseGeoraster([values], metadata)
+
+          const scale = [georaster.mins[0], georaster.maxs[0]]
+          const newActualLayerUpload = { ...actualLayerUpload }
+          const finalActualLayerUpload = {
+            dataType: newActualLayerUpload.dataType,
+            name: localUploadInfo.file.name,
+            data: georaster,
+            colors:
+              colorScale === 'Custom'
+                ? newActualLayerUpload.colors
+                : colorScale,
+            scale,
+            opacity: defaultOpacity,
+          }
+          setActualLayerUpload(finalActualLayerUpload)
+          const difValues = scale[1] - scale[0]
+          const times = 30
+          const cogColors = []
+          const cogColorsValues = []
+          let scaleColor
+          if (typeof finalActualLayerUpload.colors === 'string') {
+            scaleColor = colorScaleByName(finalActualLayerUpload.colors)
+            for (let i = 0; i < times; i++) {
+              cogColors.push(scaleColor((1 / (times - 1)) * i))
+              cogColorsValues.push(
+                Number(scale[0]) + (difValues / (times - 1)) * i,
+              )
+            }
+          } else {
+            scaleColor = chroma
+              .scale(finalActualLayerUpload.colors)
+              .domain(scale)
+            for (let i = 0; i < times; i++) {
+              const color = scaleColor((1 / (times - 1)) * i)
+              cogColors.push([color._rgb[0], color._rgb[1], color._rgb[2]])
+              cogColorsValues.push(
+                Number(scale[0]) + (difValues / (times - 1)) * i,
+              )
+            }
+          }
+          setLayerLegend((layerLegend: any) => {
+            const newLayerLegend = { ...layerLegend }
+            delete newLayerLegend[localUploadInfo.file.name]
+            newLayerLegend[localUploadInfo.file.name] = {
+              layerName: localUploadInfo.file.name,
+              layerInfo: finalActualLayerUpload,
+              selectedLayersKey: `uploaded_${localUploadInfo.file.name}`,
+              scale,
+              dataDescription: '',
+              legend: [cogColors, cogColorsValues],
+              dataType: finalActualLayerUpload.dataType,
+            }
+            return newLayerLegend
+          })
+          setLoading(false)
+        } catch (error) {
+          setError('Error on the data. Please check the ASC file')
+          setFlashMessage({
+            messageType: 'error',
+            content: 'Error on the data. Please check the ASC file',
+          })
+          setLoading(false)
+        }
+      }
+      reader.readAsText(localUploadInfo.file)
     } else if (actualLayerUpload.dataType === 'GeoJSON') {
       const reader = new FileReader()
       reader.onload = async (e) => {
         try {
           const data = JSON.parse(e.target.result.toString())
+          setActualLayerUpload((actualLayerUpload) => {
+            const newActualLayerUpload = { ...actualLayerUpload }
+            return {
+              dataType: newActualLayerUpload.dataType,
+              name: localUploadInfo.file.name,
+              data,
+              colors: newActualLayerUpload.colors,
+            }
+          })
+        } catch (e) {
+          setError('Error on the data. Please check the GeoJSON file')
+          setFlashMessage({
+            messageType: 'error',
+            content: 'Error on the data. Please check the GeoJSON file',
+          })
+        }
+        setLoading(false)
+      }
+      reader.readAsText(localUploadInfo.file)
+    } else if (['KMZ'].includes(actualLayerUpload.dataType)) {
+      const reader = new FileReader()
+      reader.onload = async (e) => {
+        try {
+          const content = e.target.result
+          let data
+
+          const zip = await JSZip.loadAsync(content as ArrayBuffer)
+          const kmlFile = Object.keys(zip.files).find((name) =>
+            name.endsWith('.kml'),
+          )
+          if (kmlFile) {
+            const kmlText = await zip.files[kmlFile].async('string')
+            const kmlDom = new DOMParser().parseFromString(kmlText, 'text/xml')
+            data = toGeoJSON.kml(kmlDom)
+          }
+          console.log(data)
+
+          setActualLayerUpload((actualLayerUpload) => {
+            const newActualLayerUpload = { ...actualLayerUpload }
+            return {
+              dataType: newActualLayerUpload.dataType,
+              name: localUploadInfo.file.name,
+              data,
+              colors: newActualLayerUpload.colors,
+            }
+          })
+        } catch (e) {
+          setError('Error on the data. Please check the GeoJSON file')
+          setFlashMessage({
+            messageType: 'error',
+            content: 'Error on the data. Please check the GeoJSON file',
+          })
+        }
+        setLoading(false)
+      }
+      reader.readAsArrayBuffer(localUploadInfo.file)
+    } else if (['KML'].includes(actualLayerUpload.dataType)) {
+      const reader = new FileReader()
+      reader.onload = async (e) => {
+        try {
+          const content = e.target.result.toString()
+
+          const kmlDom = new DOMParser().parseFromString(
+            content.toString(),
+            'text/xml',
+          )
+          const data = toGeoJSON.kml(kmlDom)
+          console.log(data)
+
           setActualLayerUpload((actualLayerUpload) => {
             const newActualLayerUpload = { ...actualLayerUpload }
             return {
@@ -219,7 +395,6 @@ export function UploadSelection({
             }
           })
         } catch (e) {
-          console.log(e)
           setError('Error on the data. Please check the shp and prj files')
           setFlashMessage({
             messageType: 'error',
@@ -228,7 +403,6 @@ export function UploadSelection({
         }
         setLoading(false)
       }
-      console.log('file', localUploadInfo.file)
       reader.readAsArrayBuffer(localUploadInfo.file)
     } else if (actualLayerUpload.dataType === 'WMS') {
       const newActualLayerUpload = {
@@ -367,6 +541,8 @@ export function UploadSelection({
       setColorScale('Custom')
     }
     setLocalUploadInfo({})
+    setLabelPrjText('Choose file')
+    setLabelText('Choose file')
     setActualLayerUpload({
       dataType: event.target.value,
       colors: ['#0859fc', '#fd1317'],
@@ -442,7 +618,6 @@ export function UploadSelection({
       })
       return
     }
-
     if (proj) {
       const reader = new FileReader()
       reader.onload = (event) => {
@@ -450,7 +625,6 @@ export function UploadSelection({
         setLocalUploadInfo((localUploadInfo) => ({
           ...localUploadInfo,
           proj: prjText,
-          file,
         }))
       }
       reader.readAsText(file)
@@ -515,9 +689,14 @@ export function UploadSelection({
                   ))}
                 </select>
               </div>
-              {['GeoJSON', 'GeoTIFF', 'Shapefile'].includes(
-                actualLayerUpload.dataType,
-              ) ? (
+              {[
+                'GeoJSON',
+                'GeoTIFF',
+                'Shapefile',
+                'ASC',
+                'KML',
+                'KMZ',
+              ].includes(actualLayerUpload.dataType) ? (
                 <UploadLayerGeoJSONGeoTIFF
                   handleFileChange={handleFileChange}
                   labelText={labelText}

@@ -73,7 +73,9 @@ export function LayersUploadedOptions({
     const layerInfo = listLayersUpload[layerClass]
     if (e.target.checked) {
       if (
-        !['Photo', 'GeoJSON', 'CSV', 'Shapefile'].includes(layerInfo.dataType)
+        !['Photo', 'GeoJSON', 'CSV', 'Shapefile', 'KML', 'KMZ'].includes(
+          layerInfo.dataType,
+        )
       ) {
         handleLocalClickLegend(layerClass, layerInfo, 'uploaded')
       }
@@ -120,7 +122,7 @@ export function LayersUploadedOptions({
           `uploaded_${layerClass}`,
         ) && (
           <div id="layer-edit">
-            {!['Photo', 'GeoJSON', 'CSV', 'Shapefile'].includes(
+            {!['Photo', 'GeoJSON', 'CSV', 'Shapefile', 'KML', 'KMZ'].includes(
               selectedLayersUpload[`uploaded_${layerClass}`].dataType,
             ) ? (
               <FontAwesomeIcon

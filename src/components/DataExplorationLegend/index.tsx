@@ -40,14 +40,17 @@ export function DataExplorationLegend({
   const [colorScale, setColorScale] = useState<string>(
     layerLegend[layerLegendName].layerInfo?.colors,
   )
+
   const [scaleLimits, setScaleLimits] = useState<any[]>(
     layerLegend[layerLegendName].scale,
   )
+
   const [editLayerColors, setEditLayerColors] = useState<boolean>(false)
   const [customColors, setCustomColors] = useState<string[]>([
     '#0859fc',
     '#fd1317',
   ])
+
   const { setSelectedLayersUpload, setActualLayerNowUpload } =
     useUploadDataHandle()
   const [wmsError, setWmsError] = useState(false)
@@ -118,7 +121,9 @@ export function DataExplorationLegend({
     ].selectedLayersKey.startsWith('uploaded_')
       ? setActualLayerNowUpload
       : setActualLayer
-    if (['COG', 'GeoTIFF'].includes(layerLegend[layerLegendName].dataType)) {
+    if (
+      ['COG', 'GeoTIFF', 'ASC'].includes(layerLegend[layerLegendName].dataType)
+    ) {
       if (checkInputValue()) {
         setError('Please enter valid values')
         setFlashMessage({
@@ -130,12 +135,17 @@ export function DataExplorationLegend({
     }
     setActualLayerState([layerLegend[layerLegendName].selectedLayersKey])
     setLayerAction('update-colors')
-    if (['COG', 'GeoTIFF'].includes(layerLegend[layerLegendName].dataType)) {
+    if (
+      ['COG', 'GeoTIFF', 'ASC'].includes(layerLegend[layerLegendName].dataType)
+    ) {
       setState((selectedLayers) => {
         const newSelectedLayers = { ...selectedLayers }
         newSelectedLayers[layerLegend[layerLegendName].selectedLayersKey] = {
           ...newSelectedLayers[layerLegend[layerLegendName].selectedLayersKey],
-          colors: colorScale === 'Custom' ? customColors : colorScale,
+          colors:
+            colorScale === 'Custom' || typeof colorScale === 'object'
+              ? customColors
+              : colorScale,
           scale: scaleLimits,
         }
         return newSelectedLayers
@@ -172,7 +182,10 @@ export function DataExplorationLegend({
           scale: scaleLimits,
           layerInfo: {
             ...layerLegend.layerInfo,
-            colors: colorScale === 'Custom' ? customColors : colorScale,
+            colors:
+              colorScale === 'Custom' || typeof colorScale === 'object'
+                ? customColors
+                : colorScale,
             scale: scaleLimits,
           },
           legend: [cogColors, cogColorsValues],
@@ -235,7 +248,7 @@ export function DataExplorationLegend({
                   onError={() => setWmsError(true)}
                 />
               ))}
-            {['COG', 'GeoTIFF'].includes(
+            {['COG', 'GeoTIFF', 'ASC'].includes(
               layerLegend[layerLegendName].dataType,
             ) ? (
               <div className="flex flex-col justify-center items-center gap-2">
@@ -273,7 +286,7 @@ export function DataExplorationLegend({
           </div>
         </div>
         {editLayerColors &&
-          (['COG', 'GeoTIFF'].includes(
+          (['COG', 'GeoTIFF', 'ASC'].includes(
             layerLegend[layerLegendName].dataType,
           ) ? (
             <div
@@ -288,7 +301,9 @@ export function DataExplorationLegend({
                   <div className="flex justify-left items-center w-full">
                     <select
                       id="fileFormat-select"
-                      value={colorScale}
+                      value={
+                        typeof colorScale === 'object' ? 'Custom' : colorScale
+                      }
                       onChange={(e) => setColorScale(e.target.value)}
                       className="clickable bg-black border border-black bg-opacity-20 text-white text-sm rounded-lg  block w-max p-2 hover:bg-opacity-80"
                     >
@@ -310,7 +325,8 @@ export function DataExplorationLegend({
                         </option>
                       ))}
                     </select>
-                    {colorScale === 'Custom' && (
+                    {(colorScale === 'Custom' ||
+                      typeof colorScale === 'object') && (
                       <div className="pl-2 flex justify-start items-center gap-1">
                         <input
                           type="color"

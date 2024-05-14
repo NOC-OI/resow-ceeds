@@ -272,6 +272,56 @@ export async function handleClickLegend(
       }
       return newLayerLegend
     })
+  } else if (subLayers[subLayer].dataType === 'ASC') {
+    let scale
+    if (!selectedLayers) {
+      if (subLayers[subLayer].scale) {
+        scale = subLayers[subLayer].scale
+      } else {
+        const tifData = new GetTifLayer(subLayers[subLayer].url)
+        await tifData.loadGeo()
+        scale = [tifData.stats[0].min, tifData.stats[0].max]
+      }
+    } else {
+      scale = selectedLayers[`${content}_${subLayer}`].scale
+    }
+
+    const difValues = scale[1] - scale[0]
+    const times = 30
+    const cogColors = []
+    const cogColorsValues = []
+    let scaleColor
+    const colors = selectedLayers
+      ? selectedLayers[`${content}_${subLayer}`].colors
+      : subLayers[subLayer].colors
+    if (typeof colors === 'string') {
+      scaleColor = colorScaleByName(colors)
+      for (let i = 0; i < times; i++) {
+        cogColors.push(scaleColor((1 / (times - 1)) * i))
+        cogColorsValues.push(Number(scale[0]) + (difValues / (times - 1)) * i)
+      }
+    } else {
+      scaleColor = chroma.scale(colors).domain(scale)
+      for (let i = 0; i < times; i++) {
+        const color = scaleColor((1 / (times - 1)) * i)
+        cogColors.push([color._rgb[0], color._rgb[1], color._rgb[2]])
+        cogColorsValues.push(Number(scale[0]) + (difValues / (times - 1)) * i)
+      }
+    }
+    setLayerLegend((layerLegend: any) => {
+      const newLayerLegend = { ...layerLegend }
+      delete newLayerLegend[legendLayerName]
+      newLayerLegend[legendLayerName] = {
+        layerName: legendLayerName,
+        layerInfo: subLayers[subLayer],
+        selectedLayersKey: `${content}_${subLayer}`,
+        scale,
+        dataDescription: subLayers[subLayer].dataDescription,
+        legend: [cogColors, cogColorsValues],
+        dataType: subLayers[subLayer].dataType,
+      }
+      return newLayerLegend
+    })
   }
 }
 

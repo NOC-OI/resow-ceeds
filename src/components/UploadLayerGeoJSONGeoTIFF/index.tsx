@@ -80,12 +80,14 @@ export function UploadLayerGeoJSONGeoTIFF({
       )}
       <div className="pt-4 flex justify-between w-full items-center">
         <p className="text-md font-bold text-white mb-2 text-center">
-          {['GeoJSON', 'Shapefile'].includes(actualLayerUpload.dataType)
+          {['GeoJSON', 'Shapefile', 'KML', 'KMZ'].includes(
+            actualLayerUpload.dataType,
+          )
             ? 'Geometry Color:'
             : 'Color Scale:'}
         </p>
         <div className="flex flex-col items-center gap-1">
-          {actualLayerUpload.dataType === 'GeoTIFF' && (
+          {['GeoTIFF', 'ASC'].includes(actualLayerUpload.dataType) && (
             <div className="flex justify-between items-center w-full">
               <select
                 id="fileFormat-select"
@@ -121,7 +123,7 @@ export function UploadLayerGeoJSONGeoTIFF({
                 onChange={(e) => handleColorChange(e, 0)}
                 title="Choose your color"
               />
-              {actualLayerUpload.dataType === 'GeoTIFF' && (
+              {['GeoTIFF', 'ASC'].includes(actualLayerUpload.dataType) && (
                 <input
                   type="color"
                   className="p-1 block bg-black bg-opacity-30  cursor-pointer rounded-lg disabled:opacity-50 disabled:pointer-events-none"

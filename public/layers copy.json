@@ -59,6 +59,7 @@
         "protected": false,
         "threeD": false,
         "download": {
+          "GeoJSON": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/case_study_areas/summaries/summary.geojson",
           "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Case%20Study%20Areas/Case%20Study%20Areas/collection.json"
         },
         "bbox": [
@@ -90,6 +91,8 @@
         "protected": false,
         "threeD": false,
         "download": {
+          "GeoTIFF": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/uk_hsm/uk_hsm_cog.tif",
+          "ASC": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/enuklogNEW1.asc",
           "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Habitat%20Suitability%20%28HSM%29/Habitat%20Suitability%20%28HSM%29/collection.json"
         },
         "bbox": [
@@ -114,8 +117,11 @@
         ],
         "units": "",
         "download": {
+          "GeoTIFF": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/craignish/craignish_log_hsm.tif",
+          "ASC": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/encraiglog_clipped.asc",
           "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Habitat%20Suitability%20%28HSM%29/Habitat%20Suitability%20%28HSM%29/collection.json"
         },
+        "download_area": true,
         "protected": false,
         "bbox": [
           -5.900586554,
@@ -139,8 +145,11 @@
         ],
         "units": "",
         "download": {
+          "GeoTIFF": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/ios/ios_log_hsm.tif",
+          "ASC": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/enioslogALL_clipped.asc",
           "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Habitat%20Suitability%20%28HSM%29/Habitat%20Suitability%20%28HSM%29/collection.json"
         },
+        "download_area": true,
         "protected": false,
         "bbox": [
           -6.43229178,
@@ -163,8 +172,11 @@
           "(Probability)"
         ],
         "download": {
+          "GeoTIFF": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/milford_haven/milford_haven_log_hsm.tif",
+          "ASC": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/enMH_log2.asc",
           "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Habitat%20Suitability%20%28HSM%29/Habitat%20Suitability%20%28HSM%29/collection.json"
         },
+        "download_area": true,
         "protected": false,
         "bbox": [
           -5.177726449,
@@ -188,6 +200,8 @@
           "(Probability)"
         ],
         "download": {
+          "GeoTIFF": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/milford_haven/orkney_log_hsm.tif",
+          "ASC": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/enorklog_clipped.asc",
           "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Habitat%20Suitability%20%28HSM%29/Habitat%20Suitability%20%28HSM%29/collection.json"
         },
         "download_area": true,
@@ -216,8 +230,11 @@
         "protected": false,
         "threeD": false,
         "download": {
+          "GeoTIFF": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/porthdinllaen/porthdinllaen_log_hsm.tif",
+          "ASC": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/enPDlog_clipped.asc",
           "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Habitat%20Suitability%20%28HSM%29/Habitat%20Suitability%20%28HSM%29/collection.json"
         },
+        "download_area": true,
         "bbox": [
           -4.578556304,
           52.933132242,
@@ -241,8 +258,11 @@
         "protected": false,
         "threeD": false,
         "download": {
+          "GeoTIFF": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/solent/solent_log_hsm.tif",
+          "ASC": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/ensollogALL_clipped.asc",
           "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Habitat%20Suitability%20%28HSM%29/Habitat%20Suitability%20%28HSM%29/collection.json"
         },
+        "download_area": true,
         "bbox": [
           -1.629735346,
           50.647550968,
@@ -266,8 +286,11 @@
         "protected": false,
         "threeD": false,
         "download": {
+          "GeoTIFF": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/studland/studland_hsm.tif",
+          "ASC": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/enstud2.asc",
           "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Habitat%20Suitability%20%28HSM%29/Habitat%20Suitability%20%28HSM%29/collection.json"
         },
+        "download_area": true,
         "bbox": [
           -2.478656334,
           50.544469014,
@@ -287,6 +310,7 @@
         "content": "This dataset contains the results of remote sensing mapping using random forest classification of Sentinel-2 satellite data.",
         "protected": false,
         "download": {
+          "GeoJSON": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/remote_sensing/remote_sensing/Fleet_lagoon_seagrass_from_EO.geojson",
           "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Seagrass%20extent%20from%20satellite%20data/Seagrass%20extent%20from%20satellite%20data/collection.json"
         },
         "bbox": [
@@ -294,7 +318,8 @@
           50.59905946481352,
           -2.495810659120408,
           50.65316469871835
-        ]
+        ],
+        "download_area": true
       },
       "Isles of Scilly": {
         "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/remote_sensing/remote_sensing/Isles_of_Scilly_seagrass_from_EO.geojson",
@@ -302,6 +327,7 @@
         "content": "This dataset contains the results of remote sensing mapping using random forest classification of Sentinel-2 satellite data.",
         "protected": false,
         "download": {
+          "GeoJSON": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/remote_sensing/remote_sensing/Isles_of_Scilly_seagrass_from_EO.geojson",
           "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Seagrass%20extent%20from%20satellite%20data/Seagrass%20extent%20from%20satellite%20data/collection.json"
         },
         "bbox": [
@@ -309,7 +335,8 @@
           49.905500451359664,
           -6.247955739785865,
           49.97108244348237
-        ]
+        ],
+        "download_area": true
       },
       "Loch Craignish": {
         "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/remote_sensing/remote_sensing/LochCraignish_seagrass_from_EO.geojson",
@@ -317,6 +344,7 @@
         "content": "This dataset contains the results of remote sensing mapping using random forest classification of Sentinel-2 satellite data.",
         "protected": false,
         "download": {
+          "GeoJSON": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/remote_sensing/remote_sensing/LochCraignish_seagrass_from_EO.geojson",
           "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Seagrass%20extent%20from%20satellite%20data/Seagrass%20extent%20from%20satellite%20data/collection.json"
         },
         "bbox": [
@@ -324,7 +352,8 @@
           56.15419374328269,
           -5.52042465727467,
           56.18850589614522
-        ]
+        ],
+        "download_area": true
       },
       "Milford Haven": {
         "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/remote_sensing/remote_sensing/MilfordHaven_seagrass_from_EO.geojson",
@@ -332,6 +361,7 @@
         "content": "This dataset contains the results of remote sensing mapping using random forest classification of Sentinel-2 satellite data.",
         "protected": false,
         "download": {
+          "GeoJSON": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/remote_sensing/remote_sensing/MilfordHaven_seagrass_fromEO.geojson",
           "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Seagrass%20extent%20from%20satellite%20data/Seagrass%20extent%20from%20satellite%20data/collection.json"
         },
         "bbox": [
@@ -339,7 +369,8 @@
           51.658313012,
           -4.798559781,
           51.740604678956046
-        ]
+        ],
+        "download_area": true
       },
       "Solent": {
         "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/remote_sensing/remote_sensing/Solent_seagrass_from_EO.geojson",
@@ -347,15 +378,16 @@
         "content": "This dataset contains the results of remote sensing mapping using random forest classification of Sentinel-2 satellite data.",
         "protected": false,
         "download": {
+          "GeoJSON": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/remote_sensing/remote_sensing/Solent_seagrass_from_EO.geojson",
           "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Seagrass%20extent%20from%20satellite%20data/Seagrass%20extent%20from%20satellite%20data/collection.json"
         },
-        "download_area": true,
         "bbox": [
           -1.540192622297193,
           50.67846846265142,
           -1.064872155359672,
           50.80980586885223
-        ]
+        ],
+        "download_area": true
       },
       "Studland": {
         "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/remote_sensing/remote_sensing/Studland_seagrass_from_EO.geojson",
@@ -363,6 +395,7 @@
         "content": "This dataset contains the results of remote sensing mapping using random forest classification of Sentinel-2 satellite data.",
         "protected": false,
         "download": {
+          "GeoJSON": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/remote_sensing/remote_sensing/Studland_seagrass_from_EO.geojson",
           "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Seagrass%20extent%20from%20satellite%20data/Seagrass%20extent%20from%20satellite%20data/collection.json"
         },
         "bbox": [
@@ -370,7 +403,8 @@
           50.64019426722318,
           -1.925425688500414,
           50.70458707246841
-        ]
+        ],
+        "download_area": true
       },
       "Weymouth": {
         "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/remote_sensing/remote_sensing/Weymouth_seagrass_from_EO.geojson",
@@ -378,6 +412,7 @@
         "content": "This dataset contains the results of remote sensing mapping using random forest classification of Sentinel-2 satellite data.",
         "protected": false,
         "download": {
+          "GeoJSON": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/remote_sensing/remote_sensing/Weymouth_seagrass_from_EO.geojson",
           "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Seagrass%20extent%20from%20satellite%20data/Seagrass%20extent%20from%20satellite%20data/collection.json"
         },
         "bbox": [
@@ -385,7 +420,8 @@
           50.59213814570934,
           -2.392389943163152,
           50.635350153149965
-        ]
+        ],
+        "download_area": true
       }
     }
   },

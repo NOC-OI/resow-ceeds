@@ -551,6 +551,19 @@ function MapHome1({
     await getTifLayer.parseGeoSimple().then(function () {
       const layer = getTifLayer.layer
       layer.addTo(map)
+      if (actualLayerUpload.bbox) {
+        const bounds = [
+          [
+            Number(actualLayerUpload.bbox[1]) - 0.1,
+            Number(actualLayerUpload.bbox[0]) - 0.1,
+          ],
+          [
+            Number(actualLayerUpload.bbox[3]) + 0.1,
+            Number(actualLayerUpload.bbox[2]) + 0.1,
+          ],
+        ]
+        map.fitBounds(bounds)
+      }
     })
   }
 
@@ -565,6 +578,19 @@ function MapHome1({
     )
     const layer = await getCOGLayer.getTile()
     layer.addTo(map)
+    if (actualLayerUpload.bbox) {
+      const bounds = [
+        [
+          Number(actualLayerUpload.bbox[1]) - 0.1,
+          Number(actualLayerUpload.bbox[0]) - 0.1,
+        ],
+        [
+          Number(actualLayerUpload.bbox[3]) + 0.1,
+          Number(actualLayerUpload.bbox[2]) + 0.1,
+        ],
+      ]
+      map.fitBounds(bounds)
+    }
 
     if (getCOGLayer.error) {
       setFlashMessage({
@@ -602,8 +628,10 @@ function MapHome1({
         return myStyle
       },
     })
+    const bounds = layer.getBounds()
     layer.options.attribution = `uploaded_${actualLayerUpload.name}`
     layer.addTo(map)
+    map.fitBounds(bounds)
   }
 
   async function generateSelectedUploadedLayer(type: string) {
@@ -628,6 +656,13 @@ function MapHome1({
       }
       const layer = await getWMSLayer(layerName, `uploaded_${layerName.name}`)
       layer.addTo(map)
+      if (layerName.bbox) {
+        const bounds = [
+          [Number(layerName.bbox[1]) - 0.1, Number(layerName.bbox[0]) - 0.1],
+          [Number(layerName.bbox[3]) + 0.1, Number(layerName.bbox[2]) + 0.1],
+        ]
+        map.fitBounds(bounds)
+      }
     }
     setLoading(false)
   }
@@ -769,10 +804,12 @@ function MapHome1({
 
   useEffect(() => {
     if (map) {
-      removeNormalLayerFromMap('drawn')
-      setTimeout(() => {
-        addDownloadLimitsToMap()
-      }, 500)
+      if (selectedSidebarOption === 'Download') {
+        removeNormalLayerFromMap('drawn')
+        setTimeout(() => {
+          addDownloadLimitsToMap()
+        }, 500)
+      }
     }
   }, [downloadInputValue])
 

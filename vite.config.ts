@@ -24,18 +24,6 @@ export default defineConfig(({ command, mode }) => {
       'process.env.APP_USE_AVT': env.APP_USE_AVT,
       // global: {},
     },
-    build: {
-      chunkSizeWarningLimit: 3800,
-      sourcemap: false,
-      rollupOptions: {
-        onwarn(warning: any, warn: any) {
-          if (warning.code === 'MODULE_LEVEL_DIRECTIVE') {
-            return
-          }
-          warn(warning)
-        },
-      },
-    },
     // build: {
     //   chunkSizeWarningLimit: 3800,
     //   sourcemap: false,
@@ -46,18 +34,30 @@ export default defineConfig(({ command, mode }) => {
     //       }
     //       warn(warning)
     //     },
-    //     output: {
-    //       manualChunks(id) {
-    //         if (id.includes('node_modules')) {
-    //           return id
-    //             .toString()
-    //             .split('node_modules/')[1]
-    //             .split('/')[0]
-    //             .toString()
-    //         }
-    //       },
-    //     },
     //   },
     // },
+    build: {
+      chunkSizeWarningLimit: 3800,
+      sourcemap: false,
+      rollupOptions: {
+        onwarn(warning: any, warn: any) {
+          if (warning.code === 'MODULE_LEVEL_DIRECTIVE') {
+            return
+          }
+          warn(warning)
+        },
+        output: {
+          manualChunks(id) {
+            if (id.includes('node_modules')) {
+              return id
+                .toString()
+                .split('node_modules/')[1]
+                .split('/')[0]
+                .toString()
+            }
+          },
+        },
+      },
+    },
   }
 })

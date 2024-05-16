@@ -147,6 +147,48 @@ export function reprojectGeometry(
   }
 }
 
+proj4.defs('EPSG:32630', '+proj=utm +zone=30 +datum=WGS84 +units=m +no_defs')
+proj4.defs('EPSG:4326', '+proj=longlat +datum=WGS84 +no_defs')
+proj4.defs('urn:ogc:def:crs:EPSG::32630', proj4.defs['EPSG:32630'])
+proj4.defs('urn:ogc:def:crs:OGC:1.3:CRS84', proj4.defs['EPSG:4326'])
+
+export const reprojectGeoJSON = (geoJsonData) => {
+  const fromCRS = geoJsonData.crs?.properties?.name || 'EPSG:4326'
+  const toCRS = 'EPSG:4326'
+
+  if (fromCRS === toCRS) {
+    return geoJsonData
+  }
+  const reprojectedFeatures = geoJsonData.features.map((feature) => {
+    const reprojectedGeometry = {
+      ...feature.geometry,
+      coordinates: reprojectCoordinates(
+        feature.geometry.coordinates,
+        fromCRS,
+        toCRS,
+      ),
+    }
+    return {
+      ...feature,
+      geometry: reprojectedGeometry,
+    }
+  })
+
+  return {
+    ...geoJsonData,
+    features: reprojectedFeatures,
+  }
+}
+
+const reprojectCoordinates = (coordinates, fromCRS, toCRS) => {
+  if (Array.isArray(coordinates[0])) {
+    return coordinates.map((coord) =>
+      reprojectCoordinates(coord, fromCRS, toCRS),
+    )
+  }
+  return proj4(fromCRS, toCRS, coordinates)
+}
+
 export function reprojectData(geojsonData, sourceProjection, targetProjection) {
   return {
     ...geojsonData,
@@ -268,7 +310,18 @@ export function parseCapabilities(xml) {
       legends.push(onlineResource)
       styles.push(styleName)
     }
-    layers[layerName] = [styles, legends]
+    const boundingBoxNode = layerNode.getElementsByTagName('BoundingBox')[0]
+    let bbox = null
+
+    if (boundingBoxNode) {
+      bbox = [
+        boundingBoxNode.getAttribute('minx'),
+        boundingBoxNode.getAttribute('miny'),
+        boundingBoxNode.getAttribute('maxx'),
+        boundingBoxNode.getAttribute('maxy'),
+      ]
+    }
+    layers[layerName] = { styles, legends, bbox }
   }
   return layers
 }

@@ -51,7 +51,7 @@ export function UploadLayerWMS({
       const layers = parseCapabilities(text)
       setLayers(layers)
       setWmsSelectedLayer(Object.keys(layers)[0])
-      setSelectedStyle(layers[Object.keys(layers)[0]][0][0])
+      setSelectedStyle(layers[Object.keys(layers)[0]].styles[0])
     } catch (error) {
       setError(
         'Error fetching capabilities: please check the URL and try again',
@@ -67,7 +67,7 @@ export function UploadLayerWMS({
 
   function handleChangeWmsSelectedLayer(value) {
     setWmsSelectedLayer(value)
-    setSelectedStyle(layers[value][0][0])
+    setSelectedStyle(layers[value].styles[0])
   }
   return (
     <div className="flex flex-col items-center gap-3 w-full">
@@ -137,7 +137,7 @@ export function UploadLayerWMS({
               onChange={(e) => setSelectedStyle(e.target.value)}
               className="clickable bg-black border border-black bg-opacity-20 text-white text-sm rounded-lg  block w-full p-2 hover:bg-opacity-80"
             >
-              {layers[wmsSelectedLayer][0].map((style, index) => (
+              {layers[wmsSelectedLayer].styles.map((style, index) => (
                 <option
                   className="!bg-black !bg-opacity-80 opacity-30 !text-white"
                   value={style}

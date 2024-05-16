@@ -8,7 +8,7 @@ import {
 } from '../DataExplorationSelection/styles'
 import { CalcTypeContainer } from '../DataExplorationType/styles'
 import HighlightAltIcon from '@mui/icons-material/HighlightAlt'
-import { ButtonIcon, CssTextField } from './styles'
+import { ButtonIcon, CssTextField, LayerTypesDownload } from './styles'
 import { LayerTypeOptionsContainer } from '../DataExplorationTypeOptions/styles'
 import React, { useEffect } from 'react'
 import { useContextHandle } from '../../lib/contextHandle'
@@ -378,7 +378,7 @@ export function DownloadSelection({
       <p className="text-lg font-bold text-white mb-2 text-center">
         Selected Layers
       </p>
-      <LayerTypes>
+      <LayerTypesDownload>
         {Object.keys(selectedLayers).length === 0 ? (
           <p className="text-sm text-white text-center">No layers selected</p>
         ) : (
@@ -459,7 +459,7 @@ export function DownloadSelection({
             )
           })
         )}
-      </LayerTypes>
+      </LayerTypesDownload>
     </LayerSelectionContainer>
   )
 }

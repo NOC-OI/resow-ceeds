@@ -12,6 +12,7 @@ import {
   TILE_SERVER_URL,
   defaultOpacity,
   reprojectData,
+  reprojectGeoJSON,
 } from '../../lib/map/utils'
 import chroma from 'chroma-js'
 import { handleClickLegend } from '../DataExplorationTypeOptions'
@@ -100,15 +101,13 @@ export function UploadSelection({
 
   const checkCOGInput = async (localUploadInfo) => {
     try {
-      await axios.get(
+      const info = await axios.get(
         `${TILE_SERVER_URL}cog/info?url=${encodeURIComponent(
           localUploadInfo.url,
         )}&encoded=false`,
       )
-      return true
-    } catch (error) {
-      return false
-    }
+      return info.data
+    } catch (error) {}
   }
   const handleUploadLayer = async (localUploadInfo) => {
     if (actualLayerUpload.dataType === 'GeoTIFF') {
@@ -126,6 +125,12 @@ export function UploadSelection({
                 : colorScale,
             scale,
             opacity: defaultOpacity,
+            bbox: [
+              georaster.xmin,
+              georaster.ymin,
+              georaster.xmax,
+              georaster.ymax,
+            ],
           }
           setActualLayerUpload(finalActualLayerUpload)
           const difValues = scale[1] - scale[0]
@@ -230,6 +235,12 @@ export function UploadSelection({
                 : colorScale,
             scale,
             opacity: defaultOpacity,
+            bbox: [
+              georaster.xmin,
+              georaster.ymin,
+              georaster.xmax,
+              georaster.ymax,
+            ],
           }
           setActualLayerUpload(finalActualLayerUpload)
           const difValues = scale[1] - scale[0]
@@ -287,12 +298,15 @@ export function UploadSelection({
       reader.onload = async (e) => {
         try {
           const data = JSON.parse(e.target.result.toString())
+          const reprojectedData = reprojectGeoJSON(data)
+          // const reprojectedData = reprojectGeoJSON(data, 'EPSG:3857', 'EPSG:4326');
+
           setActualLayerUpload((actualLayerUpload) => {
             const newActualLayerUpload = { ...actualLayerUpload }
             return {
               dataType: newActualLayerUpload.dataType,
               name: localUploadInfo.file.name,
-              data,
+              data: reprojectedData,
               colors: newActualLayerUpload.colors,
             }
           })
@@ -322,7 +336,6 @@ export function UploadSelection({
             const kmlDom = new DOMParser().parseFromString(kmlText, 'text/xml')
             data = toGeoJSON.kml(kmlDom)
           }
-
           setActualLayerUpload((actualLayerUpload) => {
             const newActualLayerUpload = { ...actualLayerUpload }
             return {
@@ -409,6 +422,7 @@ export function UploadSelection({
         url: localUploadInfo.url,
         data: wmsSelectedLayer,
         colors: selectedStyle,
+        bbox: layers[wmsSelectedLayer].bbox,
       }
       setActualLayerUpload(newActualLayerUpload)
       const newListLayersUpload = { ...listLayersUpload }
@@ -440,6 +454,7 @@ export function UploadSelection({
             nameOfLayer.length > 18 ? nameOfLayer.slice(0, 18) : nameOfLayer,
           data: localUploadInfo.url,
           colors: colorScale,
+          bbox: cogIsValid.bounds,
         }
         setActualLayerUpload(newActualLayerUpload)
         const newListLayersUpload = { ...listLayersUpload }
@@ -472,9 +487,7 @@ export function UploadSelection({
               ? csvData.latLngColumnNames[1]
               : csvData.latLngColumnNumbers[1]
             const geojsonFeatures = results.data
-              .filter(
-                (row) => row[latColumn] && row[lngColumn], // Filter out rows without lat/long
-              )
+              .filter((row) => row[latColumn] && row[lngColumn])
               .map((row) => ({
                 type: 'Feature',
                 properties: csvData.header ? row : { properties: row },
@@ -564,6 +577,7 @@ export function UploadSelection({
 
   function checkInputFile(file) {
     const fileType = fileTypes[actualLayerUpload.dataType]
+    console.log(file)
     if (
       fileType.mimeTypes.includes(file.type) ||
       fileType.extensions.includes(file.name)

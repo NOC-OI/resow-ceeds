@@ -1,15 +1,24 @@
 import styles from './DimensionsToogle.module.css'
-import { useNavigate } from 'react-router-dom'
+// import { useNavigate } from 'react-router-dom'
 
 export function DimensionsToogle() {
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
 
+  // function handleChangeLanguage() {
+  //   if (rout === '/3d') {
+  //     navigate('/')
+  //   } else {
+  //     navigate('/3d')
+  //   }
+  // }
   function handleChangeLanguage() {
-    if (rout === '/3d') {
-      navigate('/')
-    } else {
-      navigate('/3d')
-    }
+    const rout = window.location.pathname
+    const newRoute = rout === '/3d' ? '/' : '/3d'
+
+    // Create an <a> element and click it to navigate
+    const link = document.createElement('a')
+    link.href = newRoute
+    link.click()
   }
   const rout = window.location.pathname
   return (

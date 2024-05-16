@@ -23,6 +23,7 @@ import {
   verifyIfWasSelectedBefore,
 } from '../DataExplorationTypeOptions'
 import styles from '../DataExplorationTypeOptions/DataExplorationTypeOptions.module.css'
+import { ConfirmationDialog } from '../ConfirmationDialog'
 
 interface ThreeDDataExplorationTypeOptionsProps {
   content: any
@@ -60,6 +61,22 @@ export function ThreeDDataExplorationTypeOptions({
   setDownloadPopup,
 }: ThreeDDataExplorationTypeOptionsProps) {
   const [opacityIsClicked, setOpacityIsClicked] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [threeDLayer, setThreeDLayer] = useState({})
+
+  const handleConfirm = () => {
+    const layer: any = threeDLayer
+    setIsModalOpen(false)
+    setThreeDLayer({})
+    setThreeD((threeD) => {
+      return threeD?.subLayer === layer?.subLayer ? null : layer
+    })
+  }
+
+  const handleClose = () => {
+    setIsModalOpen(false)
+    setThreeDLayer({})
+  }
 
   let user: any | null = null
   if (isLogged) {
@@ -73,9 +90,8 @@ export function ThreeDDataExplorationTypeOptions({
         dataInfo: subLayers[subLayer],
       }),
     )
-    setThreeD((threeD) => {
-      return threeD?.subLayer === layerInfo.subLayer ? null : layerInfo
-    })
+    setThreeDLayer(layerInfo)
+    setIsModalOpen(true)
   }
 
   return (
@@ -166,7 +182,7 @@ export function ThreeDDataExplorationTypeOptions({
                 }
               />
             ) : null}
-            {content === 'Bathymetry' && (
+            {subLayers[subLayer].assetId && (
               <FontAwesomeIcon
                 icon={faCube}
                 title="Add 3D terrain to the Map"
@@ -234,6 +250,15 @@ export function ThreeDDataExplorationTypeOptions({
             }
           />
         )}
+      {isModalOpen && (
+        <ConfirmationDialog
+          onClose={handleClose}
+          onConfirm={handleConfirm}
+          message={
+            'The 3d visualisation consumes a lot of memory and may slow down your browser. Do you want to continue?'
+          }
+        />
+      )}
     </LayerTypeOptionsContainer>
   )
 }

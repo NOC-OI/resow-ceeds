@@ -35,7 +35,7 @@ export function FullPagePopup({
       >
         <FontAwesomeIcon icon={faCircleXmark} onClick={handleClose} />
         <div>
-          <img src="logo.png" className="h-28" />
+          <img src="logo.png" className="h-20" />
         </div>
         <h2 className="text-center font-bold pb-3 capitalize text-4xl"></h2>
         <div className="p-4">
@@ -43,8 +43,8 @@ export function FullPagePopup({
             Coastal Ecosystem Enhancement Decision Support (CEEDS) tool
           </p>
         </div>
-        <div className="p-4">
-          <p className="text-justify font-bold text-xl">
+        <div className="p-2">
+          <p className="text-justify font-bold text-lg">
             The CEEDS is a critical component of the Sustainable Management of
             Marine Resources (SMMR) funded Restoration of Seagrass for Ocean
             Wealth (ReSOW) UK project. The CEEDS Tool brings together all data
@@ -54,11 +54,11 @@ export function FullPagePopup({
           </p>
           <p className="text-center font-bold text-xl pt-5"></p>
         </div>
-        <div className="p-4 lg:px-32 px-24  flex justify-center items-center">
+        <div className="p-2 lg:px-32 px-24  flex justify-center items-center">
           <a
             href="https://forms.office.com/e/KriKWpWS6x"
             target="_blank"
-            className={`p-4 cursor-pointer ${styles.pulseAnimation}`}
+            className={`p-2 cursor-pointer ${styles.pulseAnimation}`}
             title="Feedback Form"
           >
             <FontAwesomeIcon icon={faClipboardQuestion} className="" />
@@ -88,12 +88,12 @@ export function FullPagePopup({
             </a>
           </div>
         </div> */}
-        <div className="p-4">
+        <div className="p-2">
           <div className="grid grid-cols-4 gap-1">
             <a
               href="https://resow.uk/"
               target="_blank"
-              className="p-4 cursor-pointer opacity-70 hover:opacity-100"
+              className="p-2 cursor-pointer opacity-70 hover:opacity-100"
               title="Resow Website"
             >
               <img src="favicon.png" className="h-8 pb-4" />
@@ -104,7 +104,7 @@ export function FullPagePopup({
             </a>
             <div
               onClick={() => handleTutorial()}
-              className="p-4 cursor-pointer hover:text-[#D49511]"
+              className="p-2 cursor-pointer hover:text-[#D49511]"
               title="Guided tour of the tool"
             >
               <FontAwesomeIcon icon={faBook} />
@@ -113,7 +113,7 @@ export function FullPagePopup({
             <a
               href="https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/catalog.json"
               target="_blank"
-              className="p-4 cursor-pointer"
+              className="p-2 cursor-pointer"
               title="Data Catalog"
             >
               <FontAwesomeIcon icon={faList} />
@@ -122,7 +122,7 @@ export function FullPagePopup({
             <a
               href="https://github.com/NOC-OI/resow-ceeds"
               target="_blank"
-              className="p-4 cursor-pointer"
+              className="p-2 cursor-pointer"
               title="Code"
             >
               <GithubLogo size={32} />

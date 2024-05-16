@@ -3,7 +3,7 @@ import { Button } from '@mui/material'
 
 export function ConfirmationDialog({ onClose, onConfirm, message }) {
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur confirm-dialog text-white">
+    <div className="fixed inset-0 flex items-center !justify-center z-50 backdrop-blur confirm-dialog text-white">
       <div className="bg-black bg-opacity-60 rounded-lg p-4 max-w-md w-full mx-4 shadow-lg !block">
         <div className="flex items-center">
           <WarningIcon style={{ color: 'white' }} />
@@ -14,8 +14,8 @@ export function ConfirmationDialog({ onClose, onConfirm, message }) {
         </div>
         <div className="text-center md:text-right mt-4 flex justify-end gap-2">
           <Button
-            variant="contained"
-            className="w-full md:w-auto font-bold"
+            variant="outlined"
+            className="w-full md:w-auto !bg-black !font-bold"
             color="error"
             id="confirm-delete-btn"
             onClick={onConfirm}
@@ -23,8 +23,8 @@ export function ConfirmationDialog({ onClose, onConfirm, message }) {
             Confirm
           </Button>
           <Button
-            variant="contained"
-            className="w-full md:w-auto font-bold"
+            variant="outlined"
+            className="w-full md:w-auto !bg-black !font-bold"
             id="confirm-cancel-btn"
             onClick={onClose}
           >

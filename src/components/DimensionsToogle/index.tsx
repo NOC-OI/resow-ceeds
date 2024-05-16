@@ -11,7 +11,7 @@ export function DimensionsToogle() {
   //     navigate('/3d')
   //   }
   // }
-  function handleChangeLanguage() {
+  function handleChangeDimensions() {
     const rout = window.location.pathname
     const newRoute = rout === '/3d' ? '/' : '/3d'
 
@@ -24,13 +24,13 @@ export function DimensionsToogle() {
   return (
     <div
       id="dimensions_toogle"
-      className="text-[1rem] z-[9999] font-extrabold leading-6 uppercase pl-0 sm:pl-3 pt-3 cursor-pointer"
+      className="text-[1rem] !z-[9998] font-extrabold leading-6 uppercase pl-0 sm:pl-3 pt-3 cursor-pointer"
     >
       <label className={`${styles.switch} relative cursor-pointer`}>
         <input
           type="checkbox"
           checked={rout === '/3d'}
-          onChange={handleChangeLanguage}
+          onChange={handleChangeDimensions}
         />
         <span className={`${styles.slider} ${styles.slider_animation}`}></span>
         <div className="absolute flex gap-[14px] xl:-mt-[22px] lg:-mt-[18px] md:-mt-[15px] sm:-mt-[13px] -mt-[10px] text-[14px] pl-[6px] text-gray-200 font-changa">

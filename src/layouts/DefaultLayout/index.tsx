@@ -4,7 +4,6 @@ import { ContextHandleProvider } from '../../lib/contextHandle'
 import { Loading } from '../../components/Loading'
 import { FlashMessages } from '../../components/FlashMessages'
 import { PrintPageHandleProvider } from '../../lib/data/printPageManagement'
-import { ConfirmationDialog } from '../../components/ConfirmationDialog'
 
 export function DefaulLayout() {
   return (

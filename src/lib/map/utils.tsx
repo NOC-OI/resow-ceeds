@@ -6,6 +6,7 @@ import { GetGeoblazeValue } from './getGeoblazeValue'
 import { GetTifLayer } from './addGeoraster'
 import * as Cesium from 'cesium'
 import * as turf from '@turf/turf'
+import { colorScaleByName } from './jsColormaps'
 
 export interface keyable {
   [key: string]: unknown
@@ -23,6 +24,32 @@ export function createTurfPoint(markers, coordinates, dif) {
   return markers
 }
 
+export function calculateColorsForLegend(
+  colors: any,
+  scale: any,
+  n: number,
+  rgb = false,
+) {
+  const colorScale: any = rgb
+    ? chroma.scale(colors).domain(scale)
+    : colorScaleByName(colors)
+  const difValues = scale[1] - scale[0]
+  const listColors = []
+  const listColorsValues = []
+  if (rgb) {
+    for (let i = 0; i < n; i++) {
+      const color = colorScale((1 / (n - 1)) * i)
+      listColors.push([color._rgb[0], color._rgb[1], color._rgb[2]])
+      listColorsValues.push(Number(scale[0]) + (difValues / (n - 1)) * i)
+    }
+  } else {
+    for (let i = 0; i < n; i++) {
+      listColors.push(colorScale((1 / (n - 1)) * i))
+      listColorsValues.push(Number(scale[0]) + (difValues / (n - 1)) * i)
+    }
+  }
+  return { listColors, listColorsValues }
+}
 export const baseLayers = [
   {
     attribution: 'OpenStreetMap',

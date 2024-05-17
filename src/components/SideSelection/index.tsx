@@ -76,7 +76,8 @@ export function SideSelection({
   setDownloadPopup,
 }: SideSelectionProps) {
   const { loading } = useContextHandle()
-  const { setSelectedLayersUpload } = useUploadDataHandle()
+  const { selectedLayersUpload, setSelectedLayersUpload } =
+    useUploadDataHandle()
   const { setDrawRectangle, setRectangleLimits } = useDownloadManagementHandle()
   async function handleShowSelection(e: any) {
     const oldSelectedSidebarOption = selectedSidebarOption
@@ -119,6 +120,29 @@ export function SideSelection({
     setShowRange(futureShowRange)
   }, [selectedLayers])
 
+  useEffect(() => {
+    Object.keys(layerLegend).forEach((legend: string) => {
+      if (!Object.keys(selectedLayers).includes(legend)) {
+        setLayerLegend((layerLegend) => {
+          const newLayerLegend = { ...layerLegend }
+          delete newLayerLegend[legend]
+          return newLayerLegend
+        })
+      }
+    })
+  }, [selectedLayers])
+
+  useEffect(() => {
+    Object.keys(layerLegend).forEach((legend: string) => {
+      if (!Object.keys(selectedLayersUpload).includes(legend)) {
+        setLayerLegend((layerLegend) => {
+          const newLayerLegend = { ...layerLegend }
+          delete newLayerLegend[legend]
+          return newLayerLegend
+        })
+      }
+    })
+  }, [selectedLayersUpload])
   function handleEraseLayers() {
     setActualLayer(Object.keys(selectedLayers))
     setSelectedLayers({})
@@ -267,7 +291,6 @@ export function SideSelection({
           {selectedSidebarOption === 'Download' && (
             <DownloadSelection
               selectedLayers={selectedLayers}
-              setSelectedLayers={setSelectedLayers}
               listLayers={listLayers}
               setDownloadPopup={setDownloadPopup}
             />

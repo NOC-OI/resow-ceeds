@@ -21,6 +21,8 @@ interface ContextHandleContextType {
     content: string
     duration?: number
   }) => void
+  dialogInfo: any
+  setDialogInfo: any
 }
 
 const ContextHandleContext = createContext<
@@ -35,6 +37,7 @@ export const ContextHandleProvider: React.FC<ContextHandleProviderProps> = ({
   children,
 }) => {
   const [loading, setLoading] = useState<boolean>(true)
+  const [dialogInfo, setDialogInfo] = useState<any>({})
 
   const [showFlash, setShowFlash] = useState(false)
   const [flashMessage, setFlashMessage] = useState({
@@ -57,6 +60,8 @@ export const ContextHandleProvider: React.FC<ContextHandleProviderProps> = ({
         setShowFlash,
         flashMessage,
         setFlashMessage,
+        dialogInfo,
+        setDialogInfo,
       }}
     >
       {children}

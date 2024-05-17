@@ -1,8 +1,10 @@
 import React from 'react'
 import { allColorScales } from '../../lib/map/jsColormaps'
+import { CustomUploadFile } from '../CustomUploadFile'
 
 interface UploadLayerGeoJSONGeoTIFFProps {
   handleFileChange: any
+  handleFileChangeProj: any
   labelText: any
   labelPrjText: any
   actualLayerUpload: any
@@ -13,6 +15,7 @@ interface UploadLayerGeoJSONGeoTIFFProps {
 
 export function UploadLayerGeoJSONGeoTIFF({
   handleFileChange,
+  handleFileChangeProj,
   labelText,
   labelPrjText,
   actualLayerUpload,
@@ -22,60 +25,23 @@ export function UploadLayerGeoJSONGeoTIFF({
 }: UploadLayerGeoJSONGeoTIFFProps) {
   return (
     <div className="w-full">
-      <div className="flex justify-between w-full items-center">
-        <p className="pt-4 text-md font-bold text-white mb-2 text-center">
-          {actualLayerUpload.dataType === 'Shapefile'
+      <CustomUploadFile
+        label={labelText}
+        onChange={handleFileChange}
+        text={
+          actualLayerUpload.dataType === 'Shapefile'
             ? 'Upload Shp File'
-            : 'Upload File'}
-        </p>
-        <div className="flex justify-center gap-6 items-center">
-          <label
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            htmlFor="file_input"
-          >
-            Upload file:
-          </label>
-          <input
-            id="file_input"
-            type="file"
-            style={{ display: 'none' }}
-            onChange={handleFileChange}
-          />
-          <label
-            htmlFor="file_input"
-            className="block w-full text-sm text-white rounded-lg cursor-pointer bg-black bg-opacity-50 hover:bg-opacity-80"
-            style={{ padding: '10px', textAlign: 'center' }}
-          >
-            {labelText}
-          </label>
-        </div>
-      </div>
+            : 'Upload File'
+        }
+      />
       {actualLayerUpload.dataType === 'Shapefile' && (
         <div className="flex justify-between w-full items-center">
-          <p className="pt-4 text-md font-bold text-white mb-2 text-center">
-            Upload Prj File:
-          </p>
-          <div className="flex justify-center gap-0 items-center">
-            <label
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              htmlFor="file_proj_input"
-            >
-              Upload file:
-            </label>
-            <input
-              id="file_proj_input"
-              type="file"
-              style={{ display: 'none' }}
-              onChange={(e) => handleFileChange(e, true)}
-            />
-            <label
-              htmlFor="file_proj_input"
-              className="block w-full text-sm text-white rounded-lg cursor-pointer bg-black bg-opacity-50 hover:bg-opacity-80"
-              style={{ padding: '10px', textAlign: 'center' }}
-            >
-              {labelPrjText}
-            </label>
-          </div>
+          <CustomUploadFile
+            label={labelPrjText}
+            onChange={handleFileChangeProj}
+            text={'Upload Prj File:'}
+            inputId="file_input_proj"
+          />
         </div>
       )}
       <div className="pt-4 flex justify-between w-full items-center">
@@ -119,7 +85,11 @@ export function UploadLayerGeoJSONGeoTIFF({
                 type="color"
                 className="p-1 block bg-black  bg-opacity-30 cursor-pointer rounded-lg disabled:opacity-50 disabled:pointer-events-none"
                 id="hs-color-input"
-                value={actualLayerUpload.colors[0]}
+                value={
+                  typeof actualLayerUpload.colors === 'string'
+                    ? actualLayerUpload.colors
+                    : actualLayerUpload.colors[0]
+                }
                 onChange={(e) => handleColorChange(e, 0)}
                 title="Choose your color"
               />
@@ -128,7 +98,11 @@ export function UploadLayerGeoJSONGeoTIFF({
                   type="color"
                   className="p-1 block bg-black bg-opacity-30  cursor-pointer rounded-lg disabled:opacity-50 disabled:pointer-events-none"
                   id="hs-color-input"
-                  value={actualLayerUpload.colors[1]}
+                  value={
+                    typeof actualLayerUpload.colors === 'string'
+                      ? actualLayerUpload.colors
+                      : actualLayerUpload.colors[1]
+                  }
                   onChange={(e) => handleColorChange(e, 1)}
                   title="Choose your color"
                 />

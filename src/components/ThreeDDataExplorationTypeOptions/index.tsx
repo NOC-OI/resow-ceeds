@@ -23,7 +23,7 @@ import {
   verifyIfWasSelectedBefore,
 } from '../DataExplorationTypeOptions'
 import styles from '../DataExplorationTypeOptions/DataExplorationTypeOptions.module.css'
-import { ConfirmationDialog } from '../ConfirmationDialog'
+import { useContextHandle } from '../../lib/contextHandle'
 
 interface ThreeDDataExplorationTypeOptionsProps {
   content: any
@@ -61,12 +61,12 @@ export function ThreeDDataExplorationTypeOptions({
   setDownloadPopup,
 }: ThreeDDataExplorationTypeOptionsProps) {
   const [opacityIsClicked, setOpacityIsClicked] = useState(false)
-  const [isModalOpen, setIsModalOpen] = useState(false)
   const [threeDLayer, setThreeDLayer] = useState({})
+  const { setDialogInfo } = useContextHandle()
 
   const handleConfirm = () => {
     const layer: any = threeDLayer
-    setIsModalOpen(false)
+    setDialogInfo({})
     setThreeDLayer({})
     setThreeD((threeD) => {
       return threeD?.subLayer === layer?.subLayer ? null : layer
@@ -74,7 +74,7 @@ export function ThreeDDataExplorationTypeOptions({
   }
 
   const handleClose = () => {
-    setIsModalOpen(false)
+    setDialogInfo({})
     setThreeDLayer({})
   }
 
@@ -91,7 +91,12 @@ export function ThreeDDataExplorationTypeOptions({
       }),
     )
     setThreeDLayer(layerInfo)
-    setIsModalOpen(true)
+    setDialogInfo({
+      onClose: handleClose,
+      onConfirm: handleConfirm,
+      message:
+        'The 3d visualisation consumes a lot of memory and may slow down your browser. Do you want to continue?',
+    })
   }
 
   return (
@@ -250,15 +255,6 @@ export function ThreeDDataExplorationTypeOptions({
             }
           />
         )}
-      {isModalOpen && (
-        <ConfirmationDialog
-          onClose={handleClose}
-          onConfirm={handleConfirm}
-          message={
-            'The 3d visualisation consumes a lot of memory and may slow down your browser. Do you want to continue?'
-          }
-        />
-      )}
     </LayerTypeOptionsContainer>
   )
 }

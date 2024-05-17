@@ -5,7 +5,7 @@ import {
   ZoomControl,
 } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { act, useEffect, useMemo, useState } from 'react'
 import * as L from 'leaflet'
 import { GetTifLayer, GetCOGLayer } from '../../lib/map/addGeoraster'
 import { callBetterWMS } from '../../lib/map/addBetterWMS'
@@ -397,10 +397,6 @@ function MapHome1({
                   content: getCOGLayer.error,
                 })
               }
-              // bounds = [
-              //   [getCOGLayer.bounds[3], getCOGLayer.bounds[0]],
-              //   [getCOGLayer.bounds[1], getCOGLayer.bounds[2]],
-              // ]
               return await getCOGLayer.getTile(
                 stats ? stats[stats.length - 1] : undefined,
               )
@@ -601,10 +597,14 @@ function MapHome1({
   }
 
   async function generateUploadedGeoJSONLayer(actualLayerUpload) {
+    const colors =
+      typeof actualLayerUpload.colors === 'string'
+        ? actualLayerUpload.colors
+        : actualLayerUpload.colors[0]
     const layer = L.geoJSON(actualLayerUpload.data, {
       pointToLayer: function (feature, latlng) {
         return L.marker(latlng, {
-          icon: createIcon('/marker-icon.png', [25, 25]),
+          icon: createDivIcon(colors, [25, 25]),
         })
       },
       onEachFeature: function (feature, layer) {
@@ -617,10 +617,10 @@ function MapHome1({
         })
       },
       style: function () {
-        const color = actualLayerUpload.colors[0]
+        const color = colors
         const myStyle = {
           color,
-          fillColor: actualLayerUpload.colors[0],
+          fillColor: colors,
           weight: 3,
           opacity: defaultOpacity,
           fillOpacity: defaultOpacity,
@@ -863,7 +863,7 @@ function MapHome1({
         if (
           localSelectedLayers[layer.options.attribution].dataType !== 'Photo'
         ) {
-          const bounds = localSelectedLayers[layer.options.attribution].bbox
+          let bounds = localSelectedLayers[layer.options.attribution].bbox
             ? [
                 [
                   localSelectedLayers[layer.options.attribution].bbox[1] - 0.1,
@@ -875,6 +875,13 @@ function MapHome1({
                 ],
               ]
             : defaultWMSBounds
+          if (
+            ['GeoJSON', 'Shapefile', 'CSV', 'KML', 'KMZ'].includes(
+              localSelectedLayers[layer.options.attribution].dataType,
+            )
+          ) {
+            bounds = layer.getBounds()
+          }
           bringLayerToFront(layer)
           map.fitBounds(bounds)
         } else {

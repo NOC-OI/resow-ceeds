@@ -90,6 +90,9 @@ export const UploadDataHandleProvider: React.FC<
     if (actualLayerUpload.active) {
       setSelectedLayersUpload((selectedLayersUpload: any) => {
         const newSelectedLayersUpload = { ...selectedLayersUpload }
+        if (newSelectedLayersUpload[`uploaded_${actualLayerUpload.name}`]) {
+          return newSelectedLayersUpload
+        }
         return {
           ...newSelectedLayersUpload,
           [`uploaded_${actualLayerUpload.name}`]: {
@@ -100,11 +103,15 @@ export const UploadDataHandleProvider: React.FC<
             colors: actualLayerUpload.colors,
             scale: actualLayerUpload.scale,
             opacity: defaultOpacity,
+            bbox: actualLayerUpload.bbox,
           },
         }
       })
       setListLayersUpload((listLayersUpload: any) => {
         const newListLayersUpload = { ...listLayersUpload }
+        if (newListLayersUpload[actualLayerUpload.name]) {
+          return newListLayersUpload
+        }
         return {
           ...newListLayersUpload,
           [actualLayerUpload.name]: {
@@ -115,6 +122,7 @@ export const UploadDataHandleProvider: React.FC<
             colors: actualLayerUpload.colors,
             scale: actualLayerUpload.scale,
             opacity: defaultOpacity,
+            bbox: actualLayerUpload.bbox,
           },
         }
       })

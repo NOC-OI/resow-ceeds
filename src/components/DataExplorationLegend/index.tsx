@@ -10,6 +10,7 @@ import { CssTextField } from '../DownloadSelection/styles'
 import chroma from 'chroma-js'
 import { useUploadDataHandle } from '../../lib/data/uploadDataManagement'
 import { useContextHandle } from '../../lib/contextHandle'
+import { calculateColorsForLegend } from '../../lib/map/utils'
 
 interface LayerLegendProps {
   layerLegend: any
@@ -44,7 +45,6 @@ export function DataExplorationLegend({
   const [scaleLimits, setScaleLimits] = useState<any[]>(
     layerLegend[layerLegendName].scale,
   )
-
   const [editLayerColors, setEditLayerColors] = useState<boolean>(false)
   const [customColors, setCustomColors] = useState<string[]>([
     '#0859fc',
@@ -62,13 +62,11 @@ export function DataExplorationLegend({
       clearTimeout(errorTimeoutRef.current)
       errorTimeoutRef.current = null
     }
-
     if (error) {
       errorTimeoutRef.current = window.setTimeout(() => {
         setError('')
       }, 5000)
     }
-
     return () => {
       if (errorTimeoutRef.current !== null) {
         clearTimeout(errorTimeoutRef.current)
@@ -79,6 +77,7 @@ export function DataExplorationLegend({
     setColorScale(layerLegend[layerLegendName].layerInfo?.colors)
     setScaleLimits(layerLegend[layerLegendName].scale)
   }, [layerLegend])
+
   const handleColorChange = (event, index) => {
     setCustomColors((customColors) => {
       const newCustomColors = [...customColors]
@@ -86,6 +85,7 @@ export function DataExplorationLegend({
       return newCustomColors
     })
   }
+
   function handleChangeScaleLimits(
     e: React.ChangeEvent<HTMLInputElement>,
     idx: number,
@@ -109,7 +109,6 @@ export function DataExplorationLegend({
     }
     return false
   }
-
   const handleSubmit = async () => {
     const setState = layerLegend[layerLegendName].selectedLayersKey.startsWith(
       'uploaded_',
@@ -150,33 +149,16 @@ export function DataExplorationLegend({
         }
         return newSelectedLayers
       })
+      const colors = colorScale === 'Custom' ? customColors : colorScale
+      const { listColors, listColorsValues } = calculateColorsForLegend(
+        colors,
+        scaleLimits,
+        30,
+        typeof colors !== 'string',
+      )
       setLayerLegend((layerLegend) => {
         const newLayerLegend = { ...layerLegend }
         delete newLayerLegend[layerLegendName]
-        const difValues = scaleLimits[1] - scaleLimits[0]
-        const times = 30
-        const cogColors = []
-        const cogColorsValues = []
-        const colors = colorScale === 'Custom' ? customColors : colorScale
-        let scaleColor
-        if (typeof colors === 'string') {
-          scaleColor = colorScaleByName(colors)
-          for (let i = 0; i < times; i++) {
-            cogColors.push(scaleColor((1 / (times - 1)) * i))
-            cogColorsValues.push(
-              Number(scaleLimits[0]) + (difValues / (times - 1)) * i,
-            )
-          }
-        } else {
-          scaleColor = chroma.scale(colors).domain(scaleLimits)
-          for (let i = 0; i < times; i++) {
-            const color = scaleColor((1 / (times - 1)) * i)
-            cogColors.push([color._rgb[0], color._rgb[1], color._rgb[2]])
-            cogColorsValues.push(
-              Number(scaleLimits[0]) + (difValues / (times - 1)) * i,
-            )
-          }
-        }
         newLayerLegend[layerLegendName] = {
           ...layerLegend[layerLegendName],
           scale: scaleLimits,
@@ -188,7 +170,7 @@ export function DataExplorationLegend({
                 : colorScale,
             scale: scaleLimits,
           },
-          legend: [cogColors, cogColorsValues],
+          legend: [listColors, listColorsValues],
         }
         return newLayerLegend
       })

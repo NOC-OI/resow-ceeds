@@ -13,6 +13,7 @@ import { GetCOGLayer, GetTifLayer } from '../../lib/map/addGeoraster'
 import { colorScaleByName } from '../../lib/map/jsColormaps'
 import styles from './DataExplorationTypeOptions.module.css'
 import {
+  calculateColorsForLegend,
   colorScale,
   defaultOpacity,
   getLegendCapabilities,
@@ -117,27 +118,24 @@ export async function handleClickLegend(
       }
       return newLayerLegend
     })
-  } else if (subLayers[subLayer].dataType === 'FGB') {
-    setLayerLegend((layerLegend: any) => {
-      const newLayerLegend = { ...layerLegend }
-      delete newLayerLegend[subLayer]
-      newLayerLegend[subLayer] = {
-        layerName: subLayer,
-        legend: [[subLayers[subLayer].colors], [subLayer]],
-        dataType: subLayers[subLayer].dataType,
-        selectedLayersKey: `${content}_${subLayer}`,
-      }
-      return newLayerLegend
-    })
-  } else if (subLayers[subLayer].dataType === 'GeoJSON') {
+  } else if (
+    ['GeoJSON', 'CSV', 'KML', 'KMZ', 'FGB', 'Shapefile'].includes(
+      subLayers[subLayer].dataType,
+    )
+  ) {
+    const colorName = selectedLayers
+      ? selectedLayers[`${content}_${subLayer}`].colors
+      : typeof subLayers[subLayer].colors === 'string'
+      ? subLayers[subLayer].colors
+      : subLayers[subLayer].colors[0]
     setLayerLegend((layerLegend: any) => {
       const newLayerLegend = { ...layerLegend }
       delete newLayerLegend[legendLayerName]
       newLayerLegend[legendLayerName] = {
         layerName: legendLayerName,
-        legend: [[subLayers[subLayer].colors], [subLayer]],
+        legend: [[colorName], [subLayer]],
         dataType: subLayers[subLayer].dataType,
-        selectedLayersKey: `${content}_${subLayer}`,
+        selectedLayersKey: legendLayerName,
       }
       return newLayerLegend
     })
@@ -194,20 +192,16 @@ export async function handleClickLegend(
     } else {
       scale = selectedLayers[`${content}_${subLayer}`].scale
     }
-    const difValues = scale[1] - scale[0]
-    const times = 30
-    const cogColors = []
-    const cogColorsValues = []
     const colorName = selectedLayers
       ? selectedLayers[`${content}_${subLayer}`].colors
       : subLayers[subLayer].colors
       ? subLayers[subLayer].colors
       : 'ocean_r'
-    const colorScale = colorScaleByName(colorName)
-    for (let i = 0; i < times; i++) {
-      cogColors.push(colorScale((1 / (times - 1)) * i))
-      cogColorsValues.push(Number(scale[0]) + (difValues / (times - 1)) * i)
-    }
+    const { listColors, listColorsValues } = calculateColorsForLegend(
+      colorName,
+      scale,
+      30,
+    )
     setLayerLegend((layerLegend: any) => {
       const newLayerLegend = { ...layerLegend }
       delete newLayerLegend[legendLayerName]
@@ -217,7 +211,7 @@ export async function handleClickLegend(
         selectedLayersKey: `${content}_${subLayer}`,
         scale,
         dataDescription: subLayers[subLayer].dataDescription,
-        legend: [cogColors, cogColorsValues],
+        legend: [listColors, listColorsValues],
         dataType: subLayers[subLayer].dataType,
       }
       return newLayerLegend
@@ -235,29 +229,15 @@ export async function handleClickLegend(
     } else {
       scale = selectedLayers[`${content}_${subLayer}`].scale
     }
-
-    const difValues = scale[1] - scale[0]
-    const times = 30
-    const cogColors = []
-    const cogColorsValues = []
-    let scaleColor
     const colors = selectedLayers
       ? selectedLayers[`${content}_${subLayer}`].colors
       : subLayers[subLayer].colors
-    if (typeof colors === 'string') {
-      scaleColor = colorScaleByName(colors)
-      for (let i = 0; i < times; i++) {
-        cogColors.push(scaleColor((1 / (times - 1)) * i))
-        cogColorsValues.push(Number(scale[0]) + (difValues / (times - 1)) * i)
-      }
-    } else {
-      scaleColor = chroma.scale(colors).domain(scale)
-      for (let i = 0; i < times; i++) {
-        const color = scaleColor((1 / (times - 1)) * i)
-        cogColors.push([color._rgb[0], color._rgb[1], color._rgb[2]])
-        cogColorsValues.push(Number(scale[0]) + (difValues / (times - 1)) * i)
-      }
-    }
+    const { listColors, listColorsValues } = calculateColorsForLegend(
+      colors,
+      scale,
+      30,
+      typeof colors !== 'string',
+    )
     setLayerLegend((layerLegend: any) => {
       const newLayerLegend = { ...layerLegend }
       delete newLayerLegend[legendLayerName]
@@ -267,7 +247,7 @@ export async function handleClickLegend(
         selectedLayersKey: `${content}_${subLayer}`,
         scale,
         dataDescription: subLayers[subLayer].dataDescription,
-        legend: [cogColors, cogColorsValues],
+        legend: [listColors, listColorsValues],
         dataType: subLayers[subLayer].dataType,
       }
       return newLayerLegend
@@ -285,29 +265,15 @@ export async function handleClickLegend(
     } else {
       scale = selectedLayers[`${content}_${subLayer}`].scale
     }
-
-    const difValues = scale[1] - scale[0]
-    const times = 30
-    const cogColors = []
-    const cogColorsValues = []
-    let scaleColor
     const colors = selectedLayers
       ? selectedLayers[`${content}_${subLayer}`].colors
       : subLayers[subLayer].colors
-    if (typeof colors === 'string') {
-      scaleColor = colorScaleByName(colors)
-      for (let i = 0; i < times; i++) {
-        cogColors.push(scaleColor((1 / (times - 1)) * i))
-        cogColorsValues.push(Number(scale[0]) + (difValues / (times - 1)) * i)
-      }
-    } else {
-      scaleColor = chroma.scale(colors).domain(scale)
-      for (let i = 0; i < times; i++) {
-        const color = scaleColor((1 / (times - 1)) * i)
-        cogColors.push([color._rgb[0], color._rgb[1], color._rgb[2]])
-        cogColorsValues.push(Number(scale[0]) + (difValues / (times - 1)) * i)
-      }
-    }
+    const { listColors, listColorsValues } = calculateColorsForLegend(
+      colors,
+      scale,
+      30,
+      typeof colors !== 'string',
+    )
     setLayerLegend((layerLegend: any) => {
       const newLayerLegend = { ...layerLegend }
       delete newLayerLegend[legendLayerName]
@@ -317,7 +283,7 @@ export async function handleClickLegend(
         selectedLayersKey: `${content}_${subLayer}`,
         scale,
         dataDescription: subLayers[subLayer].dataDescription,
-        legend: [cogColors, cogColorsValues],
+        legend: [listColors, listColorsValues],
         dataType: subLayers[subLayer].dataType,
       }
       return newLayerLegend
@@ -502,7 +468,11 @@ export async function handleChangeMapLayerAndAddLegend(
     : colorScale[Math.floor(Math.random() * 100)]
   if (e.target.checked && !['Photo'].includes(subLayers[subLayer].dataType)) {
     const copySubLayers = { ...subLayers }
-    if (subLayers[subLayer].dataType === 'GeoJSON') {
+    if (
+      ['GeoJSON', 'CSV', 'KML', 'KMZ', 'FGB'].includes(
+        subLayers[subLayer].dataType,
+      )
+    ) {
       copySubLayers[subLayer].colors = color
     }
     handleClickLegend(copySubLayers, subLayer, setLayerLegend, content)

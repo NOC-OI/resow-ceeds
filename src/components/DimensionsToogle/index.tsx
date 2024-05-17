@@ -15,7 +15,6 @@ export function DimensionsToogle() {
     const rout = window.location.pathname
     const newRoute = rout === '/3d' ? '/' : '/3d'
 
-    // Create an <a> element and click it to navigate
     const link = document.createElement('a')
     link.href = newRoute
     link.click()

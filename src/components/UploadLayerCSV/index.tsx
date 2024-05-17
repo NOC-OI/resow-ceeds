@@ -1,13 +1,16 @@
 import React from 'react'
-import styles1 from '../DataExplorationTypeOptions/DataExplorationTypeOptions.module.css'
 import { CssTextField } from '../DownloadSelection/styles'
-import { LayerTypeOptionsContainer } from '../DataExplorationTypeOptions/styles'
+import { CustomInputToogle } from '../CustomInputToogle'
+import { CustomUploadFile } from '../CustomUploadFile'
 
 interface UploadLayerCSVProps {
   handleFileChange: any
   labelText: any
   csvData: any
   setCsvData: any
+  delimiterList: any
+  actualLayerUpload: any
+  handleColorChange: any
 }
 
 export function UploadLayerCSV({
@@ -15,90 +18,99 @@ export function UploadLayerCSV({
   labelText,
   csvData,
   setCsvData,
+  delimiterList,
+  actualLayerUpload,
+  handleColorChange,
 }: UploadLayerCSVProps) {
+  function changeCSVHeader(e) {
+    setCsvData({ ...csvData, header: e.target.checked })
+  }
   return (
     <div className="w-full">
-      <div className="flex justify-between w-full items-center pt-2">
-        <p className="pt-4 text-md font-bold text-white mb-2 text-center">
-          Upload File
-        </p>
-        <div className="flex justify-center gap-2 items-center">
-          <label
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            htmlFor="file_input"
-          >
-            Upload file:
-          </label>
-          <input
-            id="file_input"
-            type="file"
-            style={{ display: 'none' }}
-            onChange={handleFileChange}
-          />
-          <label
-            htmlFor="file_input"
-            className="block w-full text-sm text-white rounded-lg cursor-pointer bg-black bg-opacity-50 hover:bg-opacity-80"
-            style={{
-              padding: '10px',
-              textAlign: 'center',
-            }}
-          >
-            {labelText}
-          </label>
+      <CustomUploadFile label={labelText} onChange={handleFileChange} />
+      <div className="pt-4 flex justify-between w-full items-center">
+        <p className="text-md font-bold text-white mb-2 text-center">Color</p>
+        <div className="flex flex-col items-center gap-1">
+          <div className="flex justify-end items-center gap-1">
+            <input
+              type="color"
+              className="p-1 block bg-black  bg-opacity-30 cursor-pointer rounded-lg disabled:opacity-50 disabled:pointer-events-none"
+              id="hs-color-input"
+              value={actualLayerUpload.colors[0]}
+              onChange={(e) => handleColorChange(e, 0)}
+              title="Choose your color"
+            />
+          </div>
         </div>
       </div>
-      <div className="flex justify-between w-full items-center pt-2">
-        <CssTextField
-          id="delimiter"
-          label="Delimiter"
-          type="text"
-          name="delimiter"
-          variant="standard"
-          value={csvData.delimiter}
-          className="w-20"
-          InputLabelProps={{
-            style: {
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              width: '100%',
-              color: 'white',
-              borderWidth: '1px',
-              borderColor: 'white !important',
-            },
-          }}
-          onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setCsvData({ ...csvData, delimiter: e.target.value })
-          }
-          InputProps={{
-            style: {
-              color: 'white',
-            },
-          }}
-        />
-        <LayerTypeOptionsContainer>
-          <div id="type-option" className="flex flex-col items-center">
-            <label htmlFor="contain-header" title="contain header?">
-              <input
-                id="contain-header"
-                onChange={(e) =>
-                  setCsvData({ ...csvData, header: e.target.checked })
+      <div className="flex flex-col justify-between w-full items-center pt-2">
+        <div className="flex justify-between items-center gap-2 w-full">
+          <p className="pt-4 text-md font-bold text-white mb-2 text-center">
+            Delimiter:
+          </p>
+          <div className="flex justify-between items-center w-full">
+            <select
+              id="delimiter"
+              value={
+                csvData.delimiterType === 'other' ? 'other' : csvData.delimiter
+              }
+              onChange={(e) =>
+                setCsvData({
+                  ...csvData,
+                  delimiter: e.target.value === 'other' ? '' : e.target.value,
+                  delimiterType:
+                    e.target.value === 'other' ? 'other' : 'normal',
+                })
+              }
+              className="clickable bg-black border border-black bg-opacity-20 text-white text-sm rounded-lg  block w-max p-2 hover:bg-opacity-80"
+            >
+              {delimiterList.map((delimiter, index) => (
+                <option
+                  className="!bg-black !bg-opacity-80 opacity-30 !text-white"
+                  value={delimiter}
+                  key={index}
+                >
+                  {delimiter}
+                </option>
+              ))}
+            </select>
+            {csvData.delimiterType === 'other' && (
+              <CssTextField
+                id="delimiter"
+                label="Other"
+                type="text"
+                name="delimiter"
+                variant="standard"
+                value={csvData.delimiter}
+                className="w-20"
+                InputLabelProps={{
+                  style: {
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    width: '100%',
+                    color: 'white',
+                    borderWidth: '1px',
+                    borderColor: 'white !important',
+                  },
+                }}
+                onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setCsvData({ ...csvData, delimiter: e.target.value })
                 }
-                className={styles1.chk}
-                type="checkbox"
-                name="baseLayer"
+                InputProps={{
+                  style: {
+                    color: 'white',
+                  },
+                }}
               />
-              <label
-                htmlFor="contain-header"
-                className={styles1.switch}
-                title="layer uploaded"
-              >
-                <span className={styles1.slider}></span>
-              </label>
-              <p>Contain Header?</p>
-            </label>
+            )}
           </div>
-        </LayerTypeOptionsContainer>
+        </div>
+        <CustomInputToogle
+          onChange={changeCSVHeader}
+          label={'Contain Header?'}
+          column={false}
+        />
       </div>
       <div className="flex justify-between w-full items-center pt-2 gap-2">
         <CssTextField

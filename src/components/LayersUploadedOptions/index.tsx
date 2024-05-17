@@ -7,6 +7,7 @@ import {
   faList,
   faMagnifyingGlass,
   faSliders,
+  faTrash,
 } from '@fortawesome/free-solid-svg-icons'
 import { useState } from 'react'
 import {
@@ -16,6 +17,7 @@ import {
   handleClickSlider,
   handleClickZoom,
 } from '../DataExplorationTypeOptions'
+import { colorScale } from '../../lib/map/utils'
 
 interface LayersUploadedOptionsProps {
   layerClass: string
@@ -36,6 +38,7 @@ export function LayersUploadedOptions({
     selectedLayersUpload,
     setSelectedLayersUpload,
     listLayersUpload,
+    setListLayersUpload,
     setActualLayerNowUpload,
   } = useUploadDataHandle()
   const [opacityIsClicked, setOpacityIsClicked] = useState(false)
@@ -66,19 +69,32 @@ export function LayersUploadedOptions({
       styles: layerInfo.colors,
       request: '',
     }
+    const color = selectedLayersUpload[`uploaded_${layerClass}`]?.colors
+    if (color) {
+      newListLayersUpload[layerClass].colors = color
+    }
+    const scale = selectedLayersUpload[`uploaded_${layerClass}`]?.scale
+    if (scale) {
+      newListLayersUpload[layerClass].scale = scale
+    }
+
     handleClickLegend(newListLayersUpload, layerClass, setLayerLegend, content)
   }
 
   async function handleChangeMapLayerUpload(e: any, layerClass: string) {
     const layerInfo = listLayersUpload[layerClass]
+    const color = layerInfo.colors
+      ? layerInfo.colors
+      : colorScale[Math.floor(Math.random() * 100)]
     if (e.target.checked) {
       if (
-        !['Photo', 'GeoJSON', 'CSV', 'Shapefile', 'KML', 'KMZ'].includes(
+        ['GeoJSON', 'CSV', 'KML', 'KMZ', 'FGB', 'Shapefile'].includes(
           layerInfo.dataType,
         )
       ) {
-        handleLocalClickLegend(layerClass, layerInfo, 'uploaded')
+        layerInfo.colors = color
       }
+      handleLocalClickLegend(layerClass, layerInfo, 'uploaded')
       await addMapLayerUpload(layerInfo, layerClass)
     } else {
       if (layerLegend[layerClass]) {
@@ -90,6 +106,20 @@ export function LayersUploadedOptions({
       }
       removeMapLayerUpload(layerClass)
     }
+  }
+  function handleRemoveUploadedLayer(layerClass) {
+    setListLayersUpload((listLayersUpload) => {
+      const copy = { ...listLayersUpload }
+      delete copy[layerClass]
+      return copy
+    })
+    setLayerAction('remove')
+    setActualLayerNowUpload([`uploaded_${layerClass}`])
+    setSelectedLayersUpload((selectedLayersUpload) => {
+      const copy = { ...selectedLayersUpload }
+      delete copy[`uploaded_${layerClass}`]
+      return copy
+    })
   }
   return (
     <LayerTypeOptionsContainer key={`uploaded_${layerClass}`}>
@@ -122,57 +152,33 @@ export function LayersUploadedOptions({
           `uploaded_${layerClass}`,
         ) && (
           <div id="layer-edit">
-            {!['Photo', 'GeoJSON', 'CSV', 'Shapefile', 'KML', 'KMZ'].includes(
-              selectedLayersUpload[`uploaded_${layerClass}`].dataType,
-            ) ? (
-              <FontAwesomeIcon
-                icon={faList}
-                title="Show Legend"
-                onClick={() =>
-                  handleLocalClickLegend(
-                    layerClass,
-                    listLayersUpload[layerClass],
-                    'uploaded',
-                  )
-                }
-              />
-            ) : null}
-            {['COG', 'GeoTIFF'].includes(
-              selectedLayersUpload[`uploaded_${layerClass}`].dataType,
-            ) ? (
-              <FontAwesomeIcon
-                icon={faChartSimple}
-                title="Make a graph"
-                // onClick={() =>
-                //   handleGenerateGraph(
-                //     setGetPolyline,
-                //     setActualLayer,
-                //     subLayers,
-                //     subLayer,
-                //   )
-                // }
-                // className={getPolyline ? 'active' : ''}
-              />
-            ) : null}
-            {!['CSV'].includes(
-              selectedLayersUpload[`uploaded_${layerClass}`].dataType,
-            ) && (
-              <FontAwesomeIcon
-                icon={faMagnifyingGlass}
-                title="Zoom to the layer"
-                onClick={() =>
-                  handleClickZoom(
-                    'uploaded',
-                    listLayersUpload,
-                    selectedLayersUpload[`uploaded_${layerClass}`].name,
-                    setActualLayerNowUpload,
-                    setLayerAction,
-                    selectedLayersUpload,
-                    setSelectedLayersUpload,
-                  )
-                }
-              />
-            )}
+            <FontAwesomeIcon
+              icon={faList}
+              title="Show Legend"
+              onClick={() =>
+                handleLocalClickLegend(
+                  layerClass,
+                  listLayersUpload[layerClass],
+                  'uploaded',
+                )
+              }
+            />
+            <FontAwesomeIcon
+              icon={faMagnifyingGlass}
+              title="Zoom to the layer"
+              onClick={() =>
+                handleClickZoom(
+                  'uploaded',
+                  listLayersUpload,
+                  selectedLayersUpload[`uploaded_${layerClass}`].name,
+                  setActualLayerNowUpload,
+                  setLayerAction,
+                  selectedLayersUpload,
+                  setSelectedLayersUpload,
+                )
+              }
+            />
+
             {!['Photo', 'CSV'].includes(
               selectedLayersUpload[`uploaded_${layerClass}`].dataType,
             ) && (
@@ -182,6 +188,11 @@ export function LayersUploadedOptions({
                 onClick={() => handleClickSlider(setOpacityIsClicked)}
               />
             )}
+            <FontAwesomeIcon
+              icon={faTrash}
+              title="Remove Layer"
+              onClick={() => handleRemoveUploadedLayer(layerClass)}
+            />
           </div>
         )}
       </div>

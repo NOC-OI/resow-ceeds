@@ -10,10 +10,6 @@ export const ButtonIcon = styled.div`
     opacity: 0.6;
   }
 `
-export const LayerTypesDownload = styled.div`
-  max-height: calc(80vh - 25rem);
-  overflow-y: auto;
-`
 export const CssTextField = styled(TextField)({
   '& label': {
     color: 'red',

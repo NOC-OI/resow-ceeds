@@ -96,7 +96,8 @@ function ThreeDMap1({
   //   layers: 'isobat:isobatimetria_8_16_30',
   // })
 
-  const terrainProvider = createWorldTerrainAsync()
+  // const terrainProvider = createWorldTerrainAsync()
+  const terrainProvider = new Cesium.EllipsoidTerrainProvider({})
 
   async function handleHoverUpdateInfoBox(e: any) {
     if (ref.current?.cesiumElement) {

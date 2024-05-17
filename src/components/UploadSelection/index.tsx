@@ -12,6 +12,7 @@ import { useContextHandle } from '../../lib/contextHandle'
 import { UploadLayerCOG } from '../UploadLayerCOG'
 import { UploadLayerCSV } from '../UploadLayerCSV'
 import { LayerParser } from '../../lib/data/parseUploadData'
+import { ConfirmationDialog } from '../ConfirmationDialog'
 
 interface UploadSelectionProps {
   layerAction: any
@@ -33,9 +34,11 @@ export function UploadSelection({
     setActualLayerUpload,
     listLayersUpload,
   } = useUploadDataHandle()
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
   const [error, setError] = useState('')
   const errorTimeoutRef = useRef<number | null>(null)
-  const { setLoading, setFlashMessage, setDialogInfo } = useContextHandle()
+  const { setLoading, setFlashMessage } = useContextHandle()
 
   const [colorScale, setColorScale] = useState<string>('Custom')
   const [localUploadInfo, setLocalUploadInfo] = useState<any>({})
@@ -163,7 +166,6 @@ export function UploadSelection({
       }
     })
   }
-
   function checkInputFile(file) {
     const fileType = fileTypes[actualLayerUpload.dataType]
     console.log(file)
@@ -194,13 +196,7 @@ export function UploadSelection({
     const fileSize = file.size / 1024 / 1024
     if (fileSize > 50) {
       setFileToUpload([file])
-      setDialogInfo({
-        onClose: handleClose,
-        onConfirm: handleConfirm,
-        message: `The file size is ${fileSize.toFixed(
-          2,
-        )} MB. Your browser may freeze while uploading. Do you want to continue?`,
-      })
+      setIsModalOpen(true)
     } else {
       uploadFile(file)
     }
@@ -219,13 +215,7 @@ export function UploadSelection({
     const fileSize = file.size / 1024 / 1024
     if (fileSize > 50) {
       setFileToUpload([file, true])
-      setDialogInfo({
-        onClose: handleClose,
-        onConfirm: handleConfirm,
-        message: `The file size is ${fileSize.toFixed(
-          2,
-        )} MB. Your browser may freeze while uploading. Do you want to continue?`,
-      })
+      setIsModalOpen(true)
     } else {
       uploadFile(file, true)
     }
@@ -260,20 +250,20 @@ export function UploadSelection({
       }))
       setLabelText(fileName)
     }
+    setIsModalOpen(false)
+    setFileToUpload(null)
   }
 
-  const handleConfirm = () => {
+  function handleConfirm() {
     if (fileToUpload.length > 1) {
       uploadFile(fileToUpload[0], fileToUpload[1])
     } else {
       uploadFile(fileToUpload[0])
     }
-    setDialogInfo({})
-    setFileToUpload(null)
   }
 
   const handleClose = () => {
-    setDialogInfo({})
+    setIsModalOpen(false)
     setFileToUpload(null)
   }
 
@@ -387,6 +377,19 @@ export function UploadSelection({
             />
           )}
         </>
+      )}
+      {isModalOpen && (
+        <ConfirmationDialog
+          onClose={handleClose}
+          onConfirm={handleConfirm}
+          message={`The file size is ${(
+            (fileToUpload.length > 0 ? fileToUpload[0]?.size : 0) /
+            1024 /
+            1024
+          ).toFixed(
+            2,
+          )} MB. Your browser may freeze while uploading. Do you want to continue?`}
+        />
       )}
     </LayerSelectionContainer>
   )

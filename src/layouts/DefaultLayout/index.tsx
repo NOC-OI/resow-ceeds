@@ -18,7 +18,6 @@ export function DefaulLayout() {
             position={'bcenter'}
             width={'medium'}
           />
-          <ConfirmationDialog />
         </PrintPageHandleProvider>
       </ContextHandleProvider>
     </LayoutContainer>

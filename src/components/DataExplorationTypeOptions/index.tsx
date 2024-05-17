@@ -469,7 +469,7 @@ export async function handleChangeMapLayerAndAddLegend(
   if (e.target.checked && !['Photo'].includes(subLayers[subLayer].dataType)) {
     const copySubLayers = { ...subLayers }
     if (
-      ['GeoJSON', 'CSV', 'KML', 'KMZ', 'FGB'].includes(
+      ['GeoJSON', 'CSV', 'KML', 'KMZ', 'FGB', 'Shapefile'].includes(
         subLayers[subLayer].dataType,
       )
     ) {

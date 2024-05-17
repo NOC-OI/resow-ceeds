@@ -23,7 +23,7 @@ import {
   verifyIfWasSelectedBefore,
 } from '../DataExplorationTypeOptions'
 import styles from '../DataExplorationTypeOptions/DataExplorationTypeOptions.module.css'
-import { useContextHandle } from '../../lib/contextHandle'
+import { ConfirmationDialog } from '../ConfirmationDialog'
 
 interface ThreeDDataExplorationTypeOptionsProps {
   content: any
@@ -62,20 +62,22 @@ export function ThreeDDataExplorationTypeOptions({
 }: ThreeDDataExplorationTypeOptionsProps) {
   const [opacityIsClicked, setOpacityIsClicked] = useState(false)
   const [threeDLayer, setThreeDLayer] = useState({})
-  const { setDialogInfo } = useContextHandle()
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const handleConfirm = () => {
     const layer: any = threeDLayer
-    setDialogInfo({})
-    setThreeDLayer({})
+    setIsModalOpen(false)
+
+    setThreeDLayer(null)
     setThreeD((threeD) => {
       return threeD?.subLayer === layer?.subLayer ? null : layer
     })
   }
 
   const handleClose = () => {
-    setDialogInfo({})
-    setThreeDLayer({})
+    setIsModalOpen(false)
+
+    setThreeDLayer(null)
   }
 
   let user: any | null = null
@@ -90,15 +92,13 @@ export function ThreeDDataExplorationTypeOptions({
         dataInfo: subLayers[subLayer],
       }),
     )
+    if (threeD?.subLayer === `${content}_${subLayer}`) {
+      setThreeD(null)
+      return
+    }
     setThreeDLayer(layerInfo)
-    setDialogInfo({
-      onClose: handleClose,
-      onConfirm: handleConfirm,
-      message:
-        'The 3d visualisation consumes a lot of memory and may slow down your browser. Do you want to continue?',
-    })
+    setIsModalOpen(true)
   }
-
   return (
     <LayerTypeOptionsContainer>
       <div
@@ -255,6 +255,15 @@ export function ThreeDDataExplorationTypeOptions({
             }
           />
         )}
+      {isModalOpen && (
+        <ConfirmationDialog
+          onClose={handleClose}
+          onConfirm={handleConfirm}
+          message={
+            'The 3d visualisation consumes a lot of memory and may slow down your browser. Do you want to continue?'
+          }
+        />
+      )}
     </LayerTypeOptionsContainer>
   )
 }

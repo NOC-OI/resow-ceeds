@@ -68,6 +68,9 @@
 .active-text{
   color: #D49511 !important;
 }
+.active{
+  color: #D49511 !important;
+}
 
 
 .active-button{

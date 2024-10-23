@@ -131,6 +131,9 @@ function MapHome1({
     }
   }, [graphLimits])
   const DrawLine = L.Draw.Polyline.extend({
+    initialize: function (map, options) {
+      L.Draw.Polyline.prototype.initialize.call(this, map, options)
+    },
     addVertex: function (latlng) {
       const markersLength = this._markers.length
       if (
@@ -156,6 +159,26 @@ function MapHome1({
       }
     },
   })
+  useEffect(() => {
+    if (map) {
+      if (getPolyline) {
+        setFlashMessage({
+          messageType: 'warning',
+          content: 'Select two points in the map to make a graph',
+        })
+        // @ts-expect-error drawLine is a new instance of DrawLine
+        const polyline = new DrawLine(map, {
+          shapeOptions: {
+            color: 'red',
+          },
+        })
+        polyline.enable()
+      } else {
+        setPolylineOnMap(false)
+        removeNormalLayerFromMap('drawn-polyline')
+      }
+    }
+  }, [getPolyline])
 
   useEffect(() => {
     if (map) {
@@ -866,10 +889,15 @@ function MapHome1({
         const layer = graphLimits
         const attribution = 'drawn-polyline'
         const coordinates = layer.getLatLngs()
-        const startMarker = L.marker(coordinates[0])
+        const icon = createIcon('/marker-icon_old.png', [22, 35])
+        const startMarker = L.marker(coordinates[0], {
+          icon,
+        })
         startMarker.options.attribution = attribution
         map.addLayer(startMarker)
-        const endMarker = L.marker(coordinates[1]).addTo(map)
+        const endMarker = L.marker(coordinates[1], {
+          icon,
+        })
         endMarker.options.attribution = attribution
         map.addLayer(endMarker)
         layer.options.attribution = attribution
@@ -1178,26 +1206,6 @@ function MapHome1({
     }
   }, [drawRectangle])
 
-  useEffect(() => {
-    if (map) {
-      if (getPolyline) {
-        setFlashMessage({
-          messageType: 'warning',
-          content: 'Select two points in the map to make a graph',
-        })
-        const polyline = new DrawLine(map, {
-          shapeOptions: {
-            color: 'red',
-          },
-        })
-        polyline.enable()
-      } else {
-        setPolylineOnMap(false)
-        removeNormalLayerFromMap('drawn-polyline')
-      }
-    }
-  }, [getPolyline])
-
   const DrawControl = () => {
     useEffect(() => {
       if (map) {
@@ -1226,10 +1234,15 @@ function MapHome1({
           if (e.layerType === 'polyline') {
             const coordinates = layer.getLatLngs()
             setGraphLimits(layer)
-            const startMarker = L.marker(coordinates[0])
+            const icon = createIcon('/marker-icon_old.png', [22, 35])
+            const startMarker = L.marker(coordinates[0], {
+              icon,
+            })
             startMarker.options.attribution = attribution
             map.addLayer(startMarker)
-            const endMarker = L.marker(coordinates[1]).addTo(map)
+            const endMarker = L.marker(coordinates[1], {
+              icon,
+            })
             endMarker.options.attribution = attribution
             map.addLayer(endMarker)
             setPolylineOnMap(true)

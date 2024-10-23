@@ -46,6 +46,10 @@ interface SideSelectionProps {
   printBox: any
   setPrintBox: any
   setDownloadPopup: any
+  graphLimits?: any
+  setGraphLimits?: any
+  setGraphColumns?: any
+  polylineOnMap?: any
 }
 
 export function SideSelection({
@@ -74,6 +78,10 @@ export function SideSelection({
   printBox,
   setPrintBox,
   setDownloadPopup,
+  graphLimits,
+  setGraphLimits,
+  setGraphColumns,
+  polylineOnMap,
 }: SideSelectionProps) {
   const { loading } = useContextHandle()
   const { selectedLayersUpload, setSelectedLayersUpload } =
@@ -253,6 +261,10 @@ export function SideSelection({
                 selectedBaseLayer={selectedBaseLayer}
                 setSelectedBaseLayer={setSelectedBaseLayer}
                 setDownloadPopup={setDownloadPopup}
+                graphLimits={graphLimits}
+                setGraphLimits={setGraphLimits}
+                setGraphColumns={setGraphColumns}
+                polylineOnMap={polylineOnMap}
               />
             ) : rout === '/3d' ? (
               <ThreeDDataExplorationSelection
@@ -286,6 +298,10 @@ export function SideSelection({
               setGetPolyline={setGetPolyline}
               setClickPoint={setClickPoint}
               setDownloadPopup={setDownloadPopup}
+              graphLimits={graphLimits}
+              setGraphLimits={setGraphLimits}
+              setGraphColumns={setGraphColumns}
+              polylineOnMap={polylineOnMap}
             />
           )}
           {selectedSidebarOption === 'Download' && (

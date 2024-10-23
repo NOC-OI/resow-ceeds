@@ -168,7 +168,6 @@ export function UploadSelection({
   }
   function checkInputFile(file) {
     const fileType = fileTypes[actualLayerUpload.dataType]
-    console.log(file)
     if (
       fileType.mimeTypes.includes(file.type) ||
       fileType.extensions.includes(file.name)

@@ -21,8 +21,7 @@
           47.999887816640324,
           3.100668943151864,
           60.30104166662717
-        ],
-        "graph": true
+        ]
       },
       "GEBCO-2023": {
         "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/bathymetry/gebco/gebco_2023.tif",
@@ -44,8 +43,7 @@
           -90,
           179.96586288941216,
           90
-        ],
-        "graph": true
+        ]
       }
     }
   },
@@ -98,8 +96,7 @@
           48.768750264,
           1.9677082240000505,
           60.83333360079558
-        ],
-        "graph": true
+        ]
       },
       "Craignish": {
         "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/craignish/craignish_log_hsm.tif",
@@ -124,8 +121,7 @@
           55.768668078,
           -5.438086553,
           56.35720974593919
-        ],
-        "graph": true
+        ]
       },
       "Isles of Scilly": {
         "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/ios/ios_log_hsm.tif",
@@ -150,8 +146,7 @@
           49.859375263,
           -6.238541780000001,
           49.984375263
-        ],
-        "graph": true
+        ]
       },
       "Milford Haven": {
         "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/milford_haven/milford_haven_log_hsm.tif",
@@ -176,8 +171,7 @@
           -4.798559781,
           51.740604678956046
         ],
-        "threeD": false,
-        "graph": true
+        "threeD": false
       },
       "Orkney": {
         "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/orkney/orkney_log_hsm.tif",
@@ -203,8 +197,7 @@
           58.70416693,
           -2.22916678,
           59.46354193
-        ],
-        "graph": true
+        ]
       },
       "Porthdinllaen": {
         "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/porthdinllaen/porthdinllaen_log_hsm.tif",
@@ -229,8 +222,7 @@
           52.933132242,
           -4.457722969999999,
           52.98000724225862
-        ],
-        "graph": true
+        ]
       },
       "Solent": {
         "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/solent/solent_log_hsm.tif",
@@ -255,8 +247,7 @@
           50.647550968,
           -0.7818186769999996,
           50.86838430194103
-        ],
-        "graph": true
+        ]
       },
       "Studland": {
         "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/studland/studland_hsm.tif",
@@ -281,8 +272,7 @@
           50.544469014,
           -1.8890729989999986,
           50.77988568133215
-        ],
-        "graph": true
+        ]
       }
     }
   },
@@ -426,8 +416,7 @@
           "url": "https://data.marine.gov.scot/dataset/sediment-type-and-surficial-sedimentary-carbon-stocks-across-united-kingdom%E2%80%99s-exclusive",
           "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Carbon%20Stocks/Organic%20Carbon%20Density/collection.json"
         },
-        "threeD": false,
-        "graph": true
+        "threeD": false
       }
     }
   },
@@ -452,7 +441,8 @@
           3.63202,
           61.581
         ],
-        "download_area": false      },
+        "download_area": false
+      },
       "NI LCM 2021": {
         "url": "https://catalogue.ceh.ac.uk/maps/2ad19a50-b940-469e-a40d-17818b77020c",
         "dataType": "WMS",
@@ -580,8 +570,8 @@
         }
       },
       "Sites of Special Scientific Interest (NI)": {
-        "url": "http://localhost:8084/geoserver/resow/wms",
-        "dataType": "WMS",
+        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/mpa/sssi_ni/sssi_ni.fgb",
+        "dataType": "FGB",
         "content": "Areas of Special Scientific Interest (ASSI) provide statutory protection for the best examples of Northern Ireland's flora, fauna, geological or physiographical features. In Irish Grid and British Grid format.",
         "protected": false,
         "download_area": true,
@@ -596,9 +586,7 @@
           -5.406230787767979,
           55.313029439132656
         ],
-        "params": {
-          "layers": "resow:sssi_ni"
-        }
+        "colors": "#252525"
       },
       "Sites of Special Scientific Interest (Scotland)": {
         "url": "https://ogc.nature.scot/geoserver/protectedareas/wms",
@@ -643,11 +631,11 @@
     }
   },
   "Seagrass extent from in-situ surveys": {
-    "icon": "",
+    "icon": "fish",
     "layerNames": {
       "National Seagrass Layer": {
-        "url": "https://environment.data.gov.uk/spatialdata/national-seagrass-layer-england/wms?",
-        "dataType": "WMS",
+        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/nsl/nsl/seagrass.fgb",
+        "dataType": "FGB",
         "content": "Natural England and the Environment Agency have collaborated to produce a seagrass layer for English waters, which aims to provide a comprehensive geospatial dataset of surveys of both current and historical spatial seagrass. The layer identifies a current seagrass extent; using the best and most recent available evidence and agreed by both organisations. These datasets have been provided by NE and the EA, as well as a number of third parties. Details of these third parties can be found in the accompanying metadata file.",
         "protected": false,
         "colors": "#cf52d3",
@@ -662,9 +650,6 @@
           "FlatGeoBuf": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/nsl/nsl/seagrass.fgb",
           "url": "https://www.data.gov.uk/dataset/aa1787a7-71fb-4c44-bf27-7825f9c5ee64/national-seagrass-layer-england#:~:text=The%20layer%20identifies%20a%20current,a%20number%20of%20third%20parties.",
           "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Seagrass%20extent%20from%20in-situ%20surveys/Seagrass%20extent%20from%20in-situ%20surveys/National%20Seagrass%20Layer/National%20Seagrass%20Layer.json"
-        },
-        "params": {
-          "layers": "National_Seagrass_Layer"
         }
       },
       "Natural Resource Wales": {
@@ -788,24 +773,6 @@
           63.88706699979897
         ],
         "download_area": false
-      },
-      "Local Authority Districts": {
-        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/administrative_areas/authorities/local_authorities.geojson",
-        "dataType": "GeoJSON",
-        "content": "This file contains the digital vector boundaries for Local Authority Districts, in the United Kingdom, as at May 2024. The boundaries available are: (BSC) Super Generalised (200m) - clipped to the coastline (Mean High Water mark). Contains both Ordnance Survey and ONS Intellectual Property Rights.",
-        "protected": false,
-        "threeD": false,
-        "download": {
-          "url": "https://www.data.gov.uk/dataset/fbe0125e-cb43-4436-ac1a-ce93cf928cfb/local-authority-districts-may-2024-boundaries-uk-bsc",
-          "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Case%20Study%20Areas/Case%20Study%20Areas/collection.json"
-        },
-        "bbox": [
-          -6.3007,
-          49.948,
-          -1.2534,
-          62.0262
-        ],
-        "colors": "#d3ff75"
       }
     }
   }

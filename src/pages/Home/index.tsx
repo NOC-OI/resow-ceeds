@@ -70,8 +70,9 @@ export function Home() {
   const [depth, setDepth] = useState({})
   const [position, setPosition] = useState(null)
   const [actualDate, setActualDate] = useState(yearMonths.indexOf('2021-05'))
-
-  const [graphData, setGraphData] = useState(null)
+  const [polylineOnMap, setPolylineOnMap] = useState(null)
+  const [graphLimits, setGraphLimits] = useState(null)
+  const [graphColumns, setGraphColumns] = useState({})
 
   const [selectedLayers, setSelectedLayers] = useState<any>({})
 
@@ -184,20 +185,27 @@ export function Home() {
               printBox={printBox}
               setPrintBox={setPrintBox}
               setDownloadPopup={setDownloadPopup}
+              graphLimits={graphLimits}
+              setGraphLimits={setGraphLimits}
+              setGraphColumns={setGraphColumns}
+              polylineOnMap={polylineOnMap}
             />
             <div className="hidden sm:block z-[9998] h-max" id="side-selection">
               <DimensionsToogle />
             </div>
-            {graphData ? (
-              <GraphBox
-                graphData={graphData}
-                setGraphData={setGraphData}
-                actualLayer={actualLayer}
-                setGetPolyline={setGetPolyline}
-                setClickPoint={setClickPoint}
-                selectedLayers={selectedLayers}
-              />
-            ) : null}
+            {graphLimits &&
+              Object.keys(graphColumns).map((graphColumn) => (
+                <GraphBox
+                  key={graphColumn}
+                  graphColumn={graphColumn}
+                  graphColumns={graphColumns}
+                  setGraphColumns={setGraphColumns}
+                  graphLimits={graphLimits}
+                  selectedLayers={selectedLayers}
+                  selectedSidebarOption={selectedSidebarOption}
+                  setGraphLimits={setGraphLimits}
+                />
+              ))}
             {Object.keys(layerLegend).map((legend) => (
               <DataExplorationLegend
                 key={legend}
@@ -264,7 +272,7 @@ export function Home() {
             setMapBounds={setMapBounds}
             selectedSidebarOption={selectedSidebarOption}
             getPolyline={getPolyline}
-            setGraphData={setGraphData}
+            setGraphLimits={setGraphLimits}
             actualDate={actualDate}
             setMapPopup={setMapPopup}
             clickPoint={clickPoint}
@@ -272,6 +280,8 @@ export function Home() {
             setPosition={setPosition}
             setDepth={setDepth}
             selectedBaseLayer={selectedBaseLayer}
+            graphLimits={graphLimits}
+            setPolylineOnMap={setPolylineOnMap}
           />
           <InfoBox position={position} depth={depth} />
           {showPopup && (

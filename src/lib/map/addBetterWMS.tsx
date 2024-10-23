@@ -65,6 +65,80 @@ const BetterWMS = L.TileLayer.WMS.extend({
   },
 
   showGetFeatureInfo: function (err, content) {
+    function xmlToJson(xml) {
+      let obj = {}
+
+      if (xml.nodeType === 1) {
+        if (xml.attributes.length > 0) {
+          obj['@attributes'] = {}
+          for (let i = 0; i < xml.attributes.length; i++) {
+            const attribute = xml.attributes.item(i)
+            obj['@attributes'][attribute.nodeName] = attribute.nodeValue
+          }
+        }
+      } else if (xml.nodeType === 3) {
+        obj = xml.nodeValue.trim()
+      }
+
+      if (xml.hasChildNodes()) {
+        for (let i = 0; i < xml.childNodes.length; i++) {
+          const child = xml.childNodes.item(i)
+          const childName = child.nodeName
+          const childValue = xmlToJson(child)
+
+          if (childValue !== '') {
+            if (typeof obj[childName] === 'undefined') {
+              obj[childName] = childValue
+            } else {
+              if (typeof obj[childName].push === 'undefined') {
+                const oldValue = obj[childName]
+                obj[childName] = []
+                obj[childName].push(oldValue)
+              }
+              obj[childName].push(childValue)
+            }
+          }
+        }
+      }
+      return obj
+    }
+
+    function convertToGeoJSON(xmlJson) {
+      const fields = xmlJson.FeatureInfoResponse.FIELDS['@attributes']
+
+      const x = parseFloat(fields.x)
+      const y = parseFloat(fields.y)
+
+      const geoJSON = {
+        type: 'FeatureCollection',
+        features: [
+          {
+            type: 'Feature',
+            id: fields.id || 'feature-id',
+            geometry: {
+              type: 'Point',
+              coordinates: [x, y],
+            },
+            properties: Object.keys(fields).reduce((acc, key) => {
+              acc[key] = fields[key] !== undefined ? fields[key] : null
+              return acc
+            }, {}),
+          },
+        ],
+        totalFeatures: 1,
+        numberReturned: 1,
+        timeStamp: new Date().toISOString(),
+        crs: {
+          type: 'name',
+          properties: {
+            name: 'urn:ogc:def:crs:EPSG::3857',
+          },
+        },
+        bbox: [x, y, x, y],
+      }
+
+      return geoJSON
+    }
     function verifyContent(content) {
       if (content === null || !content.features) {
         return false
@@ -85,7 +159,14 @@ const BetterWMS = L.TileLayer.WMS.extend({
     try {
       newContent = JSON.parse(content)
     } catch (e) {
-      return
+      try {
+        const parser = new DOMParser()
+        const xmlDoc = parser.parseFromString(content, 'text/xml')
+        const xmlJson = xmlToJson(xmlDoc)
+        newContent = convertToGeoJSON(xmlJson)
+      } catch (e) {
+        return
+      }
     }
     const contentOk = verifyContent(newContent)
 

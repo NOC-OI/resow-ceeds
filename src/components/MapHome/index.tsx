@@ -53,7 +53,7 @@ interface MapProps {
   setMapBounds: any
   selectedSidebarOption: any
   getPolyline: any
-  setGraphData: any
+  setGraphLimits: any
   actualDate: any
   setMapPopup: any
   clickPoint: any
@@ -61,6 +61,8 @@ interface MapProps {
   setDepth: any
   setPosition: any
   selectedBaseLayer: any
+  graphLimits: any
+  setPolylineOnMap: any
 }
 
 function MapHome1({
@@ -76,7 +78,7 @@ function MapHome1({
   setMapBounds,
   selectedSidebarOption,
   getPolyline,
-  setGraphData,
+  setGraphLimits,
   actualDate,
   setMapPopup,
   clickPoint,
@@ -84,6 +86,8 @@ function MapHome1({
   setDepth,
   setPosition,
   selectedBaseLayer,
+  graphLimits,
+  setPolylineOnMap,
 }: MapProps) {
   const { setFlashMessage, setLoading } = useContextHandle()
   const {
@@ -117,6 +121,41 @@ function MapHome1({
     //   }
     // })
   }
+
+  useEffect(() => {
+    if (map) {
+      if (!graphLimits) {
+        removeNormalLayerFromMap('drawn-polyline')
+        setPolylineOnMap(false)
+      }
+    }
+  }, [graphLimits])
+  const DrawLine = L.Draw.Polyline.extend({
+    addVertex: function (latlng) {
+      const markersLength = this._markers.length
+      if (
+        markersLength >= 2 &&
+        !this.options.allowIntersection &&
+        this._poly.newLatLngIntersects(latlng)
+      ) {
+        this._showErrorTooltip()
+        return
+      } else if (this._errorShown) {
+        this._hideErrorTooltip()
+      }
+      this._markers.push(this._createMarker(latlng))
+
+      this._poly.addLatLng(latlng)
+
+      if (this._poly.getLatLngs().length === 2) {
+        this._map.addLayer(this._poly)
+      }
+      this._vertexChanged(latlng, true)
+      if (this._markers.length === 2) {
+        this._finishShape()
+      }
+    },
+  })
 
   useEffect(() => {
     if (map) {
@@ -525,13 +564,13 @@ function MapHome1({
           }
         }
       }
-      const bounds = layerName.bbox
-        ? [
-            [layerName.bbox[1] - 0.1, layerName.bbox[0] - 0.1],
-            [layerName.bbox[3] + 0.1, layerName.bbox[2] + 0.1],
-          ]
-        : defaultWMSBounds
-      map.fitBounds(bounds)
+      // const bounds = layerName.bbox
+      //   ? [
+      //       [layerName.bbox[1] - 0.1, layerName.bbox[0] - 0.1],
+      //       [layerName.bbox[3] + 0.1, layerName.bbox[2] + 0.1],
+      //     ]
+      //   : defaultWMSBounds
+      // map.fitBounds(bounds)
     })
     setLoading(false)
   }
@@ -820,6 +859,23 @@ function MapHome1({
       } else {
         addDownloadLimitsToMap()
       }
+      if (!['selected_layers'].includes(selectedSidebarOption)) {
+        setPolylineOnMap(false)
+        removeNormalLayerFromMap('drawn-polyline')
+      } else if (graphLimits) {
+        const layer = graphLimits
+        const attribution = 'drawn-polyline'
+        const coordinates = layer.getLatLngs()
+        const startMarker = L.marker(coordinates[0])
+        startMarker.options.attribution = attribution
+        map.addLayer(startMarker)
+        const endMarker = L.marker(coordinates[1]).addTo(map)
+        endMarker.options.attribution = attribution
+        map.addLayer(endMarker)
+        layer.options.attribution = attribution
+        map.addLayer(layer)
+        setPolylineOnMap(true)
+      }
     }
   }, [selectedSidebarOption])
 
@@ -1058,113 +1114,8 @@ function MapHome1({
     }
   }, [selectedLayers])
 
-  function handleSetLatlng(e: any) {
-    const icon = createIcon('/marker-icon_old.png', [27, 45])
-    let counter = 0
-    const lineLayer: any[] = []
-    Object.keys(map._layers).forEach((layer) => {
-      if (map._layers[layer].options.attribution) {
-        if (map._layers[layer].options.attribution === 'draw-polyline1') {
-          if (lineLayer.length === 0) {
-            lineLayer.push(map._layers[layer]._latlng)
-            counter += 1
-          }
-        }
-        if (map._layers[layer].options.attribution === 'draw-polyline2') {
-          if (lineLayer.length === 1) {
-            lineLayer.push(map._layers[layer]._latlng)
-            counter += 1
-          }
-        }
-      }
-    })
-    if (counter === 0) {
-      const markerLayer = L.marker(e.latlng, {
-        attribution: 'draw-polyline1',
-        icon,
-      })
-        .addTo(map)
-        .bindPopup('Point <br/>' + e.latlng)
-      lineLayer.push(markerLayer.getLatLng())
-    } else if (counter === 1) {
-      const markerLayer = L.marker(e.latlng, {
-        attribution: 'draw-polyline2',
-        icon,
-      })
-        .addTo(map)
-        .bindPopup('Point <br/>' + e.latlng)
-
-      if (lineLayer.length === 1) {
-        lineLayer.push(markerLayer.getLatLng())
-      }
-      L.polyline([lineLayer[0], lineLayer[1]], {
-        color: 'red',
-        attribution: 'draw-polyline3',
-      }).addTo(map)
-      map.dragging.enable()
-      map.touchZoom.enable()
-      map.doubleClickZoom.enable()
-      map.scrollWheelZoom.enable()
-      map.boxZoom.enable()
-      map.keyboard.enable()
-      map.off('click', handleSetLatlng)
-      setGraphData(lineLayer)
-    } else {
-      map.dragging.enable()
-      map.touchZoom.enable()
-      map.doubleClickZoom.enable()
-      map.scrollWheelZoom.enable()
-      map.boxZoom.enable()
-      map.keyboard.enable()
-      map.off('click', handleSetLatlng)
-    }
-  }
-  useEffect(() => {
-    if (map) {
-      if (getPolyline) {
-        setFlashMessage({
-          messageType: 'warning',
-          content: 'Select two points in the map to make a graph',
-        })
-        map.dragging.disable()
-        map.touchZoom.disable()
-        map.doubleClickZoom.disable()
-        map.scrollWheelZoom.disable()
-        map.boxZoom.disable()
-        map.keyboard.disable()
-        map.on('click', handleSetLatlng)
-      } else {
-        map.dragging.enable()
-        map.touchZoom.enable()
-        map.doubleClickZoom.enable()
-        map.scrollWheelZoom.enable()
-        map.boxZoom.enable()
-        map.keyboard.enable()
-        map.off('click', handleSetLatlng)
-        setGraphData(null)
-        Object.keys(map._layers).forEach((layer) => {
-          if (map._layers[layer].options) {
-            if (map._layers[layer].options.attribution) {
-              if (map._layers[layer].options.attribution === 'draw-polyline1') {
-                map.removeLayer(map._layers[layer])
-              } else if (
-                map._layers[layer].options.attribution === 'draw-polyline2'
-              ) {
-                map.removeLayer(map._layers[layer])
-              } else if (
-                map._layers[layer].options.attribution === 'draw-polyline3'
-              ) {
-                map.removeLayer(map._layers[layer])
-              }
-            }
-          }
-        })
-      }
-    }
-  }, [getPolyline])
-
   async function handleSetLatlngPoint(e: any) {
-    setGraphData([e.latlng])
+    setGraphLimits([e.latlng])
     setClickPoint(false)
   }
   useEffect(() => {
@@ -1227,6 +1178,26 @@ function MapHome1({
     }
   }, [drawRectangle])
 
+  useEffect(() => {
+    if (map) {
+      if (getPolyline) {
+        setFlashMessage({
+          messageType: 'warning',
+          content: 'Select two points in the map to make a graph',
+        })
+        const polyline = new DrawLine(map, {
+          shapeOptions: {
+            color: 'red',
+          },
+        })
+        polyline.enable()
+      } else {
+        setPolylineOnMap(false)
+        removeNormalLayerFromMap('drawn-polyline')
+      }
+    }
+  }, [getPolyline])
+
   const DrawControl = () => {
     useEffect(() => {
       if (map) {
@@ -1245,11 +1216,27 @@ function MapHome1({
 
         map.addControl(drawControl)
 
-        map.on(L.Draw.Event.CREATED, (e) => {
-          removeNormalLayerFromMap('drawn')
+        map.on(L.Draw.Event.CREATED, (e: any) => {
+          let attribution = 'drawn'
           const { layer } = e
-          layer.options.attribution = 'drawn'
-          setRectangleLimits(layer.getBounds())
+          if (e.layerType === 'polyline') {
+            attribution = 'drawn-polyline'
+          }
+          removeNormalLayerFromMap(attribution)
+          if (e.layerType === 'polyline') {
+            const coordinates = layer.getLatLngs()
+            setGraphLimits(layer)
+            const startMarker = L.marker(coordinates[0])
+            startMarker.options.attribution = attribution
+            map.addLayer(startMarker)
+            const endMarker = L.marker(coordinates[1]).addTo(map)
+            endMarker.options.attribution = attribution
+            map.addLayer(endMarker)
+            setPolylineOnMap(true)
+          } else {
+            setRectangleLimits(layer.getBounds())
+          }
+          layer.options.attribution = attribution
           drawnItems.addLayer(layer)
         })
         return () => {
@@ -1303,7 +1290,9 @@ function mapPropsAreEqual(prevMap: any, nextMap: any) {
     prevMap.selectedBaseLayer === nextMap.selectedBaseLayer &&
     prevMap.actualLayerUpload === nextMap.actualLayerUpload &&
     prevMap.selectedLayersUpload === nextMap.selectedLayersUpload &&
-    prevMap.layerAction === nextMap.layerAction
+    prevMap.layerAction === nextMap.layerAction &&
+    prevMap.polylineOnMap === nextMap.polylineOnMap &&
+    prevMap.graphLimits === nextMap.graphLimits
   )
 }
 

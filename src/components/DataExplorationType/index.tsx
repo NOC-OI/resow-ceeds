@@ -27,6 +27,10 @@ interface DataExplorationTypeProps {
   setClickPoint: any
   listLayers: any
   setDownloadPopup?: any
+  graphLimits?: any
+  setGraphLimits?: any
+  setGraphColumns?: any
+  polylineOnMap?: any
 }
 
 export function DataExplorationType({
@@ -47,6 +51,10 @@ export function DataExplorationType({
   setClickPoint,
   listLayers,
   setDownloadPopup,
+  graphLimits,
+  setGraphLimits,
+  setGraphColumns,
+  polylineOnMap,
 }: DataExplorationTypeProps) {
   const [subLayers, setSubLayers] = useState<keyable>({})
 
@@ -126,6 +134,10 @@ export function DataExplorationType({
               setGetPolyline={setGetPolyline}
               setClickPoint={setClickPoint}
               setDownloadPopup={setDownloadPopup}
+              graphLimits={graphLimits}
+              setGraphLimits={setGraphLimits}
+              setGraphColumns={setGraphColumns}
+              polylineOnMap={polylineOnMap}
             />
           )
         })}

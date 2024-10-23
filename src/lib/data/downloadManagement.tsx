@@ -31,7 +31,7 @@ export const DownloadManagementHandleProvider: React.FC<
     region: [-7.1, 49.1, 0.1, 59.1],
   })
 
-  const [downloadableLayers, setDownloadableLayers] = useState<Object>({})
+  const [downloadableLayers, setDownloadableLayers] = useState<object>({})
   // async function getLeaks() {
   //   await fetchApiGet('v1/leaks/', setLeakList, accessToken)
   // }

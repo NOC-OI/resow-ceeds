@@ -25,6 +25,10 @@ interface DataExplorationSelectionProps {
   selectedBaseLayer: any
   setSelectedBaseLayer: any
   setDownloadPopup?: any
+  graphLimits?: any
+  setGraphLimits?: any
+  setGraphColumns?: any
+  polylineOnMap?: any
 }
 
 export function DataExplorationSelection({
@@ -46,6 +50,10 @@ export function DataExplorationSelection({
   selectedBaseLayer,
   setSelectedBaseLayer,
   setDownloadPopup,
+  graphLimits,
+  setGraphLimits,
+  setGraphColumns,
+  polylineOnMap,
 }: DataExplorationSelectionProps) {
   // function handleClickLayerInfo(title: String, content: string) {
   //   setInfoButtonBox({
@@ -80,6 +88,10 @@ export function DataExplorationSelection({
             setClickPoint={setClickPoint}
             listLayers={listLayers}
             setDownloadPopup={setDownloadPopup}
+            graphLimits={graphLimits}
+            setGraphLimits={setGraphLimits}
+            setGraphColumns={setGraphColumns}
+            polylineOnMap={polylineOnMap}
           />
         ))}
       </LayerTypes>

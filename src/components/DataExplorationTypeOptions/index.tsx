@@ -336,13 +336,32 @@ export function handleClickSlider(setOpacityIsClicked: any) {
 }
 
 export function handleGenerateGraph(
+  polylineOnMap: any,
+  graphLimits: any,
+  setGraphLimits: any,
+  setGraphColumns: any,
   setGetPolyline: any,
   setActualLayer: any,
   subLayers: any,
   subLayer: any,
+  dataExplorationTab: boolean,
 ) {
-  setGetPolyline((getPolyline: any) => !getPolyline)
-  setActualLayer([subLayers[subLayer].url])
+  if (!graphLimits) {
+    setGetPolyline((getPolyline: any) => !getPolyline)
+    setGraphColumns((prevGraphColumns: Record<string, any>) => ({
+      ...prevGraphColumns,
+      [subLayer]: subLayers[subLayer],
+    }))
+  } else if (!polylineOnMap || dataExplorationTab) {
+    setGraphLimits(null)
+    setGetPolyline((getPolyline: any) => !getPolyline)
+    setGraphColumns({ [subLayer]: subLayers[subLayer] })
+  } else {
+    setGraphColumns((prevGraphColumns: Record<string, any>) => ({
+      ...prevGraphColumns,
+      [subLayer]: subLayers[subLayer],
+    }))
+  }
 }
 
 export function changeMapZoom(
@@ -560,6 +579,10 @@ interface DataExplorationTypeOptionsProps {
   setShowRange?: any
   setClickPoint: any
   setDownloadPopup?: any
+  graphLimits?: any
+  setGraphLimits?: any
+  setGraphColumns?: any
+  polylineOnMap?: any
 }
 
 export function DataExplorationTypeOptions({
@@ -578,9 +601,12 @@ export function DataExplorationTypeOptions({
   setGetPolyline,
   setClickPoint,
   setDownloadPopup,
+  graphLimits,
+  setGraphLimits,
+  setGraphColumns,
+  polylineOnMap,
 }: DataExplorationTypeOptionsProps) {
   const [opacityIsClicked, setOpacityIsClicked] = useState(false)
-
   return (
     <LayerTypeOptionsContainer>
       <div id="type-option">
@@ -652,19 +678,24 @@ export function DataExplorationTypeOptions({
                 }
               />
             ) : null}
-            {subLayers[subLayer].dataType === 'COG' ? (
+            {subLayers[subLayer].graph ? (
               <FontAwesomeIcon
                 icon={faChartSimple}
                 title="Make a graph"
                 onClick={() =>
                   handleGenerateGraph(
+                    polylineOnMap,
+                    graphLimits,
+                    setGraphLimits,
+                    setGraphColumns,
                     setGetPolyline,
                     setActualLayer,
                     subLayers,
                     subLayer,
+                    true,
                   )
                 }
-                className={getPolyline ? 'active' : ''}
+                className={polylineOnMap ? 'active' : ''}
               />
             ) : null}
             {subLayers[subLayer].date_range ? (

@@ -19,6 +19,8 @@ interface ThreeDDataExplorationSelectionProps {
   threeD: any
   setThreeD: any
   setDownloadPopup?: any
+  threeDLayer?: any
+  setThreeDLayer?: any
 }
 
 export function ThreeDDataExplorationSelection({
@@ -35,6 +37,8 @@ export function ThreeDDataExplorationSelection({
   threeD,
   setThreeD,
   setDownloadPopup,
+  threeDLayer,
+  setThreeDLayer,
 }: ThreeDDataExplorationSelectionProps) {
   return (
     <LayerSelectionContainer>
@@ -57,6 +61,8 @@ export function ThreeDDataExplorationSelection({
             setThreeD={setThreeD}
             listLayers={listLayers}
             setDownloadPopup={setDownloadPopup}
+            threeDLayer={threeDLayer}
+            setThreeDLayer={setThreeDLayer}
           />
         ))}
       </LayerTypes>

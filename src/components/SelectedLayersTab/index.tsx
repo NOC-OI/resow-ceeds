@@ -24,6 +24,7 @@ import {
   faChevronDown,
   faChevronUp,
   faCircleInfo,
+  faCube,
   faDownload,
   faGripVertical,
   faList,
@@ -31,6 +32,7 @@ import {
   faSliders,
 } from '@fortawesome/free-solid-svg-icons'
 import { ButtonIcon } from '../DownloadSelection/styles'
+import { ConfirmationDialog } from '../ConfirmationDialog'
 
 interface SelectedLayersTabProps {
   selectedLayers: object
@@ -51,6 +53,10 @@ interface SelectedLayersTabProps {
   setGraphLimits?: any
   setGraphColumns?: any
   polylineOnMap?: any
+  threeDLayer?: any
+  setThreeDLayer?: any
+  threeD?: any
+  setThreeD?: any
 }
 
 export function SelectedLayersTab({
@@ -72,9 +78,44 @@ export function SelectedLayersTab({
   setGraphLimits,
   setGraphColumns,
   polylineOnMap,
+  threeDLayer,
+  setThreeDLayer,
+  threeD,
+  setThreeD,
 }: SelectedLayersTabProps) {
   const [opacityIsClicked, setOpacityIsClicked] = useState('')
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
+  const handleConfirm = () => {
+    const layer: any = threeDLayer
+    setIsModalOpen(false)
+
+    setThreeDLayer(null)
+    setThreeD((threeD) => {
+      return threeD?.subLayer === layer?.subLayer ? null : layer
+    })
+  }
+
+  const handleClose = () => {
+    setIsModalOpen(false)
+
+    setThreeDLayer(null)
+  }
+
+  async function handleAddTerrainLayer(layer: any) {
+    const layerInfo = JSON.parse(
+      JSON.stringify({
+        subLayer: layer,
+        dataInfo: selectedLayers[layer],
+      }),
+    )
+    if (threeD?.subLayer === layer) {
+      setThreeD(null)
+      return
+    }
+    setThreeDLayer(layerInfo)
+    setIsModalOpen(true)
+  }
   function handleClickSliderLayersSelected(
     setOpacityIsClicked: any,
     layer: any,
@@ -137,24 +178,27 @@ export function SelectedLayersTab({
             </div>
           ) : (
             <div>
-              <div className="flex justify-end gap-2 pb-2 items-center">
-                <p className="pt-3 text-sm font-bold text-white mb-2 text-right p-1">
-                  Choose plot points
-                </p>
-                <div className="flex justify-center items-center">
-                  <ButtonIcon
-                    title="Select map points, then click the graph icon in each layer"
-                    className="hover:shadow-whi hover:opacity-60 hover:shadow-sm shadow-black opacity-100 shadow-md"
-                    onClick={() => setGetPolyline(!getPolyline)}
-                  >
-                    <FontAwesomeIcon
-                      icon={faChartSimple}
+              {rout === '/' && (
+                <div className="flex justify-end gap-2 pb-2 items-center">
+                  <p className="pt-3 text-sm font-bold text-white mb-2 text-right p-1">
+                    Choose plot points
+                  </p>
+                  <div className="flex justify-center items-center">
+                    <ButtonIcon
                       title="Select map points, then click the graph icon in each layer"
-                      className={getPolyline ? 'active' : ''}
-                    />
-                  </ButtonIcon>
+                      className="hover:shadow-whi hover:opacity-60 hover:shadow-sm shadow-black opacity-100 shadow-md"
+                      onClick={() => setGetPolyline(!getPolyline)}
+                    >
+                      <FontAwesomeIcon
+                        icon={faChartSimple}
+                        title="Select map points, then click the graph icon in each layer"
+                        className={getPolyline ? 'active' : ''}
+                      />
+                    </ButtonIcon>
+                  </div>
                 </div>
-              </div>
+              )}
+
               {Object.keys(selectedLayers).map((layer: any, index: number) => (
                 <div
                   draggable={rout !== '/3d'}
@@ -295,7 +339,7 @@ export function SelectedLayersTab({
                                   }
                                 />
                               ) : null}
-                              {selectedLayers[layer].graph ? (
+                              {selectedLayers[layer].graph && rout === '/' ? (
                                 <FontAwesomeIcon
                                   icon={faChartSimple}
                                   title="Make a graph"
@@ -331,7 +375,16 @@ export function SelectedLayersTab({
                                   }
                                 />
                               ) : null}
-
+                              {selectedLayers[layer].assetId && (
+                                <FontAwesomeIcon
+                                  icon={faCube}
+                                  title="Add 3D terrain to the Map"
+                                  onClick={() => handleAddTerrainLayer(layer)}
+                                  className={
+                                    threeD?.subLayer === layer ? 'active' : ''
+                                  }
+                                />
+                              )}
                               <FontAwesomeIcon
                                 icon={faMagnifyingGlass}
                                 title="Zoom to the layer"
@@ -397,6 +450,7 @@ export function SelectedLayersTab({
                                   layer,
                                   selectedLayers,
                                 )}
+                                onDragStart={(e) => e.stopPropagation()}
                                 onChange={(e) =>
                                   handleChangeOpacity(
                                     e,
@@ -410,6 +464,15 @@ export function SelectedLayersTab({
                                 }
                               />
                             )}
+                          {isModalOpen && (
+                            <ConfirmationDialog
+                              onClose={handleClose}
+                              onConfirm={handleConfirm}
+                              message={
+                                'The 3d visualisation consumes a lot of memory and may slow down your browser. Do you want to continue?'
+                              }
+                            />
+                          )}
                         </LayerTypeOptionsContainer>
                       </div>
                     </div>

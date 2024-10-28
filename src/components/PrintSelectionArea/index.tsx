@@ -95,9 +95,9 @@ export function PrintSelectionArea() {
           // const ctx = canvas.getContext('2d')
           // ctx.drawImage(img, 0, 0, img.width, img.height)
           const logo = new Image()
-          logo.src = 'favicon.png'
+          logo.src = 'logo.png'
           logo.onload = () => {
-            const logoWidth = 100
+            const logoWidth = 180
             const logoHeight = (logo.height / logo.width) * logoWidth
             let logoX: number
             let logoY: number

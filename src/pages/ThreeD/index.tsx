@@ -85,6 +85,7 @@ export function ThreeD() {
   const [showPopup, setShowPopup] = useState(false)
   // const [activePhoto, setActivePhoto] = useState('')
   const [downloadPopup, setDownloadPopup] = useState({})
+  const [threeDLayer, setThreeDLayer] = useState({})
 
   const fetchData = async () => {
     const rout = window.location.pathname
@@ -154,6 +155,8 @@ export function ThreeD() {
               threeD={threeD}
               setThreeD={setThreeD}
               setDownloadPopup={setDownloadPopup}
+              threeDLayer={threeDLayer}
+              setThreeDLayer={setThreeDLayer}
             />
             <div className="hidden sm:block z-[9998]" id="side-selection">
               <DimensionsToogle />

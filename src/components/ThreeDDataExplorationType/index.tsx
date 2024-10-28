@@ -25,6 +25,8 @@ interface ThreeDDataExplorationTypeProps {
   setThreeD: any
   listLayers: any
   setDownloadPopup?: any
+  threeDLayer?: any
+  setThreeDLayer?: any
 }
 
 export function ThreeDDataExplorationType({
@@ -43,6 +45,8 @@ export function ThreeDDataExplorationType({
   setThreeD,
   listLayers,
   setDownloadPopup,
+  threeDLayer,
+  setThreeDLayer,
 }: ThreeDDataExplorationTypeProps) {
   const [subLayers, setSubLayers] = useState<keyable>({})
 
@@ -125,6 +129,8 @@ export function ThreeDDataExplorationType({
                 threeD={threeD}
                 setThreeD={setThreeD}
                 setDownloadPopup={setDownloadPopup}
+                threeDLayer={threeDLayer}
+                setThreeDLayer={setThreeDLayer}
               />
             )
           } else {

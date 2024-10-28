@@ -41,6 +41,8 @@ interface ThreeDDataExplorationTypeOptionsProps {
   threeD: any
   setThreeD: any
   setDownloadPopup?: any
+  threeDLayer?: any
+  setThreeDLayer?: any
 }
 
 export function ThreeDDataExplorationTypeOptions({
@@ -59,9 +61,10 @@ export function ThreeDDataExplorationTypeOptions({
   threeD,
   setThreeD,
   setDownloadPopup,
+  threeDLayer,
+  setThreeDLayer,
 }: ThreeDDataExplorationTypeOptionsProps) {
   const [opacityIsClicked, setOpacityIsClicked] = useState(false)
-  const [threeDLayer, setThreeDLayer] = useState({})
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const handleConfirm = () => {

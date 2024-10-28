@@ -76,7 +76,7 @@
     "ceeds": true,
     "layerNames": {
       "UK": {
-        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/uk_hsm/uk_hsm_cog.tif",
+        "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/uk_hsm/uk_hsm_cog2.tif",
         "dataType": "COG",
         "content": "Habitat suitability model for Zostera marina suitability (0-1) for United Kingdon, Ireland and Channel Isles area created using ensemble of GLM, GAM, RF, BRT, MARS, MaxENT methods. Presence data compiled from range of sources (see Bertelli et al., 2023) with environmental data as predictor variables from EMODNet and Copernicus. These variables include - Light (PAR) availability at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/), units Mol.phot.m-2.d-1, resolution ~0.3km2 , 1.1 x 0.7 km, 0.003°/10 arc seconds, 01 Jan2005 – 31 Dec 2009; Bathymetry (EMODnet Bathymetry and topography, http://www.emodnet.eu/emodnet-maps-catalogue) in metres below chart datum, resolution ~0.115km, 0.001°x 3.75 arc seconds, ~70m x 116m; January Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc) resolution 0.014° × 0.03°, ~1.4km x 3km  2019-present hourly-Daily mean; August Salinity (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu, NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km, 2019-present hourly-Daily mean; Wave energy at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/) in N.m2.s-1, resolution ~0.3km,~342x195m; Energy at seabed due to currents (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/, Data from EU SeaMap (2016), Energy in the Celtic Sea and North Sea) in N.m2.s-1, resolution ~0.3km, ~342x195m; Slope, Calculated from bathymetry data with GIS software.",
         "colors": "RdYlBu_r",
@@ -101,7 +101,7 @@
         ],
         "graph": true
       },
-      "Craignish": {
+      "Loch Craignish": {
         "url": "https://ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/layers/hsm/craignish/craignish_log_hsm.tif",
         "dataType": "GeoTIFF",
         "content": "Habitat suitability model for Zostera marina suitability (0-1) for Loch Craignish area created using ensemble of GLM, GAM, RF, BRT, MARS, MaxENT methods. Presence data compiled from range of sources (see Bertelli et al., 2023) with environmental data as predictor variables from EMODNet and Copernicus. These variables include - Bathymetry (EMODnet Bathymetry and topography, http://www.emodnet.eu/emodnet-maps-catalogue) in metres below chart datum, resolution ~0.115km, 0.001°x 3.75 arc seconds, ~70m x 116m; January Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km 2019-present hourly-Daily mean; August Temperature (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu,NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc) resolution 0.014° × 0.03°, ~1.4km x 3km 2019-present hourly-Daily mean; August Salinity (Copernicus Marine Environment Monitoring Service http://marine.copernicus.eu, NorthWestShelf_ANALYSIS_FORECAST_PHY_004_013) in ppt, NETcdf (.nc), resolution 0.014° × 0.03°, ~1.4km x 3km, 2019-present hourly-Daily mean; Wave energy at seabed (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/) in N.m2.s-1, resolution ~0.3km,~342x195m; Energy at seabed due to currents (EMODnet, https://www.emodnet-seabedhabitats.eu/access-data/launch-map-viewer/, Data from EU SeaMap (2016), Energy in the Celtic Sea and North Sea) in N.m2.s-1, resolution ~0.3km, ~342x195m; Slope, Calculated from bathymetry data with GIS software. N.b. no PAR data was used as didn't reach presence data at time of production even after interpolation of 3 pixels.",
@@ -580,7 +580,7 @@
         }
       },
       "Sites of Special Scientific Interest (NI)": {
-        "url": "http://localhost:8084/geoserver/resow/wms",
+        "url": "https://ceeds-geoserver.resow.uk/geoserver/resow/wms",
         "dataType": "WMS",
         "content": "Areas of Special Scientific Interest (ASSI) provide statutory protection for the best examples of Northern Ireland's flora, fauna, geological or physiographical features. In Irish Grid and British Grid format.",
         "protected": false,
@@ -800,10 +800,10 @@
           "metadata": "https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/Case%20Study%20Areas/Case%20Study%20Areas/collection.json"
         },
         "bbox": [
-          -6.3007,
-          49.948,
-          -1.2534,
-          62.0262
+          -8.5,
+          49.85,
+          2.00,
+          61.00
         ],
         "colors": "#d3ff75"
       }

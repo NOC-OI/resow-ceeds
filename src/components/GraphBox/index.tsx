@@ -298,6 +298,18 @@ export function GraphBox({
                 }}
                 config={{ responsive: true, displayModeBar: false }}
               />
+              <div className="text-right italic">
+                <p className="text-xs text-white">
+                  <strong>START POINT</strong> LAT:{' '}
+                  {graphLimits.getLatLngs()[0].lat.toFixed(4)}°, LON:{' '}
+                  {graphLimits.getLatLngs()[0].lng.toFixed(4)}°
+                </p>
+                <p className="text-xs text-white">
+                  <strong>END POINT</strong> LAT:{' '}
+                  {graphLimits.getLatLngs()[1].lat.toFixed(4)}°, LON:{' '}
+                  {graphLimits.getLatLngs()[1].lng.toFixed(4)}°
+                </p>
+              </div>
             </div>
           )}
         </InfoButtonBoxContent>

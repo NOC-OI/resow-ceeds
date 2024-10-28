@@ -50,6 +50,8 @@ interface SideSelectionProps {
   setGraphLimits?: any
   setGraphColumns?: any
   polylineOnMap?: any
+  threeDLayer?: any
+  setThreeDLayer?: any
 }
 
 export function SideSelection({
@@ -82,6 +84,8 @@ export function SideSelection({
   setGraphLimits,
   setGraphColumns,
   polylineOnMap,
+  threeDLayer,
+  setThreeDLayer,
 }: SideSelectionProps) {
   const { loading } = useContextHandle()
   const { selectedLayersUpload, setSelectedLayersUpload } =
@@ -280,6 +284,8 @@ export function SideSelection({
                 threeD={threeD}
                 setThreeD={setThreeD}
                 setDownloadPopup={setDownloadPopup}
+                threeDLayer={threeDLayer}
+                setThreeDLayer={setThreeDLayer}
               />
             ) : null)}
           {selectedSidebarOption === 'selected_layers' && (
@@ -302,6 +308,10 @@ export function SideSelection({
               setGraphLimits={setGraphLimits}
               setGraphColumns={setGraphColumns}
               polylineOnMap={polylineOnMap}
+              threeDLayer={threeDLayer}
+              setThreeDLayer={setThreeDLayer}
+              threeD={threeD}
+              setThreeD={setThreeD}
             />
           )}
           {selectedSidebarOption === 'Download' && (

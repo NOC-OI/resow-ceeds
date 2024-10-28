@@ -54,7 +54,7 @@ export function FullPagePopup({
           </p>
           <p className="text-center font-bold text-xl pt-5"></p>
         </div>
-        <div className="p-2 lg:px-32 px-24  flex justify-center items-center">
+        {/* <div className="p-2 lg:px-32 px-24  flex justify-center items-center">
           <a
             href="https://forms.office.com/e/KriKWpWS6x"
             target="_blank"
@@ -68,7 +68,7 @@ export function FullPagePopup({
           <p className="text-center font-bold text-xl text-red-500 uppercase">
             This is a beta version of the tool and we welcome your feedback
           </p>
-        </div>
+        </div> */}
         {/* <div className="p-4">
           <div className="grid grid-cols-2 gap-5">
             <div

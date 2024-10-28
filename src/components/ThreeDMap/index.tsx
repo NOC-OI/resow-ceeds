@@ -509,20 +509,20 @@ function ThreeDMap1({
           layers.add(turfLayer)
         }
       }
-      if (layerName.bbox) {
-        ref.current.cesiumElement.camera.flyTo({
-          destination: Cesium.Rectangle.fromDegrees(
-            layerName.bbox[0],
-            layerName.bbox[1],
-            layerName.bbox[2],
-            layerName.bbox[3],
-          ),
-        })
-      } else {
-        ref.current.cesiumElement.camera.flyTo({
-          destination: cesiumStartCoordinates,
-        })
-      }
+      // if (layerName.bbox) {
+      //   ref.current.cesiumElement.camera.flyTo({
+      //     destination: Cesium.Rectangle.fromDegrees(
+      //       layerName.bbox[0],
+      //       layerName.bbox[1],
+      //       layerName.bbox[2],
+      //       layerName.bbox[3],
+      //     ),
+      //   })
+      // } else {
+      //   ref.current.cesiumElement.camera.flyTo({
+      //     destination: cesiumStartCoordinates,
+      //   })
+      // }
     })
     setLoading(false)
   }

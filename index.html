@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="None">
+        
+        
+        <link rel="shortcut icon" href="img/favicon.ico">
+        <title>CEEDS Tool</title>
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/fontawesome.min.css" rel="stylesheet">
+        <link href="css/brands.min.css" rel="stylesheet">
+        <link href="css/solid.min.css" rel="stylesheet">
+        <link href="css/v4-font-face.min.css" rel="stylesheet">
+        <link href="css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <link href="css/print-site-enum-headings1.css" rel="stylesheet">
+        <link href="css/print-site-enum-headings2.css" rel="stylesheet">
+        <link href="css/print-site-enum-headings3.css" rel="stylesheet">
+        <link href="css/print-site-enum-headings4.css" rel="stylesheet">
+        <link href="css/print-site-enum-headings5.css" rel="stylesheet">
+        <link href="css/print-site-enum-headings6.css" rel="stylesheet">
+        <link href="css/print-site.css" rel="stylesheet">
+        <link href="css/print-site-mkdocs.css" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body class="homepage">
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href=".">CEEDS Tool</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="." class="nav-link active" aria-current="page">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="about.md" class="nav-link">None</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#home" class="nav-link">Home</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#general-project-infrastructure" class="nav-link">General Project Infrastructure</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#repositories" class="nav-link">Repositories</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#server-instance-organization" class="nav-link">Server Instance Organization</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#deploying-the-project" class="nav-link">Deploying the Project</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#cicd-pipeline" class="nav-link">CI/CD Pipeline</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#data-organization-object-store-and-stac-catalog" class="nav-link">Data Organization: Object Store and STAC Catalog</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#data-format-conversion" class="nav-link">Data Format Conversion</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#frontend-application" class="nav-link">Frontend Application</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#tile-servers" class="nav-link">Tile Servers</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="home">Home</h1>
+<p>The Coastal Ecosystem Enhancement Decision Support (CEEDS) tool is a critical component of the Sustainable Management of Marine Resources (SMMR) funded Restoration of Seagrass for Ocean Wealth (ReSOW) UK project. The CEEDS Tool brings together all data and reports from the project in a manner that is accessible and can be explored spatially, aligning with the needs and priorities of our community.</p>
+<h2 id="general-project-infrastructure">General Project Infrastructure</h2>
+<p>This project is based on a web-client that accesses data from different locations and uses various microservices related to APIs and tile servers. Below, we will describe the project's infrastructure in more detail.</p>
+<p><img alt="Project Schema" src="assets/project_schema.png" /></p>
+<p>As shown in the figure above, both the frontend and all microservices are running in Docker containers. These Docker containers are stored in a container registry. Currently, we are using gitlab container registry. The containers are updated each time a push is made to the master repository of the container.</p>
+<h2 id="repositories">Repositories</h2>
+<p>These are the project repositories:</p>
+<ul>
+<li>
+<p><a href="https://gitlab.com/nocacuk/ocean-informatics/ReSOW/frontend">Frontend</a>: A frontend application created in React, with the ability to interact with different data formats on both the backend and frontend. This project depends on certain backend services to perform tile server activities, as well as authentication and data calculations.</p>
+</li>
+<li>
+<p><a href="https://gitlab.com/nocacuk/ocean-informatics/ReSOW/tileserver">Tileserver</a>: Repository for configuring and creating tile servers.</p>
+</li>
+<li>
+<p><a href="https://gitlab.com/nocacuk/ocean-informatics/ReSOW/geoserver">Geoserver</a>: Repository for configuring and creating geoserver.</p>
+</li>
+<li>
+<p><a href="https://github.com/NOC-OI/data_pipelines">Data Pipelines</a>: This repository contains all the code for data format conversion, data uploading to the Object Store, and STAC Catalog creation.</p>
+</li>
+<li>
+<p><a href="https://gitlab.com/nocacuk/ocean-informatics/ReSOW/deploy">SALT Stack</a>: Repository contaning the Salt configuration for the VM.</p>
+</li>
+</ul>
+<h2 id="server-instance-organization">Server Instance Organization</h2>
+<p>The organization of server instances is carried out through the <a href="https://gitlab.com/nocacuk/ocean-informatics/ReSOW/deploy">SALT Stack</a> repository. This repository is based on the configuration of server stacks in the <a href="https://saltproject.io/">Salt project</a>. More information about the use and configuration of Salt can be found in the <a href="https://gitlab.com/nocacuk/ocean-informatics/ReSOW/deploy">Salt repository in this project</a>.</p>
+<h2 id="deploying-the-project">Deploying the Project</h2>
+<p>To deploy the project, follow the procedures <a href="deploy/">described here</a>.</p>
+<h2 id="cicd-pipeline">CI/CD Pipeline</h2>
+<p>This repository includes an automatic GitLab CI/CD pipeline for continuous integration and continuous deployment. More information about this pipeline can be found in the <a href="cicd/">CI/CD Pipeline documentation</a>.</p>
+<h2 id="data-organization-object-store-and-stac-catalog">Data Organization: Object Store and STAC Catalog</h2>
+<p>All project data files are stored in an object store. In this case, the files are accessed via HTTP requests, without the need for an intermediate database or an API.</p>
+<p>As the object store appears as a group of files, it is necessary to create a catalog of these files, called an <a href="https://stacspec.org/en">STAC Catalog</a>. The STAC catalog for this project can be accessed <a href="https://radiantearth.github.io/stac-browser/#/external/ceeds-tool-store-o.s3-ext.jc.rl.ac.uk/ceeds/stac/catalog.json">here</a>. For more information on how to generate the STAC Catalog, refer to the <a href="https://github.com/NOC-OI/data_pipelines">Data Pipelines repository</a>.</p>
+<p>This project suggests an organization of files in the Object Store, as <a href="object_store/">described here</a>.</p>
+<p>If you want to understand a little bit more about how we deal with STAC Catalogs, please <a href="stac/">click here</a>.</p>
+<h2 id="data-format-conversion">Data Format Conversion</h2>
+<p>In this project, data from different formats is converted into formats optimized for the cloud. Data conversion is performed through a series of Python codes that convert data from the following formats: GeoTIFF, GeoJSON, Shapefile, FlatGeoBuf, COG, Zarr, NetCDF, among others.</p>
+<p>The codes for converting data are described in the <a href="https://github.com/NOC-OI/data_pipelines">Data Pipelines repository</a>.</p>
+<p>More information about all the data types that we have been working with are described below:</p>
+<ul>
+<li>
+<p><a href="geotiff_cog/">GeoTIFF and Cloud Optimized GeoTIFF (COG)</a></p>
+</li>
+<li>
+<p><a href="fgb/">FlatGeoBuf</a></p>
+</li>
+<li>
+<p><a href="geoserver/">Geoserver</a></p>
+</li>
+<li>
+<p><a href="wms/">WMS Layers</a></p>
+</li>
+<li>
+<p><a href="cesium_ion/">Cesium Ion</a></p>
+</li>
+</ul>
+<h2 id="frontend-application">Frontend Application</h2>
+<p>The frontend application was developed in React and is converted into a Docker container. This app is currently running on Jasmin and Oracle Cloud and can be accessed via the link <a href="https://ceeds.resow.uk">https://ceeds.resow.uk</a>.</p>
+<p>You can find a detailed explanation about all the frontend features <a href="frontend/">here</a>.</p>
+<p>More information about the frontend application can be found in the repository: <a href="https://gitlab.com/nocacuk/ocean-informatics/ReSOW/frontend">https://gitlab.com/nocacuk/ocean-informatics/ReSOW/frontend</a></p>
+<h2 id="tile-servers">Tile Servers</h2>
+<p>Some data formats require the use of tile servers to optimize data rendering on the frontend. For this project, the following servers are used:</p>
+<p>1) Titiler: FastAPI application for dynamic tiling. It is used for COG files. You can see more information <a href="geotiff_cog/">here</a>.
+2) Geoserver: An open source server for sharing geospatial data. You can see more information <a href="geoserver/">here</a>.</p>
+<p>The tile servers are converted into Docker containers. More information about the servers can be found in the repositories:
+- <a href="https://gitlab.com/nocacuk/ocean-informatics/ReSOW/tileserver">Tileserver</a>.
+- <a href="https://gitlab.com/nocacuk/ocean-informatics/ReSOW/geoserver">Geoserver</a>.</p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = ".",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="js/base.js"></script>
+        <script src="js/print-site.js"></script>
+        <script src="search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
+
+<!--
+MkDocs version : 1.6.1
+Build Date UTC : 2024-10-29 12:16:57.864796+00:00
+-->

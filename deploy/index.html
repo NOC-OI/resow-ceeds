@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>How to Deploy the Digital Twin to a New Server - CEEDS Tool</title>
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../css/brands.min.css" rel="stylesheet">
+        <link href="../css/solid.min.css" rel="stylesheet">
+        <link href="../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <link href="../css/print-site-enum-headings1.css" rel="stylesheet">
+        <link href="../css/print-site-enum-headings2.css" rel="stylesheet">
+        <link href="../css/print-site-enum-headings3.css" rel="stylesheet">
+        <link href="../css/print-site-enum-headings4.css" rel="stylesheet">
+        <link href="../css/print-site-enum-headings5.css" rel="stylesheet">
+        <link href="../css/print-site-enum-headings6.css" rel="stylesheet">
+        <link href="../css/print-site.css" rel="stylesheet">
+        <link href="../css/print-site-mkdocs.css" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="..">CEEDS Tool</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href=".." class="nav-link">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../about.md" class="nav-link">None</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#how-to-deploy-the-digital-twin-to-a-new-server" class="nav-link">How to Deploy the Digital Twin to a New Server</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#prerequisites" class="nav-link">Prerequisites</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#setting-up-the-virtual-machines" class="nav-link">Setting up the Virtual Machines</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#setting-up-hostnames-and-ssl-certificates" class="nav-link">Setting up Hostnames and SSL Certificates</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#setting-up-salt" class="nav-link">Setting up Salt</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#setting-up-gitlab-runners" class="nav-link">Setting up GitLab Runners</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="how-to-deploy-the-digital-twin-to-a-new-server">How to Deploy the Digital Twin to a New Server</h1>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>You will need four virtual machines running Ubuntu 22.04, each with 4-8GB of RAM and 10GB of disk space for the OS. Additionally, two of these machines should have an extra 50GB of disk space (can be on an additional disk/volume).</p>
+<p>The four virtual machines are as follows:
+- <strong>gateway</strong>: Runs an Apache transparent proxy server for all services, sets up Let's Encrypt certificates, and provides SSL connections to web apps.
+- <strong>web</strong>: Runs the web apps as Docker containers.
+- <strong>tiling</strong>: Runs the tile servers as Docker containers.
+- <strong>build</strong>: Functions as a GitLab runner for building and deploying.</p>
+<p>Only the <strong>gateway</strong> VM needs an internet-routable IP address. Ensure that you have set the IP address of each system in the Salt pillar hosts file (pillar/hosts.sls) or made sure that the names <strong>gateway</strong>, <strong>web</strong>, and <strong>build</strong> are resolvable via DNS.</p>
+<p>These virtual machines can be created using the Salt configuration for this project: <a href="https://github.com/NOC-OI/imfe-pilot-salt_config">Salt Configuration Repository</a>.</p>
+<h3 id="environment-configuration">Environment Configuration</h3>
+<p>You need to set a list of secrets on the CI/CD configuration on GitLab, as described below:</p>
+<ul>
+<li>VITE_CESIUM_TOKEN: the token for the Cesium ION Api. It is necessary in order to access the 3d visualisation</li>
+<li>VITE_MAPBOX_API_KEY: the api key for the mapbox satellite layers</li>
+<li>VITE_ESRI: [OPTIONAL] the api key for  using the ESRI tile service. It has not been used now.</li>
+<li>VITE_JASMIN_OBJECT_STORE_URL: It is necessary to show the bathymetry data</li>
+<li>VITE_LAYERS_JSON_URL: a json file with the information about the layers. Please set to ./layers.json</li>
+<li>VITE_LAYERS3D_JSON_URL: a json file with the information about the layuers ./layers.json</li>
+<li>VITE_MBTILES_URL: [OPTIONAL] the url for the mbtiles tile server. It has not been used now.</li>
+<li>VITE_TILE_SERVER_URL: the url of the tile server. Please set to https://ceeds-tileserver.resow.uk/</li>
+<li>GEOSERVER_ADMIN_USER: the admin username for your geoserver</li>
+<li>GEOSERVER_ADMIN_PASSWORD: the admin password for your geoserver</li>
+</ul>
+<h2 id="setting-up-the-virtual-machines">Setting up the Virtual Machines</h2>
+<ol>
+<li>Create your virtual machines. On JASMIN, this can be done via the Cloud dashboard at <a href="https://cloud.jasmin.ac.uk/">JASMIN Cloud Dashboard</a>.</li>
+<li>Assign an internet IP to the <strong>gateway</strong> VM.</li>
+<li>Ensure you can SSH into each VM via the <strong>gateway</strong>.</li>
+<li>On the <strong>build</strong>, <strong>tiling</strong>, and <strong>web</strong> VMs, the Docker directory (/var/lib/docker) needs to have plenty of disk space, approximately 50GB, as Docker doesn't always clean up after itself. You can achieve this by either creating a large main disk or creating a second disk and mounting it in /var/lib/docker. If you choose the latter, ensure it gets mounted from the fstab when the VM reboots.</li>
+</ol>
+<h2 id="setting-up-hostnames-and-ssl-certificates">Setting up Hostnames and SSL Certificates</h2>
+<p>The following hostnames are used:
+- ceeds.resow.uk
+- ceeds-tileserver.resow.uk
+- ceeds-geooserver.resow.uk</p>
+<p>Salt is configured to set up Let's Encrypt for these hostnames but might need additional steps to request the initial certificate.</p>
+<h2 id="setting-up-salt">Setting up Salt</h2>
+<p>Salt is the configuration management system used to set up the operating system on the VMs. Follow the instructions provided in the <a href="https://github.com/NOC-OI/imfe-pilot-salt_config#deploying-to-another-vm">Salt Configuration Repository</a>.</p>
+<h2 id="setting-up-gitlab-runners">Setting up GitLab Runners</h2>
+<p>You'll need to configure a GitLab runner on the <strong>build</strong>. Give this runner the tag "shell". The shell runner is used to build Docker containers. Ensure that all three GitLab projects (frontend, geoserver and tileserver) are configured to use these runners.</p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../js/base.js"></script>
+        <script src="../js/print-site.js"></script>
+        <script src="../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

@@ -1,6 +1,11 @@
+![Logo](public/logo.png)
+
+
 # Coastal Ecosystem Enhancement Decision Support (CEEDS) Tool
 
 The Coastal Ecosystem Enhancement Decision Support (CEEDS) tool is an essential part of the Sustainable Management of Marine Resources (SMMR) funded Restoration of Seagrass for Ocean Wealth (ReSOW) UK project. CEEDS consolidates all data and reports from the project into an accessible, spatially-explorable format that aligns with the community's needs and priorities.
+
+The comprehensive documentation about the project is under development. You can see a draft version [here](https://example.com).
 
 This repository contains the frontend code for the CEEDS tool.
 
@@ -16,7 +21,7 @@ All data processing is performed client-side, enhancing the website's scalabilit
 
 Below is the system architecture diagram:
 
-![System Architecture](image.png)
+![System Architecture](docs/docs/assets/project_schema.png)
 
 ## Features
 

@@ -1,0 +1,5 @@
+mkdocs
+html5lib
+requests
+htmlark
+mkdocs-print-site-plugin

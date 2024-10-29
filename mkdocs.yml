@@ -1,5 +1,5 @@
 site_name: CEEDS Tool
-site_dir: public
+site_dir: public_docs
 nav:
   - 'index.md'
   - 'about.md'

@@ -25,3 +25,5 @@ dist-ssr
 *.geojson
 *.env*
 *.pem
+*.python-version
+docs/

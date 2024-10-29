@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { MapHome } from '../../components/MapHome'
 import { SideSelection } from '../../components/SideSelection'
 import { SideBar, HomeContainer, BottomBar } from './styles'
-import { CalculationValue } from '../../components/CalculationValue'
 import { DataExplorationLegend } from '../../components/DataExplorationLegend'
 import { InfoButtonBox } from '../../components/InfoButtonBox'
 import { GraphBox } from '../../components/GraphBox'
@@ -79,8 +78,6 @@ export function Home() {
   const [actualLayer, setActualLayer] = useState<string[]>([''])
 
   const [layerAction, setLayerAction] = useState('')
-
-  const [calculationValue, setCalculationValue] = useState('')
 
   const [showPhotos, setShowPhotos] = useState<object[]>([])
   const [selectedBaseLayer, setSelectedBaseLayer] = useState(defaultBaseLayer)
@@ -218,20 +215,6 @@ export function Home() {
               />
             ))}
             {printBox ? <PrintSelection setPrintBox={setPrintBox} /> : null}
-            {calculationValue && (
-              <CalculationValue
-                calculationValue={calculationValue}
-                setCalculationValue={setCalculationValue}
-                selectedLayers={selectedLayers}
-                setSelectedLayers={setSelectedLayers}
-                listLayers={listLayers}
-                layerAction={layerAction}
-                setLayerAction={setLayerAction}
-                actualLayer={actualLayer}
-                setActualLayer={setActualLayer}
-                setShowPhotos={setShowPhotos}
-              />
-            )}
             {Object.keys(infoButtonBox).length !== 0 ? (
               <InfoButtonBox
                 infoButtonBox={infoButtonBox}
